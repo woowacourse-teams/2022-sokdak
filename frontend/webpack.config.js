@@ -36,7 +36,7 @@ const config = ({ isDev }) => ({
             ['@babel/preset-env', { targets: { esmodules: true, browsers: ['last 2 versions'] } }],
             '@babel/preset-react',
           ],
-          plugins: [isDev && 'react-refresh/babel'].filter(Boolean),
+          plugins: ['@emotion', isDev && 'react-refresh/babel'].filter(Boolean),
         },
       },
       { test: /\.tsx?$/, loader: 'ts-loader' },

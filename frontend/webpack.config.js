@@ -7,6 +7,9 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const config = ({ isDev }) => ({
   mode: isDev ? 'development' : 'production',
   resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    },
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   entry: {
@@ -20,11 +23,19 @@ const config = ({ isDev }) => ({
   module: {
     rules: [
       {
-        test: /\.(png|jpg|svg|gif)$/,
+        test: /\.(png|jpg|gif)$/,
         loader: 'url-loader',
         options: {
           name: '[name].[ext]?[hash]',
           limit: 5000,
+        },
+      },
+      {
+        test: /\.(png|jpg|gif)$/,
+        loader: 'file-loader',
+        options: {
+          publicPath: './dist/',
+          name: '[name].[ext]?[hash]',
         },
       },
       {
@@ -40,6 +51,10 @@ const config = ({ isDev }) => ({
         },
       },
       { test: /\.tsx?$/, loader: 'ts-loader' },
+      {
+        test: /\.svg$/i,
+        use: ['@svgr/webpack'],
+      },
     ],
   },
   plugins: [

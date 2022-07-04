@@ -1,10 +1,14 @@
-import GlobalStyle from '../src/GlobalStyle';
+import { ThemeProvider } from '@emotion/react';
+import GlobalStyle from '../src/style/GlobalStyle';
+import theme from '../src/style/theme';
 
 export const decorators = [
   Story => (
     <>
-      <GlobalStyle />
-      <Story />
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <Story />
+      </ThemeProvider>
     </>
   ),
 ];

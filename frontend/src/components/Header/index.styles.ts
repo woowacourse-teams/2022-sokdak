@@ -21,11 +21,12 @@ export const RightSide = styled.div`
 
 export const Title = styled.p`
   font-size: 1.5rem;
+  font-family: 'BMYEONSUNG';
 `;
 
 export const Avartar = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 100%;
-  border: 1px solid #3bff99;
+  border: 1px solid ${props => props.theme.colors.main};
 `;

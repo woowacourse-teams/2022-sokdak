@@ -5,6 +5,7 @@ import App from './App';
 import { SnackBarContextProvider } from './context/Snackbar';
 import GlobalStyle from './style/GlobalStyle';
 import theme from './style/theme';
+import { BrowserRouter } from 'react-router-dom';
 
 const rootNode = document.getElementById('root') as Element;
 
@@ -12,7 +13,9 @@ ReactDOM.createRoot(rootNode).render(
   <React.StrictMode>
     <SnackBarContextProvider>
       <ThemeProvider theme={theme}>
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
         <GlobalStyle />
       </ThemeProvider>
     </SnackBarContextProvider>

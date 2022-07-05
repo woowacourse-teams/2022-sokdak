@@ -17,6 +17,11 @@ const style = css`
     font-weight: normal;
     font-style: normal;
   }
+
+  a {
+    text-decoration: none;
+    color: black;
+  }
 `;
 
 const GlobalStyle = () => {

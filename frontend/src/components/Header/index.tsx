@@ -5,7 +5,7 @@ import * as Styled from './index.styles';
 const Header = () => {
   return (
     <Styled.Container>
-      <Styled.LeftSide>
+      <Styled.LeftSide to="/">
         <Logo width={35} height={35} />
         <Styled.Title>속닥속닥</Styled.Title>
       </Styled.LeftSide>

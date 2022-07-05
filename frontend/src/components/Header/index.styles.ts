@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
 
 export const Container = styled.header`
   width: 100%;
@@ -7,7 +8,7 @@ export const Container = styled.header`
   justify-content: space-between;
 `;
 
-export const LeftSide = styled.div`
+export const LeftSide = styled(Link)`
   display: flex;
   align-items: center;
   gap: 8px;

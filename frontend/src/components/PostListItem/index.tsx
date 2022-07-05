@@ -1,20 +1,24 @@
 import * as Styled from './index.styles';
+import timeConverter from '@/utils/timeConverter';
 
-const PostListItem = () => {
+export interface PostListItemProp {
+  title: string;
+  localDate: {
+    date: string;
+    time: string;
+  };
+  content: string;
+}
+
+const PostListItem = ({ title, localDate, content }: PostListItemProp) => {
   return (
     <Styled.Container>
       <Styled.TitleContainer>
-        <Styled.Title>오늘 날씨 맑네여.</Styled.Title>
-        <Styled.Date>20분전</Styled.Date>
+        <Styled.Title>{title}</Styled.Title>
+        <Styled.Date>{timeConverter(localDate)}</Styled.Date>
       </Styled.TitleContainer>
       <Styled.ContentContainer>
-        <Styled.Content>
-          안녕?안녕?안녕?안녕?
-          <br />
-          안녕?안녕?안녕?안녕?안녕?
-          <br />
-          안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?안녕?
-        </Styled.Content>
+        <Styled.Content>{content}</Styled.Content>
       </Styled.ContentContainer>
     </Styled.Container>
   );

@@ -18,7 +18,6 @@ export const TitleContainer = styled.div`
 `;
 
 export const Title = styled.p`
-  margin: 0;
   font-size: 24px;
   font-family: 'BMHANNAPro';
 `;
@@ -35,7 +34,6 @@ export const ContentContainer = styled.div`
 `;
 
 export const Content = styled.p`
-  margin: 0;
   font-size: 18px;
   line-height: 25px;
 

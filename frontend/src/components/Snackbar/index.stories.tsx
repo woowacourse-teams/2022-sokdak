@@ -9,4 +9,6 @@ export default {
 const Template = (args: any) => <Snackbar {...args} />;
 
 export const SnackbarTemplate: ComponentStory<typeof Snackbar> = Template.bind({});
-SnackbarTemplate.args = {};
+SnackbarTemplate.args = {
+  message: '글 작성이 완료되었습니다.',
+};

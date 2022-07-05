@@ -1,7 +1,11 @@
 import * as Styled from './index.styles';
 
-const FAB = () => {
-  return <Styled.Container>+</Styled.Container>;
+interface FABProps {
+  handleClick: () => void;
+}
+
+const FAB = ({ handleClick }: FABProps) => {
+  return <Styled.Container onClick={handleClick}>+</Styled.Container>;
 };
 
 export default FAB;

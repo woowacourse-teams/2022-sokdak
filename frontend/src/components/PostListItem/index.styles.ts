@@ -20,6 +20,11 @@ export const TitleContainer = styled.div`
 export const Title = styled.p`
   font-size: 24px;
   font-family: 'BMHANNAPro';
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 270px;
+  white-space: nowrap;
 `;
 
 export const Date = styled.span`
@@ -31,6 +36,7 @@ export const ContentContainer = styled.div`
   padding: 1em;
   border-radius: 5px;
   background-color: ${props => props.theme.colors.gray_100};
+  height: 110px;
 `;
 
 export const Content = styled.p`

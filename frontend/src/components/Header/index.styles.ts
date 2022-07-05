@@ -2,12 +2,11 @@ import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 
 export const Container = styled.header`
-  width: 100%;
+  width: 350px;
   height: 50px;
   display: flex;
   justify-content: space-between;
-  padding: 0 20px;
-  margin: 15px 0;
+  margin: 15px auto;
   box-sizing: border-box;
 `;
 

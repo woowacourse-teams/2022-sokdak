@@ -11,7 +11,7 @@ const App = () => {
   const { isVisible, message } = useContext(SnackbarContext);
 
   return (
-    <div>
+    <>
       <Header />
       <Routes>
         <Route path="/" element={<MainPage />} />
@@ -19,7 +19,7 @@ const App = () => {
         <Route path="/post/:id" element={<PostPage />} />
       </Routes>
       {isVisible && <Snackbar message={message} />}
-    </div>
+    </>
   );
 };
 

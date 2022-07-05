@@ -1,7 +1,14 @@
+import ReactDOM from 'react-dom';
 import * as Styled from './index.styles';
 
-const Snackbar = () => {
-  return <Styled.Container>글 작성에 성공하였습니다.</Styled.Container>;
+interface SnackbarProps {
+  message: string;
+}
+
+const Snackbar = ({ message }: SnackbarProps) => {
+  return (
+    <>{ReactDOM.createPortal(<Styled.Container>{message}</Styled.Container>, document.getElementById('snackbar')!)}</>
+  );
 };
 
 export default Snackbar;

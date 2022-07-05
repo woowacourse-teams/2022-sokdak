@@ -6,6 +6,9 @@ export const Container = styled.header`
   height: 50px;
   display: flex;
   justify-content: space-between;
+  padding: 0 20px;
+  margin: 15px 0;
+  box-sizing: border-box;
 `;
 
 export const LeftSide = styled(Link)`

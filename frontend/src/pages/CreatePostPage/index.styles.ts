@@ -39,4 +39,5 @@ export const PostButton = styled.button`
   font-size: 17px;
   width: 100%;
   height: 55px;
+  cursor: pointer;
 `;

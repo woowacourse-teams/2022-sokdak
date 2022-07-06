@@ -13,4 +13,7 @@ spring:
     show-sql: true
 
 logging:
-  level: trace
+  level:
+    org:
+      hibernate:
+        type: trace

@@ -34,7 +34,7 @@ const config = ({ isDev }) => ({
         test: /\.(png|jpg|gif)$/,
         loader: 'file-loader',
         options: {
-          publicPath: './dist/',
+          publicPath: './public/',
           name: '[name].[ext]?[hash]',
         },
       },
@@ -63,7 +63,7 @@ const config = ({ isDev }) => ({
     }),
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: './src/index.html',
+      template: './public/index.html',
     }),
     new ReactRefreshWebpackPlugin(),
   ],
@@ -73,7 +73,7 @@ const config = ({ isDev }) => ({
     open: true,
     hot: true,
     static: {
-      directory: path.resolve(__dirname, 'dist'),
+      directory: path.resolve(__dirname, 'public'),
       publicPath: '/',
     },
     devMiddleware: {

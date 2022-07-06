@@ -44,4 +44,49 @@ export const postList: Post[] = [
     },
     content: '미안하다 진짜봇',
   },
+  {
+    id: 6,
+    title: '크리스 : 갑자기 이런 생각이 드네?',
+    localDate: {
+      date: '2022-07-05',
+      time: '15:30',
+    },
+    content: '생각멈춰',
+  },
+  {
+    id: 7,
+    title: '이스트 : 아채 싫엉',
+    localDate: {
+      date: '2022-07-05',
+      time: '15:30',
+    },
+    content: '베이비 이스트',
+  },
+  {
+    id: 8,
+    title: '토르 : 사진 찰칵 찰칵',
+    localDate: {
+      date: '2022-07-05',
+      time: '15:30',
+    },
+    content: '단백질 벌컥 벌컥',
+  },
+  {
+    id: 9,
+    title: '헌치 : 악상이 떠오른다.',
+    localDate: {
+      date: '2022-07-05',
+      time: '15:30',
+    },
+    content: '알고리즘 냠냠',
+  },
+  {
+    id: 10,
+    title: '동키콩 : 수학 1등급',
+    localDate: {
+      date: '2022-07-05',
+      time: '15:30',
+    },
+    content: '특 : 페이지 계산 못함',
+  },
 ];

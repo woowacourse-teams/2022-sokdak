@@ -9,6 +9,7 @@ export const Container = styled.div`
   box-shadow: 0px 1px 7px rgba(0, 0, 0, 0.13);
   border-radius: 5px;
   gap: 14px;
+  cursor: pointer;
 `;
 
 export const TitleContainer = styled.div`

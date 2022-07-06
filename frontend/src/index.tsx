@@ -7,6 +7,12 @@ import GlobalStyle from './style/GlobalStyle';
 import theme from './style/theme';
 import { BrowserRouter } from 'react-router-dom';
 
+if (process.env.NODE_ENV === 'development') {
+  const { worker } = require('./mocks/worker');
+
+  worker.start();
+}
+
 const rootNode = document.getElementById('root') as Element;
 
 ReactDOM.createRoot(rootNode).render(

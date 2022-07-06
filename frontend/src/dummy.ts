@@ -3,7 +3,7 @@ export const postList: Post[] = [
     id: 1,
     title: '오늘 날씨 맑네요',
     localDate: {
-      date: '2022-07-05',
+      date: '2022-06-05',
       time: '15:30',
     },
     content: '날씨는 참 좋네요.',
@@ -48,7 +48,7 @@ export const postList: Post[] = [
     id: 6,
     title: '크리스 : 갑자기 이런 생각이 드네?',
     localDate: {
-      date: '2022-07-05',
+      date: '2022-06-05',
       time: '15:30',
     },
     content: '생각멈춰',

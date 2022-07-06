@@ -8,7 +8,7 @@ export const Container = styled.div`
   align-items: center;
 `;
 
-export const TitleContainer = styled.div`
+export const HeadContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -16,21 +16,26 @@ export const TitleContainer = styled.div`
   margin-bottom: 60px;
 `;
 
+export const TitleContainer = styled.div`
+  width: 240px;
+  word-wrap: break-word;
+`;
+
 export const Title = styled.p`
   font-size: 24px;
   font-family: 'BMHANNAPro';
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 270px;
-  white-space: nowrap;
+  word-break: keep-all;
 `;
 
 export const Date = styled.span`
+  min-width: 80px;
+  text-align: right;
   font-size: 10px;
   color: ${props => props.theme.colors.gray_200};
 `;
 
 export const ContentContainer = styled.div`
+  width: 100%;
   min-height: 420px;
   border-bottom: 1px solid ${props => props.theme.colors.sub};
   margin-bottom: 25px;

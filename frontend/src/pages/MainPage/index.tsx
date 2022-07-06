@@ -11,11 +11,21 @@ const MainPage = () => {
     navigate('/post/write');
   };
 
+  const handleClickPostItem = (id: number) => {
+    navigate(`post/${id}`);
+  };
+
   return (
     <Layout>
       <Styled.PostListContainer>
         {postList.map(({ id, title, localDate, content }: Post) => (
-          <PostListItem title={title} localDate={localDate} content={content} key={id} />
+          <PostListItem
+            title={title}
+            localDate={localDate}
+            content={content}
+            key={id}
+            handleClick={e => handleClickPostItem(id)}
+          />
         ))}
       </Styled.PostListContainer>
       <FAB handleClick={handleClickFAB} />

@@ -3,9 +3,9 @@ package com.wooteco.sokdak.post.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.wooteco.sokdak.post.controller.dto.NewPostRequest;
-import com.wooteco.sokdak.post.controller.dto.PostResponse;
-import com.wooteco.sokdak.post.controller.dto.PostsResponse;
+import com.wooteco.sokdak.post.dto.NewPostRequest;
+import com.wooteco.sokdak.post.dto.PostResponse;
+import com.wooteco.sokdak.post.dto.PostsResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

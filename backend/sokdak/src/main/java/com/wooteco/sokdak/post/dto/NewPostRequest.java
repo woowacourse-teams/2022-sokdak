@@ -1,5 +1,7 @@
-package com.wooteco.sokdak.post.controller.dto;
+package com.wooteco.sokdak.post.dto;
 
+import com.wooteco.sokdak.post.domain.Post;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -11,8 +13,16 @@ public class NewPostRequest {
     public NewPostRequest() {
     }
 
+    @Builder
     public NewPostRequest(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public Post toEntity() {
+        return Post.builder()
+                .title(title)
+                .content(content)
+                .build();
     }
 }

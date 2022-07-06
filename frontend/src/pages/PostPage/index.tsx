@@ -1,4 +1,5 @@
 import Layout from '@/components/@styled/Layout';
+import Spinner from '@/components/Spinner';
 import timeConverter from '@/utils/timeConverter';
 import axios from 'axios';
 import { useQuery } from 'react-query';
@@ -11,7 +12,13 @@ const PostPage = () => {
   const { data, isLoading } = useQuery('post-get', getPost, {});
 
   if (isLoading) {
-    return <div>Loading</div>;
+    return (
+      <Layout>
+        <Styled.SpinnerContainer>
+          <Spinner />
+        </Styled.SpinnerContainer>
+      </Layout>
+    );
   }
 
   const { content, title, localDate } = data;

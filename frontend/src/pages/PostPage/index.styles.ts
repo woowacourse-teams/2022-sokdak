@@ -8,6 +8,14 @@ export const Container = styled.div`
   align-items: center;
 `;
 
+export const SpinnerContainer = styled.div`
+  width: 100%;
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 export const HeadContainer = styled.div`
   width: 100%;
   display: flex;

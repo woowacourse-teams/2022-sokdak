@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.post.acceptance;
+package com.wooteco.sokdak.post.controller;
 
 import static com.wooteco.sokdak.post.util.HttpMethodFixture.getExceptionMessage;
 import static com.wooteco.sokdak.post.util.HttpMethodFixture.httpGet;
@@ -6,6 +6,7 @@ import static com.wooteco.sokdak.post.util.HttpMethodFixture.httpPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.wooteco.sokdak.post.acceptance.AcceptanceTest;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
@@ -13,10 +14,13 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
-@DisplayName("게시글 관련 인수테스트")
-class PostAcceptanceTest extends AcceptanceTest {
+class PostControllerTest extends AcceptanceTest {
+
+    @Autowired
+    PostController postController;
 
     @DisplayName("글 작성 요청을 받으면 새로운 게시글을 등록한다.")
     @Test
@@ -82,9 +86,7 @@ class PostAcceptanceTest extends AcceptanceTest {
         Long invalidPostId = 9999L;
 
         ExtractableResponse<Response> response = httpGet("/posts/" + invalidPostId);
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
-                () -> assertThat(getExceptionMessage(response)).isEqualTo("게시물을 찾을 수 없습니다.")
-        );
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 }

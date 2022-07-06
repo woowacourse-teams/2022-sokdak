@@ -32,7 +32,7 @@ public class PostService {
 
     public PostResponse findPost(Long postId) {
         Post foundPost = postRepository.findById(postId)
-                .orElseThrow(() -> new PostNotFoundException(postId));
+                .orElseThrow(PostNotFoundException::new);
         return PostResponse.from(foundPost);
     }
 

@@ -7,10 +7,10 @@ import lombok.Getter;
 public class PostsResponse {
 
     private List<PostResponse> posts;
-    private boolean isLastPage;
+    private boolean lastPage;
 
-    public PostsResponse(List<PostResponse> posts, boolean isLastPage) {
+    public PostsResponse(List<PostResponse> posts, boolean lastPage) {
         this.posts = posts;
-        this.isLastPage = isLastPage;
+        this.lastPage = lastPage;
     }
 }

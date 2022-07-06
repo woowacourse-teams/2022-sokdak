@@ -13,7 +13,7 @@ export const TitleContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 100px;
+  margin-bottom: 60px;
 `;
 
 export const Title = styled.p`
@@ -34,6 +34,7 @@ export const ContentContainer = styled.div`
   min-height: 420px;
   border-bottom: 1px solid ${props => props.theme.colors.sub};
   margin-bottom: 25px;
+  padding-bottom: 20px;
 `;
 
 export const Content = styled.p`

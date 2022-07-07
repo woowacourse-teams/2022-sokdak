@@ -43,7 +43,7 @@ const MainPage = () => {
 
   const { isLoading, data, fetchNextPage } = useInfiniteQuery('posts-getByPage', getPosts, {
     enabled: false,
-    getNextPageParam: lastPage => (lastPage.isLastPage ? undefined : lastPage.nextPage),
+    getNextPageParam: ({ lastPage, nextPage }) => (lastPage ? undefined : nextPage),
   });
 
   useEffect(() => {

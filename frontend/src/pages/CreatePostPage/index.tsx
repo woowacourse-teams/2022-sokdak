@@ -22,7 +22,7 @@ const CreatePostPage = () => {
   const { mutate: registerPost, isLoading } = useMutation(createPost, {
     onSuccess: () => {
       queryClient.invalidateQueries();
-      queryClient.invalidateQueries('post-get');
+      queryClient.invalidateQueries('posts-getByPage');
     },
   });
 

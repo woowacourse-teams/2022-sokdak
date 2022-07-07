@@ -8,7 +8,6 @@ import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -37,8 +36,7 @@ public class PostService {
     }
 
     public PostsResponse findPosts(Pageable pageable) {
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-        Slice<Post> posts = postRepository.findSliceBy(pageRequest);
+        Slice<Post> posts = postRepository.findSliceBy(pageable);
         List<PostResponse> postResponses = posts.getContent()
                 .stream()
                 .map(PostResponse::from)

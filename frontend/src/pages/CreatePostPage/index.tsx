@@ -21,8 +21,9 @@ const CreatePostPage = () => {
 
   const { mutate: registerPost, isLoading } = useMutation(createPost, {
     onSuccess: () => {
-      queryClient.invalidateQueries();
-      queryClient.invalidateQueries('posts-getByPage');
+      queryClient.resetQueries('posts-getByPage');
+      showSnackbar('글 작성에 성공하였습니다.');
+      navigate('/');
     },
   });
 
@@ -39,8 +40,6 @@ const CreatePostPage = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     registerPost();
-    showSnackbar('글 작성에 성공하였습니다.');
-    navigate('/');
   };
 
   return (

@@ -9,7 +9,7 @@ import * as Styled from './index.styles';
 const PostPage = () => {
   const { id } = useParams();
   const getPost = () => axios.get(`/posts/${id}`).then(res => res.data);
-  const { data, isLoading } = useQuery('post-get', getPost, {});
+  const { data, isLoading, isError } = useQuery('post-get', getPost, {});
 
   if (isLoading) {
     return (
@@ -17,6 +17,19 @@ const PostPage = () => {
         <Styled.SpinnerContainer>
           <Spinner />
         </Styled.SpinnerContainer>
+      </Layout>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Layout>
+        <Styled.SpinnerContainer>
+          <Spinner />
+        </Styled.SpinnerContainer>
+        <Styled.ErrorContainer>
+          존재하지 않거나 삭제된 글입니다. <Styled.ListButton to="/">메인 페이지로</Styled.ListButton>
+        </Styled.ErrorContainer>
       </Layout>
     );
   }

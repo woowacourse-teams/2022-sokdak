@@ -9,11 +9,22 @@ export const Container = styled.div`
 `;
 
 export const SpinnerContainer = styled.div`
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translateY(-50%);
+  transform: translateX(-50%);
+`;
+
+export const ErrorContainer = styled.div`
   width: 100%;
   height: 500px;
+  font-family: 'BMHANNAPro';
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 3em;
 `;
 
 export const HeadContainer = styled.div`

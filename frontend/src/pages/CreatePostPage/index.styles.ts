@@ -9,6 +9,14 @@ export const PostForm = styled.form`
   box-sizing: border-box;
 `;
 
+export const SpinnerContainer = styled.div`
+  width: 100%;
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 export const Heading = styled.h1`
   font-family: 'BMHANNAPro';
   font-size: 27px;

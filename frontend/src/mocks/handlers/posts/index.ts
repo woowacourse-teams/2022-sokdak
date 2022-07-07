@@ -33,14 +33,13 @@ const postHandlers = [
   rest.get('/posts', (req, res, ctx) => {
     const size = Number(req.url.searchParams.get('size')!);
     const page = Number(req.url.searchParams.get('page')!);
-    const prevPage = page - 1;
-    const posts = postList.slice(prevPage * size, prevPage * size + size);
+    const posts = postList.slice(page * size, page * size + size);
 
     return res(
       ctx.status(200),
       ctx.json({
         posts,
-        isLastPage: postList.length - size * prevPage - posts.length === 0 && posts.length !== 0,
+        isLastPage: postList.length - size * page - posts.length === 0 && posts.length !== 0,
       }),
     );
   }),

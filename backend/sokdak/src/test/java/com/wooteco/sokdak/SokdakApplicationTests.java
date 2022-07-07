@@ -9,5 +9,4 @@ class SokdakApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

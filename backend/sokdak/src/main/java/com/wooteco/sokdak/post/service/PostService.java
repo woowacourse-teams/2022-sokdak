@@ -37,7 +37,7 @@ public class PostService {
     }
 
     public PostsResponse findPosts(Pageable pageable) {
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
         Slice<Post> posts = postRepository.findSliceBy(pageRequest);
         List<PostResponse> postResponses = posts.getContent()
                 .stream()

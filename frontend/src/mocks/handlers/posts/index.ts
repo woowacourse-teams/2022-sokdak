@@ -39,7 +39,7 @@ const postHandlers = [
       ctx.status(200),
       ctx.json({
         posts,
-        isLastPage: postList.length - size * page - posts.length === 0 && posts.length !== 0,
+        lastPage: postList.length - size * page - posts.length === 0 && posts.length !== 0,
       }),
     );
   }),

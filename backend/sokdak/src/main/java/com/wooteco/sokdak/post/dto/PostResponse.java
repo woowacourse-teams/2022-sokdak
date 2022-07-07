@@ -19,6 +19,10 @@ public class PostResponse {
     }
 
     public static PostResponse from(Post post) {
-        return new PostResponse(post.getId(), post.getTitle(), post.getContent(), DateResponse.from(post.getCreatedAt()));
+        return new PostResponse(
+                post.getId(),
+                post.getTitle(),
+                post.getContent(),
+                DateResponse.from(post.getCreatedAt()));
     }
 }

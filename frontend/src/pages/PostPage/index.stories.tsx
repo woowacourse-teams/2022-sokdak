@@ -7,10 +7,10 @@ export default {
   component: PostPage,
 } as ComponentMeta<typeof PostPage>;
 
-const Template = (args: any) => (
+const Template = () => (
   <Router initialEntries={['/posts/1']}>
     <Routes>
-      <Route path="/posts/:id" element={<PostPage {...args} />}></Route>
+      <Route path="/posts/:id" element={<PostPage />}></Route>
     </Routes>
   </Router>
 );

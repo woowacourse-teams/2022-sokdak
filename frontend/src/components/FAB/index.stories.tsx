@@ -6,7 +6,7 @@ export default {
   component: FAB,
 } as ComponentMeta<typeof FAB>;
 
-const Template = (args: any) => <FAB {...args} />;
+const Template: ComponentStory<typeof FAB> = args => <FAB {...args} />;
 
-export const FABTemplate: ComponentStory<typeof FAB> = Template.bind({});
+export const FABTemplate = Template.bind({});
 FABTemplate.args = {};

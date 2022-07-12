@@ -8,7 +8,7 @@ export default {
   decorators: [withRouter],
 } as ComponentMeta<typeof MainPage>;
 
-const Template = (args: any) => <MainPage {...args} />;
+const Template = () => <MainPage />;
 
 export const MainPageTemplate: ComponentStory<typeof MainPage> = Template.bind({});
 MainPageTemplate.args = {};

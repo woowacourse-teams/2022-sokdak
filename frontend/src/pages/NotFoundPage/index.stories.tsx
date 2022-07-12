@@ -8,7 +8,7 @@ export default {
   decorators: [withRouter],
 } as ComponentMeta<typeof NotFound>;
 
-const Template = (args: any) => <NotFound {...args} />;
+const Template = () => <NotFound />;
 
 export const NotFoundTemplate: ComponentStory<typeof NotFound> = Template.bind({});
 NotFoundTemplate.args = {};

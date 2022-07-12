@@ -1,12 +1,15 @@
-import Header from '@/components/Header';
 import { useContext } from 'react';
-import Snackbar from './components/Snackbar';
-import SnackbarContext from './context/Snackbar';
 import { Route, Routes } from 'react-router-dom';
-import MainPage from './pages/MainPage';
-import PostPage from './pages/PostPage';
+
 import CreatePostPage from './pages/CreatePostPage';
+import MainPage from './pages/MainPage';
 import NotFoundPage from './pages/NotFoundPage';
+import PostPage from './pages/PostPage';
+
+import Snackbar from './components/Snackbar';
+import Header from '@/components/Header';
+
+import SnackbarContext from './context/Snackbar';
 
 const App = () => {
   const { isVisible, message } = useContext(SnackbarContext);

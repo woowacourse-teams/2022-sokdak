@@ -1,10 +1,14 @@
-import Layout from '@/components/@styled/Layout';
-import Spinner from '@/components/Spinner';
-import timeConverter from '@/utils/timeConverter';
-import axios from 'axios';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
+
+import axios from 'axios';
+
+import Layout from '@/components/@styled/Layout';
+import Spinner from '@/components/Spinner';
+
 import * as Styled from './index.styles';
+
+import timeConverter from '@/utils/timeConverter';
 
 const PostPage = () => {
   const { id } = useParams();

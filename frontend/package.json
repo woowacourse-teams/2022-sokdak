@@ -8,7 +8,8 @@
     "build": "webpack --mode=production",
     "test": "echo \"Error: no test specified\" && exit 1",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "pretty": "prettier --write \"src/**/*.{ts,tsx,json}\""
   },
   "eslintConfig": {
     "env": {
@@ -65,7 +66,19 @@
     "semi": true,
     "trailingComma": "all",
     "tabWidth": 2,
-    "arrowParens": "avoid"
+    "arrowParens": "avoid",
+    "importOrder": [
+      "^react",
+      "^axios",
+      "^[.|@]/pages/(.*)$",
+      "^[.|@]/components/(.*)$",
+      "^[.|@]/context/(.*)$",
+      "^[.|@]/hooks/(.*)$",
+      "^[.|@]/index.styles(.*)$",
+      "^[.|@]/(assets|constants|utils|api)(/*)(.*)$",
+      "^[./@]"
+    ],
+    "importOrderSeparation": true
   },
   "dependencies": {
     "@emotion/react": "^11.9.3",
@@ -93,6 +106,7 @@
     "@storybook/react": "^6.5.9",
     "@storybook/testing-library": "^0.0.13",
     "@svgr/webpack": "^6.2.1",
+    "@trivago/prettier-plugin-sort-imports": "^3.2.0",
     "@types/react": "^18.0.14",
     "@types/react-dom": "^18.0.5",
     "babel-loader": "^8.2.5",

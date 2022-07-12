@@ -1,4 +1,5 @@
 import { rest } from 'msw';
+
 import { postList } from '@/dummy';
 
 const postHandlers = [

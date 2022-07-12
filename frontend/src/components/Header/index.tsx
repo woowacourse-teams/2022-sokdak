@@ -1,6 +1,7 @@
-import Logo from '@/assets/images/logo.svg';
-import DropDownCaret from '@/assets/images/dropdown-caret.svg';
 import * as Styled from './index.styles';
+
+import DropDownCaret from '@/assets/images/dropdown-caret.svg';
+import Logo from '@/assets/images/logo.svg';
 
 const Header = () => {
   return (

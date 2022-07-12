@@ -1,6 +1,8 @@
-import Layout from '@/components/@styled/Layout';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+
+import Layout from '@/components/@styled/Layout';
+
 import * as Styled from './index.styles';
 
 const NotFoundPage = () => {

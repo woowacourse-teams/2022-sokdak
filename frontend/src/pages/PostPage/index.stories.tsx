@@ -1,6 +1,7 @@
+import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
+
 import PostPage from '.';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
 
 export default {
   title: 'Pages/PostPage',

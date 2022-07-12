@@ -1,6 +1,7 @@
+import { withRouter } from 'storybook-addon-react-router-v6';
+
 import Header from '.';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import { withRouter } from 'storybook-addon-react-router-v6';
 
 export default {
   title: 'Components/Header',

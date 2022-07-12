@@ -2,12 +2,12 @@ import * as Styled from './index.styles';
 import timeConverter from '@/utils/timeConverter';
 import { forwardRef } from 'react';
 
-interface PostListItemProp extends Omit<Post, 'id'> {
+interface PostListItemProps extends Omit<Post, 'id'> {
   handleClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
-const PostListItem = forwardRef<HTMLDivElement, PostListItemProp>(
-  ({ title, localDate, content, handleClick }: PostListItemProp, ref) => {
+const PostListItem = forwardRef<HTMLDivElement, PostListItemProps>(
+  ({ title, localDate, content, handleClick }: PostListItemProps, ref) => {
     return (
       <Styled.Container onClick={handleClick} ref={ref}>
         <Styled.TitleContainer>

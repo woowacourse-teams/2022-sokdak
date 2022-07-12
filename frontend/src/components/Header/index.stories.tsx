@@ -8,7 +8,6 @@ export default {
   decorators: [withRouter],
 } as ComponentMeta<typeof Header>;
 
-const Template = (args: any) => <Header {...args} />;
+const Template: ComponentStory<typeof Header> = () => <Header />;
 
-export const HeaderTemplate: ComponentStory<typeof Header> = Template.bind({});
-HeaderTemplate.args = {};
+export const HeaderTemplate = Template.bind({});

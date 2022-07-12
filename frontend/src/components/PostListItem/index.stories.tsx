@@ -1,4 +1,4 @@
-import PostListItem, { PostListItemProp } from '.';
+import PostListItem from '.';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 export default {
@@ -6,9 +6,9 @@ export default {
   component: PostListItem,
 } as ComponentMeta<typeof PostListItem>;
 
-const Template = (args: PostListItemProp) => <PostListItem {...args} />;
+const Template: ComponentStory<typeof PostListItem> = args => <PostListItem {...args} />;
 
-export const PostListItemTemplate: ComponentStory<typeof PostListItem> = Template.bind({});
+export const PostListItemTemplate = Template.bind({});
 PostListItemTemplate.args = {
   title: '오늘 날씨 좋네요!',
   localDate: {

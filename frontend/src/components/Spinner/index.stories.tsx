@@ -7,11 +7,10 @@ export default {
   component: Spinner,
 } as ComponentMeta<typeof Spinner>;
 
-const Template = (args: any) => (
+const Template = () => (
   <Container>
-    <Spinner {...args} />
+    <Spinner />
   </Container>
 );
 
 export const SpinnerTemplate: ComponentStory<typeof Spinner> = Template.bind({});
-SpinnerTemplate.args = {};

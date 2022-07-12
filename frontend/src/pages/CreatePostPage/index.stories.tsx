@@ -8,7 +8,7 @@ export default {
   decorators: [withRouter],
 } as ComponentMeta<typeof CreatePostPage>;
 
-const Template = (args: any) => <CreatePostPage {...args} />;
+const Template = () => <CreatePostPage />;
 
 export const CreatePostPageTemplate: ComponentStory<typeof CreatePostPage> = Template.bind({});
 CreatePostPageTemplate.args = {};

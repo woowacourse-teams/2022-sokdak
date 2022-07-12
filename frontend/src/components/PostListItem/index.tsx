@@ -1,6 +1,8 @@
-import * as Styled from './index.styles';
-import timeConverter from '@/utils/timeConverter';
 import { forwardRef } from 'react';
+
+import * as Styled from './index.styles';
+
+import timeConverter from '@/utils/timeConverter';
 
 interface PostListItemProps extends Omit<Post, 'id'> {
   handleClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;

@@ -1,12 +1,15 @@
-import * as Styled from './index.styles';
-import PostListItem from '@/components/PostListItem';
-import FAB from '@/components/FAB';
-import { useNavigate } from 'react-router-dom';
-import Layout from '@/components/@styled/Layout';
-import axios from 'axios';
 import { useRef, useState, useEffect } from 'react';
 import { useInfiniteQuery } from 'react-query';
+import { useNavigate } from 'react-router-dom';
+
+import axios from 'axios';
+
+import Layout from '@/components/@styled/Layout';
+import FAB from '@/components/FAB';
+import PostListItem from '@/components/PostListItem';
 import Spinner from '@/components/Spinner';
+
+import * as Styled from './index.styles';
 
 const MainPage = () => {
   const navigate = useNavigate();

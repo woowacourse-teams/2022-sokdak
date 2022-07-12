@@ -1,10 +1,14 @@
-import Layout from '@/components/@styled/Layout';
-import Spinner from '@/components/Spinner';
-import SnackbarContext from '@/context/Snackbar';
-import axios from 'axios';
 import { useContext, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
+
+import axios from 'axios';
+
+import Layout from '@/components/@styled/Layout';
+import Spinner from '@/components/Spinner';
+
+import SnackbarContext from '@/context/Snackbar';
+
 import * as Styled from './index.styles';
 
 const CreatePostPage = () => {

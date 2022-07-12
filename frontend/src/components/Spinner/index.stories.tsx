@@ -1,6 +1,7 @@
+import { Container } from './index.styles';
+
 import Spinner from '.';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import { Container } from './index.styles';
 
 export default {
   title: 'Components/Spinner',

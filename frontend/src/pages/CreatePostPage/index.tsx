@@ -1,13 +1,12 @@
 import { useContext, useRef, useState } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-
-import axios from 'axios';
 
 import Layout from '@/components/@styled/Layout';
 import Spinner from '@/components/Spinner';
 
 import SnackbarContext from '@/context/Snackbar';
+
+import useCreatePost from '@/hooks/queries/post/useCreatePost';
 
 import * as Styled from './index.styles';
 
@@ -18,21 +17,13 @@ const CreatePostPage = () => {
   const [isContentAnimationActive, setIsContentAnimationActive] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const { isVisible, showSnackbar } = useContext(SnackbarContext);
-  const createPost = () =>
-    axios.post('/posts', {
-      title,
-      content,
-    });
 
-  const { mutate: registerPost, isLoading } = useMutation(createPost, {
+  const { mutate: registerPost, isLoading } = useCreatePost({
     onSuccess: () => {
-      queryClient.resetQueries('posts-getByPage');
-      showSnackbar('글 작성에 성공하였습니다.');
       navigate('/');
     },
   });
@@ -49,7 +40,7 @@ const CreatePostPage = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    registerPost();
+    registerPost({ title, content });
   };
 
   return (

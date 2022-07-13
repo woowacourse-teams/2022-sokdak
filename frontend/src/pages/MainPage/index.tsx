@@ -1,20 +1,20 @@
-import { useRef, useState, useEffect } from 'react';
-import { useInfiniteQuery } from 'react-query';
+import { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import axios from 'axios';
 
 import Layout from '@/components/@styled/Layout';
 import FAB from '@/components/FAB';
 import PostListItem from '@/components/PostListItem';
 import Spinner from '@/components/Spinner';
 
+import usePosts from '@/hooks/queries/post/usePosts';
+
 import * as Styled from './index.styles';
 
 const MainPage = () => {
   const navigate = useNavigate();
   const scrollRef = useRef(null);
-  const [postList, setPostList] = useState<Post[]>([]);
+  const { isLoading, data, fetchNextPage } = usePosts({ storeCode: [3] });
+
   const io = new IntersectionObserver(
     (entries, io) => {
       entries.forEach(entry => {
@@ -35,49 +35,27 @@ const MainPage = () => {
     navigate(`post/${id}`);
   };
 
-  const getPosts = async ({ pageParam = 0 }) => {
-    const { data } = await axios.get(`/posts?size=5&page=${pageParam}`);
-
-    return {
-      ...data,
-      nextPage: pageParam + 1,
-    };
-  };
-
-  const { isLoading, data, fetchNextPage } = useInfiniteQuery('posts-getByPage', getPosts, {
-    enabled: false,
-    getNextPageParam: ({ lastPage, nextPage }) => (lastPage ? undefined : nextPage),
-  });
-
   useEffect(() => {
     if (!data) {
       fetchNextPage();
     }
-  }, []);
 
-  useEffect(() => {
-    if (data) {
-      setPostList(data.pages.reduce((prev, { posts }) => prev.concat(posts), []));
-    }
-  }, [data]);
-
-  useEffect(() => {
     if (scrollRef.current) {
       io.observe(scrollRef.current);
     }
-  }, [postList]);
+  }, [data]);
 
   return (
     <Layout>
       <Styled.PostListContainer>
-        {postList.map(({ id, title, localDate, content }: Post, index) => (
+        {data?.pages.map(({ id, title, localDate, content }, index) => (
           <PostListItem
             title={title}
             localDate={localDate}
             content={content}
             key={id}
             handleClick={e => handleClickPostItem(id)}
-            ref={index === postList.length - 1 ? scrollRef : null}
+            ref={index === data.pages.length - 1 ? scrollRef : null}
           />
         ))}
         {isLoading && <Spinner />}

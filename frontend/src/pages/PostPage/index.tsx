@@ -1,10 +1,9 @@
-import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
-
-import axios from 'axios';
 
 import Layout from '@/components/@styled/Layout';
 import Spinner from '@/components/Spinner';
+
+import usePost from '@/hooks/queries/post/usePost';
 
 import * as Styled from './index.styles';
 
@@ -12,8 +11,7 @@ import timeConverter from '@/utils/timeConverter';
 
 const PostPage = () => {
   const { id } = useParams();
-  const getPost = () => axios.get(`/posts/${id}`).then(res => res.data);
-  const { data, isLoading, isError } = useQuery('post-get', getPost, {});
+  const { data, isLoading, isError } = usePost({ storeCode: id! });
 
   if (isLoading) {
     return (
@@ -38,7 +36,7 @@ const PostPage = () => {
     );
   }
 
-  const { content, title, localDate } = data;
+  const { content, title, localDate } = data!;
 
   return (
     <Layout>

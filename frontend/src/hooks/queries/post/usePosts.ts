@@ -21,13 +21,10 @@ const usePosts = ({
     [QUERY_KEYS.POSTS, storeCode],
     ({ pageParam = 0, queryKey: [_, size] }) => axios.get(`/posts?size=${size}&page=${pageParam}`),
     {
-      select: data => {
-        const posts: Post[] = data.pages.reduce((pre, { data }) => pre.concat(data.posts), [] as Post[]);
-        return {
-          pages: posts,
-          pageParams: [...data.pageParams, data.pageParams.length],
-        };
-      },
+      select: data => ({
+        pages: data.pages.flatMap((x: any) => x.data.posts),
+        pageParams: [...data.pageParams, data.pageParams.length],
+      }),
       enabled: false,
       getNextPageParam: (lastPage, allPages) => (lastPage.data.lastPage ? undefined : allPages.length),
       ...options,

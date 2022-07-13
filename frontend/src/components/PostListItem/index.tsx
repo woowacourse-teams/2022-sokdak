@@ -9,12 +9,12 @@ interface PostListItemProps extends Omit<Post, 'id'> {
 }
 
 const PostListItem = forwardRef<HTMLDivElement, PostListItemProps>(
-  ({ title, localDate, content, handleClick }: PostListItemProps, ref) => {
+  ({ title, content, createdAt, handleClick }: PostListItemProps, ref) => {
     return (
       <Styled.Container onClick={handleClick} ref={ref}>
         <Styled.TitleContainer>
           <Styled.Title>{title}</Styled.Title>
-          <Styled.Date>{timeConverter(localDate)}</Styled.Date>
+          <Styled.Date>{timeConverter(createdAt)}</Styled.Date>
         </Styled.TitleContainer>
         <Styled.ContentContainer>
           <Styled.Content>{content}</Styled.Content>

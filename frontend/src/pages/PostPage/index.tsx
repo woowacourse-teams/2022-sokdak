@@ -36,7 +36,7 @@ const PostPage = () => {
     );
   }
 
-  const { content, title, localDate } = data!;
+  const { content, title, createdAt } = data!;
 
   return (
     <Layout>
@@ -45,7 +45,7 @@ const PostPage = () => {
           <Styled.TitleContainer>
             <Styled.Title>{title}</Styled.Title>
           </Styled.TitleContainer>
-          <Styled.Date>{timeConverter(localDate)}</Styled.Date>
+          <Styled.Date>{timeConverter(createdAt)}</Styled.Date>
         </Styled.HeadContainer>
 
         <Styled.ContentContainer>

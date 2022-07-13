@@ -7,10 +7,12 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostResponse;
+import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,5 +91,40 @@ class PostServiceTest {
                         .ignoringFields("id", "localDate")
                         .isEqualTo(List.of(PostResponse.from(post)))
         );
+    }
+
+    @DisplayName("게시글 수정 기능")
+    @Test
+    void updatePost() {
+        Post post = Post.builder()
+                .title("제목")
+                .content("본문")
+                .build();
+        Long postId = postRepository.save(post).getId();
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest("변경된 제목", "변경된 본문");
+
+        postService.updatePost(postId, postUpdateRequest);
+
+        Post foundPost = postRepository.findById(postId)
+                .orElseThrow(PostNotFoundException::new);
+        assertAll(
+                () -> assertThat(foundPost.getTitle()).isEqualTo("변경된 제목"),
+                () -> assertThat(foundPost.getContent()).isEqualTo("변경된 본문")
+        );
+    }
+
+    @DisplayName("게시글 삭제 기능")
+    @Test
+    void deletePost() {
+        Post post = Post.builder()
+                .title("제목")
+                .content("본문")
+                .build();
+        Long postId = postRepository.save(post).getId();
+
+        postService.deletePost(postId);
+
+        Optional<Post> foundPost = postRepository.findById(postId);
+        assertThat(foundPost).isEmpty();
     }
 }

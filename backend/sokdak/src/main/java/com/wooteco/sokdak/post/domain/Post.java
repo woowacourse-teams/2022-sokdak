@@ -56,4 +56,12 @@ public class Post {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
+    public void updateTitle(String title) {
+        this.title = new Title(title);
+    }
+
+    public void updateContent(String content) {
+        this.content = new Content(content);
+    }
 }

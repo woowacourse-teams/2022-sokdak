@@ -10,6 +10,8 @@ import usePosts from '@/hooks/queries/post/usePosts';
 
 import * as Styled from './index.styles';
 
+import PATH from '@/constants/path';
+
 const MainPage = () => {
   const navigate = useNavigate();
   const scrollRef = useRef(null);
@@ -28,11 +30,11 @@ const MainPage = () => {
   );
 
   const handleClickFAB = () => {
-    navigate('/post/write');
+    navigate(PATH.CREATE_POST);
   };
 
   const handleClickPostItem = (id: number) => {
-    navigate(`post/${id}`);
+    navigate(`${PATH.POST}/${id}`);
   };
 
   useEffect(() => {

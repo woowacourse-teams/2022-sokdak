@@ -11,6 +11,8 @@ import Header from '@/components/Header';
 
 import SnackbarContext from './context/Snackbar';
 
+import PATH from './constants/path';
+
 const App = () => {
   const { isVisible, message } = useContext(SnackbarContext);
 
@@ -18,9 +20,9 @@ const App = () => {
     <>
       <Header />
       <Routes>
-        <Route path="/" element={<MainPage />} />
-        <Route path="/post/write" element={<CreatePostPage />} />
-        <Route path="/post/:id" element={<PostPage />} />
+        <Route path={PATH.HOME} element={<MainPage />} />
+        <Route path={PATH.CREATE_POST} element={<CreatePostPage />} />
+        <Route path={`${PATH.POST}/:id`} element={<PostPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       {isVisible && <Snackbar message={message} />}

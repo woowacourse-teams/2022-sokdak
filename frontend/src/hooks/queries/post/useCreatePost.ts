@@ -23,7 +23,7 @@ const useCreatePost = (
       ...options,
       onSuccess: (data, variables, context) => {
         queryClient.resetQueries(QUERY_KEYS.POSTS);
-        showSnackbar('글 작성에 성공하였습니다.');
+        showSnackbar(SNACKBAR_MESSAGE.SUCCESS_WRITE_POST);
 
         if (options && options.onSuccess) {
           options.onSuccess(data, variables, context);

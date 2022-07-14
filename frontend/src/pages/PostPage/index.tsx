@@ -7,6 +7,7 @@ import usePost from '@/hooks/queries/post/usePost';
 
 import * as Styled from './index.styles';
 
+import PATH from '@/constants/path';
 import timeConverter from '@/utils/timeConverter';
 
 const PostPage = () => {
@@ -30,7 +31,7 @@ const PostPage = () => {
           <Spinner />
         </Styled.SpinnerContainer>
         <Styled.ErrorContainer>
-          존재하지 않거나 삭제된 글입니다. <Styled.ListButton to="/">메인 페이지로</Styled.ListButton>
+          존재하지 않거나 삭제된 글입니다. <Styled.ListButton to={PATH.HOME}>메인 페이지로</Styled.ListButton>
         </Styled.ErrorContainer>
       </Layout>
     );
@@ -52,7 +53,7 @@ const PostPage = () => {
           <Styled.Content>{content}</Styled.Content>
         </Styled.ContentContainer>
         <Styled.ListButtonContainer>
-          <Styled.ListButton to="/">글 목록</Styled.ListButton>
+          <Styled.ListButton to={PATH.HOME}>글 목록</Styled.ListButton>
         </Styled.ListButtonContainer>
       </Styled.Container>
     </Layout>

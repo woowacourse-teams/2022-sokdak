@@ -5,9 +5,9 @@ import lombok.Getter;
 @Getter
 public class UsernameUniqueResponse {
 
-    private final boolean success;
+    private final boolean unique;
 
-    public UsernameUniqueResponse(boolean success) {
-        this.success = success;
+    public UsernameUniqueResponse(boolean unique) {
+        this.unique = unique;
     }
 }

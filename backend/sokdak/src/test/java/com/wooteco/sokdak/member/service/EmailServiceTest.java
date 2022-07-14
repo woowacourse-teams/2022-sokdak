@@ -1,8 +1,6 @@
 package com.wooteco.sokdak.member.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import com.wooteco.sokdak.member.domain.Ticket;
+import com.wooteco.sokdak.member.domain.auth.Ticket;
 import com.wooteco.sokdak.member.dto.EmailRequest;
 import com.wooteco.sokdak.member.repository.TicketRepository;
 import org.junit.jupiter.api.BeforeEach;

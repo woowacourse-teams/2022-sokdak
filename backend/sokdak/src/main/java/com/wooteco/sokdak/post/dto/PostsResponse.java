@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 public class PostsResponse {
 
-    private List<PostResponse> posts;
-    private boolean lastPage;
+    private final List<PostResponse> posts;
+    private final boolean lastPage;
 
     public PostsResponse(List<PostResponse> posts, boolean lastPage) {
         this.posts = posts;

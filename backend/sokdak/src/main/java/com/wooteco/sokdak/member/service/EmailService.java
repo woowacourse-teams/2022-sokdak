@@ -1,7 +1,7 @@
 package com.wooteco.sokdak.member.service;
 
-import com.wooteco.sokdak.member.domain.AuthCode;
-import com.wooteco.sokdak.member.domain.Ticket;
+import com.wooteco.sokdak.member.domain.auth.AuthCode;
+import com.wooteco.sokdak.member.domain.auth.Ticket;
 import com.wooteco.sokdak.member.dto.EmailRequest;
 import com.wooteco.sokdak.member.dto.VerificationRequest;
 import com.wooteco.sokdak.member.exception.NotWootecoMemberException;
@@ -10,7 +10,6 @@ import com.wooteco.sokdak.member.exception.TicketUsedException;
 import com.wooteco.sokdak.member.repository.AuthCodeRepository;
 import com.wooteco.sokdak.member.repository.TicketRepository;
 import com.wooteco.sokdak.member.util.AuthCodeGenerator;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

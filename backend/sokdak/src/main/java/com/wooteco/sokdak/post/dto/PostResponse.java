@@ -6,10 +6,10 @@ import lombok.Getter;
 @Getter
 public class PostResponse {
 
-    private Long id;
-    private String title;
-    private String content;
-    private DateResponse localDate;
+    private final Long id;
+    private final String title;
+    private final String content;
+    private final DateResponse localDate;
 
     private PostResponse(Long id, String title, String content, DateResponse localDate) {
         this.id = id;

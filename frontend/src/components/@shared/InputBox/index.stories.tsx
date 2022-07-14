@@ -1,6 +1,4 @@
-import { useState } from 'react';
-
-import Input from './components/Input';
+import Layout from '@/components/@styled/Layout';
 
 import InputBox from '.';
 import { useInput } from './useInput';
@@ -13,29 +11,25 @@ export default {
 
 const Template: ComponentStory<typeof InputBox> = args => {
   const { value, setValue, error, setError } = useInput();
-
+  const handleInvalid = () => {
+    setError('정확한 이메일 형식을 입력해주세요');
+  };
   return (
-    <InputBox value={value} setValue={setValue} error={error} setError={setError}>
-      <form style={{ display: 'grid', gridTemplateColumns: '4fr 1fr', alignItems: 'center', gap: '8px' }}>
-        <InputBox.Input
-          type="email"
-          placeholder="이메일"
-          onInvalid={() => {
-            setError('정확한 이메일 형식을 입력해주세요');
-            console.log('hi');
-          }}
-          required
-        />
-        <InputBox.SubmitButton
-          onClick={() => {
-            console.log('click');
-          }}
-        >
-          인증번호 받기
-        </InputBox.SubmitButton>
-      </form>
-      <InputBox.ErrorMessage />
-    </InputBox>
+    <Layout>
+      <InputBox value={value} setValue={setValue} error={error} setError={setError}>
+        <form style={{ display: 'grid', gridTemplateColumns: '4fr 1fr', alignItems: 'center', gap: '8px' }}>
+          <InputBox.Input type="email" placeholder="이메일" handleInvalid={handleInvalid} required />
+          <InputBox.SubmitButton
+            onClick={() => {
+              console.log('click');
+            }}
+          >
+            인증번호 받기
+          </InputBox.SubmitButton>
+        </form>
+        <InputBox.ErrorMessage />
+      </InputBox>
+    </Layout>
   );
 };
 

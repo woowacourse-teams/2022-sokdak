@@ -6,9 +6,10 @@ import { useInputContext } from '../../useInputContext';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   hasError?: boolean;
+  handleInvalid: () => void;
 }
 
-const Input = ({ placeholder, type, onInvalid }: InputProps) => {
+const Input = ({ placeholder, type, handleInvalid, required }: InputProps) => {
   const { value, setValue, error, setError } = useInputContext();
   return (
     <Styled.Input
@@ -19,13 +20,17 @@ const Input = ({ placeholder, type, onInvalid }: InputProps) => {
       hasError={error !== ''}
       placeholder={placeholder}
       type={type}
-      onInvalid={onInvalid}
+      onInvalid={e => {
+        e.preventDefault();
+        handleInvalid();
+      }}
       onFocus={() => {
         setValue('');
       }}
       onKeyDown={() => {
         setError('');
       }}
+      required={required}
     />
   );
 };

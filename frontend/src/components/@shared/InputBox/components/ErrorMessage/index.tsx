@@ -4,7 +4,7 @@ import { useInputContext } from '../../useInputContext';
 
 const ErrorMessage = () => {
   const { error } = useInputContext();
-  return error ? <Styled.Message>{error}</Styled.Message> : <></>;
+  return <Styled.MessageContainer>{error ? <Styled.Message>{error}</Styled.Message> : null}</Styled.MessageContainer>;
 };
 
 export default ErrorMessage;

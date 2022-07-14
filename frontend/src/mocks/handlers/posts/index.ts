@@ -13,7 +13,7 @@ const postHandlers = [
       createdAt: new Date().toISOString(),
     };
 
-    postList.push(newPost);
+    postList.unshift(newPost);
 
     return res(ctx.status(200), ctx.set('Location', `/posts/${id}`));
   }),

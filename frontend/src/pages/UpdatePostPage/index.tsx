@@ -1,11 +1,43 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import Layout from '@/components/@styled/Layout';
 import PostForm from '@/components/PostForm';
+import Spinner from '@/components/Spinner';
+
+import useUpdatePost from '@/hooks/queries/post/useUpdatePost';
+
+import * as Styled from './index.styles';
+
+import NotFoundPage from '../NotFoundPage';
 
 const UpdatePostPage = () => {
   const location = useLocation();
-  const { title, content } = location.state as Pick<Post, 'content' | 'title'>;
+  const navigate = useNavigate();
+
+  if (!location.state) {
+    return <NotFoundPage />;
+  }
+
+  const { id, title, content } = location.state as Omit<Post, 'createdAt'>;
+
+  const { mutate: updatePost, isLoading } = useUpdatePost({
+    id,
+    options: {
+      onSuccess: () => {
+        navigate(-1);
+      },
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <Layout>
+        <Styled.SpinnerContainer>
+          <Spinner />
+        </Styled.SpinnerContainer>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -14,7 +46,7 @@ const UpdatePostPage = () => {
         submitType="글 수정하기"
         prevTitle={title}
         prevContent={content}
-        handlePost={() => {}}
+        handlePost={updatePost}
       />
     </Layout>
   );

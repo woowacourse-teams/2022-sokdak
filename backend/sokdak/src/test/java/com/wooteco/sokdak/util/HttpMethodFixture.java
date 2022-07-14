@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.post.util;
+package com.wooteco.sokdak.util;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;

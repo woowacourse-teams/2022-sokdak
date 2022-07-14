@@ -10,9 +10,8 @@ import GlobalStyle from './style/GlobalStyle';
 import theme from './style/theme';
 import { ThemeProvider } from '@emotion/react';
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.MODE === 'LOCAL:MSW') {
   const { worker } = require('./mocks/worker');
-
   worker.start();
 }
 

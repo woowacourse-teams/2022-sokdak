@@ -66,4 +66,5 @@ module.exports = {
     }),
     new ReactRefreshWebpackPlugin(),
   ],
+  devtool: 'source-map',
 };

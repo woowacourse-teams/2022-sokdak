@@ -41,6 +41,29 @@ const postHandlers = [
       }),
     );
   }),
+
+  rest.put<Pick<Post, 'title' | 'content'>>('/posts/:id', (req, res, ctx) => {
+    const params = req.params;
+    const id = Number(params.id);
+    const { title, content } = req.body;
+
+    const isTargetPostExist = postList.some(post => post.id === id);
+
+    if (!isTargetPostExist) {
+      return res(ctx.status(400), ctx.json({ message: '해당 글이 존재하지 않습니다.' }));
+    }
+
+    if (!title || !content) {
+      return res(ctx.status(400), ctx.json({ message: '제목 혹은 본문이 없습니다.' }));
+    }
+
+    const targetPost = postList.find(post => post.id === id)!;
+
+    targetPost.title = title;
+    targetPost.content = content;
+
+    return res(ctx.status(204));
+  }),
 ];
 
 export default postHandlers;

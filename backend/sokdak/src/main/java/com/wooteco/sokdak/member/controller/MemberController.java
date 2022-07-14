@@ -1,11 +1,13 @@
 package com.wooteco.sokdak.member.controller;
 
 import com.wooteco.sokdak.member.dto.EmailRequest;
+import com.wooteco.sokdak.member.dto.SignupRequest;
 import com.wooteco.sokdak.member.dto.UsernameUniqueResponse;
 import com.wooteco.sokdak.member.dto.VerificationRequest;
 import com.wooteco.sokdak.member.service.EmailService;
 import com.wooteco.sokdak.member.service.MemberService;
 import javax.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,8 +41,14 @@ public class MemberController {
     }
 
     @GetMapping("/signup/exists")
-    public ResponseEntity<UsernameUniqueResponse> validateUniqueUsername(@Valid @RequestParam String username) {
+    public ResponseEntity<UsernameUniqueResponse> validateUniqueUsername(@RequestParam String username) {
         UsernameUniqueResponse usernameUniqueResponse = memberService.checkUnique(username);
         return ResponseEntity.ok(usernameUniqueResponse);
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<Void> signUp(@Valid @RequestBody SignupRequest signupRequest) {
+        memberService.signUp(signupRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

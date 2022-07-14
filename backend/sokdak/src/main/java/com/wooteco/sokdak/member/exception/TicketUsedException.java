@@ -1,6 +1,6 @@
 package com.wooteco.sokdak.member.exception;
 
-import com.wooteco.sokdak.post.exception.BadRequestException;
+import com.wooteco.sokdak.advice.BadRequestException;
 
 public class TicketUsedException extends BadRequestException {
 

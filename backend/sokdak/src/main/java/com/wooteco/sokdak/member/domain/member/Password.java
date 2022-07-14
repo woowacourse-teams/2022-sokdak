@@ -1,6 +1,6 @@
 package com.wooteco.sokdak.member.domain.member;
 
-import com.wooteco.sokdak.member.exception.InvalidPasswordException;
+import com.wooteco.sokdak.member.exception.InvalidPasswordFormatException;
 import java.util.regex.Pattern;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -26,7 +26,7 @@ public class Password {
 
     private void validate(String value) {
         if (!PATTERN.matcher(value).matches()) {
-            throw new InvalidPasswordException();
+            throw new InvalidPasswordFormatException();
         }
     }
 }

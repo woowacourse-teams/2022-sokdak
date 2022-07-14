@@ -10,6 +10,7 @@ import com.wooteco.sokdak.member.exception.TicketUsedException;
 import com.wooteco.sokdak.member.repository.AuthCodeRepository;
 import com.wooteco.sokdak.member.repository.TicketRepository;
 import com.wooteco.sokdak.member.util.AuthCodeGenerator;
+import com.wooteco.sokdak.member.util.Encryptor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,9 +30,8 @@ public class EmailService {
     }
 
     public void sendEmail(EmailRequest emailRequest) {
-        String serialNumber = serialize(emailRequest.getEmail());
-        validateQualified(serialNumber);
-        validateNewMember(serialNumber);
+        String serialNumber = Encryptor.encrypt(emailRequest.getEmail());
+        validate(serialNumber);
 
         authCodeRepository.deleteAllBySerialNumber(serialNumber);
         String authCode = AuthCodeGenerator.generate(6);
@@ -40,7 +40,12 @@ public class EmailService {
         authCodeRepository.save(new AuthCode(authCode, serialNumber));
     }
 
-    private void validateQualified(String serialNumber) {
+    public void validate(String serialNumber) {
+        validateQualified(serialNumber);
+        validateNewMember(serialNumber);
+    }
+
+    public void validateQualified(String serialNumber) {
         boolean exist = ticketRepository.existsBySerialNumber(serialNumber);
         if (!exist) {
             throw new NotWootecoMemberException();
@@ -56,14 +61,9 @@ public class EmailService {
     }
 
     public void verifyAuthCode(VerificationRequest verificationRequest) {
-        String serialNumber = serialize(verificationRequest.getEmail());
+        String serialNumber = Encryptor.encrypt(verificationRequest.getEmail());
         AuthCode authCode = authCodeRepository.findBySerialNumber(serialNumber)
                 .orElseThrow(SerialNumberNotFoundException::new);
         authCode.verify(verificationRequest.getCode());
-    }
-
-    private String serialize(String email) {
-        // TODO: 해싱필요
-        return email;
     }
 }

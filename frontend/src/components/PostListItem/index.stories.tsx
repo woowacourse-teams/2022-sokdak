@@ -11,9 +11,6 @@ const Template: ComponentStory<typeof PostListItem> = args => <PostListItem {...
 export const PostListItemTemplate = Template.bind({});
 PostListItemTemplate.args = {
   title: '오늘 날씨 좋네요!',
-  localDate: {
-    date: '2022-07-05',
-    time: '15:00',
-  },
   content: '안녕?',
+  createdAt: new Date().toISOString(),
 };

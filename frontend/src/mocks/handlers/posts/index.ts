@@ -8,15 +8,12 @@ const postHandlers = [
     const id = postList.length + 1;
     const newPost: Post = {
       id,
-      localDate: {
-        date: '2022-07-01',
-        time: '16:32',
-      },
       title,
       content,
+      createdAt: new Date().toISOString(),
     };
 
-    postList.push(newPost);
+    postList.unshift(newPost);
 
     return res(ctx.status(200), ctx.set('Location', `/posts/${id}`));
   }),

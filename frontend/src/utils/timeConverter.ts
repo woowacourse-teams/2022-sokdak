@@ -4,8 +4,8 @@ const options = {
   day: 'numeric',
 } as const;
 
-const timeConverter = (localDate: { date: string; time: string }): string => {
-  const postDate = new Date(localDate.date + 'T' + localDate.time);
+const timeConverter = (createdAt: string): string => {
+  const postDate = new Date(createdAt);
   const sec = (Date.now() - +postDate) / 1000;
   const date = Math.floor(sec / 60 / 60 / 24);
   const hour = Math.floor(sec / 60 / 60);

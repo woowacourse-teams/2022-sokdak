@@ -10,6 +10,8 @@ import useCreatePost from '@/hooks/queries/post/useCreatePost';
 
 import * as Styled from './index.styles';
 
+import PATH from '@/constants/path';
+
 const CreatePostPage = () => {
   const [isValidTitle, setIsValidTitle] = useState(true);
   const [isValidContent, setIsValidContent] = useState(true);
@@ -24,7 +26,7 @@ const CreatePostPage = () => {
 
   const { mutate: registerPost, isLoading } = useCreatePost({
     onSuccess: () => {
-      navigate('/');
+      navigate(PATH.HOME);
     },
   });
 

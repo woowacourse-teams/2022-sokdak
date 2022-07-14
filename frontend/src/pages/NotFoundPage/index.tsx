@@ -5,6 +5,8 @@ import Layout from '@/components/@styled/Layout';
 
 import * as Styled from './index.styles';
 
+import PATH from '@/constants/path';
+
 const NotFoundPage = () => {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -13,7 +15,7 @@ const NotFoundPage = () => {
       <Styled.Container>
         <Styled.ErrorCode>404</Styled.ErrorCode>
         <Styled.ErrorMessage>페이지를 찾을 수 없습니다.</Styled.ErrorMessage>
-        <Link to="/">
+        <Link to={PATH.HOME}>
           <Styled.JoshImage
             src={'/joshi.png'}
             alt="조시 이미지"

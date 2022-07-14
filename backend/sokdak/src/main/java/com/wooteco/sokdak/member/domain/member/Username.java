@@ -1,5 +1,7 @@
 package com.wooteco.sokdak.member.domain.member;
 
+import com.wooteco.sokdak.member.exception.InvalidUsernameException;
+import java.util.regex.Pattern;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import lombok.Getter;
@@ -9,14 +11,22 @@ import org.hibernate.validator.constraints.Length;
 @Embeddable
 public class Username {
 
+    private static final Pattern PATTERN = Pattern.compile("^[0-9a-zA-Z]{4,16}$");
+
     @Column(name = "username")
-    @Length(min = 4, max = 16)
     private String value;
 
     protected Username() {
     }
 
     public Username(String value) {
+        validate(value);
         this.value = value;
+    }
+
+    private void validate(String value) {
+        if (!PATTERN.matcher(value).matches()) {
+            throw new InvalidUsernameException();
+        }
     }
 }

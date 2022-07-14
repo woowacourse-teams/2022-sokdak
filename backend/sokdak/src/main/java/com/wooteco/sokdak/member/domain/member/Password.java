@@ -1,22 +1,32 @@
 package com.wooteco.sokdak.member.domain.member;
 
+import com.wooteco.sokdak.member.exception.InvalidPasswordException;
+import java.util.regex.Pattern;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import lombok.Getter;
-import org.hibernate.validator.constraints.Length;
 
 @Getter
 @Embeddable
 public class Password {
 
+    private static final Pattern PATTERN = Pattern.compile(
+            "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=]{8,20}$");
+
     @Column(name = "password")
-    @Length(min = 8, max = 20)
     private String value;
 
     protected Password() {
     }
 
     public Password(String value) {
+        validate(value);
         this.value = value;
+    }
+
+    private void validate(String value) {
+        if (!PATTERN.matcher(value).matches()) {
+            throw new InvalidPasswordException();
+        }
     }
 }

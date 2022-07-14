@@ -50,7 +50,9 @@ const style = css`
   }
 
   button {
+    font-family: 'Noto Sans KR', sans-serif;
     border: none;
+    cursor: pointer;
   }
 `;
 

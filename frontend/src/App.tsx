@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import CreatePostPage from './pages/CreatePostPage';
+import LoginPage from './pages/LoginPage';
 import MainPage from './pages/MainPage';
 import NotFoundPage from './pages/NotFoundPage';
 import PostPage from './pages/PostPage';
@@ -23,6 +24,7 @@ const App = () => {
         <Route path={PATH.HOME} element={<MainPage />} />
         <Route path={PATH.CREATE_POST} element={<CreatePostPage />} />
         <Route path={`${PATH.POST}/:id`} element={<PostPage />} />
+        <Route path={PATH.LOGIN} element={<LoginPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       {isVisible && <Snackbar message={message} />}

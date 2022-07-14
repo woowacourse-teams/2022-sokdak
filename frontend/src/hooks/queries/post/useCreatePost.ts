@@ -6,6 +6,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import SnackbarContext from '@/context/Snackbar';
 
 import QUERY_KEYS from '@/constants/queries';
+import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
 const useCreatePost = (
   options?: UseMutationOptions<AxiosResponse<string, string>, AxiosError, Pick<Post, 'title' | 'content'>>,

@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.member.util;
 
-import java.util.UUID;
 import net.bytebuddy.utility.RandomString;
 
 public class AuthCodeGenerator {

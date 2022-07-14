@@ -6,10 +6,10 @@ import static com.wooteco.sokdak.util.HttpMethodFixture.httpPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.wooteco.sokdak.util.AcceptanceTest;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
+import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;

@@ -5,7 +5,6 @@ import java.util.regex.Pattern;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import lombok.Getter;
-import org.hibernate.validator.constraints.Length;
 
 @Getter
 @Embeddable

@@ -1,8 +1,11 @@
+import { useReducer } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import Layout from '@/components/@styled/Layout';
+import ConfirmModal from '@/components/ConfirmModal';
 import Spinner from '@/components/Spinner';
 
+import useDeletePost from '@/hooks/queries/post/useDeletePost';
 import usePost from '@/hooks/queries/post/usePost';
 
 import * as Styled from './index.styles';
@@ -12,8 +15,16 @@ import timeConverter from '@/utils/timeConverter';
 
 const PostPage = () => {
   const navigate = useNavigate();
+
   const { id } = useParams();
   const { data, isLoading, isError } = usePost({ storeCode: id! });
+  const [isConfirmModalOpen, handleConfirmModal] = useReducer(state => !state, false);
+  const { mutate: deletePost } = useDeletePost({
+    onSuccess: () => {
+      handleConfirmModal();
+      navigate(-1);
+    },
+  });
 
   if (isLoading) {
     return (
@@ -51,7 +62,7 @@ const PostPage = () => {
             <Styled.UpdateButton onClick={() => navigate(PATH.UPDATE_POST, { state: { id, title, content } })}>
               수정
             </Styled.UpdateButton>
-            <Styled.DeleteButton>삭제</Styled.DeleteButton>
+            <Styled.DeleteButton onClick={handleConfirmModal}>삭제</Styled.DeleteButton>
           </Styled.PostController>
           <Styled.PostInfo>
             <Styled.Author>익명</Styled.Author>
@@ -66,6 +77,15 @@ const PostPage = () => {
           <Styled.ListButton to={PATH.HOME}>글 목록</Styled.ListButton>
         </Styled.ListButtonContainer>
       </Styled.Container>
+
+      {isConfirmModalOpen && (
+        <ConfirmModal
+          title="삭제"
+          notice="해당 글을 삭제하시겠습니까?"
+          handleCancel={handleConfirmModal}
+          handleConfirm={() => deletePost(id!)}
+        />
+      )}
     </Layout>
   );
 };

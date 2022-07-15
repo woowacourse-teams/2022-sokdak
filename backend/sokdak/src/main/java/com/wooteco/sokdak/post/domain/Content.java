@@ -1,12 +1,11 @@
 package com.wooteco.sokdak.post.domain;
 
-import com.wooteco.sokdak.post.exception.InvalidPostException;
+import com.wooteco.sokdak.post.exception.InvalidContentException;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Lob;
 import lombok.Getter;
-
 
 @Getter
 @Embeddable
@@ -28,13 +27,12 @@ public class Content {
 
     private void validate(String value) {
         if (value == null || value.isBlank()) {
-            throw new InvalidPostException();
+            throw new InvalidContentException();
         }
         if (value.length() > MAX_CONTENT_LENGTH) {
-            throw new InvalidPostException();
+            throw new InvalidContentException();
         }
     }
-
 
     @Override
     public boolean equals(Object o) {

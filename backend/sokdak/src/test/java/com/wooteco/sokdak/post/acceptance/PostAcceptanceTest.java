@@ -1,8 +1,8 @@
 package com.wooteco.sokdak.post.acceptance;
 
-import static com.wooteco.sokdak.post.util.HttpMethodFixture.getExceptionMessage;
-import static com.wooteco.sokdak.post.util.HttpMethodFixture.httpGet;
-import static com.wooteco.sokdak.post.util.HttpMethodFixture.httpPost;
+import static com.wooteco.sokdak.util.HttpMethodFixture.getExceptionMessage;
+import static com.wooteco.sokdak.util.HttpMethodFixture.httpGet;
+import static com.wooteco.sokdak.util.HttpMethodFixture.httpPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -10,6 +10,7 @@ import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsResponse;
+import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

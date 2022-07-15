@@ -29,7 +29,7 @@ class PostTest {
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
     @NullSource
-    void create_Exception_NoContent(String invalidContent){
+    void create_Exception_NoContent(String invalidContent) {
         assertThatThrownBy(
                 () -> Post.builder()
                         .title("제목")

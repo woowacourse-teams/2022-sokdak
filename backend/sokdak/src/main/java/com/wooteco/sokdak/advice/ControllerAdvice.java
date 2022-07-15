@@ -1,7 +1,5 @@
 package com.wooteco.sokdak.advice;
 
-import com.wooteco.sokdak.post.exception.BadRequestException;
-import com.wooteco.sokdak.post.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;

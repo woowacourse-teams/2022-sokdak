@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.post.exception;
+package com.wooteco.sokdak.advice;
 
 public class NotFoundException extends BusinessException {
 

@@ -60,7 +60,7 @@ class PostServiceTest {
         assertAll(
                 () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
                 () -> assertThat(response.getContent()).isEqualTo(post.getContent()),
-                () -> assertThat(response.getLocalDate()).isNotNull()
+                () -> assertThat(response.getCreatedAt()).isNotNull()
         );
     }
 

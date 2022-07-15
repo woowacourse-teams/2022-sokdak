@@ -18,8 +18,22 @@ spring:
     console:
       enabled: true
 
+  mail:
+    host:
+    username:
+    password:
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 logging:
   level:
     org:
       hibernate:
         type: trace
+
+

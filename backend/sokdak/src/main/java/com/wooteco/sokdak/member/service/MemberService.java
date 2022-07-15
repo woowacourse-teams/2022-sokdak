@@ -3,6 +3,7 @@ package com.wooteco.sokdak.member.service;
 import static com.wooteco.sokdak.member.util.Encryptor.encrypt;
 
 import com.wooteco.sokdak.member.domain.member.Member;
+import com.wooteco.sokdak.member.domain.member.Username;
 import com.wooteco.sokdak.member.dto.SignupRequest;
 import com.wooteco.sokdak.member.dto.UsernameUniqueResponse;
 import com.wooteco.sokdak.member.dto.VerificationRequest;
@@ -23,7 +24,7 @@ public class MemberService {
     }
 
     public UsernameUniqueResponse checkUnique(String username) {
-        boolean unique = !memberRepository.existsMemberByUsername(username);
+        boolean unique = !memberRepository.existsMemberByUsername(new Username(username));
         return new UsernameUniqueResponse(unique);
     }
 

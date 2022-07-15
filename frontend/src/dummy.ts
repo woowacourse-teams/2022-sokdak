@@ -120,3 +120,10 @@ export const postList: Post[] = [
     content: '좀 귀찮네',
   },
 ];
+
+export const memberList: Member[] = [
+  {
+    username: 'test',
+    password: 'test1234',
+  },
+];

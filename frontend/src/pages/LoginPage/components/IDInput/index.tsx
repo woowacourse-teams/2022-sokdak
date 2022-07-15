@@ -8,7 +8,7 @@ const IDInput = ({ value, setValue, error, setError }: ReturnType<typeof useInpu
         type="text"
         placeholder="아이디"
         handleInvalid={() => {
-          setError('정확한 아이디 형식을 입력해주세요');
+          setError('아이디를 입력해주세요.');
         }}
         required
       />

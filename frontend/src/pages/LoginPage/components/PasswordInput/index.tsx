@@ -8,7 +8,7 @@ const PasswordInput = ({ value, setValue, error, setError }: ReturnType<typeof u
         type="password"
         placeholder="비밀번호"
         handleInvalid={() => {
-          setError('정확한 비밀번호 형식을 입력해주세요');
+          setError('비밀번호를 입력해주세요.');
         }}
         required
       />

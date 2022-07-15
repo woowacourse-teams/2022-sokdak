@@ -13,6 +13,7 @@ import useLogin from '@/hooks/queries/member/useLogin';
 import * as Styled from './index.styles';
 
 import PATH from '@/constants/path';
+import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
 const LoginPage = () => {
   const [ID, setID] = useState('');
@@ -25,7 +26,7 @@ const LoginPage = () => {
 
   const { mutate } = useLogin({
     onSuccess: () => {
-      showSnackbar('로그인에 성공하였습니다');
+      showSnackbar(SNACKBAR_MESSAGE.SUCCESS_LOGIN);
       setIsLogin(true);
       setUserName(ID);
       navigate(PATH.HOME);
@@ -33,7 +34,7 @@ const LoginPage = () => {
     onError: () => {
       setIDError(' ');
       setPasswordError(' ');
-      showSnackbar('아이디와 비밀번호를 확인해주세요');
+      showSnackbar(SNACKBAR_MESSAGE.FAIL_LOGIN);
     },
   });
 

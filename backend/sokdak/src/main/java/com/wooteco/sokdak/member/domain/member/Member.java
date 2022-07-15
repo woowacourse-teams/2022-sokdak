@@ -18,10 +18,11 @@ public class Member {
 
     @Embedded
     private Username username;
-    @Embedded
-    private Password password;
+
     @Embedded
     private Nickname nickname;
+
+    private String password;
 
     public Member() {
     }
@@ -29,7 +30,7 @@ public class Member {
     @Builder
     public Member(String username, String password, String nickname) {
         this.username = new Username(username);
-        this.password = new Password(password);
+        this.password = password;
         this.nickname = new Nickname(nickname);
     }
 }

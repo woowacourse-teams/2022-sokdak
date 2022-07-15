@@ -24,10 +24,13 @@ public class Ticket {
     protected Ticket() {
     }
 
-
     @Builder
     private Ticket(String serialNumber, boolean used) {
         this.serialNumber = serialNumber;
         this.used = used;
+    }
+
+    public void use() {
+        this.used = true;
     }
 }

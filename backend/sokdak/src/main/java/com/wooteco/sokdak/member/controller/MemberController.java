@@ -2,7 +2,7 @@ package com.wooteco.sokdak.member.controller;
 
 import com.wooteco.sokdak.member.dto.EmailRequest;
 import com.wooteco.sokdak.member.dto.SignupRequest;
-import com.wooteco.sokdak.member.dto.UsernameUniqueResponse;
+import com.wooteco.sokdak.member.dto.UniqueResponse;
 import com.wooteco.sokdak.member.dto.VerificationRequest;
 import com.wooteco.sokdak.member.service.EmailService;
 import com.wooteco.sokdak.member.service.MemberService;
@@ -40,10 +40,16 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/signup/exists")
-    public ResponseEntity<UsernameUniqueResponse> validateUniqueUsername(@RequestParam String username) {
-        UsernameUniqueResponse usernameUniqueResponse = memberService.checkUnique(username);
-        return ResponseEntity.ok(usernameUniqueResponse);
+    @GetMapping(value = "/signup/exists", params = "username")
+    public ResponseEntity<UniqueResponse> validateUniqueUsername(@RequestParam String username) {
+        UniqueResponse uniqueResponse = memberService.checkUniqueUsername(username);
+        return ResponseEntity.ok(uniqueResponse);
+    }
+
+    @GetMapping(value = "/signup/exists", params = "nickname")
+    public ResponseEntity<UniqueResponse> validateUniqueNickname(@RequestParam String nickname) {
+        UniqueResponse uniqueResponse = memberService.checkUniqueNickname(nickname);
+        return ResponseEntity.ok(uniqueResponse);
     }
 
     @PostMapping("/signup")

@@ -25,7 +25,9 @@ const Input = ({ placeholder, type, handleInvalid, required }: InputProps) => {
         handleInvalid();
       }}
       onFocus={() => {
-        setValue('');
+        if (error) {
+          setValue('');
+        }
       }}
       onKeyDown={() => {
         setError('');

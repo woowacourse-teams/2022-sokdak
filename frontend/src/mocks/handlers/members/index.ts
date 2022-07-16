@@ -37,6 +37,26 @@ const memberHandler = [
 
     return res(ctx.status(204));
   }),
+
+  rest.post<{ email: string; code: string }>('/members/signup/email/verification', (req, res, ctx) => {
+    const { email, code } = req.body;
+
+    const targetEmail = validMemberEmail.find(member => member.email === email);
+
+    if (!targetEmail) {
+      return res(ctx.status(400), ctx.json({ message: '우아한테크코스 크루가 아닙니다.' }));
+    }
+
+    if (targetEmail.isSignedUp) {
+      return res(ctx.status(400), ctx.json({ message: '이미 가입된 크루입니다.' }));
+    }
+
+    if (targetEmail.code !== code) {
+      return res(ctx.status(400), ctx.json({ message: '잘못된 인증번호입니다.' }));
+    }
+
+    return res(ctx.status(204));
+  }),
 ];
 
 export default memberHandler;

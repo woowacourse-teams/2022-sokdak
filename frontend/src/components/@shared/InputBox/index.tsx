@@ -6,12 +6,12 @@ import SubmitButton from './components/SubmitButton';
 
 import { InputContextProvider } from './useInputContext';
 
-interface InputBoxProps {
+interface InputBoxProps<T = string> {
   children: React.ReactNode;
   value: string;
   setValue: Dispatch<SetStateAction<string>>;
-  error: string;
-  setError: Dispatch<SetStateAction<string>>;
+  error: T;
+  setError: Dispatch<SetStateAction<T>>;
 }
 
 const InputBox = ({ children, value, setValue, error, setError }: InputBoxProps) => {

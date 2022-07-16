@@ -4,8 +4,12 @@ interface SubmitButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement
   children: React.ReactNode;
 }
 
-const SubmitButton = ({ children, onClick }: SubmitButtonProps) => {
-  return <Styled.Button onClick={onClick}>{children}</Styled.Button>;
+const SubmitButton = ({ children, onClick, disabled }: SubmitButtonProps) => {
+  return (
+    <Styled.Button onClick={onClick} disabled={disabled}>
+      {children}
+    </Styled.Button>
+  );
 };
 
 export default SubmitButton;

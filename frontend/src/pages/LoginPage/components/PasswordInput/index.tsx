@@ -1,7 +1,21 @@
+import { Dispatch, SetStateAction } from 'react';
+
 import InputBox from '@/components/@shared/InputBox';
 import { useInput } from '@/components/@shared/InputBox/useInput';
 
-const PasswordInput = ({ value, setValue, error, setError }: ReturnType<typeof useInput>) => {
+interface PasswordInputProps extends ReturnType<typeof useInput> {
+  isAnimationActive: boolean;
+  setIsAnimationActive: Dispatch<SetStateAction<boolean>>;
+}
+
+const PasswordInput = ({
+  value,
+  setValue,
+  error,
+  setError,
+  isAnimationActive,
+  setIsAnimationActive,
+}: PasswordInputProps) => {
   return (
     <InputBox value={value} setValue={setValue} error={error} setError={setError}>
       <InputBox.Input
@@ -10,6 +24,8 @@ const PasswordInput = ({ value, setValue, error, setError }: ReturnType<typeof u
         handleInvalid={() => {
           setError('비밀번호를 입력해주세요.');
         }}
+        isAnimationActive={isAnimationActive}
+        setIsAnimationActive={setIsAnimationActive}
         required
       />
       <InputBox.ErrorMessage />

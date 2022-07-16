@@ -3,6 +3,7 @@ package com.wooteco.sokdak.post.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
@@ -77,16 +78,26 @@ class PostServiceTest {
     @DisplayName("특정 페이지 글 목록 조회 기능")
     @Test
     void findPosts() {
+        Post post2 = Post.builder()
+                .title("제목2")
+                .content("본문2")
+                .build();
+        Post post3 = Post.builder()
+                .title("제목3")
+                .content("본문3")
+                .build();
         postRepository.save(POST);
-        Pageable pageable = PageRequest.of(0, 3);
+        postRepository.save(post2);
+        postRepository.save(post3);
+        Pageable pageable = PageRequest.of(0, 2, DESC, "createdAt");
 
         PostsResponse postsResponse = postService.findPosts(pageable);
 
         assertAll(
-                () -> assertThat(postsResponse.getPosts()).hasSize(1),
+                () -> assertThat(postsResponse.getPosts()).hasSize(2),
                 () -> assertThat(postsResponse.getPosts()).usingRecursiveComparison()
                         .ignoringFields("id", "createdAt")
-                        .isEqualTo(List.of(PostResponse.from(POST)))
+                        .isEqualTo(List.of(PostResponse.from(post3), PostResponse.from(post2)))
         );
     }
 

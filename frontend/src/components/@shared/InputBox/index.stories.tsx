@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import Layout from '@/components/@styled/Layout';
 
 import InputBox from '.';
@@ -11,6 +13,7 @@ export default {
 
 const Template: ComponentStory<typeof InputBox> = args => {
   const { value, setValue, error, setError } = useInput();
+  const [isAnimationActive, setIsAnimationActive] = useState(false);
   const handleInvalid = () => {
     setError('정확한 이메일 형식을 입력해주세요');
   };
@@ -18,7 +21,14 @@ const Template: ComponentStory<typeof InputBox> = args => {
     <Layout>
       <InputBox value={value} setValue={setValue} error={error} setError={setError}>
         <form style={{ display: 'grid', gridTemplateColumns: '4fr 1fr', alignItems: 'center', gap: '8px' }}>
-          <InputBox.Input type="email" placeholder="이메일" handleInvalid={handleInvalid} required />
+          <InputBox.Input
+            type="email"
+            placeholder="이메일"
+            handleInvalid={handleInvalid}
+            required
+            isAnimationActive={isAnimationActive}
+            setIsAnimationActive={setIsAnimationActive}
+          />
           <InputBox.SubmitButton
             onClick={() => {
               console.log('click');

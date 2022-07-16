@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 
 import * as Styled from './index.styles';
 
@@ -6,22 +6,36 @@ import { useInputContext } from '../../useInputContext';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   hasError?: boolean;
+  isAnimationActive?: boolean;
+  setIsAnimationActive?: Dispatch<SetStateAction<boolean>>;
   handleInvalid: () => void;
 }
 
-const Input = ({ placeholder, type, handleInvalid, required }: InputProps) => {
+const Input = ({
+  placeholder,
+  type,
+  handleInvalid,
+  required,
+  onChange,
+  onKeyDown,
+  isAnimationActive,
+  disabled,
+  setIsAnimationActive,
+}: InputProps) => {
   const { value, setValue, error, setError } = useInputContext();
   return (
     <Styled.Input
       value={value}
-      onChange={e => {
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
         setValue(e.currentTarget.value);
+        if (onChange) onChange(e);
       }}
       hasError={error !== ''}
       placeholder={placeholder}
       type={type}
       onInvalid={e => {
         e.preventDefault();
+        if (setIsAnimationActive) setIsAnimationActive(true);
         handleInvalid();
       }}
       onFocus={() => {
@@ -29,10 +43,16 @@ const Input = ({ placeholder, type, handleInvalid, required }: InputProps) => {
           setValue('');
         }
       }}
-      onKeyDown={() => {
-        setError('');
+      isAnimationActive={isAnimationActive}
+      onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (onKeyDown) onKeyDown(e);
+        if (!onKeyDown) setError('');
       }}
       required={required}
+      onAnimationEnd={() => {
+        if (setIsAnimationActive) setIsAnimationActive(false);
+      }}
+      disabled={disabled}
     />
   );
 };

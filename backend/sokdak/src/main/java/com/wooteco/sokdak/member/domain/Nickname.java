@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.member.domain.member;
+package com.wooteco.sokdak.member.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

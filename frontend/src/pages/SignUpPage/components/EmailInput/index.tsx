@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useLayoutEffect } from 'react';
 
 import InputBox from '@/components/@shared/InputBox';
 import { useInput } from '@/components/@shared/InputBox/useInput';
@@ -22,15 +22,17 @@ const EmailInput = ({ value, setValue, error, setError, isAnimationActive, setIs
       setIsAnimationActive(true);
     },
   });
-
-  const handleChangeEmailInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  useLayoutEffect(() => {
+    if (!value) {
+      return;
+    }
     if (!isValidEmail(value)) {
       setError('올바른 이메일 형식을 입력해주세요');
     }
     if (isValidEmail(value)) {
       setError('');
     }
-  };
+  }, [value]);
 
   const handleEmailFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -47,7 +49,6 @@ const EmailInput = ({ value, setValue, error, setError, isAnimationActive, setIs
           }}
           type="email"
           placeholder="이메일"
-          onChange={handleChangeEmailInput}
           onKeyDown={handleKeyDown}
           isAnimationActive={isAnimationActive}
           setIsAnimationActive={setIsAnimationActive}

@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useContext } from 'react';
+import React, { Dispatch, SetStateAction, useContext, useLayoutEffect } from 'react';
 
 import InputBox from '@/components/@shared/InputBox';
 import { useInput } from '@/components/@shared/InputBox/useInput';
@@ -38,14 +38,17 @@ const IDInput = ({ value, setValue, error, setError, isAnimationActive, setIsAni
     },
   });
 
-  const handleChangeIDInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  useLayoutEffect(() => {
+    if (!value) {
+      return;
+    }
     if (!isValidID(value)) {
       setError('아이디는 4자에서 16자 사이입니다.');
     }
     if (isValidID(value)) {
       setError('');
     }
-  };
+  }, [value]);
 
   const handleIDCheckForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -60,7 +63,6 @@ const IDInput = ({ value, setValue, error, setError, isAnimationActive, setIsAni
             setError('아이디를 입력해주세요');
           }}
           placeholder="아이디"
-          onChange={handleChangeIDInput}
           isAnimationActive={isAnimationActive}
           setIsAnimationActive={setIsAnimationActive}
           required

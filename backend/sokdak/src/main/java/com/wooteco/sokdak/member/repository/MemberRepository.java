@@ -1,8 +1,8 @@
 package com.wooteco.sokdak.member.repository;
 
-import com.wooteco.sokdak.member.domain.member.Member;
-import com.wooteco.sokdak.member.domain.member.Nickname;
-import com.wooteco.sokdak.member.domain.member.Username;
+import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.Nickname;
+import com.wooteco.sokdak.member.domain.Username;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

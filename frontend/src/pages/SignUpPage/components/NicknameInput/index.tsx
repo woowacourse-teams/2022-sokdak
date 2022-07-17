@@ -1,32 +1,39 @@
-import React, { Dispatch, SetStateAction, useContext } from 'react';
+import React, { Dispatch, SetStateAction, useContext, useEffect, useLayoutEffect } from 'react';
 
 import InputBox from '@/components/@shared/InputBox';
 import { useInput } from '@/components/@shared/InputBox/useInput';
 
 import SnackbarContext from '@/context/Snackbar';
 
-import useIdCheck from '@/hooks/queries/member/useIDCheck';
+import useNicknameCheck from '@/hooks/queries/member/useNicknameCheck';
 
-import { isValidID } from '@/utils/regExp';
+import { isValidNickname } from '@/utils/regExp';
 
-import * as Styled from '../index.styles';
+import * as Styled from '../../index.styles';
 
-interface IDInputProps extends ReturnType<typeof useInput> {
+interface NicknameInputProps extends ReturnType<typeof useInput> {
   isAnimationActive: boolean;
   setIsAnimationActive: Dispatch<SetStateAction<boolean>>;
 }
 
-const IDInput = ({ value, setValue, error, setError, isAnimationActive, setIsAnimationActive }: IDInputProps) => {
+const NicknameInput = ({
+  value,
+  setValue,
+  error,
+  setError,
+  isAnimationActive,
+  setIsAnimationActive,
+}: NicknameInputProps) => {
   const { showSnackbar } = useContext(SnackbarContext);
-  const { refetch } = useIdCheck({
+  const { refetch } = useNicknameCheck({
     storeCode: [value],
     options: {
       onSuccess: data => {
         if (data) {
-          showSnackbar('사용할 수 있는 아이디입니다.');
+          showSnackbar('사용할 수 있는 닉네임입니다.');
         }
         if (!data) {
-          setError('중복된 아이디입니다.');
+          setError('중복된 닉네임입니다.');
           setIsAnimationActive(true);
         }
       },
@@ -38,14 +45,17 @@ const IDInput = ({ value, setValue, error, setError, isAnimationActive, setIsAni
     },
   });
 
-  const handleChangeIDInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!isValidID(value)) {
-      setError('아이디는 4자에서 16자 사이입니다.');
+  useLayoutEffect(() => {
+    if (!value) {
+      return;
     }
-    if (isValidID(value)) {
+    if (!isValidNickname(value)) {
+      setError('닉네임는 4자에서 16자 사이입니다.');
+    }
+    if (isValidNickname(value)) {
       setError('');
     }
-  };
+  }, [value]);
 
   const handleIDCheckForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -57,10 +67,9 @@ const IDInput = ({ value, setValue, error, setError, isAnimationActive, setIsAni
       <Styled.InputForm onSubmit={handleIDCheckForm}>
         <InputBox.Input
           handleInvalid={() => {
-            setError('아이디를 입력해주세요');
+            setError('닉네임를 입력해주세요');
           }}
-          placeholder="아이디"
-          onChange={handleChangeIDInput}
+          placeholder="닉네임"
           isAnimationActive={isAnimationActive}
           setIsAnimationActive={setIsAnimationActive}
           required
@@ -72,4 +81,4 @@ const IDInput = ({ value, setValue, error, setError, isAnimationActive, setIsAni
   );
 };
 
-export default IDInput;
+export default NicknameInput;

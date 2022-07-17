@@ -5,7 +5,7 @@ import { useInput } from '@/components/@shared/InputBox/useInput';
 
 import useVerificationCodeCheck from '@/hooks/queries/member/useVerificationCodeCheck';
 
-import * as Styled from '../index.styles';
+import * as Styled from '../../index.styles';
 
 interface VerificationCodeInput extends ReturnType<typeof useInput> {
   isAnimationActive: boolean;

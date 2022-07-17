@@ -7,7 +7,7 @@ import useEmailCheck from '@/hooks/queries/member/useEmailCheck';
 
 import { isValidEmail } from '@/utils/regExp';
 
-import * as Styled from '../index.styles';
+import * as Styled from '../../index.styles';
 
 interface EmailInputProps extends ReturnType<typeof useInput> {
   isAnimationActive: boolean;

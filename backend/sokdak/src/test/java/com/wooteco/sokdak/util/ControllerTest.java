@@ -3,6 +3,8 @@ package com.wooteco.sokdak.util;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 
+import com.wooteco.sokdak.auth.controller.AuthController;
+import com.wooteco.sokdak.auth.service.AuthService;
 import com.wooteco.sokdak.member.controller.MemberController;
 import com.wooteco.sokdak.member.service.EmailSender;
 import com.wooteco.sokdak.member.service.EmailService;
@@ -22,7 +24,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 @WebMvcTest({
         PostController.class,
-        MemberController.class
+        MemberController.class,
+        AuthController.class
 })
 @ExtendWith(RestDocumentationExtension.class)
 public class ControllerTest {
@@ -40,6 +43,9 @@ public class ControllerTest {
 
     @MockBean
     protected EmailService emailService;
+
+    @MockBean
+    protected AuthService authService;
 
     @BeforeEach
     void setRestDocs(WebApplicationContext webApplicationContext,

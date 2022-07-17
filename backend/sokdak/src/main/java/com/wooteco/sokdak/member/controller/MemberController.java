@@ -30,7 +30,7 @@ public class MemberController {
 
     @PostMapping("/signup/email")
     public ResponseEntity<Void> sendEmail(@RequestBody EmailRequest emailRequest) {
-        emailService.sendEmail(emailRequest);
+        emailService.sendCodeToValidUser(emailRequest);
         return ResponseEntity.noContent().build();
     }
 

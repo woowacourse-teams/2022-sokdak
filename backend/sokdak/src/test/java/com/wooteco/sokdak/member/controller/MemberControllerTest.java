@@ -41,7 +41,7 @@ class MemberControllerTest extends ControllerTest {
         EmailRequest emailRequest = new EmailRequest("test@gmail.com");
         doThrow(new NotWootecoMemberException())
                 .when(emailService)
-                .sendEmail(any());
+                .sendCodeToValidUser(any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -60,7 +60,7 @@ class MemberControllerTest extends ControllerTest {
         EmailRequest emailRequest = new EmailRequest("test@gmail.com");
         doThrow(new TicketUsedException())
                 .when(emailService)
-                .sendEmail(any());
+                .sendCodeToValidUser(any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

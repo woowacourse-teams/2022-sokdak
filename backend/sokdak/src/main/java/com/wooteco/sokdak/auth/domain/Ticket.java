@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.member.domain.auth;
+package com.wooteco.sokdak.auth.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

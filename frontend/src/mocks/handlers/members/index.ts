@@ -117,6 +117,8 @@ const memberHandler = [
       return res(ctx.status(400), ctx.json({ message: '이미 존재하는 닉네임입니다.' }));
     }
 
+    memberList.push({ username, password });
+
     return res(ctx.status(201));
   }),
 ];

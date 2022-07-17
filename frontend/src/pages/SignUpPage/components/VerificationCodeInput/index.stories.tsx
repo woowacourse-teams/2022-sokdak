@@ -14,6 +14,9 @@ const Template = () => {
   const { error, setError, setValue, value } = useInput();
   const [isAnimationActive, setIsAnimationActive] = useState(false);
   const email = 'test1@gmail.com';
+  const [isEmailSet, setIsEmailSet] = useState(false);
+  const [isSet, setIsSet] = useState(false);
+
   return (
     <VerificationCodeInput
       email={email}
@@ -23,6 +26,9 @@ const Template = () => {
       setError={setError}
       isAnimationActive={isAnimationActive}
       setIsAnimationActive={setIsAnimationActive}
+      isVerified={isSet}
+      isEmailSet={isEmailSet}
+      setIsVerified={setIsSet}
     />
   );
 };

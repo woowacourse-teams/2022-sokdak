@@ -22,6 +22,7 @@ const Template = () => {
       setError={setError}
       isAnimationActive={isAnimationActive}
       setIsAnimationActive={setIsAnimationActive}
+      password={'test1234!'}
     />
   );
 };

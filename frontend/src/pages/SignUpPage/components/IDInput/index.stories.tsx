@@ -13,6 +13,7 @@ export default {
 const Template = () => {
   const { error, setError, setValue, value } = useInput();
   const [isAnimationActive, setIsAnimationActive] = useState(false);
+  const [isSet, setIsSet] = useState(false);
 
   return (
     <IDInput
@@ -22,6 +23,8 @@ const Template = () => {
       setError={setError}
       isAnimationActive={isAnimationActive}
       setIsAnimationActive={setIsAnimationActive}
+      isSet={isSet}
+      setIsSet={setIsSet}
     />
   );
 };

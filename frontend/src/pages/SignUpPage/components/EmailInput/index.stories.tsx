@@ -13,6 +13,8 @@ export default {
 const Template = () => {
   const { error, setError, setValue, value } = useInput();
   const [isAnimationActive, setIsAnimationActive] = useState(false);
+  const [isSet, setIsSet] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
 
   return (
     <EmailInput
@@ -22,6 +24,9 @@ const Template = () => {
       setError={setError}
       isAnimationActive={isAnimationActive}
       setIsAnimationActive={setIsAnimationActive}
+      isSet={isSet}
+      setIsSet={setIsSet}
+      isVerified={isVerified}
     />
   );
 };

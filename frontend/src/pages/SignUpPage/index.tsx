@@ -44,6 +44,9 @@ const SignUpPage = () => {
   const [isNicknameAnimationActive, setIsNicknameAnimationActive] = useState(false);
   const [isPasswordConfirmationAnimationActive, setIsPasswordConfirmationAnimationActive] = useState(false);
 
+  const [isEmailSet, setIsEmailSet] = useState(false);
+  const [isVerificationCodeSet, setIsVerificationCodeSet] = useState(false);
+
   const { showSnackbar } = useContext(SnackbarContext);
   const navigate = useNavigate();
 
@@ -68,6 +71,8 @@ const SignUpPage = () => {
     mutate({ username: ID, password, code: verificationCode, email, nickname, passwordConfirmation });
   };
 
+  const handleVerificationCodeSet = () => {};
+
   return (
     <Layout>
       <Styled.SignUpForm>
@@ -79,18 +84,23 @@ const SignUpPage = () => {
           setError={setEmailError}
           isAnimationActive={isLoginAnimationActive}
           setIsAnimationActive={setIsLoginAnimationActive}
+          isSet={isEmailSet}
+          setIsSet={setIsEmailSet}
+          isVerified={isVerificationCodeSet}
         />
-        <Styled.VerificationCodeContainer>
-          <VerificationCodeInput
-            value={verificationCode}
-            setValue={setVerificationCode}
-            error={verificationCodeError}
-            setError={setVerificationCodeError}
-            isAnimationActive={isVerificationCodeAnimationActive}
-            setIsAnimationActive={setIsVerificationCodeAnimationActive}
-            email={email}
-          />
-        </Styled.VerificationCodeContainer>
+        <VerificationCodeInput
+          value={verificationCode}
+          setValue={setVerificationCode}
+          error={verificationCodeError}
+          setError={setVerificationCodeError}
+          isAnimationActive={isVerificationCodeAnimationActive}
+          setIsAnimationActive={setIsVerificationCodeAnimationActive}
+          email={email}
+          setIsVerified={setIsVerificationCodeSet}
+          isEmailSet={isEmailSet}
+          isVerified={isVerificationCodeSet}
+        />
+
         <IDInput
           isAnimationActive={isIDAnimationActive}
           setIsAnimationActive={setIsIDAnimationActive}

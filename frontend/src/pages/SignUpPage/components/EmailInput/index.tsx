@@ -12,11 +12,26 @@ import * as Styled from '../../index.styles';
 interface EmailInputProps extends ReturnType<typeof useInput> {
   isAnimationActive: boolean;
   setIsAnimationActive: Dispatch<SetStateAction<boolean>>;
+  isSet: boolean;
+  setIsSet: Dispatch<SetStateAction<boolean>>;
+  isVerified: boolean;
 }
 
-const EmailInput = ({ value, setValue, error, setError, isAnimationActive, setIsAnimationActive }: EmailInputProps) => {
+const EmailInput = ({
+  value,
+  setValue,
+  error,
+  setError,
+  isAnimationActive,
+  setIsAnimationActive,
+  isSet,
+  setIsSet,
+  isVerified,
+}: EmailInputProps) => {
   const { mutate } = useEmailCheck({
-    onSuccess: () => {},
+    onSuccess: () => {
+      setIsSet(true);
+    },
     onError(error) {
       setError(error.response?.data.message!);
       setIsAnimationActive(true);
@@ -54,7 +69,9 @@ const EmailInput = ({ value, setValue, error, setError, isAnimationActive, setIs
           setIsAnimationActive={setIsAnimationActive}
           required
         />
-        <InputBox.SubmitButton disabled={error !== '' || value === ''}>인증번호 받기</InputBox.SubmitButton>
+        <InputBox.SubmitButton disabled={error !== '' || value === '' || isSet}>
+          {isSet ? (isVerified ? '인증 완료' : '인증 중') : '인증번호 받기'}
+        </InputBox.SubmitButton>
       </Styled.InputForm>
       <InputBox.ErrorMessage />
     </InputBox>

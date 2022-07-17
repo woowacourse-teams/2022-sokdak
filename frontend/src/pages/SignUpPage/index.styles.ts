@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 
+import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 
 export const InputForm = styled.form`
@@ -52,6 +53,35 @@ export const SignUpText = styled.p`
   border-bottom: 1px solid ${props => props.theme.colors.gray_50};
 `;
 
-export const VerificationCodeContainer = styled.div`
+const sizeUp = keyframes`
+  from{
+    display: none;
+    height: 0;
+    opacity: 0;
+  }
+  to{
+    display: block;
+    height: 65px;
+    opacity: 1;
+  }
+`;
+
+const sizeDown = keyframes`
+  from{
+    display: block;
+    height: 65px;
+    opacity: 1;
+  }
+  to{
+    display: none;
+    height: 0;
+    opacity: 0;
+  }
+`;
+
+export const VerificationCodeContainer = styled.div<{ isEmailSet: boolean; isVerified: boolean }>`
   width: 100%;
+
+  animation: ${props => (props.isEmailSet ? (props.isVerified ? sizeDown : sizeUp) : null)} 2s;
+  animation-fill-mode: forwards;
 `;

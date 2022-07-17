@@ -21,6 +21,7 @@ const Input = ({
   isAnimationActive,
   disabled,
   setIsAnimationActive,
+  onBlur,
 }: InputProps) => {
   const { value, setValue, error, setError } = useInputContext();
   return (
@@ -53,6 +54,9 @@ const Input = ({
         if (setIsAnimationActive) setIsAnimationActive(false);
       }}
       disabled={disabled}
+      onBlur={e => {
+        if (onBlur) onBlur(e);
+      }}
     />
   );
 };

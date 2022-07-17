@@ -11,7 +11,7 @@ public class Encryptor {
     public Encryptor() {
     }
 
-    public static String encrypt(String text) {
+    public String encrypt(String text) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
             messageDigest.update(text.getBytes());
@@ -21,7 +21,7 @@ public class Encryptor {
         }
     }
 
-    private static String bytesToHex(byte[] bytes) {
+    private String bytesToHex(byte[] bytes) {
         StringBuilder builder = new StringBuilder();
         for (byte b : bytes) {
             builder.append(String.format("%02x", b));

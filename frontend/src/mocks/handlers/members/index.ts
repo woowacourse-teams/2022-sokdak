@@ -68,6 +68,16 @@ const memberHandler = [
       }
       return res(ctx.status(200), ctx.json({ unique: true }));
     }
+    if (req.url.searchParams.has('nickname')) {
+      const nickname = req.url.searchParams.get('nickname');
+
+      const existedID = validMemberEmail.find(member => member.nickname === nickname);
+
+      if (existedID) {
+        return res(ctx.status(200), ctx.json({ unique: false }));
+      }
+      return res(ctx.status(200), ctx.json({ unique: true }));
+    }
   }),
 ];
 

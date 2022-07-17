@@ -46,6 +46,8 @@ const SignUpPage = () => {
 
   const [isEmailSet, setIsEmailSet] = useState(false);
   const [isVerificationCodeSet, setIsVerificationCodeSet] = useState(false);
+  const [isIDSet, setIDSet] = useState(false);
+  const [isNicknameSet, setIsNicknameSet] = useState(false);
 
   const { showSnackbar } = useContext(SnackbarContext);
   const navigate = useNavigate();
@@ -70,8 +72,6 @@ const SignUpPage = () => {
     setPasswordError('');
     mutate({ username: ID, password, code: verificationCode, email, nickname, passwordConfirmation });
   };
-
-  const handleVerificationCodeSet = () => {};
 
   return (
     <Layout>
@@ -108,6 +108,8 @@ const SignUpPage = () => {
           setValue={setID}
           error={IDError}
           setError={setIDError}
+          isSet={isIDSet}
+          setIsSet={setIDSet}
         />
         <NicknameInput
           isAnimationActive={isNicknameAnimationActive}
@@ -116,6 +118,8 @@ const SignUpPage = () => {
           setValue={setNickname}
           error={nicknameError}
           setError={setNicknameError}
+          isSet={isNicknameSet}
+          setIsSet={setIsNicknameSet}
         />
         <PasswordInput
           isAnimationActive={isPasswordAnimationActive}
@@ -132,8 +136,11 @@ const SignUpPage = () => {
           setValue={setPasswordConfirmation}
           error={passwordConfirmationError}
           setError={setPasswordConfirmationError}
+          password={password}
         />
-        <Styled.SubmitButton onClick={handleSubmitButton}>회원가입</Styled.SubmitButton>
+        <Styled.SubmitButton onClick={handleSubmitButton} disabled={!isEmailSet || !isIDSet || !isNicknameSet}>
+          회원가입
+        </Styled.SubmitButton>
         <Styled.SignUpText>
           이미 회원이신가요? <Styled.LoginLink to={PATH.LOGIN}>로그인하기</Styled.LoginLink>
         </Styled.SignUpText>

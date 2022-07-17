@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useLayoutEffect } from 'react';
 
 import InputBox from '@/components/@shared/InputBox';
 import { useInput } from '@/components/@shared/InputBox/useInput';
@@ -10,6 +10,7 @@ import * as Styled from '../../index.styles';
 interface PasswordConfirmationInputProps extends ReturnType<typeof useInput> {
   isAnimationActive: boolean;
   setIsAnimationActive: Dispatch<SetStateAction<boolean>>;
+  password: string;
 }
 
 const PasswordConfirmationInput = ({
@@ -19,12 +20,24 @@ const PasswordConfirmationInput = ({
   setError,
   isAnimationActive,
   setIsAnimationActive,
+  password,
 }: PasswordConfirmationInputProps) => {
   const handleBlur = () => {
     if (!isValidPassword(value)) {
       setError('비밀번호는 영어,숫자,특수문자가 포함되어 8자에서 20자 이하입니다.');
     }
   };
+
+  useLayoutEffect(() => {
+    if (!value) return;
+    if (value !== password) {
+      setError('비밀번호와 일치하지 않습니다');
+    }
+
+    if (value === password) {
+      setError('');
+    }
+  }, [value]);
 
   return (
     <InputBox value={value} setValue={setValue} error={error} setError={setError}>

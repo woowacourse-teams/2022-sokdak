@@ -37,6 +37,10 @@ export const SubmitButton = styled.button`
   align-items: center;
   justify-content: center;
   margin-top: 30px;
+  :disabled {
+    background-color: ${props => props.theme.colors.gray_300};
+    cursor: not-allowed;
+  }
 `;
 
 export const LoginLink = styled(Link)`

@@ -128,7 +128,7 @@ export const memberList: Member[] = [
   },
 ];
 
-export const validMemberEmail: { email: string; isSignedUp: boolean; code: string }[] = [
-  { email: 'test@gmail.com', isSignedUp: true, code: 'SD32DS1' },
+export const validMemberEmail: { email: string; isSignedUp: boolean; code: string; ID?: string }[] = [
+  { email: 'test@gmail.com', isSignedUp: true, code: 'SD32DS1', ID: 'test' },
   { email: 'test1@gmail.com', isSignedUp: false, code: 'CODE123' },
 ];

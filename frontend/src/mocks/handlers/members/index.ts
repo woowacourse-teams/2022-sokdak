@@ -57,6 +57,18 @@ const memberHandler = [
 
     return res(ctx.status(204));
   }),
+  rest.get('members/signup/exists', (req, res, ctx) => {
+    if (req.url.searchParams.has('username')) {
+      const id = req.url.searchParams.get('username');
+
+      const existedID = validMemberEmail.find(member => member.ID === id);
+
+      if (existedID) {
+        return res(ctx.status(200), ctx.json({ unique: false }));
+      }
+      return res(ctx.status(200), ctx.json({ unique: true }));
+    }
+  }),
 ];
 
 export default memberHandler;

@@ -1,10 +1,15 @@
-package com.wooteco.sokdak.member.util;
+package com.wooteco.sokdak.auth.service;
 
 import com.wooteco.sokdak.member.exception.ExternalLibraryException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Encryptor {
+
+    public Encryptor() {
+    }
 
     public static String encrypt(String text) {
         try {

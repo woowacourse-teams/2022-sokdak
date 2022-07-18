@@ -11,19 +11,8 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   handleInvalid: () => void;
 }
 
-const Input = ({
-  placeholder,
-  type,
-  handleInvalid,
-  required,
-  onChange,
-  onKeyDown,
-  isAnimationActive,
-  disabled,
-  setIsAnimationActive,
-  onBlur,
-}: InputProps) => {
-  const { value, setValue, error, setError } = useInputContext();
+const Input = ({ placeholder, type, handleInvalid, required, onChange, onKeyDown, disabled, onBlur }: InputProps) => {
+  const { value, setValue, error, setError, isAnimationActive, setIsAnimationActive } = useInputContext();
   return (
     <Styled.Input
       value={value}

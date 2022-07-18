@@ -20,29 +20,54 @@ import PATH from '@/constants/path';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
 const SignUpPage = () => {
-  const { value: email, setValue: setEmail, error: emailError, setError: setEmailError } = useInput();
+  const {
+    value: email,
+    setValue: setEmail,
+    error: emailError,
+    setError: setEmailError,
+    isAnimationActive: isEmailAnimationActive,
+    setIsAnimationActive: setIsEmailAnimationActive,
+  } = useInput();
   const {
     value: verificationCode,
     setValue: setVerificationCode,
     error: verificationCodeError,
     setError: setVerificationCodeError,
+    isAnimationActive: isVerificationCodeAnimationActive,
+    setIsAnimationActive: setIsVerificationCodeAnimationActive,
   } = useInput();
-  const { value: ID, setValue: setID, error: IDError, setError: setIDError } = useInput();
-  const { value: password, setValue: setPassword, error: passwordError, setError: setPasswordError } = useInput();
-  const { value: nickname, setValue: setNickname, error: nicknameError, setError: setNicknameError } = useInput();
+  const {
+    value: ID,
+    setValue: setID,
+    error: IDError,
+    setError: setIDError,
+    isAnimationActive: isIDAnimationActive,
+    setIsAnimationActive: setIsIDAnimationActive,
+  } = useInput();
+  const {
+    value: password,
+    setValue: setPassword,
+    error: passwordError,
+    setError: setPasswordError,
+    isAnimationActive: isPasswordAnimationActive,
+    setIsAnimationActive: setIsPasswordAnimationActive,
+  } = useInput();
+  const {
+    value: nickname,
+    setValue: setNickname,
+    error: nicknameError,
+    setError: setNicknameError,
+    isAnimationActive: isNicknameAnimationActive,
+    setIsAnimationActive: setIsNicknameAnimationActive,
+  } = useInput();
   const {
     value: passwordConfirmation,
     setValue: setPasswordConfirmation,
     error: passwordConfirmationError,
     setError: setPasswordConfirmationError,
+    isAnimationActive: isPasswordConfirmationAnimationActive,
+    setIsAnimationActive: setIsPasswordConfirmationAnimationActive,
   } = useInput();
-
-  const [isLoginAnimationActive, setIsLoginAnimationActive] = useState(false);
-  const [isPasswordAnimationActive, setIsPasswordAnimationActive] = useState(false);
-  const [isVerificationCodeAnimationActive, setIsVerificationCodeAnimationActive] = useState(false);
-  const [isIDAnimationActive, setIsIDAnimationActive] = useState(false);
-  const [isNicknameAnimationActive, setIsNicknameAnimationActive] = useState(false);
-  const [isPasswordConfirmationAnimationActive, setIsPasswordConfirmationAnimationActive] = useState(false);
 
   const [isEmailSet, setIsEmailSet] = useState(false);
   const [isVerificationCodeSet, setIsVerificationCodeSet] = useState(false);
@@ -58,7 +83,7 @@ const SignUpPage = () => {
       navigate(PATH.LOGIN);
     },
     onError: error => {
-      setIsLoginAnimationActive(true);
+      setIsEmailAnimationActive(true);
       setIsPasswordAnimationActive(true);
       setIsIDAnimationActive(true);
       setIsNicknameAnimationActive(true);
@@ -83,8 +108,8 @@ const SignUpPage = () => {
           setValue={setEmail}
           error={emailError}
           setError={setEmailError}
-          isAnimationActive={isLoginAnimationActive}
-          setIsAnimationActive={setIsLoginAnimationActive}
+          isAnimationActive={isEmailAnimationActive}
+          setIsAnimationActive={setIsEmailAnimationActive}
           isSet={isEmailSet}
           setIsSet={setIsEmailSet}
           isVerified={isVerificationCodeSet}

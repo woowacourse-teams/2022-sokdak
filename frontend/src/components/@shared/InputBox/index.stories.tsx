@@ -19,16 +19,16 @@ const Template: ComponentStory<typeof InputBox> = args => {
   };
   return (
     <Layout>
-      <InputBox value={value} setValue={setValue} error={error} setError={setError}>
+      <InputBox
+        value={value}
+        setValue={setValue}
+        error={error}
+        setError={setError}
+        isAnimationActive={isAnimationActive}
+        setIsAnimationActive={setIsAnimationActive}
+      >
         <form style={{ display: 'grid', gridTemplateColumns: '4fr 1fr', alignItems: 'center', gap: '8px' }}>
-          <InputBox.Input
-            type="email"
-            placeholder="이메일"
-            handleInvalid={handleInvalid}
-            required
-            isAnimationActive={isAnimationActive}
-            setIsAnimationActive={setIsAnimationActive}
-          />
+          <InputBox.Input type="email" placeholder="이메일" handleInvalid={handleInvalid} required />
           <InputBox.SubmitButton
             onClick={() => {
               console.log('click');

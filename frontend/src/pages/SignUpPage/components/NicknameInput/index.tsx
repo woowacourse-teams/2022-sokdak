@@ -71,15 +71,20 @@ const NicknameInput = ({
   };
 
   return (
-    <InputBox value={value} setValue={setValue} error={error} setError={setError}>
+    <InputBox
+      value={value}
+      setValue={setValue}
+      error={error}
+      setError={setError}
+      isAnimationActive={isAnimationActive}
+      setIsAnimationActive={setIsAnimationActive}
+    >
       <Styled.InputForm onSubmit={handleIDCheckForm}>
         <InputBox.Input
           handleInvalid={() => {
             setError('닉네임를 입력해주세요');
           }}
           placeholder="닉네임"
-          isAnimationActive={isAnimationActive}
-          setIsAnimationActive={setIsAnimationActive}
           required
         />
         <InputBox.SubmitButton disabled={error !== '' || value === ''}>

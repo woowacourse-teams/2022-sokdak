@@ -10,7 +10,14 @@ interface IDInputProps extends ReturnType<typeof useInput> {
 
 const IDInput = ({ value, setValue, error, setError, isAnimationActive, setIsAnimationActive }: IDInputProps) => {
   return (
-    <InputBox value={value} setValue={setValue} error={error} setError={setError}>
+    <InputBox
+      value={value}
+      setValue={setValue}
+      error={error}
+      setError={setError}
+      isAnimationActive={isAnimationActive}
+      setIsAnimationActive={setIsAnimationActive}
+    >
       <InputBox.Input
         type="text"
         placeholder="아이디"
@@ -18,8 +25,6 @@ const IDInput = ({ value, setValue, error, setError, isAnimationActive, setIsAni
           setError('아이디를 입력해주세요.');
         }}
         required
-        isAnimationActive={isAnimationActive}
-        setIsAnimationActive={setIsAnimationActive}
       />
       <InputBox.ErrorMessage />
     </InputBox>

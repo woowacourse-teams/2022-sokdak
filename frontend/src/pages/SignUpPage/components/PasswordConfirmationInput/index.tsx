@@ -34,7 +34,14 @@ const PasswordConfirmationInput = ({
   }, [value]);
 
   return (
-    <InputBox value={value} setValue={setValue} error={error} setError={setError}>
+    <InputBox
+      value={value}
+      setValue={setValue}
+      error={error}
+      setError={setError}
+      isAnimationActive={isAnimationActive}
+      setIsAnimationActive={setIsAnimationActive}
+    >
       <Styled.PasswordInputContainer>
         <InputBox.Input
           type="password"
@@ -42,8 +49,6 @@ const PasswordConfirmationInput = ({
             setError('비밀번호를 입력해주세요');
           }}
           placeholder="비밀번호 확인"
-          isAnimationActive={isAnimationActive}
-          setIsAnimationActive={setIsAnimationActive}
           required
         />
         <div />

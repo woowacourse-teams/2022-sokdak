@@ -71,15 +71,20 @@ const IDInput = ({
   };
 
   return (
-    <InputBox value={value} setValue={setValue} error={error} setError={setError}>
+    <InputBox
+      value={value}
+      setValue={setValue}
+      error={error}
+      setError={setError}
+      isAnimationActive={isAnimationActive}
+      setIsAnimationActive={setIsAnimationActive}
+    >
       <Styled.InputForm onSubmit={handleIDCheckForm}>
         <InputBox.Input
           handleInvalid={() => {
             setError('아이디를 입력해주세요');
           }}
           placeholder="아이디"
-          isAnimationActive={isAnimationActive}
-          setIsAnimationActive={setIsAnimationActive}
           required
         />
         <InputBox.SubmitButton disabled={error !== '' || value === ''}>

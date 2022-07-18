@@ -17,10 +17,22 @@ import PATH from '@/constants/path';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
 const LoginPage = () => {
-  const { value: ID, setValue: setID, error: IDError, setError: setIDError } = useInput();
-  const { value: password, setValue: setPassword, error: passwordError, setError: setPasswordError } = useInput();
-  const [isLoginAnimationActive, setIsLoginAnimationActive] = useState(false);
-  const [isPasswordAnimationActive, setIsPasswordAnimationActive] = useState(false);
+  const {
+    value: ID,
+    setValue: setID,
+    error: IDError,
+    setError: setIDError,
+    isAnimationActive: isLoginAnimationActive,
+    setIsAnimationActive: setIsLoginAnimationActive,
+  } = useInput();
+  const {
+    value: password,
+    setValue: setPassword,
+    error: passwordError,
+    setError: setPasswordError,
+    isAnimationActive: isPasswordAnimationActive,
+    setIsAnimationActive: setIsPasswordAnimationActive,
+  } = useInput();
 
   const { showSnackbar } = useContext(SnackbarContext);
   const navigate = useNavigate();

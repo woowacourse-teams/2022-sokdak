@@ -56,7 +56,14 @@ const EmailInput = ({
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {};
   return (
-    <InputBox value={value} setValue={setValue} error={error} setError={setError}>
+    <InputBox
+      value={value}
+      setValue={setValue}
+      error={error}
+      setError={setError}
+      isAnimationActive={isAnimationActive}
+      setIsAnimationActive={setIsAnimationActive}
+    >
       <Styled.InputForm onSubmit={handleEmailFormSubmit}>
         <InputBox.Input
           handleInvalid={() => {
@@ -65,8 +72,6 @@ const EmailInput = ({
           type="email"
           placeholder="이메일"
           onKeyDown={handleKeyDown}
-          isAnimationActive={isAnimationActive}
-          setIsAnimationActive={setIsAnimationActive}
           disabled={isVerified || isSet}
           required
         />

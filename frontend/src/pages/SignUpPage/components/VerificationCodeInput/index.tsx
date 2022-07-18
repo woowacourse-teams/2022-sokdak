@@ -58,15 +58,20 @@ const VerificationCodeInput = ({
           onAnimationEnd={handleVerificationCodeSet}
           isVerified={isVerified}
         >
-          <InputBox value={value} setValue={setValue} error={error} setError={setError}>
+          <InputBox
+            value={value}
+            setValue={setValue}
+            error={error}
+            setError={setError}
+            isAnimationActive={isAnimationActive}
+            setIsAnimationActive={setIsAnimationActive}
+          >
             <Styled.InputForm onSubmit={handleEmailFormSubmit}>
               <InputBox.Input
                 handleInvalid={() => {
                   setError('');
                 }}
                 placeholder="인증번호"
-                isAnimationActive={isAnimationActive}
-                setIsAnimationActive={setIsAnimationActive}
                 required
                 disabled={isVerified}
               />

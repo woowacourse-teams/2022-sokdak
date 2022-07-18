@@ -17,15 +17,20 @@ const PasswordInput = ({
   setIsAnimationActive,
 }: PasswordInputProps) => {
   return (
-    <InputBox value={value} setValue={setValue} error={error} setError={setError}>
+    <InputBox
+      value={value}
+      setValue={setValue}
+      error={error}
+      setError={setError}
+      isAnimationActive={isAnimationActive}
+      setIsAnimationActive={setIsAnimationActive}
+    >
       <InputBox.Input
         type="password"
         placeholder="비밀번호"
         handleInvalid={() => {
           setError('비밀번호를 입력해주세요.');
         }}
-        isAnimationActive={isAnimationActive}
-        setIsAnimationActive={setIsAnimationActive}
         required
       />
       <InputBox.ErrorMessage />

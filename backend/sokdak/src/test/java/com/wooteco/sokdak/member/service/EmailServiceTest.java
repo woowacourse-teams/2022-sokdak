@@ -44,7 +44,7 @@ class EmailServiceTest {
     @DisplayName("인증 코드 저장")
     @Test
     void createAndSaveAuthCode() {
-        given(authCodeGenerator.generate(6))
+        given(authCodeGenerator.generate())
                 .willReturn("a1b1c1");
 
         emailService.createAndSaveAuthCode("serialNumber");
@@ -58,7 +58,7 @@ class EmailServiceTest {
     void sendCodeToValidUser() {
         given(encryptor.encrypt("test@gmail.com"))
                 .willReturn("serialNumber");
-        given(authCodeGenerator.generate(6))
+        given(authCodeGenerator.generate())
                 .willReturn("a1b1c1");
         Ticket ticket = Ticket.builder()
                 .serialNumber("serialNumber")

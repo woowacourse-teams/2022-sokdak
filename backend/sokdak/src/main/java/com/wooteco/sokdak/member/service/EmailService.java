@@ -41,7 +41,7 @@ public class EmailService {
     @Transactional
     protected String createAndSaveAuthCode(String serialNumber) {
         authCodeRepository.deleteAllBySerialNumber(serialNumber);
-        String authCode = authCodeGenerator.generate(6);
+        String authCode = authCodeGenerator.generate();
         authCodeRepository.save(new AuthCode(authCode, serialNumber));
         return authCode;
     }

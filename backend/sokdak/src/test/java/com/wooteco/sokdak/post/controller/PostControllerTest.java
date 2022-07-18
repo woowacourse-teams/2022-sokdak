@@ -19,6 +19,8 @@ import org.springframework.restdocs.RestDocumentationExtension;
 @ExtendWith(RestDocumentationExtension.class)
 class PostControllerTest extends ControllerTest {
 
+    private static final String SESSION_ID = "mySessionId";
+
     @Autowired
     PostController postController;
 
@@ -31,7 +33,7 @@ class PostControllerTest extends ControllerTest {
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .sessionId("mySessionId")
+                .sessionId(SESSION_ID)
                 .body(postRequest)
                 .when().post("/posts")
                 .then().log().all()
@@ -45,7 +47,7 @@ class PostControllerTest extends ControllerTest {
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .sessionId("mySessionId")
+                .sessionId(SESSION_ID)
                 .body(postRequest)
                 .when().post("/posts")
                 .then().log().all()
@@ -59,7 +61,7 @@ class PostControllerTest extends ControllerTest {
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .sessionId("mySessionId")
+                .sessionId(SESSION_ID)
                 .body(postRequest)
                 .when().post("/posts")
                 .then().log().all()
@@ -82,7 +84,7 @@ class PostControllerTest extends ControllerTest {
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .sessionId("mySessionId")
+                .sessionId(SESSION_ID)
                 .when().get("/posts?size=3&page=0")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
@@ -100,7 +102,7 @@ class PostControllerTest extends ControllerTest {
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .sessionId("mySessionId")
+                .sessionId(SESSION_ID)
                 .when().get("/posts/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
@@ -114,7 +116,7 @@ class PostControllerTest extends ControllerTest {
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .sessionId("mySessionId")
+                .sessionId(SESSION_ID)
                 .when().get("/posts/9999")
                 .then().log().all()
                 .statusCode(HttpStatus.NOT_FOUND.value());

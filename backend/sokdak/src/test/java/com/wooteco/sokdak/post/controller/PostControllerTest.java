@@ -3,11 +3,11 @@ package com.wooteco.sokdak.post.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.util.ControllerTest;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -71,16 +71,10 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("게시글 목록 조회 요청을 받으면 해당되는 게시글들을 반환한다.")
     @Test
     void findPosts() {
-        Post post1 = Post.builder()
-                .title("제목1")
-                .content("본문2")
-                .build();
-        Post post2 = Post.builder()
-                .title("제목2")
-                .content("본문2")
-                .build();
+        PostResponse postResponse1 = new PostResponse(1L, "제목1", "본문1", LocalDateTime.now());
+        PostResponse postResponse2 = new PostResponse(2L, "제목2", "본문2", LocalDateTime.now());
         given(postService.findPost(any()))
-                .willReturn(PostResponse.from(post1), PostResponse.from(post2));
+                .willReturn(postResponse1, postResponse2);
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -93,12 +87,9 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("특정 게시글 조회 요청을 받으면 게시글을 반환한다.")
     @Test
     void findPost() {
-        Post post = Post.builder()
-                .title("제목")
-                .content("본문")
-                .build();
+        PostResponse postResponse = new PostResponse(1L, "제목1", "본문1", LocalDateTime.now());
         given(postService.findPost(any()))
-                .willReturn(PostResponse.from(post));
+                .willReturn(postResponse);
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

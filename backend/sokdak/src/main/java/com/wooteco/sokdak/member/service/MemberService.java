@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.member.service;
 
 import com.wooteco.sokdak.auth.service.AuthService;
+import com.wooteco.sokdak.auth.service.Encryptor;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.domain.Nickname;
 import com.wooteco.sokdak.member.domain.Username;
@@ -11,7 +12,6 @@ import com.wooteco.sokdak.member.exception.InvalidSignupFlowException;
 import com.wooteco.sokdak.member.exception.PasswordConfirmationException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
-import com.wooteco.sokdak.auth.service.Encryptor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

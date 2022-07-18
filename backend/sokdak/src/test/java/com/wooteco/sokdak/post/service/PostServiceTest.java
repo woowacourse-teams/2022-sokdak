@@ -3,6 +3,7 @@ package com.wooteco.sokdak.post.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
@@ -24,6 +25,11 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 class PostServiceTest {
+
+    private static final Post POST = Post.builder()
+            .title("제목")
+            .content("본문")
+            .build();
 
     @Autowired
     private PostService postService;
@@ -49,17 +55,13 @@ class PostServiceTest {
     @DisplayName("글 조회 기능")
     @Test
     void findPost() {
-        Post post = Post.builder()
-                .title("제목")
-                .content("본문")
-                .build();
-        Long savedPostId = postRepository.save(post).getId();
+        Long savedPostId = postRepository.save(POST).getId();
 
         PostResponse response = postService.findPost(savedPostId);
 
         assertAll(
-                () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
-                () -> assertThat(response.getContent()).isEqualTo(post.getContent()),
+                () -> assertThat(response.getTitle()).isEqualTo(POST.getTitle()),
+                () -> assertThat(response.getContent()).isEqualTo(POST.getContent()),
                 () -> assertThat(response.getCreatedAt()).isNotNull()
         );
     }
@@ -76,31 +78,33 @@ class PostServiceTest {
     @DisplayName("특정 페이지 글 목록 조회 기능")
     @Test
     void findPosts() {
-        Post post = Post.builder()
-                .title("제목")
-                .content("본문")
+        Post post2 = Post.builder()
+                .title("제목2")
+                .content("본문2")
                 .build();
-        postRepository.save(post);
-        Pageable pageable = PageRequest.of(0, 3);
+        Post post3 = Post.builder()
+                .title("제목3")
+                .content("본문3")
+                .build();
+        postRepository.save(POST);
+        postRepository.save(post2);
+        postRepository.save(post3);
+        Pageable pageable = PageRequest.of(0, 2, DESC, "createdAt");
 
         PostsResponse postsResponse = postService.findPosts(pageable);
 
         assertAll(
-                () -> assertThat(postsResponse.getPosts()).hasSize(1),
+                () -> assertThat(postsResponse.getPosts()).hasSize(2),
                 () -> assertThat(postsResponse.getPosts()).usingRecursiveComparison()
-                        .ignoringFields("id", "localDate")
-                        .isEqualTo(List.of(PostResponse.from(post)))
+                        .ignoringFields("id", "createdAt")
+                        .isEqualTo(List.of(PostResponse.from(post3), PostResponse.from(post2)))
         );
     }
 
     @DisplayName("게시글 수정 기능")
     @Test
     void updatePost() {
-        Post post = Post.builder()
-                .title("제목")
-                .content("본문")
-                .build();
-        Long postId = postRepository.save(post).getId();
+        Long postId = postRepository.save(POST).getId();
         PostUpdateRequest postUpdateRequest = new PostUpdateRequest("변경된 제목", "변경된 본문");
 
         postService.updatePost(postId, postUpdateRequest);
@@ -116,11 +120,7 @@ class PostServiceTest {
     @DisplayName("게시글 삭제 기능")
     @Test
     void deletePost() {
-        Post post = Post.builder()
-                .title("제목")
-                .content("본문")
-                .build();
-        Long postId = postRepository.save(post).getId();
+        Long postId = postRepository.save(POST).getId();
 
         postService.deletePost(postId);
 

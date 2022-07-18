@@ -1,23 +1,25 @@
 package com.wooteco.sokdak.post.controller;
 
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getExceptionMessage;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostResponse;
-import com.wooteco.sokdak.post.dto.PostsResponse;
-import com.wooteco.sokdak.util.AcceptanceTest;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
+import com.wooteco.sokdak.post.exception.PostNotFoundException;
+import com.wooteco.sokdak.util.ControllerTest;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationExtension;
 
-class PostControllerTest extends AcceptanceTest {
+@ExtendWith(RestDocumentationExtension.class)
+class PostControllerTest extends ControllerTest {
+
+    private static final String SESSION_ID = "mySessionId";
 
     @Autowired
     PostController postController;
@@ -26,67 +28,88 @@ class PostControllerTest extends AcceptanceTest {
     @Test
     void addPost() {
         NewPostRequest postRequest = new NewPostRequest("제목", "본문");
-        ExtractableResponse<Response> response = httpPost(postRequest, "/posts");
+        given(postService.addPost(any()))
+                .willReturn(1L);
 
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
-                () -> assertThat(response.header("Location")).isNotNull()
-        );
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .sessionId(SESSION_ID)
+                .body(postRequest)
+                .when().post("/posts")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @DisplayName("게시글 제목이 없는 경우 400을 반환한다.")
+    @Test
+    void addPost_Exception_NoTitle() {
+        NewPostRequest postRequest = new NewPostRequest(null, "본문");
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .sessionId(SESSION_ID)
+                .body(postRequest)
+                .when().post("/posts")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("게시글 제목이 없는 경우 400을 반환한다.")
+    @Test
+    void addPost_Exception_NoContent() {
+        NewPostRequest postRequest = new NewPostRequest("제목", null);
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .sessionId(SESSION_ID)
+                .body(postRequest)
+                .when().post("/posts")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("게시글 목록 조회 요청을 받으면 해당되는 게시글들을 반환한다.")
     @Test
     void findPosts() {
-        NewPostRequest postRequest = new NewPostRequest("제목", "본문");
-        httpPost(postRequest, "/posts");
+        PostResponse postResponse1 = new PostResponse(1L, "제목1", "본문1", LocalDateTime.now());
+        PostResponse postResponse2 = new PostResponse(2L, "제목2", "본문2", LocalDateTime.now());
+        given(postService.findPost(any()))
+                .willReturn(postResponse1, postResponse2);
 
-        ExtractableResponse<Response> response = httpGet("/posts?size=3&page=0");
-        PostsResponse postsResponse = response.jsonPath()
-                .getObject(".", PostsResponse.class);
-
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(postsResponse.getPosts()).hasSize(1)
-        );
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .sessionId(SESSION_ID)
+                .when().get("/posts?size=3&page=0")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
     }
 
     @DisplayName("특정 게시글 조회 요청을 받으면 게시글을 반환한다.")
     @Test
     void findPost() {
-        NewPostRequest postRequest = new NewPostRequest("제목", "본문");
-        String postId = httpPost(postRequest, "/posts")
-                .header("Location")
-                .split("/posts/")[1];
+        PostResponse postResponse = new PostResponse(1L, "제목1", "본문1", LocalDateTime.now());
+        given(postService.findPost(any()))
+                .willReturn(postResponse);
 
-        ExtractableResponse<Response> response = httpGet("/posts/" + postId);
-        PostResponse postResponse = response.jsonPath().getObject(".", PostResponse.class);
-
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(postResponse.getTitle()).isEqualTo(postRequest.getTitle()),
-                () -> assertThat(postResponse.getContent()).isEqualTo(postRequest.getContent())
-        );
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .sessionId(SESSION_ID)
+                .when().get("/posts/1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("게시글 제목이 없는 경우 400을 반환합니다.")
-    @Test
-    void addPost_Exception_NoTitle() {
-        NewPostRequest postRequest = new NewPostRequest(null, "본문");
-        ExtractableResponse<Response> response = httpPost(postRequest, "/posts");
-
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(getExceptionMessage(response)).isEqualTo("제목 혹은 본문이 없습니다.")
-        );
-    }
-
-    @DisplayName("존재하지 않는 게시글에 대해 조회하면 404를 반환합니다.")
+    @DisplayName("존재하지 않는 게시글에 대해 조회하면 404를 반환한다.")
     @Test
     void findPost_Exception_NoPost() {
-        Long invalidPostId = 9999L;
+        given(postService.findPost(any()))
+                .willThrow(new PostNotFoundException());
 
-        ExtractableResponse<Response> response = httpGet("/posts/" + invalidPostId);
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .sessionId(SESSION_ID)
+                .when().get("/posts/9999")
+                .then().log().all()
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 }

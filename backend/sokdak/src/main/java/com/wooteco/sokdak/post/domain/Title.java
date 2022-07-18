@@ -1,6 +1,6 @@
 package com.wooteco.sokdak.post.domain;
 
-import com.wooteco.sokdak.post.exception.InvalidPostException;
+import com.wooteco.sokdak.post.exception.InvalidTitleException;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -26,10 +26,10 @@ public class Title {
 
     private void validate(String value) {
         if (value == null || value.isBlank()) {
-            throw new InvalidPostException();
+            throw new InvalidTitleException();
         }
         if (value.length() > MAX_TITLE_LENGTH) {
-            throw new InvalidPostException();
+            throw new InvalidTitleException();
         }
     }
 

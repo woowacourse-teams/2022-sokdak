@@ -12,7 +12,7 @@ public class PostResponse {
     private final String content;
     private final LocalDateTime createdAt;
 
-    private PostResponse(Long id, String title, String content, LocalDateTime createdAt) {
+    public PostResponse(Long id, String title, String content, LocalDateTime createdAt) {
         this.id = id;
         this.title = title;
         this.content = content;

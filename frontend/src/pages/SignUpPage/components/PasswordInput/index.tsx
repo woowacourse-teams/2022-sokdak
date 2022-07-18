@@ -22,7 +22,7 @@ const PasswordInput = ({
 }: PasswordInputProps) => {
   const handleBlur = () => {
     if (!isValidPassword(value)) {
-      setError('비밀번호는 영어,숫자,특수문자가 포함되어 8자에서 20자 이하입니다.');
+      setError('비밀번호는 영어,숫자,특수문자가 포함된 8~20자입니다.');
     }
   };
   return (

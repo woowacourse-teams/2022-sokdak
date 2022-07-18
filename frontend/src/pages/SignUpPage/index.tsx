@@ -57,12 +57,13 @@ const SignUpPage = () => {
       showSnackbar('회원가입에 성공하였습니다.');
       navigate(PATH.LOGIN);
     },
-    onError: () => {
-      setEmailError(' ');
-      setPasswordError(' ');
+    onError: error => {
       setIsLoginAnimationActive(true);
       setIsPasswordAnimationActive(true);
-      showSnackbar(SNACKBAR_MESSAGE.FAIL_LOGIN);
+      setIsIDAnimationActive(true);
+      setIsNicknameAnimationActive(true);
+      setIsPasswordConfirmationAnimationActive(true);
+      showSnackbar(error.response?.data.message!);
     },
   });
 

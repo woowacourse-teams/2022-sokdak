@@ -3,6 +3,7 @@ package com.wooteco.sokdak.member.acceptance;
 import static com.wooteco.sokdak.util.HttpMethodFixture.httpGet;
 import static com.wooteco.sokdak.util.HttpMethodFixture.httpPost;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -31,6 +32,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DisplayName("회원가입 관련 인수테스트")
 class MemberAcceptanceTest extends AcceptanceTest {
 
     private static final String EMAIL = "rerub0831@gmail.com";
@@ -43,7 +45,6 @@ class MemberAcceptanceTest extends AcceptanceTest {
     private TicketRepository ticketRepository;
     @Autowired
     private Encryptor encryptor;
-
     @MockBean
     private AuthCodeGenerator authCodeGenerator;
     @MockBean
@@ -64,19 +65,24 @@ class MemberAcceptanceTest extends AcceptanceTest {
     @DisplayName("정상적인 절차로 회원가입을 할 수 있다.")
     @Test
     void signUp() {
-        //when
-        이메일_인증번호_응답(EMAIL);
+        //given
         VerificationRequest verificationRequest = new VerificationRequest(EMAIL, AUTH_CODE);
-        인증번호_확인_응답(verificationRequest);
-        아이디_중복확인_응답(USERNAME);
-        닉네임_중복확인_응답(NICKNAME);
-
-        //then
         SignupRequest signupRequest = new SignupRequest(EMAIL, USERNAME, NICKNAME, AUTH_CODE,
                 PASSWORD, PASSWORD);
-        assertThat(회원가입_응답(signupRequest).statusCode()).isEqualTo(CREATED.value());
         LoginRequest loginRequest = new LoginRequest(USERNAME, PASSWORD);
-        assertThat(로그인_응답(loginRequest).statusCode()).isEqualTo(OK.value());
+
+        //when
+        getEmailAuthCodeResponse(EMAIL);
+        getVerificationResponse(verificationRequest);
+        getValidateUsernameResponse(USERNAME);
+        getValidateNicknameResponse(NICKNAME);
+
+        //then
+
+        assertAll(
+                () -> assertThat(getSignupResponse(signupRequest).statusCode()).isEqualTo(CREATED.value()),
+                () -> assertThat(getLoginResponse(loginRequest).statusCode()).isEqualTo(OK.value())
+        );
     }
 
     @DisplayName("잘못된 인증번호로 회원가입할 수 없다.")
@@ -84,20 +90,23 @@ class MemberAcceptanceTest extends AcceptanceTest {
     void singUp_Exception_WrongAuthCode() {
         //given
         String wrongAuthCode = "111111";
-
-        //when
-        이메일_인증번호_응답(EMAIL);
         VerificationRequest verificationRequest = new VerificationRequest(EMAIL, wrongAuthCode);
-        인증번호_확인_응답(verificationRequest);
-        아이디_중복확인_응답(USERNAME);
-        닉네임_중복확인_응답(NICKNAME);
-
-        //then
         SignupRequest signupRequest = new SignupRequest(EMAIL, USERNAME, NICKNAME, wrongAuthCode,
                 PASSWORD, PASSWORD);
-        assertThat(회원가입_응답(signupRequest).statusCode()).isEqualTo(BAD_REQUEST.value());
         LoginRequest loginRequest = new LoginRequest(USERNAME, PASSWORD);
-        assertThat(로그인_응답(loginRequest).statusCode()).isEqualTo(BAD_REQUEST.value());
+
+        //when
+        getEmailAuthCodeResponse(EMAIL);
+        getVerificationResponse(verificationRequest);
+        getValidateUsernameResponse(USERNAME);
+        getValidateNicknameResponse(NICKNAME);
+
+        //then
+
+        assertAll(
+                () -> assertThat(getSignupResponse(signupRequest).statusCode()).isEqualTo(BAD_REQUEST.value()),
+                () -> assertThat(getLoginResponse(loginRequest).statusCode()).isEqualTo(BAD_REQUEST.value())
+        );
     }
 
     @DisplayName("우테코 크루가 아닌 이메일로 회원가입할 수 없다.")
@@ -105,64 +114,68 @@ class MemberAcceptanceTest extends AcceptanceTest {
     void singUp_Exception_WrongEmail() {
         //given
         String wrongEmail = "fakecrew@gmail.com";
+        VerificationRequest verificationRequest = new VerificationRequest(wrongEmail, AUTH_CODE);
+        SignupRequest signupRequest = new SignupRequest(wrongEmail, USERNAME, NICKNAME, AUTH_CODE,
+                PASSWORD, PASSWORD);
+        LoginRequest loginRequest = new LoginRequest(USERNAME, PASSWORD);
 
         //when
-        assertThat(이메일_인증번호_응답(wrongEmail).statusCode()).isEqualTo(BAD_REQUEST.value());
-        VerificationRequest verificationRequest = new VerificationRequest(wrongEmail, AUTH_CODE);
-        assertThat(인증번호_확인_응답(verificationRequest).statusCode()).isEqualTo(BAD_REQUEST.value());
-        아이디_중복확인_응답(USERNAME);
-        닉네임_중복확인_응답(NICKNAME);
+        assertThat(getEmailAuthCodeResponse(wrongEmail).statusCode()).isEqualTo(BAD_REQUEST.value());
+        assertThat(getVerificationResponse(verificationRequest).statusCode()).isEqualTo(BAD_REQUEST.value());
+        getValidateUsernameResponse(USERNAME);
+        getValidateNicknameResponse(NICKNAME);
 
         //then
-        assertThat(회원가입_응답(new SignupRequest(wrongEmail, USERNAME, NICKNAME, AUTH_CODE,
-                PASSWORD, PASSWORD)).statusCode()).isEqualTo(BAD_REQUEST.value());
-        assertThat(로그인_응답(new LoginRequest(USERNAME, PASSWORD)).statusCode()).isEqualTo(BAD_REQUEST.value());
+        assertAll(
+                () -> assertThat(getSignupResponse(signupRequest).statusCode()).isEqualTo(BAD_REQUEST.value()),
+                () -> assertThat(getLoginResponse(loginRequest).statusCode()).isEqualTo(BAD_REQUEST.value())
+        );
     }
 
     @DisplayName("이미 가입한 회원은 회원가입할 수 없다.")
     @Test
     void singUp_Exception_AlreadySigned() {
         //given
-        이메일_인증번호_응답(EMAIL);
         VerificationRequest verificationRequest = new VerificationRequest(EMAIL, AUTH_CODE);
-        인증번호_확인_응답(verificationRequest);
         SignupRequest signupRequest = new SignupRequest(EMAIL, USERNAME, NICKNAME, AUTH_CODE,
                 PASSWORD, PASSWORD);
-        회원가입_응답(signupRequest);
+        LoginRequest loginRequest = new LoginRequest(USERNAME, PASSWORD);
+        getEmailAuthCodeResponse(EMAIL);
+        getVerificationResponse(verificationRequest);
+        getSignupResponse(signupRequest);
 
         //when
-        이메일_인증번호_응답(EMAIL);
-        인증번호_확인_응답(verificationRequest);
-        아이디_중복확인_응답(USERNAME);
-        닉네임_중복확인_응답(NICKNAME);
+        getEmailAuthCodeResponse(EMAIL);
+        getVerificationResponse(verificationRequest);
+        getValidateUsernameResponse(USERNAME);
+        getValidateNicknameResponse(NICKNAME);
 
         //then
-        assertThat(회원가입_응답(signupRequest).statusCode()).isEqualTo(BAD_REQUEST.value());
-        LoginRequest loginRequest = new LoginRequest(USERNAME, PASSWORD);
-        assertThat(로그인_응답(loginRequest).statusCode()).isEqualTo(OK.value());
+        assertThat(getSignupResponse(signupRequest).statusCode()).isEqualTo(BAD_REQUEST.value());
+        assertThat(getLoginResponse(loginRequest).statusCode()).isEqualTo(OK.value());
     }
 
-    private ExtractableResponse<Response> 회원가입_응답(SignupRequest signupRequest) {
+    private ExtractableResponse<Response> getSignupResponse(SignupRequest signupRequest) {
         return httpPost(signupRequest, "/members/signup");
     }
 
-    private ExtractableResponse<Response> 닉네임_중복확인_응답(String nickname) {
+    private ExtractableResponse<Response> getValidateNicknameResponse(String nickname) {
         return httpGet("/members/signup/exists?nickname=" + nickname);
     }
 
-    private ExtractableResponse<Response> 아이디_중복확인_응답(String username) {
+    private ExtractableResponse<Response> getValidateUsernameResponse(String username) {
         return httpGet("/members/signup/exists?username=" + username);
     }
 
-    private ExtractableResponse<Response> 인증번호_확인_응답(VerificationRequest verificationRequest) {
+    private ExtractableResponse<Response> getVerificationResponse(VerificationRequest verificationRequest) {
         return httpPost(verificationRequest, "/members/signup/email/verification");
     }
 
-    private ExtractableResponse<Response> 이메일_인증번호_응답(String email) {
+    private ExtractableResponse<Response> getEmailAuthCodeResponse(String email) {
         return httpPost(new EmailRequest(email), "/members/signup/email");
     }
 
-    private ExtractableResponse<Response> 로그인_응답(LoginRequest loginRequest) {
+    private ExtractableResponse<Response> getLoginResponse(LoginRequest loginRequest) {
         return httpPost(loginRequest, "/login");
     }
 }

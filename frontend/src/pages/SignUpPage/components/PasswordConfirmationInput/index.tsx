@@ -22,41 +22,33 @@ const PasswordConfirmationInput = ({
   setIsAnimationActive,
   password,
 }: PasswordConfirmationInputProps) => {
-  const handleBlur = () => {
-    if (!isValidPassword(value)) {
-      setError('비밀번호는 영어,숫자,특수문자가 포함된 8~20자입니다.');
-    }
-  };
-
   useLayoutEffect(() => {
     if (!value) return;
     if (value !== password) {
-      setError('비밀번호와 일치하지 않습니다');
+      return setError('비밀번호와 일치하지 않습니다');
     }
 
     if (value === password) {
-      setError('');
+      return setError('');
     }
   }, [value]);
 
   return (
     <InputBox value={value} setValue={setValue} error={error} setError={setError}>
-      <Styled.InputForm as="div">
-        <div>
-          <InputBox.Input
-            type="password"
-            handleInvalid={() => {
-              setError('비밀번호를 입력해주세요');
-            }}
-            placeholder="비밀번호 확인"
-            isAnimationActive={isAnimationActive}
-            setIsAnimationActive={setIsAnimationActive}
-            onBlur={handleBlur}
-            required
-          />
-          <InputBox.ErrorMessage />
-        </div>
-      </Styled.InputForm>
+      <Styled.PasswordInputContainer>
+        <InputBox.Input
+          type="password"
+          handleInvalid={() => {
+            setError('비밀번호를 입력해주세요');
+          }}
+          placeholder="비밀번호 확인"
+          isAnimationActive={isAnimationActive}
+          setIsAnimationActive={setIsAnimationActive}
+          required
+        />
+        <div />
+        <InputBox.ErrorMessage />
+      </Styled.PasswordInputContainer>
     </InputBox>
   );
 };

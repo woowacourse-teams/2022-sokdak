@@ -27,22 +27,27 @@ const PasswordInput = ({
   };
   return (
     <InputBox value={value} setValue={setValue} error={error} setError={setError}>
-      <Styled.InputForm as="div">
-        <div>
-          <InputBox.Input
-            type="password"
-            handleInvalid={() => {
-              setError('비밀번호를 입력해주세요');
-            }}
-            placeholder="비밀번호"
-            isAnimationActive={isAnimationActive}
-            setIsAnimationActive={setIsAnimationActive}
-            onBlur={handleBlur}
-            required
-          />
+      <Styled.PasswordInputContainer>
+        <InputBox.Input
+          type="password"
+          handleInvalid={() => {
+            setError('비밀번호를 입력해주세요');
+          }}
+          placeholder="비밀번호"
+          isAnimationActive={isAnimationActive}
+          setIsAnimationActive={setIsAnimationActive}
+          onBlur={handleBlur}
+          required
+        />
+        <div />
+        {error ? (
           <InputBox.ErrorMessage />
-        </div>
-      </Styled.InputForm>
+        ) : (
+          <Styled.MessageContainer>
+            <Styled.Message>영어,숫자,특수문자가 포함된 8~20자</Styled.Message>
+          </Styled.MessageContainer>
+        )}
+      </Styled.PasswordInputContainer>
     </InputBox>
   );
 };

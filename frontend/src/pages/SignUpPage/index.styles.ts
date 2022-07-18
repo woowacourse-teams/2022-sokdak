@@ -89,3 +89,21 @@ export const VerificationCodeContainer = styled.div<{ isEmailSet: boolean; isVer
   animation: ${props => (props.isEmailSet ? (props.isVerified ? sizeDown : sizeUp) : null)} 2s;
   animation-fill-mode: forwards;
 `;
+
+export const PasswordInputContainer = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: 7fr 1fr;
+  align-items: center;
+`;
+
+export const MessageContainer = styled.div`
+  width: 100%;
+  padding: 10px;
+  height: 10px;
+`;
+
+export const Message = styled.p`
+  font-size: 12px;
+  color: ${props => props.theme.colors.gray_200};
+`;

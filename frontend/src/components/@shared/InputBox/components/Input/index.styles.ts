@@ -7,6 +7,9 @@ export const Input = styled.input<{ hasError: boolean; isAnimationActive?: boole
   display: inline-block;
   padding: 8px 0px 10px 8px;
   animation: ${props => (props.isAnimationActive ? huduldul : null)} 0.3s;
+  ::placeholder {
+    color: ${props => props.theme.colors.gray_150};
+  }
 `;
 
 // animation 재활용 필요

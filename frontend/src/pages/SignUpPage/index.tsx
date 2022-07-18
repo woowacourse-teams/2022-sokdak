@@ -54,7 +54,7 @@ const SignUpPage = () => {
 
   const { mutate } = useSignUp({
     onSuccess: () => {
-      showSnackbar('회원가입에 성공하였습니다.');
+      showSnackbar(SNACKBAR_MESSAGE.SUCCESS_SIGN_UP);
       navigate(PATH.LOGIN);
     },
     onError: error => {

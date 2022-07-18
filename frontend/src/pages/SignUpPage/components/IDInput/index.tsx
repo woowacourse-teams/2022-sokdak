@@ -7,6 +7,7 @@ import SnackbarContext from '@/context/Snackbar';
 
 import useIdCheck from '@/hooks/queries/member/useIDCheck';
 
+import SNACKBAR_MESSAGE from '@/constants/snackbar';
 import { isValidID } from '@/utils/regExp';
 
 import * as Styled from '../../index.styles';
@@ -34,7 +35,7 @@ const IDInput = ({
     options: {
       onSuccess: data => {
         if (data) {
-          showSnackbar('사용할 수 있는 아이디입니다.');
+          showSnackbar(SNACKBAR_MESSAGE.SUCCESS_ID_CHECK);
           setIsSet(true);
         }
         if (!data) {

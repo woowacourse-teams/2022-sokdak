@@ -7,6 +7,7 @@ import SnackbarContext from '@/context/Snackbar';
 
 import useNicknameCheck from '@/hooks/queries/member/useNicknameCheck';
 
+import SNACKBAR_MESSAGE from '@/constants/snackbar';
 import { isValidNickname } from '@/utils/regExp';
 
 import * as Styled from '../../index.styles';
@@ -34,7 +35,7 @@ const NicknameInput = ({
     options: {
       onSuccess: data => {
         if (data) {
-          showSnackbar('사용할 수 있는 닉네임입니다.');
+          showSnackbar(SNACKBAR_MESSAGE.SUCCESS_NICKNAME_CHECK);
           setIsSet(true);
         }
         if (!data) {

@@ -22,10 +22,8 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.jdbc.Sql;
 
 @DisplayName("게시글 관련 인수테스트")
-@Sql("classpath:post_test.sql")
 class PostAcceptanceTest extends AcceptanceTest {
 
     private static final NewPostRequest NEW_POST_REQUEST = new NewPostRequest("제목", "본문");

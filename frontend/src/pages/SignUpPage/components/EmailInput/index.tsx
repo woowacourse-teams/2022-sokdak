@@ -67,7 +67,7 @@ const EmailInput = ({
           onKeyDown={handleKeyDown}
           isAnimationActive={isAnimationActive}
           setIsAnimationActive={setIsAnimationActive}
-          disabled={isVerified}
+          disabled={isVerified || isSet}
           required
         />
         <InputBox.SubmitButton disabled={error !== '' || value === '' || isSet}>

@@ -50,6 +50,7 @@ public class ControllerTest {
                                 .operationPreprocessors()
                                 .withRequestDefaults(prettyPrint())
                                 .withResponseDefaults(prettyPrint()))
-                        .build()).log().all();
+                        .build())
+                .sessionAttr("member", "mySessionId").log().all();
     }
 }

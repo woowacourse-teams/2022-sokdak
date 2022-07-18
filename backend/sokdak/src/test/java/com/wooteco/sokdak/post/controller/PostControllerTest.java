@@ -3,6 +3,7 @@ package com.wooteco.sokdak.post.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
+import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
@@ -28,12 +29,13 @@ class PostControllerTest extends ControllerTest {
     @Test
     void addPost() {
         NewPostRequest postRequest = new NewPostRequest("제목", "본문");
-        given(postService.addPost(any()))
+        given(postService.addPost(any(), any()))
                 .willReturn(1L);
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .sessionId(SESSION_ID)
+                .sessionId("mySessionId")
+                .sessionAttr("member", new AuthInfo(1L))
                 .body(postRequest)
                 .when().post("/posts")
                 .then().log().all()

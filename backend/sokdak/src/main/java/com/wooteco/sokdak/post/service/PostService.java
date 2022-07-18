@@ -1,5 +1,7 @@
 package com.wooteco.sokdak.post.service;
 
+import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostResponse;
@@ -19,14 +21,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final MemberRepository memberRepository;
 
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, MemberRepository memberRepository) {
         this.postRepository = postRepository;
+        this.memberRepository = memberRepository;
     }
 
     @Transactional
-    public Long addPost(NewPostRequest newPostRequest) {
+    public Long addPost(NewPostRequest newPostRequest, AuthInfo authInfo) {
         Post post = newPostRequest.toEntity();
+
         return postRepository.save(post).getId();
     }
 
@@ -35,6 +40,7 @@ public class PostService {
                 .orElseThrow(PostNotFoundException::new);
         return PostResponse.from(foundPost);
     }
+
 
     public PostsResponse findPosts(Pageable pageable) {
         Slice<Post> posts = postRepository.findSliceBy(pageable);

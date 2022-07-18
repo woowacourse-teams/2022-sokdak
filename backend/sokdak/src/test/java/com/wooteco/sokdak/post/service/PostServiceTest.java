@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
+import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostResponse;
@@ -41,13 +42,15 @@ class PostServiceTest {
     @Test
     void addPost() {
         NewPostRequest newPostRequest = new NewPostRequest("제목", "본문");
+        AuthInfo authInfo = new AuthInfo(1L);
 
-        Long postId = postService.addPost(newPostRequest);
+        Long postId = postService.addPost(newPostRequest, authInfo);
         Post actual = postRepository.findById(postId).orElseThrow();
 
         assertAll(
                 () -> assertThat(actual.getTitle()).isEqualTo(newPostRequest.getTitle()),
                 () -> assertThat(actual.getContent()).isEqualTo(newPostRequest.getContent()),
+                () -> assertThat(actual.getMember().getId()).isEqualTo(1L),
                 () -> assertThat(actual.getCreatedAt()).isNotNull()
         );
     }

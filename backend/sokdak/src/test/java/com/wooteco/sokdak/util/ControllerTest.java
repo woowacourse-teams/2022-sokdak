@@ -50,6 +50,7 @@ public class ControllerTest {
     @BeforeEach
     void setRestDocs(WebApplicationContext webApplicationContext,
                      RestDocumentationContextProvider restDocumentation) {
+
         restDocs = RestAssuredMockMvc.given()
                 .mockMvc(MockMvcBuilders.webAppContextSetup(webApplicationContext)
                         .apply(documentationConfiguration(restDocumentation)
@@ -57,6 +58,6 @@ public class ControllerTest {
                                 .withRequestDefaults(prettyPrint())
                                 .withResponseDefaults(prettyPrint()))
                         .build())
-                .sessionAttr("member", "mySessionId").log().all();
+                .log().all();
     }
 }

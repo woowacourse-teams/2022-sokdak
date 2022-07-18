@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.member.domain.member;
+package com.wooteco.sokdak.member.domain;
 
 import com.wooteco.sokdak.member.exception.InvalidUsernameException;
 import java.util.regex.Pattern;

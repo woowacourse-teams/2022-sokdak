@@ -1,11 +1,11 @@
 package com.wooteco.sokdak.post.acceptance;
 
-import static com.wooteco.sokdak.util.HttpMethodFixture.getExceptionMessage;
-import static com.wooteco.sokdak.util.HttpMethodFixture.httpDeleteWithAuthorization;
-import static com.wooteco.sokdak.util.HttpMethodFixture.httpGet;
-import static com.wooteco.sokdak.util.HttpMethodFixture.httpPost;
-import static com.wooteco.sokdak.util.HttpMethodFixture.httpPostWithAuthorization;
-import static com.wooteco.sokdak.util.HttpMethodFixture.httpPutWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getExceptionMessage;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 

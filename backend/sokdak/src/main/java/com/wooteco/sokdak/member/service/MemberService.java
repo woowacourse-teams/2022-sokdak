@@ -1,10 +1,10 @@
 package com.wooteco.sokdak.member.service;
 
-import static com.wooteco.sokdak.member.util.Encryptor.encrypt;
-
-import com.wooteco.sokdak.member.domain.member.Member;
-import com.wooteco.sokdak.member.domain.member.Nickname;
-import com.wooteco.sokdak.member.domain.member.Username;
+import com.wooteco.sokdak.auth.service.AuthService;
+import com.wooteco.sokdak.auth.service.Encryptor;
+import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.Nickname;
+import com.wooteco.sokdak.member.domain.Username;
 import com.wooteco.sokdak.member.dto.SignupRequest;
 import com.wooteco.sokdak.member.dto.UniqueResponse;
 import com.wooteco.sokdak.member.dto.VerificationRequest;
@@ -21,10 +21,15 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final EmailService emailService;
+    private final AuthService authService;
+    private final Encryptor encryptor;
 
-    public MemberService(MemberRepository memberRepository, EmailService emailService) {
+    public MemberService(MemberRepository memberRepository, EmailService emailService,
+                         AuthService authService, Encryptor encryptor) {
         this.memberRepository = memberRepository;
         this.emailService = emailService;
+        this.authService = authService;
+        this.encryptor = encryptor;
     }
 
     public UniqueResponse checkUniqueUsername(String username) {
@@ -43,11 +48,11 @@ public class MemberService {
 
         Member member = Member.builder()
                 .username(signupRequest.getUsername())
-                .password(encrypt(signupRequest.getPassword()))
+                .password(encryptor.encrypt(signupRequest.getPassword()))
                 .nickname(RandomNicknameGenerator.generate())
                 .build();
         memberRepository.save(member);
-        emailService.useTicket(signupRequest.getEmail());
+        authService.useTicket(signupRequest.getEmail());
     }
 
     private void validate(SignupRequest signupRequest) {
@@ -81,8 +86,8 @@ public class MemberService {
     }
 
     private void validateSerialNumber(SignupRequest signupRequest) {
-        String serialNumber = encrypt(signupRequest.getEmail());
-        emailService.validate(serialNumber);
+        String serialNumber = encryptor.encrypt(signupRequest.getEmail());
+        authService.validateSignUpMember(serialNumber);
     }
 
     private void confirmPassword(String password, String passwordConfirmation) {

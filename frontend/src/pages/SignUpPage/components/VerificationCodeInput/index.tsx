@@ -68,6 +68,7 @@ const VerificationCodeInput = ({
                 isAnimationActive={isAnimationActive}
                 setIsAnimationActive={setIsAnimationActive}
                 required
+                disabled={isVerified}
               />
               <InputBox.SubmitButton disabled={error !== '' || value === ''}>확인</InputBox.SubmitButton>
             </Styled.InputForm>

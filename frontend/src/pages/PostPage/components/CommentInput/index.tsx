@@ -6,6 +6,8 @@ import usePostComments from '@/hooks/queries/comment/usePostComments';
 
 import * as Styled from './index.styles';
 
+import SNACKBAR_MESSAGE from '@/constants/snackbar';
+
 interface CommentInputProps {
   amount: number;
   id: string;
@@ -30,7 +32,8 @@ const CommentInput = ({ amount = 0, id }: CommentInputProps) => {
   const handlePostComment = (e: React.FormEvent) => {
     e.preventDefault();
     if (!contentElement.current?.value) {
-      return showSnackbar('댓글을 입력해주세요.');
+      contentElement.current?.focus();
+      return showSnackbar(SNACKBAR_MESSAGE.FAIL_COMMENT);
     }
     mutate({ id, content: contentElement.current?.value, anonymous });
   };

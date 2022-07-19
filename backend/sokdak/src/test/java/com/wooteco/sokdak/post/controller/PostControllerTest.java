@@ -2,17 +2,21 @@ package com.wooteco.sokdak.post.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.spy;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
+import com.wooteco.sokdak.support.AuthInfoMapper;
 import com.wooteco.sokdak.util.ControllerTest;
 import java.time.LocalDateTime;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -21,21 +25,31 @@ import org.springframework.restdocs.RestDocumentationExtension;
 class PostControllerTest extends ControllerTest {
 
     private static final String SESSION_ID = "mySessionId";
+    private static final AuthInfo AUTH_INFO = new AuthInfo(1L);
 
     @Autowired
     PostController postController;
+
+    @MockBean
+    private AuthInfoMapper authInfoMapper;
+
+    @BeforeEach
+    void setUpArgumentResolver() {
+        //해당 부분에서 ArgumentResolver 리턴값을 목 형태로 만듦
+        given(authInfoMapper.getAuthInfo(any()))
+                .willReturn(AUTH_INFO);
+    }
+
 
     @DisplayName("글 작성 요청을 받으면 새로운 게시글을 등록한다.")
     @Test
     void addPost() {
         NewPostRequest postRequest = new NewPostRequest("제목", "본문");
-        given(postService.addPost(any(), any()))
-                .willReturn(1L);
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .sessionId("mySessionId")
-                .sessionAttr("member", new AuthInfo(1L))
+                .sessionId(SESSION_ID)
+                .sessionAttr("member", AUTH_INFO)
                 .body(postRequest)
                 .when().post("/posts")
                 .then().log().all()
@@ -50,6 +64,7 @@ class PostControllerTest extends ControllerTest {
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .sessionId(SESSION_ID)
+                .sessionAttr("member", AUTH_INFO)
                 .body(postRequest)
                 .when().post("/posts")
                 .then().log().all()
@@ -64,6 +79,7 @@ class PostControllerTest extends ControllerTest {
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .sessionId(SESSION_ID)
+                .sessionAttr("member", AUTH_INFO)
                 .body(postRequest)
                 .when().post("/posts")
                 .then().log().all()
@@ -81,6 +97,7 @@ class PostControllerTest extends ControllerTest {
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .sessionId(SESSION_ID)
+                .sessionAttr("member", AUTH_INFO)
                 .when().get("/posts?size=3&page=0")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
@@ -96,6 +113,7 @@ class PostControllerTest extends ControllerTest {
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .sessionId(SESSION_ID)
+                .sessionAttr("member", AUTH_INFO)
                 .when().get("/posts/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
@@ -110,6 +128,7 @@ class PostControllerTest extends ControllerTest {
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .sessionId(SESSION_ID)
+                .sessionAttr("member", AUTH_INFO)
                 .when().get("/posts/9999")
                 .then().log().all()
                 .statusCode(HttpStatus.NOT_FOUND.value());

@@ -3,6 +3,7 @@ package com.wooteco.sokdak.config;
 
 import com.wooteco.sokdak.support.AuthInterceptor;
 import com.wooteco.sokdak.support.LoginArgumentResolver;
+import com.wooteco.sokdak.support.AuthInfoMapper;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,6 +42,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new LoginArgumentResolver());
+        resolvers.add(new LoginArgumentResolver(getMapMember()));
+    }
+
+    @Bean
+    public AuthInfoMapper getMapMember() {
+        return new AuthInfoMapper();
     }
 }

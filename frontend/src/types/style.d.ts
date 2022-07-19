@@ -10,6 +10,7 @@ declare module '@emotion/react' {
       gray_150: string;
       gray_200: string;
       gray_300: string;
+      gray_400: string;
       gray_900: string;
       red_100: string;
       red_200: string;

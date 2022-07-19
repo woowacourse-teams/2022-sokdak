@@ -1,20 +1,26 @@
 package com.wooteco.sokdak.post.service;
 
+import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.exception.MemberNotFoundException;
+import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
-import com.wooteco.sokdak.post.dto.PostResponse;
+import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
+import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,24 +33,34 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class PostServiceTest {
 
-    private static final Post POST = Post.builder()
-            .title("제목")
-            .content("본문")
-            .build();
-
     @Autowired
     private PostService postService;
 
     @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
     private PostRepository postRepository;
+
+    private Post post;
+
+    @BeforeEach
+    public void setUp() {
+        Member member = memberRepository.findById(1L)
+                .orElseThrow(MemberNotFoundException::new);
+        post = Post.builder()
+                .title("제목")
+                .content("본문")
+                .member(member)
+                .build();
+    }
 
     @DisplayName("글 작성 기능")
     @Test
     void addPost() {
         NewPostRequest newPostRequest = new NewPostRequest("제목", "본문");
-        AuthInfo authInfo = new AuthInfo(1L);
 
-        Long postId = postService.addPost(newPostRequest, authInfo);
+        Long postId = postService.addPost(newPostRequest, AUTH_INFO);
         Post actual = postRepository.findById(postId).orElseThrow();
 
         assertAll(
@@ -55,16 +71,50 @@ class PostServiceTest {
         );
     }
 
-    @DisplayName("글 조회 기능")
+    @DisplayName("본인이 작성한 게시글 조회 기능")
     @Test
-    void findPost() {
-        Long savedPostId = postRepository.save(POST).getId();
+    void findPost_Session_MyPost() {
+        Long savedPostId = postRepository.save(post).getId();
 
-        PostResponse response = postService.findPost(savedPostId);
+        PostDetailResponse response = postService.findPost(savedPostId, AUTH_INFO);
 
         assertAll(
-                () -> assertThat(response.getTitle()).isEqualTo(POST.getTitle()),
-                () -> assertThat(response.getContent()).isEqualTo(POST.getContent()),
+                () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
+                () -> assertThat(response.getContent()).isEqualTo(post.getContent()),
+                () -> assertThat(response.isAuthorized()).isTrue(),
+                () -> assertThat(response.isModified()).isFalse(),
+                () -> assertThat(response.getCreatedAt()).isNotNull()
+        );
+    }
+
+    @DisplayName("로그인을 하고, 다른 회원이 작성한 게시글 조회 기능")
+    @Test
+    void findPost_Session_OtherPost() {
+        Long savedPostId = postRepository.save(post).getId();
+
+        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(2L));
+
+        assertAll(
+                () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
+                () -> assertThat(response.getContent()).isEqualTo(post.getContent()),
+                () -> assertThat(response.isAuthorized()).isFalse(),
+                () -> assertThat(response.isModified()).isFalse(),
+                () -> assertThat(response.getCreatedAt()).isNotNull()
+        );
+    }
+
+    @DisplayName("로그인 없이,게시글 조회 기능")
+    @Test
+    void findPost_NoSession() {
+        Long savedPostId = postRepository.save(post).getId();
+
+        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(null));
+
+        assertAll(
+                () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
+                () -> assertThat(response.getContent()).isEqualTo(post.getContent()),
+                () -> assertThat(response.isAuthorized()).isFalse(),
+                () -> assertThat(response.isModified()).isFalse(),
                 () -> assertThat(response.getCreatedAt()).isNotNull()
         );
     }
@@ -74,7 +124,7 @@ class PostServiceTest {
     void findPost_Exception() {
         Long invalidPostId = 9999L;
 
-        assertThatThrownBy(() -> postService.findPost(invalidPostId))
+        assertThatThrownBy(() -> postService.findPost(invalidPostId, AUTH_INFO))
                 .isInstanceOf(PostNotFoundException.class);
     }
 
@@ -89,7 +139,7 @@ class PostServiceTest {
                 .title("제목3")
                 .content("본문3")
                 .build();
-        postRepository.save(POST);
+        postRepository.save(post);
         postRepository.save(post2);
         postRepository.save(post3);
         Pageable pageable = PageRequest.of(0, 2, DESC, "createdAt");
@@ -100,32 +150,34 @@ class PostServiceTest {
                 () -> assertThat(postsResponse.getPosts()).hasSize(2),
                 () -> assertThat(postsResponse.getPosts()).usingRecursiveComparison()
                         .ignoringFields("id", "createdAt")
-                        .isEqualTo(List.of(PostResponse.from(post3), PostResponse.from(post2)))
+                        .isEqualTo(List.of(PostsElementResponse.from(post3), PostsElementResponse.from(post2)))
         );
     }
 
     @DisplayName("게시글 수정 기능")
     @Test
     void updatePost() {
-        Long postId = postRepository.save(POST).getId();
+        Long postId = postRepository.save(post).getId();
         PostUpdateRequest postUpdateRequest = new PostUpdateRequest("변경된 제목", "변경된 본문");
 
-        postService.updatePost(postId, postUpdateRequest);
+        postService.updatePost(postId, postUpdateRequest, AUTH_INFO);
 
         Post foundPost = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
+        postRepository.flush();
         assertAll(
                 () -> assertThat(foundPost.getTitle()).isEqualTo("변경된 제목"),
-                () -> assertThat(foundPost.getContent()).isEqualTo("변경된 본문")
+                () -> assertThat(foundPost.getContent()).isEqualTo("변경된 본문"),
+                () -> assertThat(foundPost.isModified()).isTrue()
         );
     }
 
     @DisplayName("게시글 삭제 기능")
     @Test
     void deletePost() {
-        Long postId = postRepository.save(POST).getId();
+        Long postId = postRepository.save(post).getId();
 
-        postService.deletePost(postId);
+        postService.deletePost(postId, AUTH_INFO);
 
         Optional<Post> foundPost = postRepository.findById(postId);
         assertThat(foundPost).isEmpty();

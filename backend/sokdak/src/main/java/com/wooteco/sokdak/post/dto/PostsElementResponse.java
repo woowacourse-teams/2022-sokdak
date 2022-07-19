@@ -5,25 +5,28 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Getter
-public class PostResponse {
+public class PostsElementResponse {
 
     private final Long id;
     private final String title;
     private final String content;
     private final LocalDateTime createdAt;
+    private final boolean modified;
 
-    public PostResponse(Long id, String title, String content, LocalDateTime createdAt) {
+    public PostsElementResponse(Long id, String title, String content, LocalDateTime createdAt, boolean modified) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.createdAt = createdAt;
+        this.modified = modified;
     }
 
-    public static PostResponse from(Post post) {
-        return new PostResponse(
+    public static PostsElementResponse from(Post post) {
+        return new PostsElementResponse(
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
-                post.getCreatedAt());
+                post.getCreatedAt(),
+                post.isModified());
     }
 }

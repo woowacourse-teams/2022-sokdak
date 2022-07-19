@@ -2,11 +2,13 @@ package com.wooteco.sokdak.post.controller;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
+import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
-import com.wooteco.sokdak.post.dto.PostResponse;
+import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.service.PostService;
+import com.wooteco.sokdak.support.Login;
 import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.data.domain.Pageable;
@@ -32,14 +34,14 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponse> findPost(@PathVariable Long id) {
-        PostResponse postResponse = postService.findPost(id);
+    public ResponseEntity<PostDetailResponse> findPost(@PathVariable Long id, @Login AuthInfo authInfo) {
+        PostDetailResponse postResponse = postService.findPost(id, authInfo);
         return ResponseEntity.ok(postResponse);
     }
 
     @PostMapping
-    public ResponseEntity<Void> addPost(@Valid @RequestBody NewPostRequest newPostRequest) {
-        Long postId = postService.addPost(newPostRequest);
+    public ResponseEntity<Void> addPost(@Valid @RequestBody NewPostRequest newPostRequest, @Login AuthInfo authInfo) {
+        Long postId = postService.addPost(newPostRequest, authInfo);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
     }
 
@@ -52,14 +54,15 @@ public class PostController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updatePost(@PathVariable Long id,
-                                           @Valid @RequestBody PostUpdateRequest postUpdateRequest) {
-        postService.updatePost(id, postUpdateRequest);
+                                           @Valid @RequestBody PostUpdateRequest postUpdateRequest,
+                                           @Login AuthInfo authInfo) {
+        postService.updatePost(id, postUpdateRequest, authInfo);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
-        postService.deletePost(id);
+    public ResponseEntity<Void> deletePost(@PathVariable Long id, @Login AuthInfo authInfo) {
+        postService.deletePost(id, authInfo);
         return ResponseEntity.noContent().build();
     }
 }

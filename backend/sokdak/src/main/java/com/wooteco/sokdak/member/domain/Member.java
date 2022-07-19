@@ -28,7 +28,8 @@ public class Member {
     }
 
     @Builder
-    public Member(String username, String password, String nickname) {
+    public Member(Long id, String username, String password, String nickname) {
+        this.id = id;
         this.username = new Username(username);
         this.password = password;
         this.nickname = new Nickname(nickname);

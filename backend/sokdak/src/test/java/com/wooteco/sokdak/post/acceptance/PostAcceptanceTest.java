@@ -1,5 +1,9 @@
 package com.wooteco.sokdak.post.acceptance;
 
+import static com.wooteco.sokdak.post.util.PostFixture.UPDATED_POST_CONTENT;
+import static com.wooteco.sokdak.post.util.PostFixture.UPDATED_POST_TITLE;
+import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_CONTENT;
+import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getExceptionMessage;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
@@ -11,8 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
-import com.wooteco.sokdak.post.dto.PostResponse;
+import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
+import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
@@ -26,7 +31,7 @@ import org.springframework.http.HttpStatus;
 @DisplayName("게시글 관련 인수테스트")
 class PostAcceptanceTest extends AcceptanceTest {
 
-    private static final NewPostRequest NEW_POST_REQUEST = new NewPostRequest("제목", "본문");
+    private static final NewPostRequest NEW_POST_REQUEST = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT);
 
     @DisplayName("새로운 게시글을 작성할 수 있다.")
     @Test
@@ -72,19 +77,19 @@ class PostAcceptanceTest extends AcceptanceTest {
                 httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getSessionId()));
 
         ExtractableResponse<Response> response = httpGet("/posts/" + postId);
-        PostResponse postResponse = response.jsonPath().getObject(".", PostResponse.class);
+        PostDetailResponse postDetailResponse = response.jsonPath().getObject(".", PostDetailResponse.class);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(postResponse.getTitle()).isEqualTo(NEW_POST_REQUEST.getTitle()),
-                () -> assertThat(postResponse.getContent()).isEqualTo(NEW_POST_REQUEST.getContent())
+                () -> assertThat(postDetailResponse.getTitle()).isEqualTo(NEW_POST_REQUEST.getTitle()),
+                () -> assertThat(postDetailResponse.getContent()).isEqualTo(NEW_POST_REQUEST.getContent())
         );
     }
 
     @DisplayName("게시글 제목이 없는 경우 글 작성을 할 수 없다.")
     @Test
     void addPost_Exception_NoTitle() {
-        NewPostRequest newPostRequestWithoutTitle = new NewPostRequest(null, "본문");
+        NewPostRequest newPostRequestWithoutTitle = new NewPostRequest(null, VALID_POST_CONTENT);
         ExtractableResponse<Response> response =
                 httpPostWithAuthorization(newPostRequestWithoutTitle, "/posts", getSessionId());
 
@@ -112,15 +117,16 @@ class PostAcceptanceTest extends AcceptanceTest {
         String postId = parsePostId(
                 httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getSessionId()));
 
-        PostUpdateRequest postUpdateRequest = new PostUpdateRequest("변경된 제목", "변경된 본문");
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT);
         ExtractableResponse<Response> response =
                 httpPutWithAuthorization(postUpdateRequest, "/posts/" + postId, getSessionId());
 
-        PostResponse postResponse = httpGet("/posts/" + postId).jsonPath().getObject(".", PostResponse.class);
+        PostDetailResponse postDetailResponse = httpGet("/posts/" + postId).jsonPath()
+                .getObject(".", PostDetailResponse.class);
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
-                () -> assertThat(postResponse.getTitle()).isEqualTo("변경된 제목"),
-                () -> assertThat(postResponse.getContent()).isEqualTo("변경된 본문")
+                () -> assertThat(postDetailResponse.getTitle()).isEqualTo(UPDATED_POST_TITLE),
+                () -> assertThat(postDetailResponse.getContent()).isEqualTo(UPDATED_POST_CONTENT)
         );
     }
 
@@ -155,7 +161,7 @@ class PostAcceptanceTest extends AcceptanceTest {
                 .getObject(".", PostsResponse.class)
                 .getPosts()
                 .stream()
-                .map(PostResponse::getTitle)
+                .map(PostsElementResponse::getTitle)
                 .collect(Collectors.toList());
     }
 }

@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 
-import { postList } from '@/dummy';
+import { commentList, postList } from '@/dummy';
 
 const postHandlers = [
   rest.post<Pick<Post, 'title' | 'content'>>('/posts', (req, res, ctx) => {
@@ -83,6 +83,27 @@ const postHandlers = [
       postList.findIndex(post => post.id === id),
       1,
     );
+
+    return res(ctx.status(204));
+  }),
+  rest.get('/posts/:id/comments', (req, res, ctx) => {
+    const params = req.params;
+    const id = Number(params.id);
+
+    const targetCommentList = commentList.filter(comment => comment.postId === id);
+    return res(ctx.status(200), ctx.json({ comments: targetCommentList }));
+  }),
+  rest.post<{ content: string; anonymous: boolean }>('/posts/:id/comments', (req, res, ctx) => {
+    const params = req.params;
+    const id = Number(params.id);
+    const { content, anonymous } = req.body;
+    commentList.unshift({
+      id: commentList.length + 1,
+      content,
+      createdAt: new Date().toISOString(),
+      nickname: anonymous ? '익명' : '기명',
+      postId: id,
+    });
 
     return res(ctx.status(204));
   }),

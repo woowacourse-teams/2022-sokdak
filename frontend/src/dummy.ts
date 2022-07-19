@@ -193,3 +193,124 @@ export const validMemberEmail: { email: string; isSignedUp: boolean; code: strin
     { email: 'test@gmail.com', isSignedUp: true, code: 'test', ID: 'test', nickname: 'test' },
     { email: 'test1@gmail.com', isSignedUp: false, code: 'test' },
   ];
+
+interface CommentListType extends CommentType {
+  id: number;
+  postId: number;
+}
+
+export const commentList: CommentListType[] = [
+  {
+    id: 1,
+    postId: 1,
+    content:
+      'ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ첫댓글',
+    createdAt: '2022-07-04T19:55:31.016376300',
+    nickname: '익명',
+  },
+  {
+    id: 2,
+    postId: 1,
+    content: '안녕하세요.',
+    createdAt: '2022-07-04T19:55:31.016376300',
+    nickname: '익명',
+  },
+  {
+    id: 3,
+    postId: 1,
+    content: '안녕하세요.',
+    createdAt: '2022-07-04T19:55:31.016376300',
+    nickname: '익명',
+  },
+  {
+    id: 4,
+    postId: 1,
+    content: '안녕하세요.',
+    createdAt: '2022-07-04T19:55:31.016376300',
+    nickname: '익명',
+  },
+  {
+    id: 5,
+    postId: 1,
+    content: '안녕하세요.',
+    createdAt: '2022-07-04T19:55:31.016376300',
+    nickname: '익명',
+  },
+  {
+    id: 6,
+    postId: 1,
+    content: '안녕하세요.',
+    createdAt: '2022-07-04T19:55:31.016376300',
+    nickname: '익명',
+  },
+  {
+    id: 7,
+    postId: 1,
+    content: '안녕하세요.',
+    createdAt: '2022-07-04T19:55:31.016376300',
+    nickname: '익명',
+  },
+  {
+    id: 8,
+    postId: 1,
+    content: '안녕하세요.',
+    createdAt: '2022-07-04T19:55:31.016376300',
+    nickname: '익명',
+  },
+  {
+    id: 9,
+    postId: 1,
+    content: '안녕하세요.',
+    createdAt: '2022-07-04T19:55:31.016376300',
+    nickname: '익명',
+  },
+  {
+    id: 10,
+    postId: 1,
+    content: '안녕하세요.',
+    createdAt: '2022-07-04T19:55:31.016376300',
+    nickname: '익명',
+  },
+  {
+    id: 11,
+    postId: 1,
+    content: '안녕하세요.',
+    createdAt: '2022-07-04T19:55:31.016376300',
+    nickname: '익명',
+  },
+  {
+    id: 12,
+    postId: 1,
+    content: '안녕하세요.',
+    createdAt: '2022-07-04T19:55:31.016376300',
+    nickname: '익명',
+  },
+  {
+    id: 13,
+    postId: 1,
+    content: '안녕하세요.',
+    createdAt: '2022-07-04T19:55:31.016376300',
+    nickname: '익명',
+  },
+  {
+    id: 14,
+    postId: 1,
+    content: '안녕하세요.',
+    createdAt: '2022-07-04T19:55:31.016376300',
+    nickname: '익명',
+  },
+  {
+    id: 15,
+    postId: 1,
+    content: '안녕하세요.',
+    createdAt: '2022-07-04T19:55:31.016376300',
+    nickname: '익명',
+  },
+  {
+    id: 16,
+    postId: 1,
+    content: '안녕하세요.',
+    createdAt: '2022-07-04T19:55:31.016376300',
+    nickname: '익명',
+  },
+];

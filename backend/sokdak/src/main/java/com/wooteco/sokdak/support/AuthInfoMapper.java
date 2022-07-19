@@ -4,6 +4,7 @@ import com.wooteco.sokdak.auth.dto.AuthInfo;
 import javax.servlet.http.HttpSession;
 
 public class AuthInfoMapper {
+
     public AuthInfoMapper() {
     }
 

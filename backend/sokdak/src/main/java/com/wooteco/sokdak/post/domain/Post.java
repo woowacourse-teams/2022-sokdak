@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.post.domain;
 
+import com.wooteco.sokdak.auth.exception.AuthenticationException;
 import com.wooteco.sokdak.member.domain.Member;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -67,11 +68,19 @@ public class Post {
         return member;
     }
 
-    public void updateTitle(String title) {
+    public void updateTitle(String title, Long accessMemberId) {
+        validateOwner(accessMemberId);
         this.title = new Title(title);
     }
 
-    public void updateContent(String content) {
+    public void updateContent(String content, Long accessMemberId) {
+        validateOwner(accessMemberId);
         this.content = new Content(content);
+    }
+
+    public void validateOwner(Long accessMemberId) {
+        if (accessMemberId != member.getId()) {
+            throw new AuthenticationException();
+        }
     }
 }

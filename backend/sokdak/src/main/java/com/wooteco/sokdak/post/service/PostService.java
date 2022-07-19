@@ -1,6 +1,8 @@
 package com.wooteco.sokdak.post.service;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
@@ -30,8 +32,13 @@ public class PostService {
 
     @Transactional
     public Long addPost(NewPostRequest newPostRequest, AuthInfo authInfo) {
-        Post post = newPostRequest.toEntity();
-
+        Member member = memberRepository.findById(authInfo.getId())
+                .orElseThrow(MemberNotFoundException::new);
+        Post post = Post.builder()
+                .title(newPostRequest.getTitle())
+                .content(newPostRequest.getContent())
+                .member(member)
+                .build();
         return postRepository.save(post).getId();
     }
 
@@ -52,17 +59,18 @@ public class PostService {
     }
 
     @Transactional
-    public void updatePost(Long postId, PostUpdateRequest postUpdateRequest) {
+    public void updatePost(Long postId, PostUpdateRequest postUpdateRequest, AuthInfo authInfo) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-        post.updateTitle(postUpdateRequest.getTitle());
-        post.updateContent(postUpdateRequest.getContent());
+        post.updateTitle(postUpdateRequest.getTitle(), authInfo.getId());
+        post.updateContent(postUpdateRequest.getContent(), authInfo.getId());
     }
 
     @Transactional
-    public void deletePost(Long id) {
+    public void deletePost(Long id, AuthInfo authInfo) {
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFoundException::new);
+        post.validateOwner(authInfo.getId());
         postRepository.delete(post);
     }
 }

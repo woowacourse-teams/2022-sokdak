@@ -2,6 +2,8 @@ package com.wooteco.sokdak.comment.service;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.comment.domain.Comment;
+import com.wooteco.sokdak.comment.dto.CommentResponse;
+import com.wooteco.sokdak.comment.dto.CommentsResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.member.domain.Member;
@@ -13,6 +15,7 @@ import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -62,5 +65,13 @@ public class CommentService {
                 .filter(nickname -> !nickname.equals(memberNickname))
                 .findAny()
                 .orElseGet(() -> RandomNicknameGenerator.generate(new HashSet<>(usedNicknames)));
+    }
+
+    public CommentsResponse findComments(Long postId) {
+        List<CommentResponse> commentResponses = commentRepository.findAllByPostId(postId)
+                .stream()
+                .map(CommentResponse::of)
+                .collect(Collectors.toList());
+        return new CommentsResponse(commentResponses);
     }
 }

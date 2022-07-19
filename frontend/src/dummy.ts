@@ -2,18 +2,18 @@ export const postList: Post[] = [
   {
     id: 1,
     title: '오늘 날씨 맑네요',
-    createdAt: '2022-07-13T19:55:31.016376300',
+    createdAt: '2022-07-19T19:55:31.016376300',
     content: '날씨는 참 좋네요.',
-    likeCount: 1,
+    likeCount: 1200,
     commentCount: 2,
-    modified: true,
+    modified: false,
   },
   {
     id: 2,
     title: '오늘 날씨 좋네요',
-    createdAt: '2022-07-12T19:55:31.016376300',
+    createdAt: '2022-07-18T19:55:31.016376300',
     content: '어항에 있는 것 같아요.',
-    likeCount: 3,
+    likeCount: 4,
     commentCount: 0,
     modified: true,
   },
@@ -23,8 +23,8 @@ export const postList: Post[] = [
     createdAt: '2022-07-11T19:55:31.016376300',
     content: '싫어? 아냐 나 괜찮아',
     likeCount: 3,
-    commentCount: 0,
-    modified: true,
+    commentCount: 6,
+    modified: false,
   },
   {
     id: 4,
@@ -41,8 +41,8 @@ export const postList: Post[] = [
     createdAt: '2022-07-09T19:55:31.016376300',
     content: '미안하다 진짜봇',
     likeCount: 3,
-    commentCount: 4,
-    modified: true,
+    commentCount: 2,
+    modified: false,
   },
   {
     id: 6,
@@ -51,7 +51,7 @@ export const postList: Post[] = [
     content: '생각멈춰',
     likeCount: 2,
     commentCount: 2,
-    modified: true,
+    modified: false,
   },
   {
     id: 7,
@@ -60,7 +60,7 @@ export const postList: Post[] = [
     content: '베이비 이스트',
     likeCount: 3,
     commentCount: 4,
-    modified: true,
+    modified: false,
   },
   {
     id: 8,
@@ -69,7 +69,7 @@ export const postList: Post[] = [
     content: '단백질 벌컥 벌컥',
     likeCount: 7,
     commentCount: 7,
-    modified: true,
+    modified: false,
   },
   {
     id: 9,
@@ -78,7 +78,7 @@ export const postList: Post[] = [
     content: '알고리즘 냠냠',
     likeCount: 10,
     commentCount: 1,
-    modified: true,
+    modified: false,
   },
   {
     id: 10,
@@ -87,7 +87,7 @@ export const postList: Post[] = [
     content: '특 : 페이지 계산 못함',
     likeCount: 1,
     commentCount: 1,
-    modified: true,
+    modified: false,
   },
   {
     id: 11,
@@ -96,7 +96,7 @@ export const postList: Post[] = [
     content: '어떻게 해야 할까요?',
     likeCount: 3,
     commentCount: 4,
-    modified: true,
+    modified: false,
   },
   {
     id: 12,
@@ -105,7 +105,7 @@ export const postList: Post[] = [
     content: '잘한걸까요? ...',
     likeCount: 3,
     commentCount: 4,
-    modified: true,
+    modified: false,
   },
   {
     id: 13,
@@ -114,7 +114,7 @@ export const postList: Post[] = [
     content: '슬리퍼 신고 싶엉',
     likeCount: 3,
     commentCount: 4,
-    modified: true,
+    modified: false,
   },
   {
     id: 14,
@@ -123,7 +123,7 @@ export const postList: Post[] = [
     content: '너무 좋다.',
     likeCount: 3,
     commentCount: 4,
-    modified: true,
+    modified: false,
   },
   {
     id: 15,
@@ -132,7 +132,7 @@ export const postList: Post[] = [
     content: '화이팅!',
     likeCount: 3,
     commentCount: 4,
-    modified: true,
+    modified: false,
   },
   {
     id: 16,
@@ -141,7 +141,7 @@ export const postList: Post[] = [
     content: '다시 시작합니다.',
     likeCount: 3,
     commentCount: 4,
-    modified: true,
+    modified: false,
   },
   {
     id: 17,
@@ -150,7 +150,7 @@ export const postList: Post[] = [
     content: '안오네',
     likeCount: 3,
     commentCount: 4,
-    modified: true,
+    modified: false,
   },
   {
     id: 18,
@@ -159,7 +159,7 @@ export const postList: Post[] = [
     content: '오잖아',
     likeCount: 3,
     commentCount: 4,
-    modified: true,
+    modified: false,
   },
   {
     id: 19,
@@ -168,7 +168,7 @@ export const postList: Post[] = [
     content: '염증은 밥으로 밀어내야한다는 썰이 있던데..',
     likeCount: 3,
     commentCount: 4,
-    modified: true,
+    modified: false,
   },
   {
     id: 20,
@@ -177,7 +177,7 @@ export const postList: Post[] = [
     content: '좀 귀찮네',
     likeCount: 3,
     commentCount: 4,
-    modified: true,
+    modified: false,
   },
 ];
 

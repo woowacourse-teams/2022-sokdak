@@ -74,9 +74,6 @@ const PostPage = () => {
         <Styled.ContentContainer>
           <Styled.Content>{content}</Styled.Content>
         </Styled.ContentContainer>
-        <Styled.ListButtonContainer>
-          <Styled.ListButton to={PATH.HOME}>글 목록</Styled.ListButton>
-        </Styled.ListButtonContainer>
         <CommentList id={id!} />
       </Styled.Container>
 

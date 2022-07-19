@@ -6,7 +6,7 @@
   "scripts": {
     "start:MSW": "eslint . && env-cmd -f ./env/.env.mocking webpack serve --open --config ./webpack/webpack.dev.js",
     "start": "eslint . && env-cmd -f ./env/.env.local webpack serve --open --config ./webpack/webpack.dev.js",
-    "build": "webpack --config ./webpack/webpack.prod.js",
+    "build": "env-cmd -f ./env/.env.production webpack --config ./webpack/webpack.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",

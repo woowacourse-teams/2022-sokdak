@@ -48,7 +48,6 @@ public class PostService {
         return PostResponse.from(foundPost);
     }
 
-
     public PostsResponse findPosts(Pageable pageable) {
         Slice<Post> posts = postRepository.findSliceBy(pageable);
         List<PostResponse> postResponses = posts.getContent()

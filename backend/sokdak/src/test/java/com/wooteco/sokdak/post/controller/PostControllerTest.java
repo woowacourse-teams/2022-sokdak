@@ -1,10 +1,9 @@
 package com.wooteco.sokdak.post.controller;
 
+import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.spy;
 
-import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
@@ -25,7 +24,6 @@ import org.springframework.restdocs.RestDocumentationExtension;
 class PostControllerTest extends ControllerTest {
 
     private static final String SESSION_ID = "mySessionId";
-    private static final AuthInfo AUTH_INFO = new AuthInfo(1L);
 
     @Autowired
     PostController postController;
@@ -35,11 +33,9 @@ class PostControllerTest extends ControllerTest {
 
     @BeforeEach
     void setUpArgumentResolver() {
-        //해당 부분에서 ArgumentResolver 리턴값을 목 형태로 만듦
         given(authInfoMapper.getAuthInfo(any()))
                 .willReturn(AUTH_INFO);
     }
-
 
     @DisplayName("글 작성 요청을 받으면 새로운 게시글을 등록한다.")
     @Test

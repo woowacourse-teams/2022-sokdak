@@ -10,6 +10,11 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
+    private final AuthInfoMapper authInfoMapper;
+
+    public LoginArgumentResolver(AuthInfoMapper authInfoMapper) {
+        this.authInfoMapper = authInfoMapper;
+    }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -19,13 +24,13 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public AuthInfo resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+                                    NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         HttpSession session = request.getSession(false);
         if (session == null) {
             return null;
         }
-        return session.getAttribute("member");
+        return authInfoMapper.getAuthInfo(session);
     }
 }

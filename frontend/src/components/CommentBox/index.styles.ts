@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 
 export const Container = styled.div`
-  width: 100%;
+  width: calc(100%-1em);
   border-top: 0.5px solid ${props => props.theme.colors.gray_150};
-  padding: 1em;
+  padding: 1em 0.5em;
 `;
 
 export const Nickname = styled.p`
@@ -13,6 +13,8 @@ export const Nickname = styled.p`
 
 export const Content = styled.p`
   font-size: 12px;
+  line-height: 1.3;
+  white-space: pre-wrap;
 `;
 
 export const Date = styled.p`

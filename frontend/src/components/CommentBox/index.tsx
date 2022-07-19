@@ -2,7 +2,7 @@ import * as Styled from './index.styles';
 
 import timeConverter from '@/utils/timeConverter';
 
-const Comment = ({ nickname, content, createdAt }: Comment) => {
+const CommentBox = ({ nickname, content, createdAt }: CommentType) => {
   return (
     <Styled.Container>
       <Styled.Nickname>{nickname}</Styled.Nickname>
@@ -12,4 +12,4 @@ const Comment = ({ nickname, content, createdAt }: Comment) => {
   );
 };
 
-export default Comment;
+export default CommentBox;

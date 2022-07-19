@@ -3,8 +3,6 @@ package com.wooteco.sokdak.member.service;
 import com.wooteco.sokdak.auth.service.AuthService;
 import com.wooteco.sokdak.auth.service.Encryptor;
 import com.wooteco.sokdak.member.domain.Member;
-import com.wooteco.sokdak.member.domain.Nickname;
-import com.wooteco.sokdak.member.domain.Username;
 import com.wooteco.sokdak.member.dto.SignupRequest;
 import com.wooteco.sokdak.member.dto.UniqueResponse;
 import com.wooteco.sokdak.member.dto.VerificationRequest;
@@ -33,12 +31,12 @@ public class MemberService {
     }
 
     public UniqueResponse checkUniqueUsername(String username) {
-        boolean unique = !memberRepository.existsMemberByUsername(new Username(username));
+        boolean unique = !memberRepository.existsMemberByUsernameValue(username);
         return new UniqueResponse(unique);
     }
 
     public UniqueResponse checkUniqueNickname(String nickname) {
-        boolean unique = !memberRepository.existsMemberByNickname(new Nickname(nickname));
+        boolean unique = !memberRepository.existsMemberByNicknameValue(nickname);
         return new UniqueResponse(unique);
     }
 
@@ -65,7 +63,7 @@ public class MemberService {
 
     private void validateUniqueUsername(SignupRequest signupRequest) {
         boolean isDuplicatedUsername = memberRepository
-                .existsMemberByUsername(new Username(signupRequest.getUsername()));
+                .existsMemberByUsernameValue(signupRequest.getUsername());
         if (isDuplicatedUsername) {
             throw new InvalidSignupFlowException();
         }
@@ -73,7 +71,7 @@ public class MemberService {
 
     private void validateUniqueNickname(SignupRequest signupRequest) {
         boolean isDuplicatedNickname = memberRepository
-                .existsMemberByNickname(new Nickname(signupRequest.getNickname()));
+                .existsMemberByNicknameValue(signupRequest.getNickname());
         if (isDuplicatedNickname) {
             throw new InvalidSignupFlowException();
         }

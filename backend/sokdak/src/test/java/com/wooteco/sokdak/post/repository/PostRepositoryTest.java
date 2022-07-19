@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.member.domain.Member;
-import com.wooteco.sokdak.member.domain.Username;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +34,7 @@ class PostRepositoryTest {
     @BeforeEach
     void setUp() {
         Member member = memberRepository
-                .findByUsernameAndPassword(new Username(VALID_USERNAME), VALID_ENCRYPTED_PASSWORD)
+                .findByUsernameValueAndPassword(VALID_USERNAME, VALID_ENCRYPTED_PASSWORD)
                 .get();
 
         post1 = Post.builder()

@@ -86,7 +86,7 @@ const sizeDown = keyframes`
 export const VerificationCodeContainer = styled.div<{ isEmailSet: boolean; isVerified: boolean }>`
   width: 100%;
 
-  animation: ${props => (props.isEmailSet ? (props.isVerified ? sizeDown : sizeUp) : null)} 2s;
+  animation: ${props => (props.isEmailSet ? (props.isVerified ? sizeDown : sizeUp) : null)} 0.5s;
   animation-fill-mode: forwards;
 `;
 

@@ -1,11 +1,17 @@
 package com.wooteco.sokdak.post.controller;
 
+import static com.wooteco.sokdak.post.util.PostFixture.UPDATED_POST_CONTENT;
+import static com.wooteco.sokdak.post.util.PostFixture.UPDATED_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 
+import com.wooteco.sokdak.auth.exception.AuthenticationException;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostResponse;
+import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.support.AuthInfoMapper;
 import com.wooteco.sokdak.util.ControllerTest;
@@ -33,8 +39,9 @@ class PostControllerTest extends ControllerTest {
 
     @BeforeEach
     void setUpArgumentResolver() {
-        given(authInfoMapper.getAuthInfo(any()))
-                .willReturn(AUTH_INFO);
+        doReturn(AUTH_INFO)
+                .when(authInfoMapper)
+                .getAuthInfo(any());
     }
 
     @DisplayName("글 작성 요청을 받으면 새로운 게시글을 등록한다.")
@@ -87,8 +94,9 @@ class PostControllerTest extends ControllerTest {
     void findPosts() {
         PostResponse postResponse1 = new PostResponse(1L, "제목1", "본문1", LocalDateTime.now());
         PostResponse postResponse2 = new PostResponse(2L, "제목2", "본문2", LocalDateTime.now());
-        given(postService.findPost(any()))
-                .willReturn(postResponse1, postResponse2);
+        doReturn(postResponse1, postResponse2)
+                .when(postService)
+                .findPost(any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -103,8 +111,9 @@ class PostControllerTest extends ControllerTest {
     @Test
     void findPost() {
         PostResponse postResponse = new PostResponse(1L, "제목1", "본문1", LocalDateTime.now());
-        given(postService.findPost(any()))
-                .willReturn(postResponse);
+        doReturn(postResponse)
+                .when(postService)
+                .findPost(any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -118,8 +127,9 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("존재하지 않는 게시글에 대해 조회하면 404를 반환한다.")
     @Test
     void findPost_Exception_NoPost() {
-        given(postService.findPost(any()))
-                .willThrow(new PostNotFoundException());
+        doThrow(new PostNotFoundException())
+                .when(postService)
+                .findPost(any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -128,5 +138,71 @@ class PostControllerTest extends ControllerTest {
                 .when().get("/posts/9999")
                 .then().log().all()
                 .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @DisplayName("게시글을 수정한다.")
+    @Test
+    void updatePost() {
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT);
+        doNothing().when(postService)
+                .updatePost(any(), any(), any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .sessionId(SESSION_ID)
+                .body(postUpdateRequest)
+                .sessionAttr("member", AUTH_INFO)
+                .when().put("/posts/1")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("권한이 없는 게시글을 수정하려고 하면 403을 반환한다.")
+    @Test
+    void updatePost_Exception_ForbiddenMemberId() {
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT);
+        doThrow(new AuthenticationException())
+                .when(postService)
+                .updatePost(any(), any(), any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .sessionId(SESSION_ID)
+                .body(postUpdateRequest)
+                .sessionAttr("member", AUTH_INFO)
+                .when().put("/posts/1")
+                .then().log().all()
+                .statusCode(HttpStatus.FORBIDDEN.value());
+    }
+
+    @DisplayName("게시글을 삭제한다.")
+    @Test
+    void deletePost() {
+        doNothing().when(postService)
+                .deletePost(any(), any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .sessionId(SESSION_ID)
+                .sessionAttr("member", AUTH_INFO)
+                .when().delete("/posts/1")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("권한이 없는 게시글을 삭제하려고 하면 403을 반환한다.")
+    @Test
+    void deletePost_Exception_ForbiddenMemberId() {
+        doThrow(new AuthenticationException())
+                .when(postService)
+                .deletePost(any(), any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .sessionId(SESSION_ID)
+                .sessionAttr("member", AUTH_INFO)
+                .when().delete("/posts/1")
+                .then().log().all()
+                .statusCode(HttpStatus.FORBIDDEN.value());
     }
 }

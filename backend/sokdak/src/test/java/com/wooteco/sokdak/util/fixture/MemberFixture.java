@@ -16,5 +16,6 @@ public class MemberFixture {
     public static final LoginRequest VALID_LOGIN_REQUEST = new LoginRequest(VALID_USERNAME, VALID_PASSWORD);
     public static final LoginRequest INVALID_LOGIN_REQUEST = new LoginRequest(INVALID_USERNAME, INVALID_PASSWORD);
 
+    public static final String SESSION_ID = "mySessionId";
     public static final AuthInfo AUTH_INFO = new AuthInfo(1L);
 }

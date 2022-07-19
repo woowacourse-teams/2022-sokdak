@@ -5,6 +5,8 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 
 import com.wooteco.sokdak.auth.controller.AuthController;
 import com.wooteco.sokdak.auth.service.AuthService;
+import com.wooteco.sokdak.comment.controller.CommentController;
+import com.wooteco.sokdak.comment.service.CommentService;
 import com.wooteco.sokdak.member.controller.MemberController;
 import com.wooteco.sokdak.member.service.EmailSender;
 import com.wooteco.sokdak.member.service.EmailService;
@@ -25,7 +27,8 @@ import org.springframework.web.context.WebApplicationContext;
 @WebMvcTest({
         PostController.class,
         MemberController.class,
-        AuthController.class
+        AuthController.class,
+        CommentController.class
 })
 @ExtendWith(RestDocumentationExtension.class)
 public class ControllerTest {
@@ -46,6 +49,9 @@ public class ControllerTest {
 
     @MockBean
     protected AuthService authService;
+
+    @MockBean
+    protected CommentService commentService;
 
     @BeforeEach
     void setRestDocs(WebApplicationContext webApplicationContext,

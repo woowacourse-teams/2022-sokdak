@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import IDInput from './components/IDInput';
 import PasswordInput from './components/PasswordInput';
+import { useInput } from '@/components/@shared/InputBox/useInput';
 import Layout from '@/components/@styled/Layout';
 
 import AuthContext from '@/context/Auth';
@@ -16,10 +17,23 @@ import PATH from '@/constants/path';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
 const LoginPage = () => {
-  const [ID, setID] = useState('');
-  const [IDError, setIDError] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
+  const {
+    value: ID,
+    setValue: setID,
+    error: IDError,
+    setError: setIDError,
+    isAnimationActive: isLoginAnimationActive,
+    setIsAnimationActive: setIsLoginAnimationActive,
+  } = useInput();
+  const {
+    value: password,
+    setValue: setPassword,
+    error: passwordError,
+    setError: setPasswordError,
+    isAnimationActive: isPasswordAnimationActive,
+    setIsAnimationActive: setIsPasswordAnimationActive,
+  } = useInput();
+
   const { showSnackbar } = useContext(SnackbarContext);
   const navigate = useNavigate();
   const { setIsLogin, setUserName } = useContext(AuthContext);
@@ -34,6 +48,8 @@ const LoginPage = () => {
     onError: () => {
       setIDError(' ');
       setPasswordError(' ');
+      setIsLoginAnimationActive(true);
+      setIsPasswordAnimationActive(true);
       showSnackbar(SNACKBAR_MESSAGE.FAIL_LOGIN);
     },
   });
@@ -49,8 +65,22 @@ const LoginPage = () => {
     <Layout>
       <Styled.LoginForm onSubmit={handleSubmitButton}>
         <Styled.Heading>로그인</Styled.Heading>
-        <IDInput value={ID} setValue={setID} error={IDError} setError={setIDError} />
-        <PasswordInput value={password} setValue={setPassword} error={passwordError} setError={setPasswordError} />
+        <IDInput
+          value={ID}
+          setValue={setID}
+          error={IDError}
+          setError={setIDError}
+          isAnimationActive={isLoginAnimationActive}
+          setIsAnimationActive={setIsLoginAnimationActive}
+        />
+        <PasswordInput
+          value={password}
+          setValue={setPassword}
+          error={passwordError}
+          setError={setPasswordError}
+          isAnimationActive={isPasswordAnimationActive}
+          setIsAnimationActive={setIsPasswordAnimationActive}
+        />
         <Styled.SubmitButton>로그인</Styled.SubmitButton>
         <Styled.SignUpText>
           속닥속닥, <Styled.SignUpLink to={PATH.SIGN_UP}>간편 회원가입하기</Styled.SignUpLink>

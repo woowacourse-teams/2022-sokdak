@@ -8,4 +8,8 @@ export const Button = styled.button`
   cursor: pointer;
   min-width: 100px;
   height: 30px;
+  :disabled {
+    color: ${props => props.theme.colors.gray_300};
+    cursor: not-allowed;
+  }
 `;

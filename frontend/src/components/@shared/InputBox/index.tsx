@@ -6,16 +6,30 @@ import SubmitButton from './components/SubmitButton';
 
 import { InputContextProvider } from './useInputContext';
 
-interface InputBoxProps {
+interface InputBoxProps<T = string> {
   children: React.ReactNode;
   value: string;
   setValue: Dispatch<SetStateAction<string>>;
-  error: string;
-  setError: Dispatch<SetStateAction<string>>;
+  error: T;
+  setError: Dispatch<SetStateAction<T>>;
+  isAnimationActive: boolean;
+  setIsAnimationActive: Dispatch<SetStateAction<boolean>>;
 }
 
-const InputBox = ({ children, value, setValue, error, setError }: InputBoxProps) => {
-  return <InputContextProvider value={{ value, setValue, error, setError }}>{children}</InputContextProvider>;
+const InputBox = ({
+  children,
+  value,
+  setValue,
+  error,
+  setError,
+  isAnimationActive,
+  setIsAnimationActive,
+}: InputBoxProps) => {
+  return (
+    <InputContextProvider value={{ value, setValue, error, setError, isAnimationActive, setIsAnimationActive }}>
+      {children}
+    </InputContextProvider>
+  );
 };
 
 InputBox.SubmitButton = SubmitButton;

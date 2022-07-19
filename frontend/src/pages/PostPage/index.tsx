@@ -1,6 +1,7 @@
 import { useReducer } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import CommentList from './components/CommentList';
 import Layout from '@/components/@styled/Layout';
 import ConfirmModal from '@/components/ConfirmModal';
 import Spinner from '@/components/Spinner';
@@ -76,6 +77,7 @@ const PostPage = () => {
         <Styled.ListButtonContainer>
           <Styled.ListButton to={PATH.HOME}>글 목록</Styled.ListButton>
         </Styled.ListButtonContainer>
+        <CommentList id={id!} />
       </Styled.Container>
 
       {isConfirmModalOpen && (

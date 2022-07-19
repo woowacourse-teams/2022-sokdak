@@ -9,11 +9,13 @@ export default {
   decorators: [withRouter],
 } as ComponentMeta<typeof CommentInput>;
 
-const Template = () => (
+const Template: ComponentStory<typeof CommentInput> = args => (
   <div style={{ width: '300px' }}>
-    <CommentInput />
+    <CommentInput {...args} />
   </div>
 );
 
 export const CommentInputTemplate: ComponentStory<typeof CommentInput> = Template.bind({});
-CommentInputTemplate.args = {};
+CommentInputTemplate.args = {
+  amount: 35,
+};

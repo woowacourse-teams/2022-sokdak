@@ -2,6 +2,7 @@ import { forwardRef } from 'react';
 
 import * as Styled from './index.styles';
 
+import countFormatter from '@/utils/countFormatter';
 import timeConverter from '@/utils/timeConverter';
 
 interface PostListItemProps extends Omit<Post, 'id'> {
@@ -9,16 +10,25 @@ interface PostListItemProps extends Omit<Post, 'id'> {
 }
 
 const PostListItem = forwardRef<HTMLDivElement, PostListItemProps>(
-  ({ title, content, createdAt, handleClick }: PostListItemProps, ref) => {
+  ({ title, content, createdAt, likeCount, commentCount, modified, handleClick }: PostListItemProps, ref) => {
     return (
       <Styled.Container onClick={handleClick} ref={ref}>
-        <Styled.TitleContainer>
-          <Styled.Title>{title}</Styled.Title>
+        <Styled.HeadContainer>
+          <Styled.TitleContainer>
+            <Styled.Title isModified={modified}>{title}</Styled.Title>
+            {modified && <Styled.Modified>(편집됨)</Styled.Modified>}
+          </Styled.TitleContainer>
           <Styled.Date>{timeConverter(createdAt)}</Styled.Date>
-        </Styled.TitleContainer>
+        </Styled.HeadContainer>
         <Styled.ContentContainer>
           <Styled.Content>{content}</Styled.Content>
         </Styled.ContentContainer>
+        <Styled.PostInfoContainer>
+          <Styled.LikeIcon />
+          <Styled.LikeCount>{countFormatter(likeCount)}</Styled.LikeCount>
+          <Styled.CommentIcon />
+          <Styled.CommentCount>{countFormatter(commentCount)}</Styled.CommentCount>
+        </Styled.PostInfoContainer>
       </Styled.Container>
     );
   },

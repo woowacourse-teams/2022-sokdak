@@ -11,6 +11,9 @@ const postHandlers = [
       title,
       content,
       createdAt: new Date().toISOString(),
+      likeCount: 0,
+      commentCount: 0,
+      modified: false,
     };
 
     postList.unshift(newPost);
@@ -61,6 +64,7 @@ const postHandlers = [
 
     targetPost.title = title;
     targetPost.content = content;
+    targetPost.modified = true;
 
     return res(ctx.status(204));
   }),

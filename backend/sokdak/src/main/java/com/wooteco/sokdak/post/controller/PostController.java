@@ -4,7 +4,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
-import com.wooteco.sokdak.post.dto.PostResponse;
+import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.service.PostService;
@@ -34,8 +34,8 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponse> findPost(@PathVariable Long id) {
-        PostResponse postResponse = postService.findPost(id);
+    public ResponseEntity<PostDetailResponse> findPost(@PathVariable Long id, @Login AuthInfo authInfo) {
+        PostDetailResponse postResponse = postService.findPost(id, authInfo);
         return ResponseEntity.ok(postResponse);
     }
 

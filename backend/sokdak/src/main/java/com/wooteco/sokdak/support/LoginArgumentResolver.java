@@ -10,6 +10,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
+
     private final AuthInfoMapper authInfoMapper;
 
     public LoginArgumentResolver(AuthInfoMapper authInfoMapper) {
@@ -29,7 +30,7 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         HttpSession session = request.getSession(false);
         if (session == null) {
-            return null;
+            return new AuthInfo(null);
         }
         return authInfoMapper.getAuthInfo(session);
     }

@@ -6,8 +6,9 @@ import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
-import com.wooteco.sokdak.post.dto.PostResponse;
+import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
+import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
@@ -42,19 +43,20 @@ public class PostService {
         return postRepository.save(post).getId();
     }
 
-    public PostResponse findPost(Long postId) {
+    public PostDetailResponse findPost(Long postId, AuthInfo authInfo) {
+        System.out.println(authInfo);
         Post foundPost = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-        return PostResponse.from(foundPost);
+        return PostDetailResponse.of(foundPost, foundPost.isAuthenticated(authInfo.getId()));
     }
 
     public PostsResponse findPosts(Pageable pageable) {
         Slice<Post> posts = postRepository.findSliceBy(pageable);
-        List<PostResponse> postResponses = posts.getContent()
+        List<PostsElementResponse> postsElementResponses = posts.getContent()
                 .stream()
-                .map(PostResponse::from)
+                .map(PostsElementResponse::from)
                 .collect(Collectors.toUnmodifiableList());
-        return new PostsResponse(postResponses, posts.isLast());
+        return new PostsResponse(postsElementResponses, posts.isLast());
     }
 
     @Transactional

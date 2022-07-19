@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.Builder;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
@@ -37,6 +38,9 @@ public class Post {
 
     @CreatedDate
     private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    private LocalDateTime modifiedAt;
 
     protected Post() {
     }
@@ -68,6 +72,10 @@ public class Post {
         return member;
     }
 
+    public boolean isModified() {
+        return !createdAt.equals(modifiedAt);
+    }
+
     public void updateTitle(String title, Long accessMemberId) {
         validateOwner(accessMemberId);
         this.title = new Title(title);
@@ -82,5 +90,12 @@ public class Post {
         if (accessMemberId != member.getId()) {
             throw new AuthenticationException();
         }
+    }
+
+    public boolean isAuthenticated(Long accessMemberId) {
+        if (accessMemberId == null) {
+            return false;
+        }
+        return member.getId().equals(accessMemberId);
     }
 }

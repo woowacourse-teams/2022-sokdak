@@ -15,8 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
-import com.wooteco.sokdak.post.dto.PostResponse;
+import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
+import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
@@ -76,12 +77,12 @@ class PostAcceptanceTest extends AcceptanceTest {
                 httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getSessionId()));
 
         ExtractableResponse<Response> response = httpGet("/posts/" + postId);
-        PostResponse postResponse = response.jsonPath().getObject(".", PostResponse.class);
+        PostDetailResponse postDetailResponse = response.jsonPath().getObject(".", PostDetailResponse.class);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(postResponse.getTitle()).isEqualTo(NEW_POST_REQUEST.getTitle()),
-                () -> assertThat(postResponse.getContent()).isEqualTo(NEW_POST_REQUEST.getContent())
+                () -> assertThat(postDetailResponse.getTitle()).isEqualTo(NEW_POST_REQUEST.getTitle()),
+                () -> assertThat(postDetailResponse.getContent()).isEqualTo(NEW_POST_REQUEST.getContent())
         );
     }
 
@@ -120,11 +121,12 @@ class PostAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response =
                 httpPutWithAuthorization(postUpdateRequest, "/posts/" + postId, getSessionId());
 
-        PostResponse postResponse = httpGet("/posts/" + postId).jsonPath().getObject(".", PostResponse.class);
+        PostDetailResponse postDetailResponse = httpGet("/posts/" + postId).jsonPath()
+                .getObject(".", PostDetailResponse.class);
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
-                () -> assertThat(postResponse.getTitle()).isEqualTo(UPDATED_POST_TITLE),
-                () -> assertThat(postResponse.getContent()).isEqualTo(UPDATED_POST_CONTENT)
+                () -> assertThat(postDetailResponse.getTitle()).isEqualTo(UPDATED_POST_TITLE),
+                () -> assertThat(postDetailResponse.getContent()).isEqualTo(UPDATED_POST_CONTENT)
         );
     }
 
@@ -159,7 +161,7 @@ class PostAcceptanceTest extends AcceptanceTest {
                 .getObject(".", PostsResponse.class)
                 .getPosts()
                 .stream()
-                .map(PostResponse::getTitle)
+                .map(PostsElementResponse::getTitle)
                 .collect(Collectors.toList());
     }
 }

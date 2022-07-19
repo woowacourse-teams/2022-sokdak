@@ -11,6 +11,8 @@ import com.wooteco.sokdak.member.domain.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class PostTest {
 
@@ -63,5 +65,14 @@ class PostTest {
 
         assertThatThrownBy(() -> post.updateContent("변경된 본문", forbiddenMemberId))
                 .isInstanceOf(AuthenticationException.class);
+    }
+
+    @DisplayName("게시글의 회원 정보가 일치하는지 반환")
+    @ParameterizedTest
+    @CsvSource({"1, true", "2, false"})
+    void isAuthenticated(Long accessMemberId, boolean expected) {
+        boolean actual = post.isAuthenticated(accessMemberId);
+
+        assertThat(actual).isEqualTo(expected);
     }
 }

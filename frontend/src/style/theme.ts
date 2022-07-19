@@ -10,6 +10,7 @@ const theme = {
     gray_900: '#020202',
     red_100: '#F3ABA4',
     red_200: '#CC4949',
+    pink_300: '#FF6F6F',
   },
 };
 

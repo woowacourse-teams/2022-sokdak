@@ -6,7 +6,6 @@ import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.auth.exception.LoginFailedException;
 import com.wooteco.sokdak.member.domain.Member;
-import com.wooteco.sokdak.member.domain.Username;
 import com.wooteco.sokdak.member.dto.VerificationRequest;
 import com.wooteco.sokdak.member.exception.NotWootecoMemberException;
 import com.wooteco.sokdak.member.exception.SerialNumberNotFoundException;
@@ -35,9 +34,9 @@ public class AuthService {
     }
 
     public AuthInfo login(LoginRequest loginRequest) {
-        Username username = new Username(loginRequest.getUsername());
+        String username = loginRequest.getUsername();
         String password = encryptor.encrypt(loginRequest.getPassword());
-        Member member = memberRepository.findByUsernameAndPassword(username, password)
+        Member member = memberRepository.findByUsernameValueAndPassword(username, password)
                 .orElseThrow(LoginFailedException::new);
         return new AuthInfo(member.getId());
     }

@@ -78,11 +78,22 @@ export const ContentContainer = styled.div`
   min-height: 420px;
   border-bottom: 1px solid ${props => props.theme.colors.sub};
   margin-bottom: 25px;
-  padding-bottom: 20px;
 `;
 
 export const Content = styled.p`
+  min-height: 370px;
   line-height: 25px;
+`;
+
+export const TagContainer = styled.div`
+  min-height: 50px;
+  float: left;
+  display: flex;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  gap: 5px;
+  row-gap: 10px;
+  padding: 15px 0;
 `;
 
 export const ListButtonContainer = styled.div`

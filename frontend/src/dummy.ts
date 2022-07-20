@@ -18,6 +18,7 @@ export const postList: Post[] = [
         name: '조현근',
       },
     ],
+    authorized: true,
   },
   {
     id: 2,
@@ -38,6 +39,7 @@ export const postList: Post[] = [
         name: '속닥속닥',
       },
     ],
+    authorized: false,
   },
   {
     id: 3,
@@ -54,6 +56,7 @@ export const postList: Post[] = [
         name: '날씨',
       },
     ],
+    authorized: true,
   },
   {
     id: 4,
@@ -70,6 +73,7 @@ export const postList: Post[] = [
         name: '날씨',
       },
     ],
+    authorized: false,
   },
   {
     id: 5,
@@ -81,6 +85,7 @@ export const postList: Post[] = [
     like: false,
     modified: false,
     hashtags: [],
+    authorized: true,
   },
   {
     id: 6,
@@ -92,6 +97,7 @@ export const postList: Post[] = [
     like: true,
     modified: false,
     hashtags: [],
+    authorized: false,
   },
   {
     id: 7,
@@ -103,6 +109,7 @@ export const postList: Post[] = [
     like: true,
     modified: false,
     hashtags: [],
+    authorized: false,
   },
   {
     id: 8,
@@ -114,6 +121,7 @@ export const postList: Post[] = [
     like: true,
     modified: false,
     hashtags: [],
+    authorized: false,
   },
   {
     id: 9,
@@ -125,6 +133,7 @@ export const postList: Post[] = [
     like: true,
     modified: false,
     hashtags: [],
+    authorized: false,
   },
   {
     id: 10,
@@ -136,6 +145,7 @@ export const postList: Post[] = [
     like: true,
     modified: false,
     hashtags: [],
+    authorized: false,
   },
   {
     id: 11,
@@ -147,6 +157,7 @@ export const postList: Post[] = [
     like: true,
     modified: false,
     hashtags: [],
+    authorized: false,
   },
   {
     id: 12,
@@ -158,6 +169,7 @@ export const postList: Post[] = [
     like: true,
     modified: false,
     hashtags: [],
+    authorized: false,
   },
   {
     id: 13,
@@ -169,6 +181,7 @@ export const postList: Post[] = [
     like: true,
     modified: false,
     hashtags: [],
+    authorized: false,
   },
   {
     id: 14,
@@ -180,6 +193,7 @@ export const postList: Post[] = [
     like: true,
     modified: false,
     hashtags: [],
+    authorized: false,
   },
   {
     id: 15,
@@ -191,6 +205,7 @@ export const postList: Post[] = [
     like: true,
     modified: false,
     hashtags: [],
+    authorized: false,
   },
   {
     id: 16,
@@ -202,6 +217,7 @@ export const postList: Post[] = [
     like: true,
     modified: false,
     hashtags: [],
+    authorized: false,
   },
   {
     id: 17,
@@ -213,6 +229,7 @@ export const postList: Post[] = [
     like: true,
     modified: false,
     hashtags: [],
+    authorized: false,
   },
   {
     id: 18,
@@ -224,6 +241,7 @@ export const postList: Post[] = [
     like: true,
     modified: false,
     hashtags: [],
+    authorized: false,
   },
   {
     id: 19,
@@ -235,6 +253,7 @@ export const postList: Post[] = [
     like: true,
     modified: false,
     hashtags: [],
+    authorized: false,
   },
   {
     id: 20,
@@ -246,6 +265,7 @@ export const postList: Post[] = [
     like: true,
     modified: false,
     hashtags: [],
+    authorized: false,
   },
 ];
 

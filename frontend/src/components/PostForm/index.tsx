@@ -12,8 +12,8 @@ interface PostFormProps {
   submitType: string;
   prevTitle?: string;
   prevContent?: string;
-  prevHashTags?: string[];
-  handlePost: (post: Pick<Post, 'title' | 'content'>) => void;
+  prevHashTags?: Hashtag[];
+  handlePost: (post: Pick<Post, 'title' | 'content'> & { hashtags: string[] }) => void;
 }
 
 const PostForm = ({
@@ -28,7 +28,9 @@ const PostForm = ({
 
   const [title, setTitle] = useState(prevTitle);
   const [content, setContent] = useState(prevContent);
-  const { tags, tagInputValue, handleTagInputChange, handleTagInputKeyDown } = useHashTag(prevHashTags);
+  const { hashtags, tagInputValue, handleTagInputChange, handleTagInputKeyDown } = useHashTag(
+    prevHashTags.map(hashtag => hashtag.name),
+  );
 
   const [isValidTitle, setIsValidTitle] = useState(true);
   const [isValidContent, setIsValidContent] = useState(true);
@@ -37,7 +39,7 @@ const PostForm = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    handlePost({ title, content });
+    handlePost({ title, content, hashtags });
   };
 
   return (
@@ -80,8 +82,8 @@ const PostForm = ({
         required
       />
       <Styled.TagContainer>
-        {tags.map(tag => (
-          <HashTag key={tag} name={tag} />
+        {hashtags.map(hashtag => (
+          <HashTag key={hashtag} name={hashtag} />
         ))}
         <Styled.TagInput
           placeholder="태그를 입력해주세요."

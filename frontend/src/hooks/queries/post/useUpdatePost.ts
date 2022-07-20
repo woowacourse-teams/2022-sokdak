@@ -13,16 +13,17 @@ const useUpdatePost = ({
   options,
 }: {
   id: string | number;
-  options?: UseMutationOptions<AxiosResponse, AxiosError, Pick<Post, 'title' | 'content'>>;
+  options?: UseMutationOptions<AxiosResponse, AxiosError, Pick<Post, 'title' | 'content'> & { hashtags: string[] }>;
 }) => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useContext(SnackbarContext);
 
   return useMutation(
-    ({ title, content }: Pick<Post, 'title' | 'content'>): Promise<AxiosResponse> =>
+    ({ title, content, hashtags }: Pick<Post, 'title' | 'content'> & { hashtags: string[] }): Promise<AxiosResponse> =>
       axios.put(`/posts/${id}`, {
         title,
         content,
+        hashtags,
       }),
     {
       ...options,

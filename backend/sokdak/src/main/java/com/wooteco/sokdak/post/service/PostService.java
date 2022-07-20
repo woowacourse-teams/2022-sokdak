@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.post.service;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.like.repository.LikeRepository;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
@@ -31,13 +32,16 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final HashtagRepository hashtagRepository;
     private final PostHashtagRepository postHashtagRepository;
+    private final LikeRepository likeRepository;
 
 
     public PostService(PostRepository postRepository, MemberRepository memberRepository,
                        HashtagRepository hashtagRepository,
-                       PostHashtagRepository postHashtagRepository) {
+                       PostHashtagRepository postHashtagRepository,
+                       LikeRepository likeRepository) {
         this.postRepository = postRepository;
         this.memberRepository = memberRepository;
+        this.likeRepository = likeRepository;
         this.hashtagRepository = hashtagRepository;
         this.postHashtagRepository = postHashtagRepository;
     }
@@ -46,7 +50,6 @@ public class PostService {
     public Long addPost(NewPostRequest newPostRequest, AuthInfo authInfo) {
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
-
         Post post = Post.builder()
                 .title(newPostRequest.getTitle())
                 .content(newPostRequest.getContent())
@@ -85,11 +88,12 @@ public class PostService {
         System.out.println(authInfo);
         Post foundPost = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
+        boolean liked = likeRepository.existsByMemberIdAndPostId(authInfo.getId(), postId);
         List<Hashtag> hashtags = postHashtagRepository.findAllByPostId(postId)
                 .stream()
                 .map(PostHashtag::getHashtag)
                 .collect(Collectors.toList());
-        return PostDetailResponse.of(foundPost, foundPost.isAuthenticated(authInfo.getId()), hashtags);
+        return PostDetailResponse.of(foundPost, liked, foundPost.isAuthenticated(authInfo.getId()), hashtags);
     }
 
     public PostsResponse findPosts(Pageable pageable) {

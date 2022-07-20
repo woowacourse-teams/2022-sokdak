@@ -118,5 +118,6 @@ public class PostService {
                 .orElseThrow(PostNotFoundException::new);
         post.validateOwner(authInfo.getId());
         postRepository.delete(post);
+        postHashtagRepository.deleteAllByPostId(post.getId());
     }
 }

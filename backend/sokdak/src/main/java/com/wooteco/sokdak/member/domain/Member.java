@@ -1,5 +1,6 @@
-package com.wooteco.sokdak.member.domain.member;
+package com.wooteco.sokdak.member.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +15,7 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_id")
     private Long id;
 
     @Embedded
@@ -28,7 +30,8 @@ public class Member {
     }
 
     @Builder
-    public Member(String username, String password, String nickname) {
+    public Member(Long id, String username, String password, String nickname) {
+        this.id = id;
         this.username = new Username(username);
         this.password = password;
         this.nickname = new Nickname(nickname);

@@ -1,16 +1,21 @@
 package com.wooteco.sokdak.member.repository;
 
-import com.wooteco.sokdak.member.domain.member.Member;
-import com.wooteco.sokdak.member.domain.member.Nickname;
-import com.wooteco.sokdak.member.domain.member.Username;
+import com.wooteco.sokdak.member.domain.Member;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    boolean existsMemberByUsername(Username username);
+    boolean existsMemberByUsernameValue(String username);
 
-    boolean existsMemberByNickname(Nickname nickname);
+    boolean existsMemberByNicknameValue(String nickname);
 
-    Optional<Member> findByUsernameAndPassword(Username username, String password);
+    Optional<Member> findByUsernameValueAndPassword(String username, String password);
+
+    Optional<Member> findById(Long id);
+
+    @Query(value = "SELECT m.nickname.value FROM Member m WHERE m.id = :id")
+    Optional<String> findNicknameValueById(@Param("id") Long id);
 }

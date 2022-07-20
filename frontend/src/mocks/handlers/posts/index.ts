@@ -1,11 +1,25 @@
 import { rest } from 'msw';
 
-import { commentList, postList } from '@/dummy';
+import { hashtagList, commentList, postList } from '@/dummy';
 
 const postHandlers = [
-  rest.post<Pick<Post, 'title' | 'content'>>('/posts', (req, res, ctx) => {
-    const { title, content } = req.body;
+  rest.post<Pick<Post, 'title' | 'content'> & { hashtags: string[] }>('/posts', (req, res, ctx) => {
+    const { title, content, hashtags } = req.body;
     const id = postList.length + 1;
+
+    if (!title || !content) {
+      return res(ctx.status(400), ctx.json({ message: '제목 혹은 본문이 없습니다.' }));
+    }
+
+    hashtags.forEach(hashtagName => {
+      if (hashtagList.some(hashtag => hashtag.name === hashtagName)) return;
+
+      hashtagList.push({
+        id: hashtagList.length + 1,
+        name: hashtagName,
+      });
+    });
+
     const newPost: Post = {
       id,
       title,
@@ -15,6 +29,7 @@ const postHandlers = [
       commentCount: 0,
       modified: false,
       like: false,
+      hashtags: hashtags.map(hashtagName => hashtagList.find(hashtag => hashtag.name === hashtagName)!),
     };
 
     postList.unshift(newPost);
@@ -74,10 +89,10 @@ const postHandlers = [
     );
   }),
 
-  rest.put<Pick<Post, 'title' | 'content'>>('/posts/:id', (req, res, ctx) => {
+  rest.put<Pick<Post, 'title' | 'content'> & { hashtags: string[] }>('/posts/:id', (req, res, ctx) => {
     const params = req.params;
     const id = Number(params.id);
-    const { title, content } = req.body;
+    const { title, content, hashtags } = req.body;
 
     const isTargetPostExist = postList.some(post => post.id === id);
 
@@ -93,6 +108,17 @@ const postHandlers = [
 
     targetPost.title = title;
     targetPost.content = content;
+
+    hashtags.forEach(hashtagName => {
+      if (hashtagList.some(hashtag => hashtag.name === hashtagName)) return;
+
+      hashtagList.push({
+        id: hashtagList.length + 1,
+        name: hashtagName,
+      });
+    });
+
+    targetPost.hashtags = hashtags.map(hashtagName => hashtagList.find(hashtag => hashtag.name === hashtagName)!);
     targetPost.modified = true;
 
     return res(ctx.status(204));

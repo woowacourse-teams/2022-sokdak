@@ -74,7 +74,7 @@ const PostPage = () => {
     );
   }
 
-  const { content, title, createdAt } = data!;
+  const { content, title, createdAt, hashtags } = data!;
 
   return (
     <Layout>
@@ -84,7 +84,9 @@ const PostPage = () => {
             <Styled.Title>{title}</Styled.Title>
           </Styled.TitleContainer>
           <Styled.PostController>
-            <Styled.UpdateButton onClick={() => navigate(PATH.UPDATE_POST, { state: { id, title, content } })}>
+            <Styled.UpdateButton
+              onClick={() => navigate(PATH.UPDATE_POST, { state: { id, title, content, hashtags } })}
+            >
               수정
             </Styled.UpdateButton>
             <Styled.DeleteButton onClick={handleConfirmModal}>삭제</Styled.DeleteButton>

@@ -1,3 +1,8 @@
+type Hashtag = {
+  id: number;
+  name: string;
+};
+
 interface Post {
   id: number;
   title: string;
@@ -7,4 +12,5 @@ interface Post {
   commentCount: number;
   modified: boolean;
   like: boolean;
+  hashtags: Hashtag[];
 }

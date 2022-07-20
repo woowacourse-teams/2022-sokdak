@@ -8,6 +8,8 @@ const SNACKBAR_MESSAGE = {
   SUCCESS_NICKNAME_CHECK: '사용할 수 있는 닉네임입니다.',
   FAIL_LOGIN: '아이디와 비밀번호를 확인해주세요',
   FAIL_COMMENT: '댓글을 입력해주세요',
+  EMPTY_TAG: '내용을 채워주세요.',
+  EXIST_TAG: '이미 존재하는 태그입니다.',
 };
 
 export default SNACKBAR_MESSAGE;

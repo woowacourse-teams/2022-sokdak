@@ -4,6 +4,7 @@ import com.wooteco.sokdak.auth.exception.AuthenticationException;
 import com.wooteco.sokdak.like.domain.Like;
 import com.wooteco.sokdak.member.domain.Member;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Embedded;

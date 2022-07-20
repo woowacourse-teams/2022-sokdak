@@ -10,17 +10,21 @@ import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
+import com.wooteco.sokdak.post.domain.Hashtag;
 import com.wooteco.sokdak.post.domain.Post;
+import com.wooteco.sokdak.post.domain.PostHashtag;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
+import com.wooteco.sokdak.post.repository.PostHashtagRepository;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,6 +46,9 @@ class PostServiceTest {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private PostHashtagRepository postHashtagRepository;
 
     private Post post;
 
@@ -72,6 +79,23 @@ class PostServiceTest {
         );
     }
 
+    @DisplayName("해시태그가 포함된 게시글 작성 기능")
+    @Test
+    void addPostWithHashtag() {
+        final List<String> expected = List.of("태그1", "태그2");
+        NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", expected);
+
+        Long postId = postService.addPost(newPostRequest, AUTH_INFO);
+        List<PostHashtag> postHashtags = postHashtagRepository.findAllByPostId(postId);
+
+        final List<String> hashtags = postHashtags
+                .stream()
+                .map(PostHashtag::getHashtag)
+                .map(Hashtag::getName)
+                .collect(Collectors.toList());
+        assertThat(hashtags).isEqualTo(expected);
+    }
+
     @DisplayName("본인이 작성한 게시글 조회 기능")
     @Test
     void findPost_Session_MyPost() {
@@ -87,6 +111,8 @@ class PostServiceTest {
                 () -> assertThat(response.getCreatedAt()).isNotNull()
         );
     }
+
+
 
     @DisplayName("로그인을 하고, 다른 회원이 작성한 게시글 조회 기능")
     @Test

@@ -9,7 +9,6 @@ import com.wooteco.sokdak.member.dto.VerificationRequest;
 import com.wooteco.sokdak.member.exception.InvalidSignupFlowException;
 import com.wooteco.sokdak.member.exception.PasswordConfirmationException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
-import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +46,7 @@ public class MemberService {
         Member member = Member.builder()
                 .username(signupRequest.getUsername())
                 .password(encryptor.encrypt(signupRequest.getPassword()))
-                .nickname(RandomNicknameGenerator.generate())
+                .nickname(signupRequest.getNickname())
                 .build();
         memberRepository.save(member);
         authService.useTicket(signupRequest.getEmail());

@@ -2,6 +2,8 @@ import { HTMLAttributes } from 'react';
 
 import * as Styled from './index.styles';
 
+import HeartImg from '@/assets/images/heart.svg';
+
 import { useTheme } from '@emotion/react';
 
 interface LikeButtonProps extends HTMLAttributes<HTMLButtonElement> {
@@ -16,7 +18,7 @@ const LikeButton = ({ isLiked, onClick, likeCount }: LikeButtonProps) => {
 
   return (
     <Styled.Button isLiked={isLiked} onClick={onClick}>
-      <Styled.HeartLogo isLiked={isLiked} fill={fillColor} stroke={strokeColor} /> {likeCount}
+      <HeartImg fill={fillColor} stroke={strokeColor} width="20px" height="20px" /> {likeCount}
     </Styled.Button>
   );
 };

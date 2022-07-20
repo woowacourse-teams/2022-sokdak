@@ -25,7 +25,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
                 .allowCredentials(true)
                 .exposedHeaders(HttpHeaders.LOCATION)
-                .exposedHeaders(HttpHeaders.COOKIE);
+                .exposedHeaders(HttpHeaders.SET_COOKIE);
     }
 
     @Override

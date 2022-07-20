@@ -91,11 +91,11 @@ export const TagContainer = styled.div`
 export const appear = keyframes`
   0% {
     opacity: 0;
-    top: -47px;
+    top: -45px;
   } 
   100% {
     opacity: 0.6;
-    top: -67px;
+    top: -65px;
   }
 `;
 

@@ -36,4 +36,8 @@ logging:
       hibernate:
         type: trace
 
-
+server:
+  servlet:
+    session:
+      cookie:
+        http-only: false

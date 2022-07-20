@@ -1,9 +1,8 @@
 import * as Styled from './index.styles';
 
 interface HashTagProps {
-  id?: number;
   name: string;
-  handleTagClick?: () => void;
+  handleTagClick?: React.MouseEventHandler<HTMLDivElement>;
 }
 
 const HashTag = ({ name, handleTagClick }: HashTagProps) => {

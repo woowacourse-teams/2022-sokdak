@@ -16,6 +16,7 @@ export const Container = styled.div`
   transform: translateX(-50%);
   -webkit-animation: fadein 0.5s, fadeout 0.5s 1.2s;
   animation: fadein 0.5s, fadeout 0.5s 1.2s;
+  z-index: 500;
 
   @-webkit-keyframes fadein {
     from {

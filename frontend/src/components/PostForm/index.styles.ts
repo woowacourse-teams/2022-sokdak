@@ -102,7 +102,7 @@ export const appear = keyframes`
 export const TagTooltip = styled.div`
   position: absolute;
   background-color: black;
-  opacity: 0.6;
+  opacity: 0.75;
   width: 115px;
   height: 60px;
   top: -67px;

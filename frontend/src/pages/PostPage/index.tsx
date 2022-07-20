@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import CommentList from './components/CommentList';
 import Layout from '@/components/@styled/Layout';
 import ConfirmModal from '@/components/ConfirmModal';
+import HashTag from '@/components/HashTag';
 import LikeButton from '@/components/LikeButton';
 import Spinner from '@/components/Spinner';
 
@@ -102,6 +103,11 @@ const PostPage = () => {
 
         <Styled.ContentContainer>
           <Styled.Content>{content}</Styled.Content>
+          <Styled.TagContainer>
+            {hashtags.map(({ name }) => (
+              <HashTag key={name} name={name} />
+            ))}
+          </Styled.TagContainer>
         </Styled.ContentContainer>
         <CommentList id={id!} />
       </Styled.Container>

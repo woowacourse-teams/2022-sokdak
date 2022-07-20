@@ -9,6 +9,8 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 
 import com.wooteco.sokdak.auth.exception.AuthenticationException;
+import com.wooteco.sokdak.post.domain.Hashtag;
+import com.wooteco.sokdak.post.dto.HashtagResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
@@ -152,7 +154,7 @@ class PostControllerTest extends ControllerTest {
                 .likeCount(0)
                 .like(false)
                 .modified(false)
-                .hashtags()
+                .hashtagResponses(List.of(new HashtagResponse(1L, "gogo")))
                 .authorized(true)
                 .build();
         doReturn(postResponse)
@@ -211,7 +213,7 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("게시글을 수정한다.")
     @Test
     void updatePost() {
-        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT);
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT, List.of("tag"));
         doNothing().when(postService)
                 .updatePost(any(), any(), any());
 
@@ -228,7 +230,7 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("권한이 없는 게시글을 수정하려고 하면 403을 반환한다.")
     @Test
     void updatePost_Exception_ForbiddenMemberId() {
-        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT);
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT, List.of("tag"));
         doThrow(new AuthenticationException())
                 .when(postService)
                 .updatePost(any(), any(), any());

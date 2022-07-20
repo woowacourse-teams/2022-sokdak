@@ -22,10 +22,8 @@ public class PostDetailResponse {
     private final boolean authorized;
     private final boolean modified;
 
-    public PostDetailResponse(Long id, String title, String content, List<HashtagResponse> hashtagResponses,
-                              LocalDateTime createdAt, boolean authorized, boolean modified) {
     @Builder
-    private PostDetailResponse(Long id, String title, String content, LocalDateTime createdAt, int likeCount,
+    private PostDetailResponse(Long id, String title, String content, List<HashtagResponse> hashtagResponses, LocalDateTime createdAt, int likeCount,
                                boolean like,
                                boolean authorized, boolean modified) {
         this.id = id;
@@ -40,7 +38,7 @@ public class PostDetailResponse {
     }
 
 
-    public static PostDetailResponse of(Post post, boolean liked, boolean authorized) {
+    public static PostDetailResponse of(Post post, boolean liked, boolean authorized, List<Hashtag> hashtags) {
         return PostDetailResponse.builder()
                 .id(post.getId())
                 .title(post.getTitle())
@@ -49,7 +47,7 @@ public class PostDetailResponse {
                 .likeCount(post.getLikeCount())
                 .like(liked)
                 .authorized(authorized)
-                .hashtags(toResponse(hashtags))
+                .hashtagResponses(toResponse(hashtags))
                 .modified(post.isModified())
                 .build();
     }

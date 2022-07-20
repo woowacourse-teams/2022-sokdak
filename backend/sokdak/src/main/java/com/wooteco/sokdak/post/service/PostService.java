@@ -52,12 +52,15 @@ public class PostService {
                 .content(newPostRequest.getContent())
                 .member(member)
                 .build();
-
         Post savedPost = postRepository.save(post);
-        List<Hashtag> hashtags = newPostRequest.getHashtags()
-                .stream()
-                .map(it -> Hashtag.builder().name(it).build())
-                .collect(Collectors.toList());
+
+        saveHashtags(newPostRequest.getHashtags(), savedPost);
+
+        return savedPost.getId();
+    }
+
+    private void saveHashtags(List<String> names, Post savedPost) {
+        List<Hashtag> hashtags = toHashtags(names);
         List<Hashtag> saveHashtags = hashtags.stream()
                 .filter(it -> !hashtagRepository.existsByName(it.getName()))
                 .collect(Collectors.toList());
@@ -69,15 +72,24 @@ public class PostService {
                 .collect(Collectors.toList());
 
         postHashtagRepository.saveAll(realHashtags);
+    }
 
-        return savedPost.getId();
+    private List<Hashtag> toHashtags(List<String> names) {
+        return names
+                .stream()
+                .map(it -> Hashtag.builder().name(it).build())
+                .collect(Collectors.toList());
     }
 
     public PostDetailResponse findPost(Long postId, AuthInfo authInfo) {
         System.out.println(authInfo);
         Post foundPost = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-        return PostDetailResponse.of(foundPost, foundPost.isAuthenticated(authInfo.getId()));
+        List<Hashtag> hashtags = postHashtagRepository.findAllByPostId(postId)
+                .stream()
+                .map(PostHashtag::getHashtag)
+                .collect(Collectors.toList());
+        return PostDetailResponse.of(foundPost, foundPost.isAuthenticated(authInfo.getId()), hashtags);
     }
 
     public PostsResponse findPosts(Pageable pageable) {
@@ -95,6 +107,9 @@ public class PostService {
                 .orElseThrow(PostNotFoundException::new);
         post.updateTitle(postUpdateRequest.getTitle(), authInfo.getId());
         post.updateContent(postUpdateRequest.getContent(), authInfo.getId());
+
+        postHashtagRepository.deleteAllByPostId(post.getId());
+        saveHashtags(postUpdateRequest.getHashtags(), post);
     }
 
     @Transactional

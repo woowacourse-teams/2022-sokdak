@@ -1,9 +1,11 @@
 package com.wooteco.sokdak.post.dto;
 
+import com.wooteco.sokdak.post.domain.Hashtag;
 import com.wooteco.sokdak.post.domain.Post;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 
 @Getter
@@ -28,14 +30,20 @@ public class PostDetailResponse {
         this.modified = modified;
     }
 
-    public static PostDetailResponse of(Post post, boolean authorized) {
+    public static PostDetailResponse of(Post post, boolean authorized, List<Hashtag> hashtags) {
         return new PostDetailResponse(
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
-                Collections.emptyList(),
+                toResponse(hashtags),
                 post.getCreatedAt(),
                 authorized,
                 post.isModified());
+    }
+
+    private static List<HashtagResponse> toResponse(List<Hashtag> hashtags) {
+        return hashtags.stream()
+                .map(HashtagResponse::new)
+                .collect(Collectors.toList());
     }
 }

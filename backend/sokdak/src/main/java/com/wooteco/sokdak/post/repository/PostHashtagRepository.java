@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface PostHashtagRepository extends JpaRepository<PostHashtag, Long> {
 
     List<PostHashtag> findAllByPostId(Long id);
+
+    void deleteAllByPostId(Long postId);
 }

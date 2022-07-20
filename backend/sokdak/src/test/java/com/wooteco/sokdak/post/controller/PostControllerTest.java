@@ -51,7 +51,7 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("글 작성 요청을 받으면 새로운 게시글을 등록한다.")
     @Test
     void addPost() {
-        NewPostRequest postRequest = new NewPostRequest("제목", "본문", Collections.emptyList());
+        NewPostRequest postRequest = new NewPostRequest("제목", "본문", List.of("태그1"));
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

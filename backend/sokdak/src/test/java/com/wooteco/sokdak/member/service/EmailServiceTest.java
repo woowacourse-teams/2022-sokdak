@@ -1,11 +1,9 @@
 package com.wooteco.sokdak.member.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.wooteco.sokdak.auth.domain.AuthCode;
 import com.wooteco.sokdak.auth.domain.Ticket;
 import com.wooteco.sokdak.auth.service.AuthCodeGenerator;
 import com.wooteco.sokdak.auth.service.Encryptor;
@@ -40,18 +38,6 @@ class EmailServiceTest {
 
     @MockBean
     private EmailSender emailSender;
-
-    @DisplayName("인증 코드 저장")
-    @Test
-    void createAndSaveAuthCode() {
-        given(authCodeGenerator.generate())
-                .willReturn("a1b1c1");
-
-        emailService.createAndSaveAuthCode("serialNumber");
-        AuthCode authCode = authCodeRepository.findBySerialNumber("serialNumber").get();
-
-        assertThat(authCode.getCode()).isEqualTo("a1b1c1");
-    }
 
     @DisplayName("인증 코드 발송")
     @Test

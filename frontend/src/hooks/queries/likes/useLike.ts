@@ -1,6 +1,8 @@
-import { useMutation, UseMutationOptions } from 'react-query';
+import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
 import axios, { AxiosError, AxiosResponse } from 'axios';
+
+import QUERY_KEYS from '@/constants/queries';
 
 const useLike = (
   options?: UseMutationOptions<
@@ -9,9 +11,20 @@ const useLike = (
     { id: string }
   >,
 ) => {
+  const queryClient = useQueryClient();
+
   return useMutation(
     ({ id }): Promise<AxiosResponse<{ like: boolean; likeCount: number }, string>> => axios.put(`/posts/${id}/like`),
-    options,
+    {
+      ...options,
+      onSuccess: (data, variables, context) => {
+        queryClient.refetchQueries(QUERY_KEYS.POSTS);
+
+        if (options && options.onSuccess) {
+          options.onSuccess(data, variables, context);
+        }
+      },
+    },
   );
 };
 

@@ -13,4 +13,5 @@ interface Post {
   modified: boolean;
   like: boolean;
   hashtags: Hashtag[];
+  authorized: boolean;
 }

@@ -30,6 +30,7 @@ const postHandlers = [
       modified: false,
       like: false,
       hashtags: hashtags.map(hashtagName => hashtagList.find(hashtag => hashtag.name === hashtagName)!),
+      authorized: true,
     };
 
     postList.unshift(newPost);

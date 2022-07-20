@@ -49,6 +49,15 @@ public class HttpMethodFixture {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> httpPutWithAuthorization(String path, String sessionId) {
+        return RestAssured
+                .given().log().all()
+                .sessionId(sessionId)
+                .when().put(path)
+                .then().log().all()
+                .extract();
+    }
+
     public static ExtractableResponse<Response> httpDeleteWithAuthorization(String path, String sessionId) {
         return RestAssured
                 .given().log().all()

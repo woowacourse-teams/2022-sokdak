@@ -24,7 +24,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedOrigins("http://localhost:3000", "http://3.34.1.220")
                 .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
                 .allowCredentials(true)
-                .exposedHeaders(HttpHeaders.LOCATION);
+                .exposedHeaders(HttpHeaders.LOCATION)
+                .exposedHeaders(HttpHeaders.COOKIE);
     }
 
     @Override

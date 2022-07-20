@@ -28,9 +28,8 @@ const PostForm = ({
 
   const [title, setTitle] = useState(prevTitle);
   const [content, setContent] = useState(prevContent);
-  const { hashtags, tagInputValue, handleTagInputChange, handleTagInputKeyDown } = useHashTag(
-    prevHashTags.map(hashtag => hashtag.name),
-  );
+  const { hashtags, tagInputValue, handleTagInputChange, handleTagInputKeyDown, isTagInputFocus, handleTagInputFocus } =
+    useHashTag(prevHashTags.map(hashtag => hashtag.name));
 
   const [isValidTitle, setIsValidTitle] = useState(true);
   const [isValidContent, setIsValidContent] = useState(true);
@@ -82,6 +81,12 @@ const PostForm = ({
         required
       />
       <Styled.TagContainer>
+        {isTagInputFocus && (
+          <Styled.TagTooltip>
+            쉼표 혹은 엔터를 통해, <br />
+            태그를 등록해보세요
+          </Styled.TagTooltip>
+        )}
         {hashtags.map(hashtag => (
           <HashTag key={hashtag} name={hashtag} />
         ))}
@@ -90,6 +95,8 @@ const PostForm = ({
           value={tagInputValue}
           onChange={handleTagInputChange}
           onKeyDown={handleTagInputKeyDown}
+          onFocus={handleTagInputFocus}
+          onBlur={handleTagInputFocus}
         />
       </Styled.TagContainer>
       <Styled.SubmitButton>{submitType}</Styled.SubmitButton>

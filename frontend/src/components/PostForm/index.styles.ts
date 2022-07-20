@@ -85,6 +85,35 @@ export const TagContainer = styled.div`
   flex-wrap: wrap;
   gap: 5px;
   row-gap: 10px;
+  position: relative;
+`;
+
+export const appear = keyframes`
+  0% {
+    opacity: 0;
+    top: -47px;
+  } 
+  100% {
+    opacity: 0.6;
+    top: -67px;
+  }
+`;
+
+export const TagTooltip = styled.div`
+  position: absolute;
+  background-color: black;
+  opacity: 0.6;
+  width: 115px;
+  height: 60px;
+  top: -67px;
+  left: 0px;
+  color: white;
+  font-size: 10px;
+  line-height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: ${appear} 0.3s;
 `;
 
 export const TagInput = styled.input`

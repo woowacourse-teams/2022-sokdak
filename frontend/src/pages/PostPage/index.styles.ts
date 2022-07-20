@@ -123,3 +123,9 @@ export const ErrorContainer = styled.div`
   align-items: center;
   gap: 3em;
 `;
+
+export const LikeButtonContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+`;

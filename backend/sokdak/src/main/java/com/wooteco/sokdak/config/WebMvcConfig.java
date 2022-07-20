@@ -1,9 +1,9 @@
 package com.wooteco.sokdak.config;
 
 
+import com.wooteco.sokdak.support.AuthInfoMapper;
 import com.wooteco.sokdak.support.AuthInterceptor;
 import com.wooteco.sokdak.support.LoginArgumentResolver;
-import com.wooteco.sokdak.support.AuthInfoMapper;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +21,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000")
+                .allowedOrigins("http://localhost:3000", "http://3.34.1.220")
                 .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
                 .allowCredentials(true)
                 .exposedHeaders(HttpHeaders.LOCATION);

@@ -30,6 +30,7 @@ public class EmailService {
         this.authCodeRepository = authCodeRepository;
     }
 
+    @Transactional
     public void sendCodeToValidUser(EmailRequest emailRequest) {
         String serialNumber = encryptor.encrypt(emailRequest.getEmail());
         authService.validateSignUpMember(serialNumber);
@@ -38,8 +39,7 @@ public class EmailService {
         sendEmail(emailRequest, authCode);
     }
 
-    @Transactional
-    protected String createAndSaveAuthCode(String serialNumber) {
+    private String createAndSaveAuthCode(String serialNumber) {
         authCodeRepository.deleteAllBySerialNumber(serialNumber);
         String authCode = authCodeGenerator.generate();
         authCodeRepository.save(new AuthCode(authCode, serialNumber));

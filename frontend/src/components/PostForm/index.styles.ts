@@ -72,6 +72,31 @@ export const ContentInput = styled.textarea<InputProps>`
   }
 `;
 
+export const TagContainer = styled.div`
+  width: 100%;
+  background-color: ${props => props.theme.colors.gray_10};
+  border-radius: 15px;
+  min-height: 55px;
+  margin: 20px 0;
+  float: left;
+  display: flex;
+  padding: 15px;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  gap: 5px;
+  row-gap: 10px;
+`;
+
+export const TagInput = styled.input`
+  background-color: transparent;
+  width: 130px;
+
+  ::placeholder {
+    font-size: 14px;
+    color: ${props => props.theme.colors.gray_200};
+  }
+`;
+
 export const SubmitButton = styled.button`
   font-family: 'BMHANNAAir';
   background-color: ${props => props.theme.colors.sub};

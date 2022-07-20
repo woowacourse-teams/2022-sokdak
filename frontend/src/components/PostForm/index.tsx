@@ -1,22 +1,34 @@
-import { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import SnackbarContext from '@/context/Snackbar';
 
 import * as Styled from './index.styles';
+
+import HashTag from '../HashTag';
+import useHashTag from '../HashTag/useHashTag';
 
 interface PostFormProps {
   heading: string;
   submitType: string;
   prevTitle?: string;
   prevContent?: string;
+  prevHashTags?: string[];
   handlePost: (post: Pick<Post, 'title' | 'content'>) => void;
 }
 
-const PostForm = ({ heading, submitType, prevTitle = '', prevContent = '', handlePost }: PostFormProps) => {
+const PostForm = ({
+  heading,
+  submitType,
+  prevTitle = '',
+  prevContent = '',
+  prevHashTags = [],
+  handlePost,
+}: PostFormProps) => {
   const { isVisible, showSnackbar } = useContext(SnackbarContext);
 
   const [title, setTitle] = useState(prevTitle);
   const [content, setContent] = useState(prevContent);
+  const { tags, tagInputValue, handleTagInputChange, handleTagInputKeyDown } = useHashTag(prevHashTags);
 
   const [isValidTitle, setIsValidTitle] = useState(true);
   const [isValidContent, setIsValidContent] = useState(true);
@@ -67,6 +79,17 @@ const PostForm = ({ heading, submitType, prevTitle = '', prevContent = '', handl
         isAnimationActive={isContentAnimationActive}
         required
       />
+      <Styled.TagContainer>
+        {tags.map(tag => (
+          <HashTag key={tag} name={tag} />
+        ))}
+        <Styled.TagInput
+          placeholder="태그를 입력해주세요."
+          value={tagInputValue}
+          onChange={handleTagInputChange}
+          onKeyDown={handleTagInputKeyDown}
+        />
+      </Styled.TagContainer>
       <Styled.SubmitButton>{submitType}</Styled.SubmitButton>
     </Styled.Container>
   );

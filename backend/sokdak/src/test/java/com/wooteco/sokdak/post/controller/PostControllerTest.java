@@ -9,6 +9,8 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 
 import com.wooteco.sokdak.auth.exception.AuthenticationException;
+import com.wooteco.sokdak.post.domain.Hashtag;
+import com.wooteco.sokdak.post.dto.HashtagResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
@@ -18,6 +20,7 @@ import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.support.AuthInfoMapper;
 import com.wooteco.sokdak.util.ControllerTest;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -68,7 +71,7 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("글 작성 요청을 받으면 새로운 게시글을 등록한다.")
     @Test
     void addPost() {
-        NewPostRequest postRequest = new NewPostRequest("제목", "본문");
+        NewPostRequest postRequest = new NewPostRequest("제목", "본문", List.of("태그1"));
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -83,7 +86,7 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("게시글 제목이 없는 경우 400을 반환한다.")
     @Test
     void addPost_Exception_NoTitle() {
-        NewPostRequest postRequest = new NewPostRequest(null, "본문");
+        NewPostRequest postRequest = new NewPostRequest(null, "본문", Collections.emptyList());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -98,7 +101,7 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("게시글 제목이 없는 경우 400을 반환한다.")
     @Test
     void addPost_Exception_NoContent() {
-        NewPostRequest postRequest = new NewPostRequest("제목", null);
+        NewPostRequest postRequest = new NewPostRequest("제목", null, Collections.emptyList());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -151,6 +154,7 @@ class PostControllerTest extends ControllerTest {
                 .likeCount(0)
                 .like(false)
                 .modified(false)
+                .hashtagResponses(List.of(new HashtagResponse(1L, "gogo")))
                 .authorized(true)
                 .build();
         doReturn(postResponse)
@@ -166,7 +170,7 @@ class PostControllerTest extends ControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("세션 정보 없이 특정 게시글 조회 요청을 받으면 게시글을 반환한다.")
+    @DisplayName("세션 정보를 가진 특정 게시글 조회 요청을 받으면 게시글을 반환한다.")
     @Test
     void findPost_NoSession() {
         PostDetailResponse postResponse = PostDetailResponse.builder()
@@ -209,7 +213,7 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("게시글을 수정한다.")
     @Test
     void updatePost() {
-        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT);
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT, List.of("tag"));
         doNothing().when(postService)
                 .updatePost(any(), any(), any());
 
@@ -226,7 +230,7 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("권한이 없는 게시글을 수정하려고 하면 403을 반환한다.")
     @Test
     void updatePost_Exception_ForbiddenMemberId() {
-        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT);
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT, List.of("tag"));
         doThrow(new AuthenticationException())
                 .when(postService)
                 .updatePost(any(), any(), any());

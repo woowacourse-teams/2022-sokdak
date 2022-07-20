@@ -37,7 +37,7 @@ class LikeControllerTest extends ControllerTest {
         restDocs
                 .sessionId(SESSION_ID)
                 .sessionAttr("member", AUTH_INFO)
-                .when().post("/posts/1/like")
+                .when().put("/posts/1/like")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }

@@ -1,14 +1,17 @@
 package com.wooteco.sokdak.post.domain;
 
 import com.wooteco.sokdak.auth.exception.AuthenticationException;
+import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.like.domain.Like;
 import com.wooteco.sokdak.member.domain.Member;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,18 +32,21 @@ public class Post {
     @Column(name = "post_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-
-    @OneToMany(mappedBy = "post")
-    private List<Like> likes;
 
     @Embedded
     private Title title;
 
     @Embedded
     private Content content;
+
+    @OneToMany(mappedBy = "post")
+    private List<Like> likes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post")
+    private List<Comment> comments = new ArrayList<>();
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -52,11 +58,12 @@ public class Post {
     }
 
     @Builder
-    private Post(String title, String content, Member member, List<Like> likes) {
+    private Post(String title, String content, Member member, List<Like> likes, List<Comment> comments) {
         this.title = new Title(title);
         this.content = new Content(content);
         this.member = member;
         this.likes = likes;
+        this.comments = comments;
     }
 
     public boolean isModified() {
@@ -104,6 +111,14 @@ public class Post {
 
     public Member getMember() {
         return member;
+    }
+
+    public int getLikeCount() {
+        return likes.size();
+    }
+
+    public int getCommentCount() {
+        return comments.size();
     }
 
     public List<Like> getLikes() {

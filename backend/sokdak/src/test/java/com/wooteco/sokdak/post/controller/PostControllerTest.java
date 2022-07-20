@@ -33,6 +33,24 @@ import org.springframework.restdocs.RestDocumentationExtension;
 class PostControllerTest extends ControllerTest {
 
     private static final String SESSION_ID = "mySessionId";
+    private static final PostsElementResponse POSTS_ELEMENT_RESPONSE_1 = PostsElementResponse.builder()
+            .id(1L)
+            .title("제목1")
+            .content("본문1")
+            .createdAt(LocalDateTime.now())
+            .likeCount(0)
+            .commentCount(0)
+            .modified(false)
+            .build();
+    private static final PostsElementResponse POSTS_ELEMENT_RESPONSE_2 = PostsElementResponse.builder()
+            .id(2L)
+            .title("제목2")
+            .content("본문2")
+            .createdAt(LocalDateTime.now())
+            .likeCount(0)
+            .commentCount(0)
+            .modified(false)
+            .build();
 
     @Autowired
     PostController postController;
@@ -95,11 +113,7 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("세션 정보를 가진 게시글 목록 조회 요청을 받으면 해당되는 게시글들을 반환한다.")
     @Test
     void findPosts() {
-        PostsElementResponse postsElementResponse1 = new PostsElementResponse(1L, "제목1", "본문1", LocalDateTime.now(),
-                false);
-        PostsElementResponse postsElementResponse2 = new PostsElementResponse(2L, "제목2", "본문2", LocalDateTime.now(),
-                false);
-        doReturn(new PostsResponse(List.of(postsElementResponse1, postsElementResponse2), true))
+        doReturn(new PostsResponse(List.of(POSTS_ELEMENT_RESPONSE_1, POSTS_ELEMENT_RESPONSE_2), true))
                 .when(postService)
                 .findPosts(any());
 
@@ -115,11 +129,7 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("세션 정보가 없는 게시글 목록 조회 요청을 받으면 해당되는 게시글들을 반환한다.")
     @Test
     void findPosts_NoSession() {
-        PostsElementResponse postsElementResponse1 = new PostsElementResponse(1L, "제목1", "본문1", LocalDateTime.now(),
-                false);
-        PostsElementResponse postsElementResponse2 = new PostsElementResponse(2L, "제목2", "본문2", LocalDateTime.now(),
-                false);
-        doReturn(new PostsResponse(List.of(postsElementResponse1, postsElementResponse2), true))
+        doReturn(new PostsResponse(List.of(POSTS_ELEMENT_RESPONSE_1, POSTS_ELEMENT_RESPONSE_2), true))
                 .when(postService)
                 .findPosts(any());
 
@@ -133,8 +143,16 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("세션 정보를 가진 특정 게시글 조회 요청을 받으면 게시글을 반환한다.")
     @Test
     void findPost() {
-        PostDetailResponse postResponse =
-                new PostDetailResponse(1L, "제목1", "본문1", LocalDateTime.now(), true, false);
+        PostDetailResponse postResponse = PostDetailResponse.builder()
+                .id(1L)
+                .title("제목1")
+                .content("본문1")
+                .createdAt(LocalDateTime.now())
+                .likeCount(0)
+                .like(false)
+                .modified(false)
+                .authorized(true)
+                .build();
         doReturn(postResponse)
                 .when(postService)
                 .findPost(any(), any());
@@ -148,11 +166,19 @@ class PostControllerTest extends ControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("세션 정보를 가진 특정 게시글 조회 요청을 받으면 게시글을 반환한다.")
+    @DisplayName("세션 정보 없이 특정 게시글 조회 요청을 받으면 게시글을 반환한다.")
     @Test
     void findPost_NoSession() {
-        PostDetailResponse postResponse =
-                new PostDetailResponse(1L, "제목1", "본문1", LocalDateTime.now(), false, false);
+        PostDetailResponse postResponse = PostDetailResponse.builder()
+                .id(1L)
+                .title("제목1")
+                .content("본문1")
+                .createdAt(LocalDateTime.now())
+                .likeCount(0)
+                .like(false)
+                .modified(false)
+                .authorized(false)
+                .build();
         doReturn(postResponse)
                 .when(postService)
                 .findPost(any(), any());

@@ -3,6 +3,7 @@ import { HTMLAttributes } from 'react';
 import * as Styled from './index.styles';
 
 import HeartImg from '@/assets/images/heart.svg';
+import countFormatter from '@/utils/countFormatter';
 
 import { useTheme } from '@emotion/react';
 
@@ -18,7 +19,8 @@ const LikeButton = ({ isLiked, onClick, likeCount }: LikeButtonProps) => {
 
   return (
     <Styled.Button isLiked={isLiked} onClick={onClick}>
-      <HeartImg fill={fillColor} stroke={strokeColor} width="20px" height="20px" /> {likeCount}
+      <HeartImg fill={fillColor} stroke={strokeColor} width="16px" height="14px" />
+      {countFormatter(likeCount)}
     </Styled.Button>
   );
 };

@@ -18,6 +18,7 @@ import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,7 +59,7 @@ class PostServiceTest {
     @DisplayName("글 작성 기능")
     @Test
     void addPost() {
-        NewPostRequest newPostRequest = new NewPostRequest("제목", "본문");
+        NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", Collections.emptyList());
 
         Long postId = postService.addPost(newPostRequest, AUTH_INFO);
         Post actual = postRepository.findById(postId).orElseThrow();
@@ -158,7 +159,7 @@ class PostServiceTest {
     @Test
     void updatePost() {
         Long postId = postRepository.save(post).getId();
-        PostUpdateRequest postUpdateRequest = new PostUpdateRequest("변경된 제목", "변경된 본문");
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest("변경된 제목", "변경된 본문", Collections.emptyList());
 
         postService.updatePost(postId, postUpdateRequest, AUTH_INFO);
 

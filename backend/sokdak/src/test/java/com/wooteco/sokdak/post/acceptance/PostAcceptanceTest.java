@@ -22,6 +22,7 @@ import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
@@ -31,7 +32,7 @@ import org.springframework.http.HttpStatus;
 @DisplayName("게시글 관련 인수테스트")
 class PostAcceptanceTest extends AcceptanceTest {
 
-    private static final NewPostRequest NEW_POST_REQUEST = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT);
+    private static final NewPostRequest NEW_POST_REQUEST = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT, Collections.emptyList());
 
     @DisplayName("새로운 게시글을 작성할 수 있다.")
     @Test
@@ -55,8 +56,8 @@ class PostAcceptanceTest extends AcceptanceTest {
     @DisplayName("게시글 목록 중 특정 페이지를 최신순으로 조회할 수 있다.")
     @Test
     void findPosts() {
-        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2");
-        NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3");
+        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", Collections.emptyList());
+        NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", Collections.emptyList());
         httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getSessionId());
         httpPostWithAuthorization(postRequest2, "/posts", getSessionId());
         httpPostWithAuthorization(postRequest3, "/posts", getSessionId());
@@ -89,7 +90,7 @@ class PostAcceptanceTest extends AcceptanceTest {
     @DisplayName("게시글 제목이 없는 경우 글 작성을 할 수 없다.")
     @Test
     void addPost_Exception_NoTitle() {
-        NewPostRequest newPostRequestWithoutTitle = new NewPostRequest(null, VALID_POST_CONTENT);
+        NewPostRequest newPostRequestWithoutTitle = new NewPostRequest(null, VALID_POST_CONTENT, Collections.emptyList());
         ExtractableResponse<Response> response =
                 httpPostWithAuthorization(newPostRequestWithoutTitle, "/posts", getSessionId());
 
@@ -117,7 +118,8 @@ class PostAcceptanceTest extends AcceptanceTest {
         String postId = parsePostId(
                 httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getSessionId()));
 
-        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT);
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(
+                UPDATED_POST_TITLE, UPDATED_POST_CONTENT, Collections.emptyList());
         ExtractableResponse<Response> response =
                 httpPutWithAuthorization(postUpdateRequest, "/posts/" + postId, getSessionId());
 

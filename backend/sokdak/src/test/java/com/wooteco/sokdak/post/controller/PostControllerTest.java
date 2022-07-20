@@ -18,6 +18,7 @@ import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.support.AuthInfoMapper;
 import com.wooteco.sokdak.util.ControllerTest;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -50,7 +51,7 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("글 작성 요청을 받으면 새로운 게시글을 등록한다.")
     @Test
     void addPost() {
-        NewPostRequest postRequest = new NewPostRequest("제목", "본문");
+        NewPostRequest postRequest = new NewPostRequest("제목", "본문", Collections.emptyList());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -65,7 +66,7 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("게시글 제목이 없는 경우 400을 반환한다.")
     @Test
     void addPost_Exception_NoTitle() {
-        NewPostRequest postRequest = new NewPostRequest(null, "본문");
+        NewPostRequest postRequest = new NewPostRequest(null, "본문", Collections.emptyList());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -80,7 +81,7 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("게시글 제목이 없는 경우 400을 반환한다.")
     @Test
     void addPost_Exception_NoContent() {
-        NewPostRequest postRequest = new NewPostRequest("제목", null);
+        NewPostRequest postRequest = new NewPostRequest("제목", null, Collections.emptyList());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -134,7 +135,7 @@ class PostControllerTest extends ControllerTest {
     @Test
     void findPost() {
         PostDetailResponse postResponse =
-                new PostDetailResponse(1L, "제목1", "본문1", LocalDateTime.now(), true, false);
+                new PostDetailResponse(1L, "제목1", "본문1", Collections.emptyList(), LocalDateTime.now(), true, false);
         doReturn(postResponse)
                 .when(postService)
                 .findPost(any(), any());
@@ -152,7 +153,7 @@ class PostControllerTest extends ControllerTest {
     @Test
     void findPost_NoSession() {
         PostDetailResponse postResponse =
-                new PostDetailResponse(1L, "제목1", "본문1", LocalDateTime.now(), false, false);
+                new PostDetailResponse(1L, "제목1", "본문1", Collections.emptyList(), LocalDateTime.now(), false, false);
         doReturn(postResponse)
                 .when(postService)
                 .findPost(any(), any());
@@ -183,7 +184,7 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("게시글을 수정한다.")
     @Test
     void updatePost() {
-        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT);
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT, Collections.emptyList());
         doNothing().when(postService)
                 .updatePost(any(), any(), any());
 
@@ -200,7 +201,7 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("권한이 없는 게시글을 수정하려고 하면 403을 반환한다.")
     @Test
     void updatePost_Exception_ForbiddenMemberId() {
-        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT);
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT,Collections.emptyList());
         doThrow(new AuthenticationException())
                 .when(postService)
                 .updatePost(any(), any(), any());

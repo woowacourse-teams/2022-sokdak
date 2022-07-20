@@ -14,6 +14,7 @@ import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Collections;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ class LikeAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인한 회원은 좋아요 하지 않은 게시물에 좋아요를 할 수 있다.")
     @Test
     void flipLike_Create() {
-        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT);
+        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT, Collections.emptyList());
         httpPostWithAuthorization(newPostRequest, "/posts", getSessionId());
 
         ExtractableResponse<Response> response = httpPutWithAuthorization("/posts/1/like", getSessionId());
@@ -39,7 +40,7 @@ class LikeAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인한 회원이 좋아요를 누른 게시물에 좋아요를 취소할 수 있다.")
     @Test
     void flipLike_Delete(){
-        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT);
+        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT, Collections.emptyList());
         String sessionId = getSessionId();
         httpPostWithAuthorization(newPostRequest, "/posts", sessionId);
 
@@ -58,7 +59,7 @@ class LikeAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인 하지 않은 회원이 좋아요를 누를 경우 예외를 반환한다")
     @Test
     void flipLike_Unauthorized(){
-        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT);
+        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT, Collections.emptyList());
         String sessionId = getSessionId();
         httpPostWithAuthorization(newPostRequest, "/posts", sessionId);
 

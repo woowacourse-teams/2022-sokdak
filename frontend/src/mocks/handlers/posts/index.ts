@@ -14,11 +14,40 @@ const postHandlers = [
       likeCount: 0,
       commentCount: 0,
       modified: false,
+      like: false,
     };
 
     postList.unshift(newPost);
 
     return res(ctx.status(200), ctx.set('Location', `/posts/${id}`));
+  }),
+
+  rest.put('/posts/:id/like', (req, res, ctx) => {
+    const id = Number(req.params.id!);
+    const targetPost = postList.find(post => post.id === id);
+
+    if (!targetPost) {
+      return res(
+        ctx.status(400),
+        ctx.json({
+          message: '해당 포스트가 없습니다.',
+        }),
+      );
+    }
+    targetPost.like = !targetPost.like;
+    if (targetPost.like) {
+      targetPost.likeCount += 1;
+    }
+    if (!targetPost.like) {
+      targetPost.likeCount -= 1;
+    }
+    return res(
+      ctx.status(200),
+      ctx.json({
+        likeCount: targetPost.likeCount,
+        like: targetPost.like,
+      }),
+    );
   }),
 
   rest.get('/posts/:id', (req, res, ctx) => {
@@ -93,6 +122,7 @@ const postHandlers = [
     const targetCommentList = commentList.filter(comment => comment.postId === id);
     return res(ctx.status(200), ctx.json({ comments: targetCommentList }));
   }),
+
   rest.post<{ content: string; anonymous: boolean }>('/posts/:id/comments', (req, res, ctx) => {
     const params = req.params;
     const id = Number(params.id);

@@ -6,6 +6,7 @@ export const postList: Post[] = [
     content: '날씨는 참 좋네요.',
     likeCount: 1200,
     commentCount: 2,
+    like: true,
     modified: false,
   },
   {
@@ -15,6 +16,7 @@ export const postList: Post[] = [
     content: '어항에 있는 것 같아요.',
     likeCount: 4,
     commentCount: 0,
+    like: false,
     modified: true,
   },
   {
@@ -24,6 +26,7 @@ export const postList: Post[] = [
     content: '싫어? 아냐 나 괜찮아',
     likeCount: 3,
     commentCount: 6,
+    like: false,
     modified: false,
   },
   {
@@ -33,6 +36,7 @@ export const postList: Post[] = [
     content: '어항에 있는 것 같아요',
     likeCount: 5,
     commentCount: 0,
+    like: true,
     modified: true,
   },
   {
@@ -42,6 +46,7 @@ export const postList: Post[] = [
     content: '미안하다 진짜봇',
     likeCount: 3,
     commentCount: 2,
+    like: false,
     modified: false,
   },
   {
@@ -51,6 +56,7 @@ export const postList: Post[] = [
     content: '생각멈춰',
     likeCount: 2,
     commentCount: 2,
+    like: true,
     modified: false,
   },
   {
@@ -60,6 +66,7 @@ export const postList: Post[] = [
     content: '베이비 이스트',
     likeCount: 3,
     commentCount: 4,
+    like: true,
     modified: false,
   },
   {
@@ -69,6 +76,7 @@ export const postList: Post[] = [
     content: '단백질 벌컥 벌컥',
     likeCount: 7,
     commentCount: 7,
+    like: true,
     modified: false,
   },
   {
@@ -78,6 +86,7 @@ export const postList: Post[] = [
     content: '알고리즘 냠냠',
     likeCount: 10,
     commentCount: 1,
+    like: true,
     modified: false,
   },
   {
@@ -87,6 +96,7 @@ export const postList: Post[] = [
     content: '특 : 페이지 계산 못함',
     likeCount: 1,
     commentCount: 1,
+    like: true,
     modified: false,
   },
   {
@@ -96,6 +106,7 @@ export const postList: Post[] = [
     content: '어떻게 해야 할까요?',
     likeCount: 3,
     commentCount: 4,
+    like: true,
     modified: false,
   },
   {
@@ -105,6 +116,7 @@ export const postList: Post[] = [
     content: '잘한걸까요? ...',
     likeCount: 3,
     commentCount: 4,
+    like: true,
     modified: false,
   },
   {
@@ -114,6 +126,7 @@ export const postList: Post[] = [
     content: '슬리퍼 신고 싶엉',
     likeCount: 3,
     commentCount: 4,
+    like: true,
     modified: false,
   },
   {
@@ -123,6 +136,7 @@ export const postList: Post[] = [
     content: '너무 좋다.',
     likeCount: 3,
     commentCount: 4,
+    like: true,
     modified: false,
   },
   {
@@ -132,6 +146,7 @@ export const postList: Post[] = [
     content: '화이팅!',
     likeCount: 3,
     commentCount: 4,
+    like: true,
     modified: false,
   },
   {
@@ -141,6 +156,7 @@ export const postList: Post[] = [
     content: '다시 시작합니다.',
     likeCount: 3,
     commentCount: 4,
+    like: true,
     modified: false,
   },
   {
@@ -150,6 +166,7 @@ export const postList: Post[] = [
     content: '안오네',
     likeCount: 3,
     commentCount: 4,
+    like: true,
     modified: false,
   },
   {
@@ -159,6 +176,7 @@ export const postList: Post[] = [
     content: '오잖아',
     likeCount: 3,
     commentCount: 4,
+    like: true,
     modified: false,
   },
   {
@@ -168,6 +186,7 @@ export const postList: Post[] = [
     content: '염증은 밥으로 밀어내야한다는 썰이 있던데..',
     likeCount: 3,
     commentCount: 4,
+    like: true,
     modified: false,
   },
   {
@@ -177,6 +196,7 @@ export const postList: Post[] = [
     content: '좀 귀찮네',
     likeCount: 3,
     commentCount: 4,
+    like: true,
     modified: false,
   },
 ];

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-export const Container = styled.div`
+export const Container = styled.div<{ onClick: React.MouseEventHandler<HTMLDivElement> | undefined }>`
   min-width: fit-content;
   height: 23px;
   border: 1px solid ${props => props.theme.colors.sub};
@@ -11,5 +11,5 @@ export const Container = styled.div`
   padding: 6px;
   box-sizing: border-box;
   user-select: none;
-  cursor: pointer;
+  cursor: ${props => (!!props.onClick ? 'pointer' : null)};
 `;

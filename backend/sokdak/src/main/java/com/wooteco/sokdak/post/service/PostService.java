@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.post.service;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.like.repository.LikeRepository;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
@@ -25,10 +26,13 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final LikeRepository likeRepository;
 
-    public PostService(PostRepository postRepository, MemberRepository memberRepository) {
+    public PostService(PostRepository postRepository, MemberRepository memberRepository,
+                       LikeRepository likeRepository) {
         this.postRepository = postRepository;
         this.memberRepository = memberRepository;
+        this.likeRepository = likeRepository;
     }
 
     @Transactional
@@ -44,10 +48,10 @@ public class PostService {
     }
 
     public PostDetailResponse findPost(Long postId, AuthInfo authInfo) {
-        System.out.println(authInfo);
         Post foundPost = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-        return PostDetailResponse.of(foundPost, foundPost.isAuthenticated(authInfo.getId()));
+        boolean liked = likeRepository.existsByMemberIdAndPostId(authInfo.getId(), postId);
+        return PostDetailResponse.of(foundPost, liked, foundPost.isAuthenticated(authInfo.getId()));
     }
 
     public PostsResponse findPosts(Pageable pageable) {

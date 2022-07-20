@@ -18,6 +18,7 @@ import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,6 +53,7 @@ class PostServiceTest {
                 .title("제목")
                 .content("본문")
                 .member(member)
+                .likes(new ArrayList<>())
                 .build();
     }
 
@@ -134,10 +136,14 @@ class PostServiceTest {
         Post post2 = Post.builder()
                 .title("제목2")
                 .content("본문2")
+                .likes(new ArrayList<>())
+                .comments(new ArrayList<>())
                 .build();
         Post post3 = Post.builder()
                 .title("제목3")
                 .content("본문3")
+                .likes(new ArrayList<>())
+                .comments(new ArrayList<>())
                 .build();
         postRepository.save(post);
         postRepository.save(post2);

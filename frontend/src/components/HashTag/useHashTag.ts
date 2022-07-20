@@ -49,6 +49,7 @@ const useHashTag = (prevHashTags: string[]) => {
 
   return {
     hashtags,
+    setHashtags,
     tagInputValue,
     handleTagInputChange,
     handleTagInputKeyDown,

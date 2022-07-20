@@ -8,6 +8,16 @@ export const postList: Post[] = [
     commentCount: 2,
     like: true,
     modified: false,
+    hashtags: [
+      {
+        id: 1,
+        name: '생활',
+      },
+      {
+        id: 2,
+        name: '조현근',
+      },
+    ],
   },
   {
     id: 2,
@@ -18,6 +28,16 @@ export const postList: Post[] = [
     commentCount: 0,
     like: false,
     modified: true,
+    hashtags: [
+      {
+        id: 3,
+        name: '날씨',
+      },
+      {
+        id: 4,
+        name: '속닥속닥',
+      },
+    ],
   },
   {
     id: 3,
@@ -28,6 +48,12 @@ export const postList: Post[] = [
     commentCount: 6,
     like: false,
     modified: false,
+    hashtags: [
+      {
+        id: 3,
+        name: '날씨',
+      },
+    ],
   },
   {
     id: 4,
@@ -38,6 +64,12 @@ export const postList: Post[] = [
     commentCount: 0,
     like: true,
     modified: true,
+    hashtags: [
+      {
+        id: 3,
+        name: '날씨',
+      },
+    ],
   },
   {
     id: 5,
@@ -48,6 +80,7 @@ export const postList: Post[] = [
     commentCount: 2,
     like: false,
     modified: false,
+    hashtags: [],
   },
   {
     id: 6,
@@ -58,6 +91,7 @@ export const postList: Post[] = [
     commentCount: 2,
     like: true,
     modified: false,
+    hashtags: [],
   },
   {
     id: 7,
@@ -68,6 +102,7 @@ export const postList: Post[] = [
     commentCount: 4,
     like: true,
     modified: false,
+    hashtags: [],
   },
   {
     id: 8,
@@ -78,6 +113,7 @@ export const postList: Post[] = [
     commentCount: 7,
     like: true,
     modified: false,
+    hashtags: [],
   },
   {
     id: 9,
@@ -88,6 +124,7 @@ export const postList: Post[] = [
     commentCount: 1,
     like: true,
     modified: false,
+    hashtags: [],
   },
   {
     id: 10,
@@ -98,6 +135,7 @@ export const postList: Post[] = [
     commentCount: 1,
     like: true,
     modified: false,
+    hashtags: [],
   },
   {
     id: 11,
@@ -108,6 +146,7 @@ export const postList: Post[] = [
     commentCount: 4,
     like: true,
     modified: false,
+    hashtags: [],
   },
   {
     id: 12,
@@ -118,6 +157,7 @@ export const postList: Post[] = [
     commentCount: 4,
     like: true,
     modified: false,
+    hashtags: [],
   },
   {
     id: 13,
@@ -128,6 +168,7 @@ export const postList: Post[] = [
     commentCount: 4,
     like: true,
     modified: false,
+    hashtags: [],
   },
   {
     id: 14,
@@ -138,6 +179,7 @@ export const postList: Post[] = [
     commentCount: 4,
     like: true,
     modified: false,
+    hashtags: [],
   },
   {
     id: 15,
@@ -148,6 +190,7 @@ export const postList: Post[] = [
     commentCount: 4,
     like: true,
     modified: false,
+    hashtags: [],
   },
   {
     id: 16,
@@ -158,6 +201,7 @@ export const postList: Post[] = [
     commentCount: 4,
     like: true,
     modified: false,
+    hashtags: [],
   },
   {
     id: 17,
@@ -168,6 +212,7 @@ export const postList: Post[] = [
     commentCount: 4,
     like: true,
     modified: false,
+    hashtags: [],
   },
   {
     id: 18,
@@ -178,6 +223,7 @@ export const postList: Post[] = [
     commentCount: 4,
     like: true,
     modified: false,
+    hashtags: [],
   },
   {
     id: 19,
@@ -188,6 +234,7 @@ export const postList: Post[] = [
     commentCount: 4,
     like: true,
     modified: false,
+    hashtags: [],
   },
   {
     id: 20,
@@ -198,6 +245,7 @@ export const postList: Post[] = [
     commentCount: 4,
     like: true,
     modified: false,
+    hashtags: [],
   },
 ];
 
@@ -332,5 +380,24 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+  },
+];
+
+export const hashtagList: Hashtag[] = [
+  {
+    id: 1,
+    name: '생활',
+  },
+  {
+    id: 2,
+    name: '조현근',
+  },
+  {
+    id: 3,
+    name: '날씨',
+  },
+  {
+    id: 4,
+    name: '속닥속닥',
   },
 ];

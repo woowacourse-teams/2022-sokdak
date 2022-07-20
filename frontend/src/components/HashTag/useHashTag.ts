@@ -5,7 +5,7 @@ import SnackbarContext from '@/context/Snackbar';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
 const useHashTag = (prevHashTags: string[]) => {
-  const [tags, setTags] = useState<string[]>(prevHashTags);
+  const [hashtags, setHashtags] = useState<string[]>(prevHashTags);
   const [tagInputValue, setTagInputValue] = useState('');
   const { showSnackbar } = useContext(SnackbarContext);
 
@@ -29,7 +29,7 @@ const useHashTag = (prevHashTags: string[]) => {
   };
 
   const addTag = (tagContent: string) => {
-    const isExistTag = tags.includes(tagContent);
+    const isExistTag = hashtags.includes(tagContent);
 
     setTagInputValue('');
 
@@ -43,11 +43,11 @@ const useHashTag = (prevHashTags: string[]) => {
       return;
     }
 
-    setTags(state => [...state, tagContent]);
+    setHashtags(state => [...state, tagContent]);
   };
 
   return {
-    tags,
+    hashtags,
     tagInputValue,
     handleTagInputChange,
     handleTagInputKeyDown,

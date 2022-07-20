@@ -1,10 +1,6 @@
 import { rest } from 'msw';
 
-<<<<<<< HEAD
-import { commentList, postList } from '@/dummy';
-=======
-import { hashtagList, postList } from '@/dummy';
->>>>>>> 7038c6c (feat: 글 작성 • 수정 msw에 해시태그 필드 추가)
+import { hashtagList, commentList, postList } from '@/dummy';
 
 const postHandlers = [
   rest.post<Pick<Post, 'title' | 'content'> & { hashtags: string[] }>('/posts', (req, res, ctx) => {
@@ -32,11 +28,8 @@ const postHandlers = [
       likeCount: 0,
       commentCount: 0,
       modified: false,
-<<<<<<< HEAD
       like: false,
-=======
       hashtags: hashtags.map(hashtagName => hashtagList.find(hashtag => hashtag.name === hashtagName)!),
->>>>>>> 7038c6c (feat: 글 작성 • 수정 msw에 해시태그 필드 추가)
     };
 
     postList.unshift(newPost);

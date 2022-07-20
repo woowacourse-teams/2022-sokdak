@@ -6,4 +6,5 @@ interface Post {
   likeCount: number;
   commentCount: number;
   modified: boolean;
+  like: boolean;
 }

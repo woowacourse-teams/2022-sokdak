@@ -25,6 +25,7 @@ const usePostComments = (
       ...options,
       onSuccess: (data, variables, context) => {
         queryClient.refetchQueries(QUERY_KEYS.COMMENTS);
+        queryClient.refetchQueries(QUERY_KEYS.POSTS);
 
         if (options && options.onSuccess) {
           options.onSuccess(data, variables, context);

@@ -154,6 +154,13 @@ const postHandlers = [
     const params = req.params;
     const id = Number(params.id);
     const { content, anonymous } = req.body;
+
+    const targetPost = postList.find(post => post.id === id);
+
+    if (!targetPost) {
+      return res(ctx.status(400), ctx.json({ message: '해당 글이 존재하지 않습니다.' }));
+    }
+
     commentList.unshift({
       id: commentList.length + 1,
       content,
@@ -161,6 +168,7 @@ const postHandlers = [
       nickname: anonymous ? '익명' : '기명',
       postId: id,
     });
+    targetPost.commentCount += 1;
 
     return res(ctx.status(204));
   }),

@@ -21,8 +21,8 @@ import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostHashtagRepository;
 import com.wooteco.sokdak.post.repository.PostRepository;
-import java.util.Collections;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -113,7 +113,6 @@ class PostServiceTest {
                 () -> assertThat(response.getCreatedAt()).isNotNull()
         );
     }
-
 
 
     @DisplayName("로그인을 하고, 다른 회원이 작성한 게시글 조회 기능")

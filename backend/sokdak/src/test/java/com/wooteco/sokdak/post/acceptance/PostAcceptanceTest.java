@@ -12,6 +12,7 @@ import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuth
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
@@ -32,12 +33,13 @@ import org.springframework.http.HttpStatus;
 @DisplayName("게시글 관련 인수테스트")
 class PostAcceptanceTest extends AcceptanceTest {
 
-    private static final NewPostRequest NEW_POST_REQUEST = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT, Collections.emptyList());
+    private static final NewPostRequest NEW_POST_REQUEST = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT,
+            Collections.emptyList());
 
     @DisplayName("새로운 게시글을 작성할 수 있다.")
     @Test
     void addPost() {
-        ExtractableResponse<Response> response = httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getSessionId());
+        ExtractableResponse<Response> response = httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getToken());
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
@@ -56,11 +58,12 @@ class PostAcceptanceTest extends AcceptanceTest {
     @DisplayName("게시글 목록 중 특정 페이지를 최신순으로 조회할 수 있다.")
     @Test
     void findPosts() {
+        String token = getToken();
         NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", Collections.emptyList());
         NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", Collections.emptyList());
-        httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getSessionId());
-        httpPostWithAuthorization(postRequest2, "/posts", getSessionId());
-        httpPostWithAuthorization(postRequest3, "/posts", getSessionId());
+        httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", token);
+        httpPostWithAuthorization(postRequest2, "/posts", token);
+        httpPostWithAuthorization(postRequest3, "/posts", token);
 
         ExtractableResponse<Response> response = httpGet("/posts?size=2&page=0");
         List<String> postNames = parsePostTitles(response);
@@ -75,7 +78,7 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void findPost() {
         String postId = parsePostId(
-                httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getSessionId()));
+                httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getToken()));
 
         ExtractableResponse<Response> response = httpGet("/posts/" + postId);
         PostDetailResponse postDetailResponse = response.jsonPath().getObject(".", PostDetailResponse.class);
@@ -90,9 +93,10 @@ class PostAcceptanceTest extends AcceptanceTest {
     @DisplayName("게시글 제목이 없는 경우 글 작성을 할 수 없다.")
     @Test
     void addPost_Exception_NoTitle() {
-        NewPostRequest newPostRequestWithoutTitle = new NewPostRequest(null, VALID_POST_CONTENT, Collections.emptyList());
+        NewPostRequest newPostRequestWithoutTitle = new NewPostRequest(null, VALID_POST_CONTENT,
+                Collections.emptyList());
         ExtractableResponse<Response> response =
-                httpPostWithAuthorization(newPostRequestWithoutTitle, "/posts", getSessionId());
+                httpPostWithAuthorization(newPostRequestWithoutTitle, "/posts", getToken());
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
@@ -116,12 +120,12 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void updatePost() {
         String postId = parsePostId(
-                httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getSessionId()));
+                httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getToken()));
 
         PostUpdateRequest postUpdateRequest = new PostUpdateRequest(
                 UPDATED_POST_TITLE, UPDATED_POST_CONTENT, Collections.emptyList());
         ExtractableResponse<Response> response =
-                httpPutWithAuthorization(postUpdateRequest, "/posts/" + postId, getSessionId());
+                httpPutWithAuthorization(postUpdateRequest, "/posts/" + postId, getToken());
 
         PostDetailResponse postDetailResponse = httpGet("/posts/" + postId).jsonPath()
                 .getObject(".", PostDetailResponse.class);
@@ -136,9 +140,9 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void deletePost() {
         String postId = parsePostId(
-                httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getSessionId()));
+                httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getToken()));
 
-        ExtractableResponse<Response> response = httpDeleteWithAuthorization("/posts/" + postId, getSessionId());
+        ExtractableResponse<Response> response = httpDeleteWithAuthorization("/posts/" + postId, getToken());
 
         ExtractableResponse<Response> foundPostResponse = httpGet("/posts/" + postId);
         assertAll(
@@ -147,10 +151,9 @@ class PostAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    private String getSessionId() {
+    private String getToken() {
         LoginRequest loginRequest = new LoginRequest("chris", "Abcd123!@");
-        return httpPost(loginRequest, "/login")
-                .cookie("JSESSIONID");
+        return httpPost(loginRequest, "/login").header(AUTHORIZATION);
     }
 
     private String parsePostId(ExtractableResponse<Response> response) {

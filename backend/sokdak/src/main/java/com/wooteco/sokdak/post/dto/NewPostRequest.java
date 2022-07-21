@@ -1,10 +1,8 @@
 package com.wooteco.sokdak.post.dto;
 
 import com.wooteco.sokdak.post.domain.Post;
-import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter

@@ -3,10 +3,9 @@ package com.wooteco.sokdak.post.dto;
 import com.wooteco.sokdak.post.domain.Hashtag;
 import com.wooteco.sokdak.post.domain.Post;
 import java.time.LocalDateTime;
-import lombok.Builder;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -23,7 +22,8 @@ public class PostDetailResponse {
     private final boolean modified;
 
     @Builder
-    private PostDetailResponse(Long id, String title, String content, List<HashtagResponse> hashtagResponses, LocalDateTime createdAt, int likeCount,
+    private PostDetailResponse(Long id, String title, String content, List<HashtagResponse> hashtagResponses,
+                               LocalDateTime createdAt, int likeCount,
                                boolean like,
                                boolean authorized, boolean modified) {
         this.id = id;

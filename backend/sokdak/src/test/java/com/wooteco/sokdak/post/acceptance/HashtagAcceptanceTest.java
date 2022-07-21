@@ -6,6 +6,7 @@ import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuth
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.post.dto.HashtagResponse;
@@ -29,7 +30,7 @@ public class HashtagAcceptanceTest extends AcceptanceTest {
     @Test
     void addPostWithHashtags() {
         String postId = parsePostId(
-                httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getSessionId()));
+                httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getToken()));
 
         ExtractableResponse<Response> response = httpGet("/posts/" + postId);
         PostDetailResponse postDetailResponse = response.jsonPath().getObject(".", PostDetailResponse.class);
@@ -47,10 +48,10 @@ public class HashtagAcceptanceTest extends AcceptanceTest {
     @Test
     void modifyPostWithHashtags() {
         String postId = parsePostId(
-                httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getSessionId()));
+                httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getToken()));
 
-        final PostUpdateRequest requestBody = new PostUpdateRequest("제목","본문",List.of("변경1","변경2"));
-        httpPutWithAuthorization(requestBody, "/posts/" + postId, getSessionId());
+        final PostUpdateRequest requestBody = new PostUpdateRequest("제목", "본문", List.of("변경1", "변경2"));
+        httpPutWithAuthorization(requestBody, "/posts/" + postId, getToken());
 
         ExtractableResponse<Response> response = httpGet("/posts/" + postId);
         PostDetailResponse postDetailResponse = response.jsonPath().getObject(".", PostDetailResponse.class);
@@ -70,9 +71,8 @@ public class HashtagAcceptanceTest extends AcceptanceTest {
                 .split("/posts/")[1];
     }
 
-    private String getSessionId() {
+    private String getToken() {
         LoginRequest loginRequest = new LoginRequest("chris", "Abcd123!@");
-        return httpPost(loginRequest, "/login")
-                .cookie("JSESSIONID");
+        return httpPost(loginRequest, "/login").header(AUTHORIZATION);
     }
 }

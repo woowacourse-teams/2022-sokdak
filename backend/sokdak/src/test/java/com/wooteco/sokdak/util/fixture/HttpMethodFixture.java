@@ -1,5 +1,7 @@
 package com.wooteco.sokdak.util.fixture;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -26,10 +28,10 @@ public class HttpMethodFixture {
     }
 
     public static ExtractableResponse<Response> httpPostWithAuthorization(
-            Object requestBody, String path, String sessionId) {
+            Object requestBody, String path, String token) {
         return RestAssured
                 .given().log().all()
-                .sessionId(sessionId)
+                .header(AUTHORIZATION, token)
                 .body(requestBody)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().post(path)
@@ -38,10 +40,10 @@ public class HttpMethodFixture {
     }
 
     public static ExtractableResponse<Response> httpPutWithAuthorization(
-            Object requestBody, String path, String sessionId) {
+            Object requestBody, String path, String token) {
         return RestAssured
                 .given().log().all()
-                .sessionId(sessionId)
+                .header(AUTHORIZATION, token)
                 .body(requestBody)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().put(path)
@@ -49,20 +51,19 @@ public class HttpMethodFixture {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> httpPutWithAuthorization(String path, String sessionId) {
+    public static ExtractableResponse<Response> httpPutWithAuthorization(String path, String token) {
         return RestAssured
                 .given().log().all()
-                .sessionId(sessionId)
+                .header(AUTHORIZATION, token)
                 .when().put(path)
                 .then().log().all()
                 .extract();
     }
 
-    public static ExtractableResponse<Response> httpDeleteWithAuthorization(String path, String sessionId) {
+    public static ExtractableResponse<Response> httpDeleteWithAuthorization(String path, String token) {
         return RestAssured
                 .given().log().all()
-                .sessionId(sessionId)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(AUTHORIZATION, token)
                 .when().delete(path)
                 .then().log().all()
                 .extract();

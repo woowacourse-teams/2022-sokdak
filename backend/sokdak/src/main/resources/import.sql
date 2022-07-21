@@ -1,3 +1,4 @@
+insert into member (username, nickname, password) values ('chris', 'chrisNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e');
 insert into ticket (serial_number, used) values ('21f46568bf6002c23843d198af30bb2bc8123695bd3d12ce86e0fc35bc5d3279', false);
 insert into ticket (serial_number, used) values ('5810c81b6f78b1bcf62b53035d879e1309750ab60d1b4b601dfbc368005645cb', false);
 insert into ticket (serial_number, used) values ('694f51c40e1910a86b3f4a655ac874a0511402a6ac347b1cadccf7b9e3678fac', false);

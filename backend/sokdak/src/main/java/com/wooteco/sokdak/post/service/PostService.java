@@ -50,6 +50,7 @@ public class PostService {
     public Long addPost(NewPostRequest newPostRequest, AuthInfo authInfo) {
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
+
         Post post = Post.builder()
                 .title(newPostRequest.getTitle())
                 .content(newPostRequest.getContent())
@@ -85,7 +86,6 @@ public class PostService {
     }
 
     public PostDetailResponse findPost(Long postId, AuthInfo authInfo) {
-        System.out.println(authInfo);
         Post foundPost = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
         boolean liked = likeRepository.existsByMemberIdAndPostId(authInfo.getId(), postId);

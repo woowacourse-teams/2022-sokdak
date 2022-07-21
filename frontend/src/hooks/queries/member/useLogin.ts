@@ -7,12 +7,23 @@ const useLogin = (
 ) => {
   return useMutation(
     ({ username, password }): Promise<AxiosResponse<string, string>> =>
-      axios.post('/login', {
-        username,
-        password,
-      }),
+      axios.post(
+        '/login',
+        {
+          username,
+          password,
+        },
+        { withCredentials: true },
+      ),
     {
       ...options,
+      onSettled(data, error, variables, context) {
+        console.log(data);
+        if (data?.headers.Authorization) {
+          axios.defaults.headers.common['Authorization'] = data?.headers.Authorization;
+          localStorage.setItem('AccessToken', data.headers.Authorization);
+        }
+      },
     },
   );
 };

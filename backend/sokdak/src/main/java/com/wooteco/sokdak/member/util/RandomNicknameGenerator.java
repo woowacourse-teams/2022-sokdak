@@ -1,7 +1,10 @@
 package com.wooteco.sokdak.member.util;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class RandomNicknameGenerator {
 
@@ -10,6 +13,7 @@ public class RandomNicknameGenerator {
     private static final String[] NOUNS = {"404", "200", "자스", "타스", "리액트", "스프링", "자바", "파이썬", "노드", "AWS", "맥북",
             "윈도우", "마우스", "키보드", "노드", "도커"};
     public static final Set<String> RANDOM_NICKNAMES = new HashSet<>();
+    private static final Random RANDOM = new Random();
 
     static {
         for (String adjective : ADJECTIVES) {
@@ -20,10 +24,10 @@ public class RandomNicknameGenerator {
     }
 
     public static String generate(Set<String> usedNicknames) {
-        return RANDOM_NICKNAMES.stream()
+        List<String> names = RANDOM_NICKNAMES.stream()
                 .filter(nickname -> !usedNicknames.contains(nickname))
-                .findFirst()
-                .orElse("크루");
+                .collect(Collectors.toList());
+        return names.get(RANDOM.nextInt(names.size()));
     }
 
     private RandomNicknameGenerator() {

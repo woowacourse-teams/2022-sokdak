@@ -61,7 +61,7 @@ public class CommentService {
             return memberNickname;
         }
         // 익명이면, comment table에서 memberId에 해당하는 nickname들을 다 가져와서, member
-        List<String> nickNamesByMember = commentRepository.findNickNamesByMemberId(authInfo.getId(), postId);
+        List<String> nickNamesByMember = commentRepository.findNickNamesByPostIdAndMemberId(postId, authInfo.getId());
         List<String> usedNicknames = commentRepository.findNicknamesByPostId(postId);
 
         return nickNamesByMember.stream()

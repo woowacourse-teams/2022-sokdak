@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.support;
+package com.wooteco.sokdak.support.token;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

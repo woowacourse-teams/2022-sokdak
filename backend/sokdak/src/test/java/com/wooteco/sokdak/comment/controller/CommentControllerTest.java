@@ -8,27 +8,26 @@ import static org.mockito.Mockito.doReturn;
 import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.CommentsResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
-import com.wooteco.sokdak.support.AuthInfoMapper;
 import com.wooteco.sokdak.util.ControllerTest;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 class CommentControllerTest extends ControllerTest {
 
-    @MockBean
-    private AuthInfoMapper authInfoMapper;
-
     @BeforeEach
     void setUpArgumentResolver() {
+        doReturn(true)
+                .when(authInterceptor)
+                .preHandle(any(), any(), any());
+
         doReturn(AUTH_INFO)
-                .when(authInfoMapper)
-                .getAuthInfo(any());
+                .when(authenticationPrincipalArgumentResolver)
+                .resolveArgument(any(), any(), any(), any());
     }
 
     @DisplayName("댓글 작성 요청이 오면 새로운 댓글을 작성한다.")
@@ -38,8 +37,7 @@ class CommentControllerTest extends ControllerTest {
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .sessionId(SESSION_ID)
-                .sessionAttr("member", AUTH_INFO)
+                .header("Authorization", "any")
                 .body(newCommentRequest)
                 .when().post("/posts/1/comments")
                 .then().log().all()

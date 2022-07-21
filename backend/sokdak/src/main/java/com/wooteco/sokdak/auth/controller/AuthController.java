@@ -3,8 +3,9 @@ package com.wooteco.sokdak.auth.controller;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.auth.service.AuthService;
-import javax.servlet.http.HttpSession;
+import com.wooteco.sokdak.support.token.TokenManager;
 import javax.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,15 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+    private final TokenManager tokenManager;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, TokenManager tokenManager) {
         this.authService = authService;
+        this.tokenManager = tokenManager;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(HttpSession httpSession, @Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest loginRequest) {
         AuthInfo authInfo = authService.login(loginRequest);
-        httpSession.setAttribute("member", authInfo);
-        return ResponseEntity.ok().build();
+        String token = tokenManager.createToken(authInfo);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .build();
     }
 }

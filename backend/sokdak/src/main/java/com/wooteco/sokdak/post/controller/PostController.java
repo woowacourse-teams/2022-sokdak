@@ -8,7 +8,7 @@ import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.service.PostService;
-import com.wooteco.sokdak.support.Login;
+import com.wooteco.sokdak.support.token.Login;
 import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.data.domain.Pageable;
@@ -34,13 +34,15 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostDetailResponse> findPost(@PathVariable Long id, @Login AuthInfo authInfo) {
+    public ResponseEntity<PostDetailResponse> findPost(@PathVariable Long id,
+                                                       @Login AuthInfo authInfo) {
         PostDetailResponse postResponse = postService.findPost(id, authInfo);
         return ResponseEntity.ok(postResponse);
     }
 
     @PostMapping
-    public ResponseEntity<Void> addPost(@Valid @RequestBody NewPostRequest newPostRequest, @Login AuthInfo authInfo) {
+    public ResponseEntity<Void> addPost(@Valid @RequestBody NewPostRequest newPostRequest,
+                                        @Login AuthInfo authInfo) {
         Long postId = postService.addPost(newPostRequest, authInfo);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
     }

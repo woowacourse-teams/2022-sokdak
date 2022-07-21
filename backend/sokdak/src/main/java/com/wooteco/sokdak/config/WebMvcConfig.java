@@ -1,9 +1,8 @@
 package com.wooteco.sokdak.config;
 
-
-import com.wooteco.sokdak.support.AuthInfoMapper;
 import com.wooteco.sokdak.support.AuthInterceptor;
-import com.wooteco.sokdak.support.LoginArgumentResolver;
+import com.wooteco.sokdak.support.token.AuthenticationPrincipalArgumentResolver;
+import com.wooteco.sokdak.support.token.TokenManager;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,9 +18,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private static final String ALLOWED_METHOD_NAMES = "GET,HEAD,POST,DELETE,TRACE,OPTIONS,PATCH,PUT";
 
     private final AuthInterceptor authInterceptor;
+    private final TokenManager tokenManager;
 
-    public WebMvcConfig(AuthInterceptor authInterceptor) {
+    public WebMvcConfig(AuthInterceptor authInterceptor, TokenManager tokenManager) {
         this.authInterceptor = authInterceptor;
+        this.tokenManager = tokenManager;
     }
 
     @Override
@@ -44,11 +45,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new LoginArgumentResolver(getMapMember()));
+        resolvers.add(authenticationPrincipalArgumentResolver());
     }
 
     @Bean
-    public AuthInfoMapper getMapMember() {
-        return new AuthInfoMapper();
+    public AuthenticationPrincipalArgumentResolver authenticationPrincipalArgumentResolver() {
+        return new AuthenticationPrincipalArgumentResolver(tokenManager);
     }
 }

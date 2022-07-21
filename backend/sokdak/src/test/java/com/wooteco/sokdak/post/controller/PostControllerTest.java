@@ -15,7 +15,6 @@ import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
-import com.wooteco.sokdak.support.AuthInfoMapper;
 import com.wooteco.sokdak.util.ControllerTest;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,8 +22,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -32,7 +29,6 @@ import org.springframework.restdocs.RestDocumentationExtension;
 @ExtendWith(RestDocumentationExtension.class)
 class PostControllerTest extends ControllerTest {
 
-    private static final String SESSION_ID = "mySessionId";
     private static final PostsElementResponse POSTS_ELEMENT_RESPONSE_1 = PostsElementResponse.builder()
             .id(1L)
             .title("제목1")
@@ -52,17 +48,14 @@ class PostControllerTest extends ControllerTest {
             .modified(false)
             .build();
 
-    @Autowired
-    PostController postController;
-
-    @MockBean
-    private AuthInfoMapper authInfoMapper;
-
     @BeforeEach
     void setUpArgumentResolver() {
+        doReturn(true)
+                .when(authInterceptor)
+                .preHandle(any(), any(), any());
         doReturn(AUTH_INFO)
-                .when(authInfoMapper)
-                .getAuthInfo(any());
+                .when(authenticationPrincipalArgumentResolver)
+                .resolveArgument(any(), any(), any(), any());
     }
 
     @DisplayName("글 작성 요청을 받으면 새로운 게시글을 등록한다.")
@@ -70,10 +63,13 @@ class PostControllerTest extends ControllerTest {
     void addPost() {
         NewPostRequest postRequest = new NewPostRequest("제목", "본문");
 
+        doReturn(true)
+                .when(authInterceptor)
+                .preHandle(any(), any(), any());
+
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .sessionId(SESSION_ID)
-                .sessionAttr("member", AUTH_INFO)
+                .header("Authorization", "any")
                 .body(postRequest)
                 .when().post("/posts")
                 .then().log().all()
@@ -87,8 +83,7 @@ class PostControllerTest extends ControllerTest {
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .sessionId(SESSION_ID)
-                .sessionAttr("member", AUTH_INFO)
+                .header("Authorization", "any")
                 .body(postRequest)
                 .when().post("/posts")
                 .then().log().all()
@@ -102,8 +97,7 @@ class PostControllerTest extends ControllerTest {
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .sessionId(SESSION_ID)
-                .sessionAttr("member", AUTH_INFO)
+                .header("Authorization", "any")
                 .body(postRequest)
                 .when().post("/posts")
                 .then().log().all()
@@ -119,8 +113,6 @@ class PostControllerTest extends ControllerTest {
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .sessionId(SESSION_ID)
-                .sessionAttr("member", AUTH_INFO)
                 .when().get("/posts?size=3&page=0")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
@@ -159,8 +151,6 @@ class PostControllerTest extends ControllerTest {
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .sessionId(SESSION_ID)
-                .sessionAttr("member", AUTH_INFO)
                 .when().get("/posts/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
@@ -199,8 +189,7 @@ class PostControllerTest extends ControllerTest {
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .sessionId(SESSION_ID)
-                .sessionAttr("member", AUTH_INFO)
+                .header("Authorization", "any")
                 .when().get("/posts/9999")
                 .then().log().all()
                 .statusCode(HttpStatus.NOT_FOUND.value());
@@ -210,14 +199,14 @@ class PostControllerTest extends ControllerTest {
     @Test
     void updatePost() {
         PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT);
-        doNothing().when(postService)
+        doNothing()
+                .when(postService)
                 .updatePost(any(), any(), any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .sessionId(SESSION_ID)
+                .header("Authorization", "any")
                 .body(postUpdateRequest)
-                .sessionAttr("member", AUTH_INFO)
                 .when().put("/posts/1")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
@@ -233,9 +222,8 @@ class PostControllerTest extends ControllerTest {
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .sessionId(SESSION_ID)
                 .body(postUpdateRequest)
-                .sessionAttr("member", AUTH_INFO)
+                .header("Authorization", "any")
                 .when().put("/posts/1")
                 .then().log().all()
                 .statusCode(HttpStatus.FORBIDDEN.value());
@@ -249,8 +237,7 @@ class PostControllerTest extends ControllerTest {
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .sessionId(SESSION_ID)
-                .sessionAttr("member", AUTH_INFO)
+                .header("Authorization", "any")
                 .when().delete("/posts/1")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
@@ -265,8 +252,7 @@ class PostControllerTest extends ControllerTest {
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .sessionId(SESSION_ID)
-                .sessionAttr("member", AUTH_INFO)
+                .header("Authorization", "any")
                 .when().delete("/posts/1")
                 .then().log().all()
                 .statusCode(HttpStatus.FORBIDDEN.value());

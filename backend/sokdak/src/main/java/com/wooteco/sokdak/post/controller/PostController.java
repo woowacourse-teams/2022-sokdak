@@ -8,7 +8,7 @@ import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.service.PostService;
-import com.wooteco.sokdak.support.token.AuthenticationPrincipal;
+import com.wooteco.sokdak.support.token.Login;
 import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.data.domain.Pageable;
@@ -35,14 +35,14 @@ public class PostController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PostDetailResponse> findPost(@PathVariable Long id,
-                                                       @AuthenticationPrincipal AuthInfo authInfo) {
+                                                       @Login AuthInfo authInfo) {
         PostDetailResponse postResponse = postService.findPost(id, authInfo);
         return ResponseEntity.ok(postResponse);
     }
 
     @PostMapping
     public ResponseEntity<Void> addPost(@Valid @RequestBody NewPostRequest newPostRequest,
-                                        @AuthenticationPrincipal AuthInfo authInfo) {
+                                        @Login AuthInfo authInfo) {
         Long postId = postService.addPost(newPostRequest, authInfo);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
     }
@@ -57,13 +57,13 @@ public class PostController {
     @PutMapping("/{id}")
     public ResponseEntity<Void> updatePost(@PathVariable Long id,
                                            @Valid @RequestBody PostUpdateRequest postUpdateRequest,
-                                           @AuthenticationPrincipal AuthInfo authInfo) {
+                                           @Login AuthInfo authInfo) {
         postService.updatePost(id, postUpdateRequest, authInfo);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id, @AuthenticationPrincipal AuthInfo authInfo) {
+    public ResponseEntity<Void> deletePost(@PathVariable Long id, @Login AuthInfo authInfo) {
         postService.deletePost(id, authInfo);
         return ResponseEntity.noContent().build();
     }

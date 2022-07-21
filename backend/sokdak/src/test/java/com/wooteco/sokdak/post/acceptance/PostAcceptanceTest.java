@@ -12,6 +12,7 @@ import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuth
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
@@ -36,7 +37,7 @@ class PostAcceptanceTest extends AcceptanceTest {
     @DisplayName("새로운 게시글을 작성할 수 있다.")
     @Test
     void addPost() {
-        ExtractableResponse<Response> response = httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getSessionId());
+        ExtractableResponse<Response> response = httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getToken());
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
@@ -57,9 +58,10 @@ class PostAcceptanceTest extends AcceptanceTest {
     void findPosts() {
         NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2");
         NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3");
-        httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getSessionId());
-        httpPostWithAuthorization(postRequest2, "/posts", getSessionId());
-        httpPostWithAuthorization(postRequest3, "/posts", getSessionId());
+        String token = getToken();
+        httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", token);
+        httpPostWithAuthorization(postRequest2, "/posts", token);
+        httpPostWithAuthorization(postRequest3, "/posts", token);
 
         ExtractableResponse<Response> response = httpGet("/posts?size=2&page=0");
         List<String> postNames = parsePostTitles(response);
@@ -74,7 +76,7 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void findPost() {
         String postId = parsePostId(
-                httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getSessionId()));
+                httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getToken()));
 
         ExtractableResponse<Response> response = httpGet("/posts/" + postId);
         PostDetailResponse postDetailResponse = response.jsonPath().getObject(".", PostDetailResponse.class);
@@ -91,7 +93,7 @@ class PostAcceptanceTest extends AcceptanceTest {
     void addPost_Exception_NoTitle() {
         NewPostRequest newPostRequestWithoutTitle = new NewPostRequest(null, VALID_POST_CONTENT);
         ExtractableResponse<Response> response =
-                httpPostWithAuthorization(newPostRequestWithoutTitle, "/posts", getSessionId());
+                httpPostWithAuthorization(newPostRequestWithoutTitle, "/posts", getToken());
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
@@ -115,11 +117,11 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void updatePost() {
         String postId = parsePostId(
-                httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getSessionId()));
+                httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getToken()));
 
         PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT);
         ExtractableResponse<Response> response =
-                httpPutWithAuthorization(postUpdateRequest, "/posts/" + postId, getSessionId());
+                httpPutWithAuthorization(postUpdateRequest, "/posts/" + postId, getToken());
 
         PostDetailResponse postDetailResponse = httpGet("/posts/" + postId).jsonPath()
                 .getObject(".", PostDetailResponse.class);
@@ -134,9 +136,9 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void deletePost() {
         String postId = parsePostId(
-                httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getSessionId()));
+                httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getToken()));
 
-        ExtractableResponse<Response> response = httpDeleteWithAuthorization("/posts/" + postId, getSessionId());
+        ExtractableResponse<Response> response = httpDeleteWithAuthorization("/posts/" + postId, getToken());
 
         ExtractableResponse<Response> foundPostResponse = httpGet("/posts/" + postId);
         assertAll(
@@ -145,10 +147,9 @@ class PostAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    private String getSessionId() {
+    private String getToken() {
         LoginRequest loginRequest = new LoginRequest("chris", "Abcd123!@");
-        return httpPost(loginRequest, "/login")
-                .cookie("JSESSIONID");
+        return httpPost(loginRequest, "/login").header(AUTHORIZATION);
     }
 
     private String parsePostId(ExtractableResponse<Response> response) {

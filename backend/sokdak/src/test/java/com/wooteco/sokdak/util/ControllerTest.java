@@ -15,6 +15,9 @@ import com.wooteco.sokdak.member.service.EmailService;
 import com.wooteco.sokdak.member.service.MemberService;
 import com.wooteco.sokdak.post.controller.PostController;
 import com.wooteco.sokdak.post.service.PostService;
+import com.wooteco.sokdak.support.AuthInterceptor;
+import com.wooteco.sokdak.support.token.AuthenticationPrincipalArgumentResolver;
+import com.wooteco.sokdak.support.token.TokenManager;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,6 +61,15 @@ public class ControllerTest {
 
     @MockBean
     protected LikeService likeService;
+
+    @MockBean
+    protected TokenManager tokenManager;
+
+    @MockBean
+    protected AuthInterceptor authInterceptor;
+
+    @MockBean
+    protected AuthenticationPrincipalArgumentResolver authenticationPrincipalArgumentResolver;
 
     @BeforeEach
     void setRestDocs(WebApplicationContext webApplicationContext,

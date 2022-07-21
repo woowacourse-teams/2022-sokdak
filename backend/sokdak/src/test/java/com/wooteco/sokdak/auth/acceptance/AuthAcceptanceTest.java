@@ -5,6 +5,7 @@ import static com.wooteco.sokdak.util.fixture.MemberFixture.INVALID_LOGIN_REQUES
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_LOGIN_REQUEST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
@@ -22,7 +23,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.header("Set-Cookie")).contains("JSESSIONID")
+                () -> assertThat(response.header(AUTHORIZATION)).contains("Bearer")
         );
     }
 

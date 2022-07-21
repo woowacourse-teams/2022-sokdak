@@ -60,7 +60,7 @@ export const ContentContainer = styled.div`
 export const Content = styled.p`
   font-size: 18px;
   line-height: 25px;
-
+  white-space: pre-wrap;
   display: -webkit-box;
   max-width: 308px;
   -webkit-line-clamp: 4;

@@ -8,8 +8,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    @Query(value = "SELECT c.nickname.value FROM Comment c WHERE c.member.id = :memberId")
-    List<String> findNickNamesByMemberId(@Param("memberId") Long memberId);
+    @Query(value = "SELECT c.nickname.value FROM Comment c WHERE c.member.id = :memberId and c.post.id = :postId")
+    List<String> findNickNamesByMemberId(@Param("postId") Long postId, @Param("memberId") Long memberId);
 
     @Query(value = "SELECT c.nickname.value FROM Comment c WHERE c.post.id = :postId")
     List<String> findNicknamesByPostId(@Param("postId") Long postId);

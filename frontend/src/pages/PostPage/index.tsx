@@ -106,7 +106,7 @@ const PostPage = () => {
         <Styled.ContentContainer>
           <Styled.Content>{content}</Styled.Content>
           <Styled.TagContainer>
-            {hashtags.map(({ name }) => (
+            {hashtags?.map(({ name }) => (
               <HashTag key={name} name={name} />
             ))}
           </Styled.TagContainer>

@@ -1,7 +1,5 @@
 package com.wooteco.sokdak.support;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-
 import com.wooteco.sokdak.support.token.AuthorizationExtractor;
 import com.wooteco.sokdak.support.token.InvalidTokenException;
 import com.wooteco.sokdak.support.token.TokenManager;
@@ -9,10 +7,8 @@ import com.wooteco.sokdak.support.token.TokenNotFoundException;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
-import org.springframework.web.cors.CorsUtils;
-import javax.servlet.http.HttpSession;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -27,10 +23,10 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (CorsUtils.isPreFlightRequest(request)) {
+        if (isGetMethodWithPostsUri(request)) {
             return true;
         }
-        if (isGetMethodWithPostsUri(request)) {
+        if (CorsUtils.isPreFlightRequest(request)) {
             return true;
         }
 
@@ -45,7 +41,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     private void validateExistHeader(HttpServletRequest request) {
-        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (Objects.isNull(authorizationHeader)) {
             throw new TokenNotFoundException();
         }

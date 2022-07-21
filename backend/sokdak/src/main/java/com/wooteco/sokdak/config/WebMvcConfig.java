@@ -1,6 +1,8 @@
 package com.wooteco.sokdak.config;
 
 import com.wooteco.sokdak.support.AuthInterceptor;
+import com.wooteco.sokdak.support.token.AuthenticationPrincipalArgumentResolver;
+import com.wooteco.sokdak.support.token.TokenManager;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

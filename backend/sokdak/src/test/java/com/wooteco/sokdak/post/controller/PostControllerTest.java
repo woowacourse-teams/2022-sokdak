@@ -9,7 +9,6 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 
 import com.wooteco.sokdak.auth.exception.AuthenticationException;
-import com.wooteco.sokdak.post.domain.Hashtag;
 import com.wooteco.sokdak.post.dto.HashtagResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
@@ -17,7 +16,6 @@ import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
-import com.wooteco.sokdak.support.AuthInfoMapper;
 import com.wooteco.sokdak.util.ControllerTest;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -26,8 +24,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -205,7 +201,8 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("게시글을 수정한다.")
     @Test
     void updatePost() {
-        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT, List.of("tag"));
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT,
+                List.of("tag"));
         doNothing().when(postService)
                 .updatePost(any(), any(), any());
 
@@ -221,7 +218,8 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("권한이 없는 게시글을 수정하려고 하면 403을 반환한다.")
     @Test
     void updatePost_Exception_ForbiddenMemberId() {
-        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT, List.of("tag"));
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT,
+                List.of("tag"));
         doThrow(new AuthenticationException())
                 .when(postService)
                 .updatePost(any(), any(), any());

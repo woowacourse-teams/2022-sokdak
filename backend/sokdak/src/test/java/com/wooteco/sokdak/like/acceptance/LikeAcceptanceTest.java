@@ -25,7 +25,8 @@ class LikeAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인한 회원은 좋아요 하지 않은 게시물에 좋아요를 할 수 있다.")
     @Test
     void flipLike_Create() {
-        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT, Collections.emptyList());
+        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT,
+                Collections.emptyList());
         httpPostWithAuthorization(newPostRequest, "/posts", getToken());
 
         ExtractableResponse<Response> response = httpPutWithAuthorization("/posts/1/like", getToken());
@@ -40,8 +41,9 @@ class LikeAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("로그인한 회원이 좋아요를 누른 게시물에 좋아요를 취소할 수 있다.")
     @Test
-    void flipLike_Delete(){
-        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT, Collections.emptyList());
+    void flipLike_Delete() {
+        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT,
+                Collections.emptyList());
         String sessionId = getToken();
         httpPostWithAuthorization(newPostRequest, "/posts", sessionId);
 
@@ -59,12 +61,13 @@ class LikeAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("로그인 하지 않은 회원이 좋아요를 누를 경우 예외를 반환한다")
     @Test
-    void flipLike_Unauthorized(){
-        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT, Collections.emptyList());
+    void flipLike_Unauthorized() {
+        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT,
+                Collections.emptyList());
         String sessionId = getToken();
         httpPostWithAuthorization(newPostRequest, "/posts", sessionId);
 
-        ExtractableResponse<Response> response = httpPutWithAuthorization("/posts/1/like","");
+        ExtractableResponse<Response> response = httpPutWithAuthorization("/posts/1/like", "");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }

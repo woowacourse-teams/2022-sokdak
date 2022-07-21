@@ -16,7 +16,8 @@ import lombok.Getter;
 @Entity(name = "likes")
 public class Like {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "like_id")
     private Long id;
 

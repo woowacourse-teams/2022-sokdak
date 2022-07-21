@@ -21,8 +21,7 @@ public class LikeController {
     }
 
     @PutMapping("/{id}/like")
-    public ResponseEntity<LikeFlipResponse> flipLike(@PathVariable("id") Long postId,
-                                                     @Login AuthInfo authInfo) {
+    public ResponseEntity<LikeFlipResponse> flipLike(@PathVariable("id") Long postId, @Login AuthInfo authInfo) {
         LikeFlipResponse likeFlipResponse = likeService.flipLike(postId, authInfo);
         return ResponseEntity.ok(likeFlipResponse);
     }

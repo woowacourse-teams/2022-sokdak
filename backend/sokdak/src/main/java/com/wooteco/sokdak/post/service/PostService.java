@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.post.service;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.like.repository.LikeRepository;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
@@ -32,15 +33,18 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final HashtagRepository hashtagRepository;
     private final PostHashtagRepository postHashtagRepository;
+    private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
 
 
     public PostService(PostRepository postRepository, MemberRepository memberRepository,
                        HashtagRepository hashtagRepository,
                        PostHashtagRepository postHashtagRepository,
+                       CommentRepository commentRepository,
                        LikeRepository likeRepository) {
         this.postRepository = postRepository;
         this.memberRepository = memberRepository;
+        this.commentRepository = commentRepository;
         this.likeRepository = likeRepository;
         this.hashtagRepository = hashtagRepository;
         this.postHashtagRepository = postHashtagRepository;
@@ -121,6 +125,9 @@ public class PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFoundException::new);
         post.validateOwner(authInfo.getId());
+
+        commentRepository.deleteAllByPostId(post.getId());
+        likeRepository.deleteAllByPostId(post.getId());
         postRepository.delete(post);
         postHashtagRepository.deleteAllByPostId(post.getId());
     }

@@ -7,6 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.comment.dto.CommentResponse;
+import com.wooteco.sokdak.comment.dto.NewCommentRequest;
+import com.wooteco.sokdak.comment.repository.CommentRepository;
+import com.wooteco.sokdak.comment.service.CommentService;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
@@ -51,6 +55,9 @@ class PostServiceTest {
 
     @Autowired
     private PostHashtagRepository postHashtagRepository;
+
+    @Autowired
+    private CommentService commentService;
 
     @Autowired
     private HashtagRepository hashtagRepository;
@@ -219,5 +226,18 @@ class PostServiceTest {
 
         Optional<Post> foundPost = postRepository.findById(postId);
         assertThat(foundPost).isEmpty();
+    }
+
+    @DisplayName("댓글이 있는 게시글 삭제")
+    @Test
+    void deletePostWithComment() {
+        Long savedPostId = postRepository.save(post).getId();
+        NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
+        Long commentId = commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
+
+        postService.deletePost(post.getId(), AUTH_INFO);
+
+        Optional<Post> deletePost = postRepository.findById(post.getId());
+        assertThat(deletePost).isEmpty();
     }
 }

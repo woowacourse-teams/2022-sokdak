@@ -19,6 +19,7 @@ import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
+import com.wooteco.sokdak.post.repository.HashtagRepository;
 import com.wooteco.sokdak.post.repository.PostHashtagRepository;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.ArrayList;
@@ -50,6 +51,9 @@ class PostServiceTest {
 
     @Autowired
     private PostHashtagRepository postHashtagRepository;
+
+    @Autowired
+    private HashtagRepository hashtagRepository;
 
     private Post post;
 
@@ -207,6 +211,8 @@ class PostServiceTest {
     @DisplayName("게시글 삭제 기능")
     @Test
     void deletePost() {
+        Hashtag hashtag = hashtagRepository.save(new Hashtag("태그1"));
+        PostHashtag postHashtag = postHashtagRepository.save(new PostHashtag(post, hashtag));
         Long postId = postRepository.save(post).getId();
 
         postService.deletePost(postId, AUTH_INFO);

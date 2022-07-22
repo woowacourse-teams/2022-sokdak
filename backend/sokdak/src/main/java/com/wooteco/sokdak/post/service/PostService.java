@@ -121,7 +121,8 @@ public class PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFoundException::new);
         post.validateOwner(authInfo.getId());
+
+        postHashtagRepository.deleteAllByPostId(id);
         postRepository.delete(post);
-        postHashtagRepository.deleteAllByPostId(post.getId());
     }
 }

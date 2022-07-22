@@ -43,10 +43,10 @@ public class Post {
     @Embedded
     private Content content;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "post")
     private List<Like> likes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
     @CreatedDate

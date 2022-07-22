@@ -128,7 +128,8 @@ public class PostService {
 
         commentRepository.deleteAllByPostId(post.getId());
         likeRepository.deleteAllByPostId(post.getId());
+        postHashtagRepository.deleteAllByPostId(id);
+
         postRepository.delete(post);
-        postHashtagRepository.deleteAllByPostId(post.getId());
     }
 }

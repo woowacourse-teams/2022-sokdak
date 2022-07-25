@@ -74,12 +74,10 @@ class PostServiceTest {
                 .member(member)
                 .likes(new ArrayList<>())
                 .build();
-        tag1 = Hashtag
-                .builder()
+        tag1 = Hashtag.builder()
                 .name("태그1")
                 .build();
-        tag2 = Hashtag
-                .builder()
+        tag2 = Hashtag.builder()
                 .name("태그2")
                 .build();
     }
@@ -239,20 +237,20 @@ class PostServiceTest {
         assertThat(hashtags).containsOnly("태그1", "태그2");
     }
 
-    @DisplayName("게시글에 해시태그를 삭제하는 수정 기능")
+    @DisplayName("게시글에 일부 해시태그를 삭제하는 수정 기능")
     @Test
     void updatePostWithDeletingHashtag() {
-        Long postId = savePostWithHashtags(post, tag1, tag2);
+        Long postId = savePostWithHashtags(post, List.of(tag1, tag2));
 
         PostUpdateRequest postUpdateRequest = new PostUpdateRequest("변경된 제목", "변경된 본문", List.of("태그1"));
         postService.updatePost(postId, postUpdateRequest, AUTH_INFO);
 
-        List<String> hashtags = postHashtagRepository.findAllByPostId(postId)
+        List<String> hashtagNames = postHashtagRepository.findAllByPostId(postId)
                 .stream()
                 .map(PostHashtag::getHashtag)
                 .map(Hashtag::getName)
                 .collect(Collectors.toList());
-        assertThat(hashtags).containsOnly("태그1");
+        assertThat(hashtagNames).containsOnly("태그1");
     }
 
     @DisplayName("게시글 삭제 기능")
@@ -301,7 +299,7 @@ class PostServiceTest {
     private Long savePostWithHashtags(Post post, List<Hashtag> tags) {
         Long postId = postRepository.save(post).getId();
         hashtagRepository.saveAll(tags);
-        tags.forEach(tag-> postHashtagRepository.save(new PostHashtag(post, tag)));
+        tags.forEach(tag-> postHashtagRepository.save(PostHashtag.builder().post(post).hashtag(tag).build()));
         return postId;
     }
 }

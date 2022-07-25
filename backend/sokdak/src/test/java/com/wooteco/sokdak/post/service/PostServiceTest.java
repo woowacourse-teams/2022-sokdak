@@ -240,4 +240,24 @@ class PostServiceTest {
         Optional<Post> deletePost = postRepository.findById(post.getId());
         assertThat(deletePost).isEmpty();
     }
+
+    @DisplayName("해시태그가 있는 게시글 삭제 및 사용되지 않는 해시태그 삭제 기능")
+    @Test
+    void deletePostWithHashtag() {
+        Long postId = savePostWithHashtags(post, tag1, tag2);
+
+        postService.deletePost(postId, AUTH_INFO);
+
+        assertAll(
+                () -> assertThat(postHashtagRepository.findAllByPostId(postId)).isEmpty(),
+                () -> assertThat(hashtagRepository.findByName("태그1").isEmpty() && hashtagRepository.findByName("태그2").isEmpty()).isTrue()
+        );
+    }
+
+    private Long savePostWithHashtags(Post post, Hashtag tag1, Hashtag tag2) {
+        Long postId = postRepository.save(post).getId();
+        hashtagRepository.saveAll(List.of(tag1, tag2));
+        postHashtagRepository.saveAll(List.of(new PostHashtag(post, tag1),new PostHashtag(post, tag2)));
+        return postId;
+    }
 }

@@ -63,7 +63,19 @@ public class HashtagAcceptanceTest extends AcceptanceTest {
                         .ignoringFields("id")
                         .isEqualTo(List.of(new HashtagResponse(1L, "변경1"), new HashtagResponse(2L, "변경2")))
         );
+    }
 
+    @DisplayName("해시태그가 포함된 게시글이 정상적으로 삭제된다.")
+    @Test
+    void deletePostWithHashtags() {
+        String postId = parsePostId(
+                httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getToken()));
+
+        ExtractableResponse<Response> response = httpDeleteWithAuthorization("/posts/" + postId, getToken());
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
+        );
     }
 
     private String parsePostId(ExtractableResponse<Response> response) {

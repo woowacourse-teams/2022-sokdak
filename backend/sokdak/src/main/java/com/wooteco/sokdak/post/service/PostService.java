@@ -126,10 +126,25 @@ public class PostService {
                 .orElseThrow(PostNotFoundException::new);
         post.validateOwner(authInfo.getId());
 
+        List<Hashtag> hashtags = postHashtagRepository.findAllByPostId(id)
+                .stream()
+                .map(PostHashtag::getHashtag)
+                .collect(Collectors.toList());
+
         commentRepository.deleteAllByPostId(post.getId());
         likeRepository.deleteAllByPostId(post.getId());
         postHashtagRepository.deleteAllByPostId(id);
 
         postRepository.delete(post);
+
+        deleteNoUsedHashtags(hashtags);
+    }
+
+    private void deleteNoUsedHashtags(List<Hashtag> hashtags) {
+        for (Hashtag hashtag : hashtags) {
+            if (postHashtagRepository.findAllByHashtagId(hashtag.getId()).isEmpty()) {
+                hashtagRepository.delete(hashtag);
+            }
+        }
     }
 }

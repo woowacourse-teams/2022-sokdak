@@ -83,6 +83,7 @@ export const ContentContainer = styled.div`
 export const Content = styled.p`
   min-height: 370px;
   line-height: 25px;
+  white-space: pre-wrap;
 `;
 
 export const TagContainer = styled.div`

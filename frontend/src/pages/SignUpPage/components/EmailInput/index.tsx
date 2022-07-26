@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useLayoutEffect } from 'react';
+import React, { Dispatch, SetStateAction, useLayoutEffect, useState } from 'react';
 
 import InputBox from '@/components/@shared/InputBox';
 import { useInput } from '@/components/@shared/InputBox/useInput';
@@ -28,7 +28,7 @@ const EmailInput = ({
   setIsSet,
   isVerified,
 }: EmailInputProps) => {
-  const { mutate } = useEmailCheck({
+  const { isLoading, mutate } = useEmailCheck({
     onSuccess: () => {
       setIsSet(true);
     },
@@ -75,9 +75,13 @@ const EmailInput = ({
           disabled={isVerified || isSet}
           required
         />
-        <InputBox.SubmitButton disabled={error !== '' || value === '' || isSet}>
-          {isSet ? (isVerified ? '인증 완료' : '인증 중') : '인증번호 받기'}
-        </InputBox.SubmitButton>
+        {isLoading ? (
+          <InputBox.SubmitButton disabled={true}>로딩중</InputBox.SubmitButton>
+        ) : (
+          <InputBox.SubmitButton disabled={error !== '' || value === '' || isSet}>
+            {isSet ? (isVerified ? '인증 완료' : '인증 중') : '인증번호 받기'}
+          </InputBox.SubmitButton>
+        )}
       </Styled.InputForm>
       <InputBox.ErrorMessage />
     </InputBox>

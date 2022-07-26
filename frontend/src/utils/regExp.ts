@@ -5,7 +5,7 @@ export const isValidEmail = (email: string) =>
 
 export const isValidID = (id: string) => /^[a-zA-Z0-9]{4,16}$/.test(id);
 
-export const isValidNickname = (id: string) => /^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣]{4,16}$/.test(id);
+export const isValidNickname = (id: string) => /^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣]{1,16}$/.test(id);
 
 export const isValidPassword = (password: string) =>
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/.test(password);

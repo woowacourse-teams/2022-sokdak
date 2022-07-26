@@ -39,7 +39,7 @@ const LoginPage = () => {
   const { setIsLogin, setUserName } = useContext(AuthContext);
 
   const { mutate } = useLogin({
-    onSuccess: () => {
+    onSuccess: data => {
       showSnackbar(SNACKBAR_MESSAGE.SUCCESS_LOGIN);
       setIsLogin(true);
       setUserName(ID);

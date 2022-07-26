@@ -23,6 +23,7 @@ const CommentInput = ({ amount = 0, id }: CommentInputProps) => {
   const { mutate } = usePostComments({
     onSuccess: () => {
       formElement.current?.reset();
+      document.body.scrollIntoView({ behavior: 'smooth', block: 'end' });
     },
     onError: data => {
       showSnackbar(data.response?.data.message!);

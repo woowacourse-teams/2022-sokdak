@@ -57,7 +57,7 @@ const NicknameInput = ({
     }
     setIsSet(false);
     if (!isValidNickname(value)) {
-      setError('닉네임는 4자에서 16자 사이입니다.');
+      setError('닉네임는 1자에서 16자 사이입니다.');
     }
     if (isValidNickname(value)) {
       setError('');

@@ -17,7 +17,7 @@ public class EmailSenderImpl implements EmailSender {
         this.javaMailSender = javaMailSender;
     }
 
-    @Async
+    @Async("mailExecutor")
     @Override
     public void send(String email, String authCode) {
         SimpleMailMessage message = new SimpleMailMessage();

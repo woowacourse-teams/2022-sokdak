@@ -2,12 +2,12 @@ package com.wooteco.sokdak.post.service;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
+import com.wooteco.sokdak.hashtag.domain.Hashtags;
 import com.wooteco.sokdak.hashtag.service.HashtagService;
 import com.wooteco.sokdak.like.repository.LikeRepository;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
-import com.wooteco.sokdak.hashtag.domain.Hashtag;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
@@ -57,7 +57,7 @@ public class PostService {
                 .build();
         Post savedPost = postRepository.save(post);
 
-        hashtagService.saveHashtags(newPostRequest.getHashtags(), savedPost);
+        hashtagService.saveHashtag(newPostRequest.getHashtags(), savedPost);
         return savedPost.getId();
     }
 
@@ -65,8 +65,7 @@ public class PostService {
         Post foundPost = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
         boolean liked = likeRepository.existsByMemberIdAndPostId(authInfo.getId(), postId);
-
-        List<Hashtag> hashtags = hashtagService.findHashtagsByPostId(postId);
+        Hashtags hashtags = hashtagService.findHashtagsByPostId(postId);
 
         return PostDetailResponse.of(foundPost, liked, foundPost.isAuthenticated(authInfo.getId()), hashtags);
     }
@@ -84,13 +83,13 @@ public class PostService {
     public void updatePost(Long postId, PostUpdateRequest postUpdateRequest, AuthInfo authInfo) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-        List<Hashtag> hashtags = hashtagService.findHashtagsByPostId(post.getId());
+        Hashtags hashtags = hashtagService.findHashtagsByPostId(post.getId());
 
         post.updateTitle(postUpdateRequest.getTitle(), authInfo.getId());
         post.updateContent(postUpdateRequest.getContent(), authInfo.getId());
 
         hashtagService.deleteAllByPostId(hashtags, post.getId());
-        hashtagService.saveHashtags(postUpdateRequest.getHashtags(), post);
+        hashtagService.saveHashtag(postUpdateRequest.getHashtags(), post);
     }
 
     @Transactional
@@ -98,8 +97,7 @@ public class PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFoundException::new);
         post.validateOwner(authInfo.getId());
-
-        List<Hashtag> hashtags = hashtagService.findHashtagsByPostId(post.getId());
+        Hashtags hashtags = hashtagService.findHashtagsByPostId(post.getId());
 
         commentRepository.deleteAllByPostId(post.getId());
         likeRepository.deleteAllByPostId(post.getId());

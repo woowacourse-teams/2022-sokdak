@@ -1,10 +1,9 @@
 package com.wooteco.sokdak.hashtag.service;
 
 import com.wooteco.sokdak.hashtag.domain.Hashtag;
-import com.wooteco.sokdak.hashtag.domain.PostHashtag;
+import com.wooteco.sokdak.hashtag.domain.Hashtags;
 import com.wooteco.sokdak.hashtag.repository.HashtagRepository;
 import com.wooteco.sokdak.hashtag.repository.PostHashtagRepository;
-import com.wooteco.sokdak.hashtag.util.HashtagConverter;
 import com.wooteco.sokdak.post.domain.Post;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,45 +16,34 @@ public class HashtagService {
 
     private final HashtagRepository hashtagRepository;
     private final PostHashtagRepository postHashtagRepository;
-    private final HashtagConverter hashtagConverter;
 
     public HashtagService(HashtagRepository hashtagRepository,
-                          PostHashtagRepository postHashtagRepository,
-                          HashtagConverter hashtagConverter) {
+                          PostHashtagRepository postHashtagRepository) {
         this.hashtagRepository = hashtagRepository;
         this.postHashtagRepository = postHashtagRepository;
-        this.hashtagConverter = hashtagConverter;
     }
 
     @Transactional
-    public void saveHashtags(List<String> names, Post savedPost) {
-        List<Hashtag> hashtags = hashtagConverter.NamesToHashtags(names);
-
-        List<Hashtag> saveHashtags = hashtags.stream()
-                .filter(it -> !hashtagRepository.existsByName(it.getName()))
-                .collect(Collectors.toList());
-        hashtagRepository.saveAll(saveHashtags);
-
-        List<Hashtag> realHashtags = names.stream()
-                .map(name -> hashtagRepository.findByName(name).orElseThrow())
-                .collect(Collectors.toList());
-        postHashtagRepository.saveAll(hashtagConverter
-                .HashtagsToPostHashtags(realHashtags, savedPost));
+    public void saveHashtag(List<String> names, Post savedPost) {
+        Hashtags hashtags = new Hashtags(names.stream()
+                .map(name -> hashtagRepository.findByName(name)
+                        .orElse(hashtagRepository.save(Hashtag.builder().name(name).build())))
+                .collect(Collectors.toList()));
+        postHashtagRepository.saveAll(hashtags.getPostHashtags(savedPost));
     }
 
-    public List<Hashtag> findHashtagsByPostId(Long postId) {
-        List<PostHashtag> postHashtags = postHashtagRepository.findAllByPostId(postId);
-        return hashtagConverter.PostHashtagsToHashtags(postHashtags);
+    public Hashtags findHashtagsByPostId(Long postId) {
+        return Hashtags.ofPostHashtags(postHashtagRepository.findAllByPostId(postId));
     }
 
     @Transactional
-    public void deleteAllByPostId(List<Hashtag> hashtags, Long id) {
+    public void deleteAllByPostId(Hashtags hashtags, Long id) {
         postHashtagRepository.deleteAllByPostId(id);
         deleteNoUsedHashtags(hashtags);
     }
 
-    private void deleteNoUsedHashtags(List<Hashtag> hashtags) {
-        for (Hashtag hashtag : hashtags) {
+    private void deleteNoUsedHashtags(Hashtags hashtags) {
+        for (Hashtag hashtag : hashtags.getValue()) {
             if (!postHashtagRepository.existsByHashtagId(hashtag.getId())) {
                 hashtagRepository.delete(hashtag);
             }

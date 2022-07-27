@@ -7,9 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
-import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
-import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.comment.service.CommentService;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
@@ -65,7 +63,6 @@ class PostServiceTest {
     private Post post;
     private Hashtag tag1;
     private Hashtag tag2;
-
 
     @BeforeEach
     public void setUp() {
@@ -224,12 +221,42 @@ class PostServiceTest {
         );
     }
 
+    @DisplayName("게시글에 해시태그를 추가하는 수정 기능")
+    @Test
+    void updatePostWithAddingHashtag() {
+        Long postId = postRepository.save(post).getId();
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest("변경된 제목", "변경된 본문", List.of("태그1", "태그2"));
+
+        postService.updatePost(postId, postUpdateRequest, AUTH_INFO);
+
+        List<String> hashtags = postHashtagRepository.findAllByPostId(postId)
+                .stream()
+                .map(PostHashtag::getHashtag)
+                .map(Hashtag::getName)
+                .collect(Collectors.toList());
+        assertThat(hashtags).containsOnly("태그1", "태그2");
+    }
+
+    @DisplayName("게시글에 일부 해시태그를 삭제하는 수정 기능")
+    @Test
+    void updatePostWithDeletingHashtag() {
+        Long postId = savePostWithHashtags(post, List.of(tag1, tag2));
+
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest("변경된 제목", "변경된 본문", List.of("태그1"));
+        postService.updatePost(postId, postUpdateRequest, AUTH_INFO);
+
+        List<String> hashtagNames = postHashtagRepository.findAllByPostId(postId)
+                .stream()
+                .map(PostHashtag::getHashtag)
+                .map(Hashtag::getName)
+                .collect(Collectors.toList());
+        assertThat(hashtagNames).containsOnly("태그1");
+    }
+
     @DisplayName("게시글 삭제 기능")
     @Test
     void deletePost() {
-        Hashtag hashtag = hashtagRepository.save(new Hashtag("태그1"));
-        PostHashtag postHashtag = postHashtagRepository.save(new PostHashtag(post, hashtag));
-        Long postId = postRepository.save(post).getId();
+        Long postId = savePostWithHashtags(post, List.of(tag1, tag2));
 
         postService.deletePost(postId, AUTH_INFO);
 
@@ -272,7 +299,7 @@ class PostServiceTest {
     private Long savePostWithHashtags(Post post, List<Hashtag> tags) {
         Long postId = postRepository.save(post).getId();
         hashtagRepository.saveAll(tags);
-        tags.forEach(tag-> postHashtagRepository.save(new PostHashtag(post, tag)));
+        tags.forEach(tag-> postHashtagRepository.save(PostHashtag.builder().post(post).hashtag(tag).build()));
         return postId;
     }
 }

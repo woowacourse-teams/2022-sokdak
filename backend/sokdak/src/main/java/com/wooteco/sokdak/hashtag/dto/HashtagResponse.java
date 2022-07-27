@@ -1,6 +1,6 @@
-package com.wooteco.sokdak.post.dto;
+package com.wooteco.sokdak.hashtag.dto;
 
-import com.wooteco.sokdak.post.domain.Hashtag;
+import com.wooteco.sokdak.hashtag.domain.Hashtag;
 import lombok.Getter;
 
 @Getter

@@ -1,5 +1,8 @@
-package com.wooteco.sokdak.post.domain;
+package com.wooteco.sokdak.hashtag.util;
 
+import com.wooteco.sokdak.hashtag.domain.Hashtag;
+import com.wooteco.sokdak.post.domain.Post;
+import com.wooteco.sokdak.hashtag.domain.PostHashtag;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;

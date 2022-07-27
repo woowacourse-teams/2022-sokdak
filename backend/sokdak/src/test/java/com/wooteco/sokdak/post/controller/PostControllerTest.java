@@ -9,7 +9,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 
 import com.wooteco.sokdak.auth.exception.AuthenticationException;
-import com.wooteco.sokdak.post.dto.HashtagResponse;
+import com.wooteco.sokdak.hashtag.dto.HashtagResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;

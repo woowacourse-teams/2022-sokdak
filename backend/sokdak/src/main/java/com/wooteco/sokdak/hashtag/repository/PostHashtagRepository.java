@@ -1,6 +1,6 @@
-package com.wooteco.sokdak.post.repository;
+package com.wooteco.sokdak.hashtag.repository;
 
-import com.wooteco.sokdak.post.domain.PostHashtag;
+import com.wooteco.sokdak.hashtag.domain.PostHashtag;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

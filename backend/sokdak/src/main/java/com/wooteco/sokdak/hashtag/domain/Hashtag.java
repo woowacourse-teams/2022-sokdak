@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.post.domain;
+package com.wooteco.sokdak.hashtag.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

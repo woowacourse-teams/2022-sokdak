@@ -2,22 +2,19 @@ package com.wooteco.sokdak.post.service;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
+import com.wooteco.sokdak.hashtag.service.HashtagService;
 import com.wooteco.sokdak.like.repository.LikeRepository;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
-import com.wooteco.sokdak.post.domain.Hashtag;
-import com.wooteco.sokdak.post.domain.HashtagConverter;
+import com.wooteco.sokdak.hashtag.domain.Hashtag;
 import com.wooteco.sokdak.post.domain.Post;
-import com.wooteco.sokdak.post.domain.PostHashtag;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
-import com.wooteco.sokdak.post.repository.HashtagRepository;
-import com.wooteco.sokdak.post.repository.PostHashtagRepository;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,27 +27,22 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class PostService {
 
+    private final HashtagService hashtagService;
+
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
-    private final HashtagRepository hashtagRepository;
-    private final PostHashtagRepository postHashtagRepository;
-    private final HashtagConverter hashtagConverter;
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
 
-
-    public PostService(PostRepository postRepository, MemberRepository memberRepository,
-                       HashtagRepository hashtagRepository,
-                       PostHashtagRepository postHashtagRepository,
+    public PostService(HashtagService hashtagService, PostRepository postRepository,
+                       MemberRepository memberRepository,
                        CommentRepository commentRepository,
-                       LikeRepository likeRepository, HashtagConverter hashtagConverter) {
+                       LikeRepository likeRepository) {
+        this.hashtagService = hashtagService;
         this.postRepository = postRepository;
         this.memberRepository = memberRepository;
         this.commentRepository = commentRepository;
         this.likeRepository = likeRepository;
-        this.hashtagRepository = hashtagRepository;
-        this.postHashtagRepository = postHashtagRepository;
-        this.hashtagConverter = hashtagConverter;
     }
 
     @Transactional
@@ -65,24 +57,8 @@ public class PostService {
                 .build();
         Post savedPost = postRepository.save(post);
 
-        saveHashtags(newPostRequest.getHashtags(), savedPost);
-
+        hashtagService.saveHashtags(newPostRequest.getHashtags(), savedPost);
         return savedPost.getId();
-    }
-
-    private void saveHashtags(List<String> names, Post savedPost) {
-        List<Hashtag> hashtags = hashtagConverter.NamesToHashtags(names);
-
-        List<Hashtag> saveHashtags = hashtags.stream()
-                .filter(it -> !hashtagRepository.existsByName(it.getName()))
-                .collect(Collectors.toList());
-        hashtagRepository.saveAll(saveHashtags);
-
-        List<Hashtag> realHashtags = names.stream()
-                .map(name -> hashtagRepository.findByName(name).orElseThrow())
-                .collect(Collectors.toList());
-        postHashtagRepository.saveAll(hashtagConverter
-                .HashtagsToPostHashtags(realHashtags, savedPost));
     }
 
     public PostDetailResponse findPost(Long postId, AuthInfo authInfo) {
@@ -90,8 +66,8 @@ public class PostService {
                 .orElseThrow(PostNotFoundException::new);
         boolean liked = likeRepository.existsByMemberIdAndPostId(authInfo.getId(), postId);
 
-        List<PostHashtag> postHashtags = postHashtagRepository.findAllByPostId(postId);
-        List<Hashtag> hashtags = hashtagConverter.PostHashtagsToHashtags(postHashtags);
+        List<Hashtag> hashtags = hashtagService.findHashtagsByPostId(postId);
+
         return PostDetailResponse.of(foundPost, liked, foundPost.isAuthenticated(authInfo.getId()), hashtags);
     }
 
@@ -108,11 +84,13 @@ public class PostService {
     public void updatePost(Long postId, PostUpdateRequest postUpdateRequest, AuthInfo authInfo) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
+        List<Hashtag> hashtags = hashtagService.findHashtagsByPostId(post.getId());
+
         post.updateTitle(postUpdateRequest.getTitle(), authInfo.getId());
         post.updateContent(postUpdateRequest.getContent(), authInfo.getId());
 
-        postHashtagRepository.deleteAllByPostId(post.getId());
-        saveHashtags(postUpdateRequest.getHashtags(), post);
+        hashtagService.deleteAllByPostId(hashtags, post.getId());
+        hashtagService.saveHashtags(postUpdateRequest.getHashtags(), post);
     }
 
     @Transactional
@@ -121,22 +99,12 @@ public class PostService {
                 .orElseThrow(PostNotFoundException::new);
         post.validateOwner(authInfo.getId());
 
-        List<Hashtag> hashtags = hashtagConverter.PostHashtagsToHashtags(postHashtagRepository.findAllByPostId(id));
+        List<Hashtag> hashtags = hashtagService.findHashtagsByPostId(post.getId());
 
         commentRepository.deleteAllByPostId(post.getId());
         likeRepository.deleteAllByPostId(post.getId());
-        postHashtagRepository.deleteAllByPostId(id);
+        hashtagService.deleteAllByPostId(hashtags, id);
 
         postRepository.delete(post);
-
-        deleteNoUsedHashtags(hashtags);
-    }
-
-    private void deleteNoUsedHashtags(List<Hashtag> hashtags) {
-        for (Hashtag hashtag : hashtags) {
-            if (!postHashtagRepository.existsByHashtagId(hashtag.getId())) {
-                hashtagRepository.delete(hashtag);
-            }
-        }
     }
 }

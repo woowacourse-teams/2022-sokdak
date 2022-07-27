@@ -63,6 +63,9 @@ class PostServiceTest {
     private HashtagRepository hashtagRepository;
 
     private Post post;
+    private Hashtag tag1;
+    private Hashtag tag2;
+
 
     @BeforeEach
     public void setUp() {
@@ -73,6 +76,12 @@ class PostServiceTest {
                 .content("본문")
                 .member(member)
                 .likes(new ArrayList<>())
+                .build();
+        tag1 = Hashtag.builder()
+                .name("태그1")
+                .build();
+        tag2 = Hashtag.builder()
+                .name("태그2")
                 .build();
     }
 
@@ -241,23 +250,29 @@ class PostServiceTest {
         assertThat(deletePost).isEmpty();
     }
 
-    @DisplayName("해시태그가 있는 게시글 삭제 및 사용되지 않는 해시태그 삭제 기능")
+    @DisplayName("해시태그가 있는 게시글 삭제 시 더 이상 사용되지 않는 해시태그 삭제 기능")
     @Test
     void deletePostWithHashtag() {
-        Long postId = savePostWithHashtags(post, tag1, tag2);
+        Long postId = savePostWithHashtags(post, List.of(tag1, tag2));
+        Post post = Post.builder()
+                .title("제목2").
+                content("내용2")
+                .build();
+        savePostWithHashtags(post, List.of(tag1));
 
         postService.deletePost(postId, AUTH_INFO);
 
         assertAll(
                 () -> assertThat(postHashtagRepository.findAllByPostId(postId)).isEmpty(),
-                () -> assertThat(hashtagRepository.findByName("태그1").isEmpty() && hashtagRepository.findByName("태그2").isEmpty()).isTrue()
+                () -> assertThat(hashtagRepository.existsByName("태그1")).isTrue(),
+                () -> assertThat(!hashtagRepository.existsByName("태그2")).isTrue()
         );
     }
 
-    private Long savePostWithHashtags(Post post, Hashtag tag1, Hashtag tag2) {
+    private Long savePostWithHashtags(Post post, List<Hashtag> tags) {
         Long postId = postRepository.save(post).getId();
-        hashtagRepository.saveAll(List.of(tag1, tag2));
-        postHashtagRepository.saveAll(List.of(new PostHashtag(post, tag1),new PostHashtag(post, tag2)));
+        hashtagRepository.saveAll(tags);
+        tags.forEach(tag-> postHashtagRepository.save(new PostHashtag(post, tag)));
         return postId;
     }
 }

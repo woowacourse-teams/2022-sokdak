@@ -10,5 +10,5 @@ public interface PostHashtagRepository extends JpaRepository<PostHashtag, Long> 
 
     void deleteAllByPostId(Long postId);
 
-    List<PostHashtag> findAllByHashtagId(Long id);
+    boolean existsByHashtagId(Long id);
 }

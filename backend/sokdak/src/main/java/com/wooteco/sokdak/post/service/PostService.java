@@ -142,7 +142,7 @@ public class PostService {
 
     private void deleteNoUsedHashtags(List<Hashtag> hashtags) {
         for (Hashtag hashtag : hashtags) {
-            if (postHashtagRepository.findAllByHashtagId(hashtag.getId()).isEmpty()) {
+            if (!postHashtagRepository.existsByHashtagId(hashtag.getId())) {
                 hashtagRepository.delete(hashtag);
             }
         }

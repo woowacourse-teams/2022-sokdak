@@ -28,6 +28,14 @@ public class HttpMethodFixture {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> httpGetWithAuthorization(String path) {
+        return RestAssured
+                .given().log().all()
+                .when().get(path)
+                .then().log().all()
+                .extract();
+    }
+
     public static ExtractableResponse<Response> httpPostWithAuthorization(
             Object requestBody, String path, String token) {
         return RestAssured

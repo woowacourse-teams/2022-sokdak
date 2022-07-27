@@ -1,10 +1,12 @@
 package com.wooteco.sokdak.member.domain;
 
 import com.wooteco.sokdak.member.exception.InvalidNicknameException;
+import com.wooteco.sokdak.member.exception.InvalidUsernameException;
 import java.util.regex.Pattern;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import lombok.Getter;
+import org.hibernate.query.criteria.internal.expression.function.AggregationFunction.MAX;
 
 @Getter
 @Embeddable
@@ -27,7 +29,7 @@ public class Nickname {
 
     private void validate(String value) {
         if (value.length() < MIN_LENGTH || value.length() > MAX_LENGTH
-                || !PATTERN.matcher(value).matches()) {
+        || !PATTERN.matcher(value).matches()) {
             throw new InvalidNicknameException();
         }
     }

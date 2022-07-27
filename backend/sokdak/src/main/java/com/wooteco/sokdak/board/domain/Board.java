@@ -9,9 +9,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import lombok.Builder;
+import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@Getter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class Board {
@@ -20,7 +22,7 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String title;
 
     @OneToMany(mappedBy = "board")
     private List<PostBoard> postBoards;
@@ -33,18 +35,6 @@ public class Board {
 
     @Builder
     public Board(String name) {
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+        this.title = name;
     }
 }

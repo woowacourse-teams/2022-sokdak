@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.board.domain;
 
 import com.wooteco.sokdak.post.domain.Post;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;

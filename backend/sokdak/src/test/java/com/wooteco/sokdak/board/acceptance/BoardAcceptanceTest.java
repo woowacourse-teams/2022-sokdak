@@ -4,9 +4,8 @@ import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.wooteco.sokdak.board.dto.BoardsResponse;
+import com.wooteco.sokdak.board.dto.BoardResponse;
 import com.wooteco.sokdak.board.dto.NewBoardRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
@@ -36,10 +35,9 @@ public class BoardAcceptanceTest extends AcceptanceTest {
         httpPostWithAuthorization(newBoardRequest2, "/boards", getToken());
 
         ExtractableResponse<Response> response = httpGet("/boards");
-        BoardsResponse board = response.jsonPath().getObject(".", BoardsResponse.class);
 
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-        );
+        assertThat(response.body().jsonPath().getList("boards", BoardResponse.class))
+                .extracting("title")
+                .containsExactly("포수타", "자유게시판");
     }
 }

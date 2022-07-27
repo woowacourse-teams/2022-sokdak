@@ -26,10 +26,15 @@ public class HashtagService {
     @Transactional
     public void saveHashtag(List<String> names, Post savedPost) {
         Hashtags hashtags = new Hashtags(names.stream()
-                .map(name -> hashtagRepository.findByName(name)
-                        .orElse(hashtagRepository.save(Hashtag.builder().name(name).build())))
+                .map(this::saveOrFind)
                 .collect(Collectors.toList()));
         postHashtagRepository.saveAll(hashtags.getPostHashtags(savedPost));
+    }
+
+    private Hashtag saveOrFind(String name) {
+        return hashtagRepository
+                .findByName(name)
+                .orElseGet(() -> hashtagRepository.save(Hashtag.builder().name(name).build()));
     }
 
     public Hashtags findHashtagsByPostId(Long postId) {

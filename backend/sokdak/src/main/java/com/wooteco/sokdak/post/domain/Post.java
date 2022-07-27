@@ -2,11 +2,14 @@ package com.wooteco.sokdak.post.domain;
 
 import com.wooteco.sokdak.auth.exception.AuthenticationException;
 import com.wooteco.sokdak.comment.domain.Comment;
+import com.wooteco.sokdak.hashtag.domain.PostHashtag;
 import com.wooteco.sokdak.like.domain.Like;
 import com.wooteco.sokdak.member.domain.Member;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -48,6 +51,8 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private List<PostHashtag> postHashtags;
     @CreatedDate
     private LocalDateTime createdAt;
 
@@ -58,12 +63,14 @@ public class Post {
     }
 
     @Builder
-    private Post(String title, String content, Member member, List<Like> likes, List<Comment> comments) {
+    private Post(String title, String content, Member member, List<Like> likes, List<Comment> comments,
+                 List<PostHashtag> postHashtags) {
         this.title = new Title(title);
         this.content = new Content(content);
         this.member = member;
         this.likes = likes;
         this.comments = comments;
+        this.postHashtags = postHashtags;
     }
 
     public boolean isModified() {
@@ -81,7 +88,7 @@ public class Post {
     }
 
     public void validateOwner(Long accessMemberId) {
-        if (accessMemberId != member.getId()) {
+        if (!Objects.equals(accessMemberId, member.getId())) {
             throw new AuthenticationException();
         }
     }
@@ -123,5 +130,9 @@ public class Post {
 
     public List<Like> getLikes() {
         return likes;
+    }
+
+    public List<PostHashtag> getPostHashtags() {
+        return postHashtags;
     }
 }

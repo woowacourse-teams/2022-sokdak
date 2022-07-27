@@ -7,6 +7,7 @@ import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Hashtag;
+import com.wooteco.sokdak.post.domain.HashtagConverter;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.domain.PostHashtag;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
@@ -33,6 +34,7 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final HashtagRepository hashtagRepository;
     private final PostHashtagRepository postHashtagRepository;
+    private final HashtagConverter hashtagConverter;
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
 
@@ -41,13 +43,14 @@ public class PostService {
                        HashtagRepository hashtagRepository,
                        PostHashtagRepository postHashtagRepository,
                        CommentRepository commentRepository,
-                       LikeRepository likeRepository) {
+                       LikeRepository likeRepository, HashtagConverter hashtagConverter) {
         this.postRepository = postRepository;
         this.memberRepository = memberRepository;
         this.commentRepository = commentRepository;
         this.likeRepository = likeRepository;
         this.hashtagRepository = hashtagRepository;
         this.postHashtagRepository = postHashtagRepository;
+        this.hashtagConverter = hashtagConverter;
     }
 
     @Transactional
@@ -68,35 +71,27 @@ public class PostService {
     }
 
     private void saveHashtags(List<String> names, Post savedPost) {
-        List<Hashtag> hashtags = toHashtags(names);
+        List<Hashtag> hashtags = hashtagConverter.NamesToHashtags(names);
+
         List<Hashtag> saveHashtags = hashtags.stream()
                 .filter(it -> !hashtagRepository.existsByName(it.getName()))
                 .collect(Collectors.toList());
         hashtagRepository.saveAll(saveHashtags);
 
-        List<PostHashtag> realHashtags = hashtags.stream()
-                .map(hashtag -> hashtagRepository.findByName(hashtag.getName()).orElseThrow())
-                .map(hashtag -> PostHashtag.builder().post(savedPost).hashtag(hashtag).build())
+        List<Hashtag> realHashtags = names.stream()
+                .map(name -> hashtagRepository.findByName(name).orElseThrow())
                 .collect(Collectors.toList());
-
-        postHashtagRepository.saveAll(realHashtags);
-    }
-
-    private List<Hashtag> toHashtags(List<String> names) {
-        return names
-                .stream()
-                .map(it -> Hashtag.builder().name(it).build())
-                .collect(Collectors.toList());
+        postHashtagRepository.saveAll(hashtagConverter
+                .HashtagsToPostHashtags(realHashtags, savedPost));
     }
 
     public PostDetailResponse findPost(Long postId, AuthInfo authInfo) {
         Post foundPost = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
         boolean liked = likeRepository.existsByMemberIdAndPostId(authInfo.getId(), postId);
-        List<Hashtag> hashtags = postHashtagRepository.findAllByPostId(postId)
-                .stream()
-                .map(PostHashtag::getHashtag)
-                .collect(Collectors.toList());
+
+        List<PostHashtag> postHashtags = postHashtagRepository.findAllByPostId(postId);
+        List<Hashtag> hashtags = hashtagConverter.PostHashtagsToHashtags(postHashtags);
         return PostDetailResponse.of(foundPost, liked, foundPost.isAuthenticated(authInfo.getId()), hashtags);
     }
 
@@ -126,10 +121,7 @@ public class PostService {
                 .orElseThrow(PostNotFoundException::new);
         post.validateOwner(authInfo.getId());
 
-        List<Hashtag> hashtags = postHashtagRepository.findAllByPostId(id)
-                .stream()
-                .map(PostHashtag::getHashtag)
-                .collect(Collectors.toList());
+        List<Hashtag> hashtags = hashtagConverter.PostHashtagsToHashtags(postHashtagRepository.findAllByPostId(id));
 
         commentRepository.deleteAllByPostId(post.getId());
         likeRepository.deleteAllByPostId(post.getId());

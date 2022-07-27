@@ -1,6 +1,8 @@
 package com.wooteco.sokdak.post.dto;
 
-import com.wooteco.sokdak.post.domain.Hashtag;
+import com.wooteco.sokdak.hashtag.domain.Hashtag;
+import com.wooteco.sokdak.hashtag.domain.Hashtags;
+import com.wooteco.sokdak.hashtag.dto.HashtagResponse;
 import com.wooteco.sokdak.post.domain.Post;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,7 +40,7 @@ public class PostDetailResponse {
     }
 
 
-    public static PostDetailResponse of(Post post, boolean liked, boolean authorized, List<Hashtag> hashtags) {
+    public static PostDetailResponse of(Post post, boolean liked, boolean authorized, Hashtags hashtags) {
         return PostDetailResponse.builder()
                 .id(post.getId())
                 .title(post.getTitle())
@@ -52,8 +54,8 @@ public class PostDetailResponse {
                 .build();
     }
 
-    private static List<HashtagResponse> toResponse(List<Hashtag> hashtags) {
-        return hashtags.stream()
+    private static List<HashtagResponse> toResponse(Hashtags hashtags) {
+        return hashtags.getValue().stream()
                 .map(HashtagResponse::new)
                 .collect(Collectors.toList());
     }

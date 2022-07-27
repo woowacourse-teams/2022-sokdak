@@ -9,7 +9,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 
 import com.wooteco.sokdak.auth.exception.AuthenticationException;
-import com.wooteco.sokdak.post.dto.HashtagResponse;
+import com.wooteco.sokdak.hashtag.dto.HashtagResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
@@ -92,7 +92,7 @@ class PostControllerTest extends ControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("게시글 제목이 없는 경우 400을 반환한다.")
+    @DisplayName("게시글 내용이 없는 경우 400을 반환한다.")
     @Test
     void addPost_Exception_NoContent() {
         NewPostRequest postRequest = new NewPostRequest("제목", null, Collections.emptyList());
@@ -170,6 +170,7 @@ class PostControllerTest extends ControllerTest {
                 .likeCount(0)
                 .like(false)
                 .modified(false)
+                .hashtagResponses(List.of(new HashtagResponse(1L, "gogo")))
                 .authorized(false)
                 .build();
         doReturn(postResponse)

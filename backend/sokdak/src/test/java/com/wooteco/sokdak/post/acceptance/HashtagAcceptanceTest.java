@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.post.acceptance;
 
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
@@ -73,9 +74,7 @@ public class HashtagAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> response = httpDeleteWithAuthorization("/posts/" + postId, getToken());
 
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
-        );
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     private String parsePostId(ExtractableResponse<Response> response) {

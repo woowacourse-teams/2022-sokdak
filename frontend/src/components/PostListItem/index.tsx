@@ -5,7 +5,7 @@ import * as Styled from './index.styles';
 import countFormatter from '@/utils/countFormatter';
 import timeConverter from '@/utils/timeConverter';
 
-interface PostListItemProps extends Omit<Post, 'id' | 'like' | 'hashtags'> {
+interface PostListItemProps extends Omit<Post, 'id' | 'like' | 'hashtags' | 'authorized'> {
   handleClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 

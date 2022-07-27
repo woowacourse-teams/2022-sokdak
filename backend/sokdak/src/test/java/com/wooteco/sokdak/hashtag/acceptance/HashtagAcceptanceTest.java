@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.post.acceptance;
+package com.wooteco.sokdak.hashtag.acceptance;
 
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;

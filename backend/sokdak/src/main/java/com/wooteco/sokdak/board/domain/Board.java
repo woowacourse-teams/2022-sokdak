@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import lombok.Builder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -30,6 +31,7 @@ public class Board {
     public Board() {
     }
 
+    @Builder
     public Board(String name) {
         this.name = name;
     }

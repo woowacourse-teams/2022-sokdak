@@ -22,7 +22,7 @@ public class BoardAcceptanceTest extends AcceptanceTest {
     @Test
     void createBoard() {
         NewBoardRequest newBoardRequest = new NewBoardRequest("포수타");
-        ExtractableResponse<Response> response = httpPostWithAuthorization(newBoardRequest, "/board", getToken());
+        ExtractableResponse<Response> response = httpPostWithAuthorization(newBoardRequest, "/boards", getToken());
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
@@ -31,9 +31,9 @@ public class BoardAcceptanceTest extends AcceptanceTest {
     @Test
     void findBoards() {
         NewBoardRequest newBoardRequest1 = new NewBoardRequest("포수타");
-        httpPostWithAuthorization(newBoardRequest1, "/board", getToken());
+        httpPostWithAuthorization(newBoardRequest1, "/boards", getToken());
         NewBoardRequest newBoardRequest2 = new NewBoardRequest("자유게시판");
-        httpPostWithAuthorization(newBoardRequest2, "/board", getToken());
+        httpPostWithAuthorization(newBoardRequest2, "/boards", getToken());
 
         ExtractableResponse<Response> response = httpGet("/boards");
         BoardsResponse board = response.jsonPath().getObject(".", BoardsResponse.class);

@@ -2,6 +2,7 @@ package com.wooteco.sokdak.util.fixture;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
+import com.wooteco.sokdak.auth.dto.LoginRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -71,5 +72,10 @@ public class HttpMethodFixture {
 
     public static String getExceptionMessage(ExtractableResponse<Response> response) {
         return response.jsonPath().getString("message");
+    }
+
+    public static String getToken() {
+        LoginRequest loginRequest = new LoginRequest("chris", "Abcd123!@");
+        return httpPost(loginRequest, "/login").header(AUTHORIZATION);
     }
 }

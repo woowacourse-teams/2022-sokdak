@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.post.dto;
 
-import com.wooteco.sokdak.hashtag.domain.Hashtag;
 import com.wooteco.sokdak.hashtag.domain.Hashtags;
 import com.wooteco.sokdak.hashtag.dto.HashtagResponse;
 import com.wooteco.sokdak.post.domain.Post;

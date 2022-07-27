@@ -1,12 +1,11 @@
 package com.wooteco.sokdak.board.service;
 
-import static com.wooteco.sokdak.util.fixture.BoardFixture.*;
+import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.repository.BoardRepository;
-import com.wooteco.sokdak.util.fixture.BoardFixture;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

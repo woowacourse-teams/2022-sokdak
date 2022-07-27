@@ -123,7 +123,7 @@ class HashtagServiceTest {
         Long postId = savePostWithHashtags(post, List.of(tag1, tag2));
         Post post = Post.builder()
                 .title("제목2").
-                content("내용2")
+                        content("내용2")
                 .build();
         savePostWithHashtags(post, List.of(tag1));
 

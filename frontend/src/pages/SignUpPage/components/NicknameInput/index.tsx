@@ -7,6 +7,7 @@ import SnackbarContext from '@/context/Snackbar';
 
 import useNicknameCheck from '@/hooks/queries/member/useNicknameCheck';
 
+import { SIGN_UP_ERROR } from '@/constants/signUp';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 import { isValidNickname } from '@/utils/regExp';
 
@@ -39,7 +40,7 @@ const NicknameInput = ({
           setIsSet(true);
         }
         if (!data) {
-          setError('중복된 닉네임입니다.');
+          setError(SIGN_UP_ERROR.DUPLICATED_NICKNAME);
           setIsAnimationActive(true);
         }
       },
@@ -57,7 +58,7 @@ const NicknameInput = ({
     }
     setIsSet(false);
     if (!isValidNickname(value)) {
-      setError('닉네임는 1자에서 16자 사이입니다.');
+      setError(SIGN_UP_ERROR.INVALID_NICKNAME);
     }
     if (isValidNickname(value)) {
       setError('');
@@ -82,7 +83,7 @@ const NicknameInput = ({
       <Styled.InputForm onSubmit={handleIDCheckForm}>
         <InputBox.Input
           handleInvalid={() => {
-            setError('닉네임를 입력해주세요');
+            setError(SIGN_UP_ERROR.BLANK_NICKNAME);
           }}
           placeholder="닉네임"
           required

@@ -5,6 +5,7 @@ import { useInput } from '@/components/@shared/InputBox/useInput';
 
 import useEmailCheck from '@/hooks/queries/member/useEmailCheck';
 
+import { SIGN_UP_ERROR } from '@/constants/signUp';
 import { isValidEmail } from '@/utils/regExp';
 
 import * as Styled from '../../index.styles';
@@ -42,7 +43,7 @@ const EmailInput = ({
       return;
     }
     if (!isValidEmail(value)) {
-      setError('올바른 이메일 형식을 입력해주세요');
+      setError(SIGN_UP_ERROR.INVALID_EMAIL);
     }
     if (isValidEmail(value)) {
       setError('');
@@ -67,7 +68,7 @@ const EmailInput = ({
       <Styled.InputForm onSubmit={handleEmailFormSubmit}>
         <InputBox.Input
           handleInvalid={() => {
-            setError('올바른 이메일 형식을 입력해주세요');
+            setError(SIGN_UP_ERROR.INVALID_EMAIL);
           }}
           type="email"
           placeholder="이메일"

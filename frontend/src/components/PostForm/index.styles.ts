@@ -1,3 +1,4 @@
+import { invalidInputAnimation } from '@/style/GlobalStyle';
 import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -16,24 +17,6 @@ export const Heading = styled.h1`
   margin: 40px 0;
 `;
 
-export const huduldul = keyframes`
-  0% {
-    transform: translateX(-10px)
-  } 
-  20% {
-    transform: translateX(10px)
-  }
-  40% {
-    transform: translateX(-10px)
-  }
-  60% {
-    transform: translateX(10px)
-  }
-  100% {
-    transform: translateX(0px)
-  }
-`;
-
 interface InputProps {
   isValid: boolean;
   isAnimationActive: boolean;
@@ -46,7 +29,7 @@ export const TitleInput = styled.input<InputProps>`
   width: 100%;
   padding: 10px;
   font-size: 20px;
-  animation: ${props => (props.isAnimationActive ? huduldul : null)} 0.5s;
+  ${invalidInputAnimation}
 
   :valid {
     border-bottom: 1px solid ${props => props.theme.colors.sub};
@@ -59,7 +42,7 @@ export const ContentInput = styled.textarea<InputProps>`
   padding: 10px;
   font-size: 14px;
   margin: 20px 0;
-  animation: ${props => (props.isAnimationActive ? huduldul : null)} 0.5s;
+  ${invalidInputAnimation}
 
   ::placeholder {
     color: ${props => (props.isValid ? 'gray' : props.theme.colors.red_100)};

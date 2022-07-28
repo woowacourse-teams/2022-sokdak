@@ -7,9 +7,9 @@ import { useInput } from '@/components/@shared/InputBox/useInput';
 import Layout from '@/components/@styled/Layout';
 
 import AuthContext from '@/context/Auth';
-import SnackbarContext from '@/context/Snackbar';
 
 import useLogin from '@/hooks/queries/member/useLogin';
+import useSnackbar from '@/hooks/useSnackbar';
 
 import * as Styled from './index.styles';
 
@@ -34,7 +34,7 @@ const LoginPage = () => {
     setIsAnimationActive: setIsPasswordAnimationActive,
   } = useInput();
 
-  const { showSnackbar } = useContext(SnackbarContext);
+  const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const { setIsLogin, setUserName } = useContext(AuthContext);
 

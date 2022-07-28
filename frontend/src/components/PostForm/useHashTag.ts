@@ -1,6 +1,6 @@
-import { useContext, useReducer, useState } from 'react';
+import { useReducer, useState } from 'react';
 
-import SnackbarContext from '@/context/Snackbar';
+import useSnackbar from '@/hooks/useSnackbar';
 
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
@@ -8,7 +8,7 @@ const useHashTag = (prevHashTags: string[]) => {
   const [hashtags, setHashtags] = useState<string[]>(prevHashTags);
   const [tagInputValue, setTagInputValue] = useState('');
   const [isTagInputFocus, handleTagInputFocus] = useReducer(state => !state, false);
-  const { showSnackbar } = useContext(SnackbarContext);
+  const { showSnackbar } = useSnackbar();
 
   const handleTagInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const endOfContent = e.target.value.includes(',');

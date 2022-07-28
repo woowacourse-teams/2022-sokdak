@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 
 import HashTag from '@/components/HashTag';
 
-import SnackbarContext from '@/context/Snackbar';
+import useSnackbar from '@/hooks/useSnackbar';
 
 import * as Styled from './index.styles';
 
@@ -25,7 +25,7 @@ const PostForm = ({
   prevHashTags = [],
   handlePost,
 }: PostFormProps) => {
-  const { isVisible, showSnackbar } = useContext(SnackbarContext);
+  const { isVisible, showSnackbar } = useSnackbar();
 
   const [title, setTitle] = useState(prevTitle);
   const [content, setContent] = useState(prevContent);

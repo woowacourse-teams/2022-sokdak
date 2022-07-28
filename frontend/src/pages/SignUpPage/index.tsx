@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import EmailInput from './components/EmailInput';
@@ -10,9 +10,8 @@ import VerificationCodeInput from './components/VerificationCodeInput';
 import { useInput } from '@/components/@shared/InputBox/useInput';
 import Layout from '@/components/@styled/Layout';
 
-import SnackbarContext from '@/context/Snackbar';
-
 import useSignUp from '@/hooks/queries/member/useSignUp';
+import useSnackbar from '@/hooks/useSnackbar';
 
 import * as Styled from './index.styles';
 
@@ -34,7 +33,7 @@ const SignUpPage = () => {
   const [isIDSet, setIDSet] = useState(false);
   const [isNicknameSet, setIsNicknameSet] = useState(false);
 
-  const { showSnackbar } = useContext(SnackbarContext);
+  const { showSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
 

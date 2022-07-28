@@ -1,11 +1,10 @@
-import React, { Dispatch, SetStateAction, useContext, useLayoutEffect } from 'react';
+import React, { Dispatch, SetStateAction, useLayoutEffect } from 'react';
 
 import InputBox from '@/components/@shared/InputBox';
 import { useInput } from '@/components/@shared/InputBox/useInput';
 
-import SnackbarContext from '@/context/Snackbar';
-
 import useIdCheck from '@/hooks/queries/member/useIDCheck';
+import useSnackbar from '@/hooks/useSnackbar';
 
 import { SIGN_UP_ERROR } from '@/constants/signUp';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
@@ -30,7 +29,7 @@ const IDInput = ({
   isSet,
   setIsSet,
 }: IDInputProps) => {
-  const { showSnackbar } = useContext(SnackbarContext);
+  const { showSnackbar } = useSnackbar();
   const { refetch } = useIdCheck({
     storeCode: [value],
     options: {

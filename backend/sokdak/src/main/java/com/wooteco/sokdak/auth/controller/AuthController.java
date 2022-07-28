@@ -60,6 +60,12 @@ public class AuthController {
                 .build();
     }
 
+    @GetMapping("/logout")
+    public ResponseEntity<Void> logout(@Login AuthInfo authInfo) {
+        refreshTokenService.deleteToken(authInfo.getId());
+        return ResponseEntity.ok().build();
+    }
+
     private void validateExistHeader(HttpServletRequest request) {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         String refreshTokenHeader = request.getHeader("Refresh-Token");

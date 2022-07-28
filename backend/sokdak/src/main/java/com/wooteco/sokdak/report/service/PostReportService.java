@@ -14,8 +14,7 @@ import com.wooteco.sokdak.report.repository.PostReportRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class
-PostReportService {
+public class PostReportService {
 
     private final PostReportRepository postReportRepository;
     private final PostRepository postRepository;

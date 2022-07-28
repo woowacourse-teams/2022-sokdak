@@ -5,6 +5,7 @@ import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -31,7 +32,7 @@ public class HashtagAcceptanceTest extends AcceptanceTest {
     @Test
     void addPostWithHashtags() {
         String postId = parsePostId(
-                httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getToken()));
+                httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getToken()));
 
         ExtractableResponse<Response> response = httpGet("/posts/" + postId);
         PostDetailResponse postDetailResponse = response.jsonPath().getObject(".", PostDetailResponse.class);
@@ -49,7 +50,7 @@ public class HashtagAcceptanceTest extends AcceptanceTest {
     @Test
     void modifyPostWithHashtags() {
         String postId = parsePostId(
-                httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getToken()));
+                httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getToken()));
 
         final PostUpdateRequest requestBody = new PostUpdateRequest("제목", "본문", List.of("변경1", "변경2"));
         httpPutWithAuthorization(requestBody, "/posts/" + postId, getToken());
@@ -70,7 +71,7 @@ public class HashtagAcceptanceTest extends AcceptanceTest {
     @Test
     void deletePostWithHashtags() {
         String postId = parsePostId(
-                httpPostWithAuthorization(NEW_POST_REQUEST, "/posts", getToken()));
+                httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getToken()));
 
         ExtractableResponse<Response> response = httpDeleteWithAuthorization("/posts/" + postId, getToken());
 

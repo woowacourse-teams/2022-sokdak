@@ -41,12 +41,9 @@ class BoardServiceTest {
     @DisplayName("게시판 목록을 조회한다.")
     @Test
     void findBoards() {
-        boardService.createBoard(BOARD_REQUEST_1);
-        boardService.createBoard(BOARD_REQUEST_2);
-
         BoardsResponse boards = boardService.findBoards();
 
-        assertThat(boards.getBoards()).hasSize(2)
+        assertThat(boards.getBoards()).hasSize(4)
                 .extracting("title")
                 .containsExactly(BOARD_REQUEST_1.getName(), BOARD_REQUEST_2.getName());
     }

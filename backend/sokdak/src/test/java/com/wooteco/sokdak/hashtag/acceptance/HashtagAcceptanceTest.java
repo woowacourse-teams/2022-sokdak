@@ -12,6 +12,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.hashtag.dto.HashtagResponse;
+import com.wooteco.sokdak.hashtag.dto.HashtagSearchElementResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
@@ -112,6 +113,27 @@ public class HashtagAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
                 () -> assertThat(getExceptionMessage(response)).isEqualTo("해당 이름의 해시태그를 찾을 수 없습니다.")
+        );
+    }
+
+    @DisplayName("특정 키워드로 검색하면 이름에 해당 키워드가 포함된 해시태그들을 조회한다.")
+    @Test
+    void searchHashtagsWithName() {
+        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", List.of("태그1","태그2"));
+        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", List.of("태그2"));
+        httpPostWithAuthorization(postRequest1, "/posts", getToken());
+        httpPostWithAuthorization(postRequest2, "/posts", getToken());
+
+        ExtractableResponse<Response> response = httpGet("/hashtags/popular?limit=3&include=태그");
+
+        List<HashtagSearchElementResponse> hashtagSearchElementResponses = response.body().jsonPath()
+                .getList("boards", HashtagSearchElementResponse.class);
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(hashtagSearchElementResponses).hasSize(2),
+                () -> assertThat(hashtagSearchElementResponses).usingRecursiveComparison()
+                        .comparingOnlyFields("name")
+                        .isEqualTo(List.of("태그2","태그1"))
         );
     }
 

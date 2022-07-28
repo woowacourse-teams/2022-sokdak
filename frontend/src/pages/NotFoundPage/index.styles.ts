@@ -24,13 +24,17 @@ export const ErrorMessage = styled.p`
 const upDown = keyframes`
   0% {
     transform: translateY(-5px);
-  } 25%{
+  }
+  25% {
     transform: translateY(5px);
-  } 50%{
+  }
+  50% {
     transform: translateY(-5px);
-  } 75%{
+  }
+  75% {
     transform: translateY(5px);
-  } 100%{
+  }
+  100% {
     transform: translateY(-5px);
   }
 `;
@@ -38,13 +42,17 @@ const upDown = keyframes`
 const rotate = keyframes`
   0% {
     transform: rotate(0deg);
-  } 25%{
+  }
+  25% {
     transform: rotate(90deg);
-  } 50%{
+  }
+  50% {
     transform: rotate(180deg);
-  } 75%{
+  }
+  75% {
     transform: rotate(270deg);
-  } 100%{
+  }
+  100% {
     transform: rotate(360deg);
   }
 `;

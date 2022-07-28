@@ -15,6 +15,8 @@ import com.wooteco.sokdak.member.service.EmailService;
 import com.wooteco.sokdak.member.service.MemberService;
 import com.wooteco.sokdak.post.controller.PostController;
 import com.wooteco.sokdak.post.service.PostService;
+import com.wooteco.sokdak.report.controller.PostReportController;
+import com.wooteco.sokdak.report.service.PostReportService;
 import com.wooteco.sokdak.support.AuthInterceptor;
 import com.wooteco.sokdak.support.token.AuthenticationPrincipalArgumentResolver;
 import com.wooteco.sokdak.support.token.TokenManager;
@@ -34,7 +36,8 @@ import org.springframework.web.context.WebApplicationContext;
         MemberController.class,
         AuthController.class,
         CommentController.class,
-        LikeController.class
+        LikeController.class,
+        PostReportController.class
 })
 @ExtendWith(RestDocumentationExtension.class)
 public class ControllerTest {
@@ -61,6 +64,9 @@ public class ControllerTest {
 
     @MockBean
     protected LikeService likeService;
+
+    @MockBean
+    protected PostReportService postReportService;
 
     @MockBean
     protected TokenManager tokenManager;

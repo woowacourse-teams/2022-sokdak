@@ -100,10 +100,11 @@ public class HashtagAcceptanceTest extends AcceptanceTest {
         httpPostWithAuthorization(postRequest2, "/posts", getToken());
         httpPostWithAuthorization(postRequest3, "/posts", getToken());
 
-        ExtractableResponse<Response> response = httpGet("/posts?hashtag=태그1&size=10&page=0");
+        ExtractableResponse<Response> response = httpGet("/posts?hashtag=태그1&size=3&page=0");
         List<String> postNames = parsePostTitles(response);
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(postNames).hasSize(2),
                 () -> assertThat(postNames).containsExactly("제목3","제목1")
         );
     }

@@ -39,3 +39,5 @@ out/
 ./src/main/resources/
 
 ./src/main/resources/application.yml
+
+/logfiles

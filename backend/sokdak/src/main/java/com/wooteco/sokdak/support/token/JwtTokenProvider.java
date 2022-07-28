@@ -18,16 +18,19 @@ public class JwtTokenProvider implements TokenManager {
 
     private final Key signingKey;
     private final long validityInMilliseconds;
+    private final long refreshTokenValidityMilliseconds;
 
     public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") String secretKey,
-                            @Value("${security.jwt.token.expire-length}") long validityInMilliseconds) {
+                            @Value("${security.jwt.token.expire-length.access}") long validityInMilliseconds,
+                            @Value("${security.jwt.token.expire-length.refresh}") long refreshTokenValidityMilliseconds) {
         byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
         this.signingKey = Keys.hmacShaKeyFor(keyBytes);
         this.validityInMilliseconds = validityInMilliseconds;
+        this.refreshTokenValidityMilliseconds = refreshTokenValidityMilliseconds;
     }
 
     @Override
-    public String createToken(AuthInfo authInfo) {
+    public String createAccessToken(AuthInfo authInfo) {
         Long payload = authInfo.getId();
         Claims claims = Jwts.claims().setSubject(String.valueOf(payload));
         Date now = new Date();
@@ -35,6 +38,18 @@ public class JwtTokenProvider implements TokenManager {
 
         return Jwts.builder()
                 .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .signWith(signingKey)
+                .compact();
+    }
+
+    @Override
+    public String createRefreshToken() {
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + refreshTokenValidityMilliseconds);
+
+        return Jwts.builder()
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .signWith(signingKey)

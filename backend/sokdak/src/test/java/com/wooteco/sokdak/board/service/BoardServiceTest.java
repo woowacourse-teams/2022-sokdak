@@ -14,10 +14,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
+@Sql("classpath:truncate.sql")
 class BoardServiceTest {
 
     @Autowired
@@ -42,10 +44,13 @@ class BoardServiceTest {
     @DisplayName("게시판 목록을 조회한다.")
     @Test
     void findBoards() {
+        boardService.createBoard(BOARD_REQUEST_1);
+        boardService.createBoard(BOARD_REQUEST_2);
+
         BoardsResponse boards = boardService.findBoards();
 
-        assertThat(boards.getBoards()).hasSize(4)
+        assertThat(boards.getBoards()).hasSize(2)
                 .extracting("title")
-                .containsExactly("Hot 게시판", "자유게시판", "포수타", "감동크루");
+                .containsExactly(BOARD_REQUEST_1.getName(), BOARD_REQUEST_2.getName());
     }
 }

@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.board.acceptance;
 
+import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_1;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
@@ -7,6 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.wooteco.sokdak.board.dto.BoardResponse;
 import com.wooteco.sokdak.board.dto.NewBoardRequest;
+import com.wooteco.sokdak.board.dto.NewBoardResponse;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -29,6 +31,11 @@ public class BoardAcceptanceTest extends AcceptanceTest {
     @DisplayName("게시판 목록을 조회할 수 있다.")
     @Test
     void findBoards() {
+        NewBoardRequest newBoardRequest1 = new NewBoardRequest("포수타");
+        httpPostWithAuthorization(newBoardRequest1, "/boards", getToken());
+        NewBoardRequest newBoardRequest2 = new NewBoardRequest("자유게시판");
+        httpPostWithAuthorization(newBoardRequest2, "/boards", getToken());
+
         ExtractableResponse<Response> response = httpGet("/boards");
 
         assertThat(response.body().jsonPath().getList("boards", BoardResponse.class))

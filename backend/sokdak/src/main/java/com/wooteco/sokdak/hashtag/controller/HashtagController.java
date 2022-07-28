@@ -23,8 +23,8 @@ public class HashtagController {
     }
 
     @GetMapping(path = "/posts", params = {"hashtag", "size", "page"})
-    public ResponseEntity<PostsResponse> findPostsWithHashtags(@RequestParam String hashtag,
-                                                               @PageableDefault(sort = "createdAt", direction = DESC) Pageable pageable) {
+    public ResponseEntity<PostsResponse> findPostsWithHashtag(@RequestParam String hashtag,
+                                                              @PageableDefault(sort = "createdAt", direction = DESC) Pageable pageable) {
         PostsResponse postsResponse = hashtagService.findPostsWithHashtag(hashtag, pageable);
         return ResponseEntity.ok(postsResponse);
     }

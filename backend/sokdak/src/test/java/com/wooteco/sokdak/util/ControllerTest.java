@@ -9,6 +9,8 @@ import com.wooteco.sokdak.board.controller.BoardController;
 import com.wooteco.sokdak.board.service.BoardService;
 import com.wooteco.sokdak.comment.controller.CommentController;
 import com.wooteco.sokdak.comment.service.CommentService;
+import com.wooteco.sokdak.hashtag.controller.HashtagController;
+import com.wooteco.sokdak.hashtag.service.HashtagService;
 import com.wooteco.sokdak.like.controller.LikeController;
 import com.wooteco.sokdak.like.service.LikeService;
 import com.wooteco.sokdak.member.controller.MemberController;
@@ -37,7 +39,8 @@ import org.springframework.web.context.WebApplicationContext;
         AuthController.class,
         CommentController.class,
         LikeController.class,
-        BoardController.class
+        BoardController.class,
+        HashtagController.class
 })
 @ExtendWith(RestDocumentationExtension.class)
 public class ControllerTest {
@@ -67,6 +70,9 @@ public class ControllerTest {
 
     @MockBean
     protected BoardService boardService;
+
+    @MockBean
+    protected HashtagService hashtagService;
 
     @MockBean
     protected TokenManager tokenManager;

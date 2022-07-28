@@ -29,15 +29,10 @@ public class BoardAcceptanceTest extends AcceptanceTest {
     @DisplayName("게시판 목록을 조회할 수 있다.")
     @Test
     void findBoards() {
-        NewBoardRequest newBoardRequest1 = new NewBoardRequest("포수타");
-        httpPostWithAuthorization(newBoardRequest1, "/boards", getToken());
-        NewBoardRequest newBoardRequest2 = new NewBoardRequest("자유게시판");
-        httpPostWithAuthorization(newBoardRequest2, "/boards", getToken());
-
         ExtractableResponse<Response> response = httpGet("/boards");
 
         assertThat(response.body().jsonPath().getList("boards", BoardResponse.class))
                 .extracting("title")
-                .containsExactly("포수타", "자유게시판");
+                .contains("포수타", "자유게시판");
     }
 }

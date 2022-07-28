@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.dto.BoardsResponse;
+import com.wooteco.sokdak.board.dto.NewBoardResponse;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -28,9 +29,9 @@ class BoardServiceTest {
     @DisplayName("게시판을 생성한다.")
     @Test
     void createBoard() {
-        boardService.createBoard(BOARD_REQUEST_1);
+        NewBoardResponse board = boardService.createBoard(BOARD_REQUEST_1);
 
-        Optional<Board> savedBoard = boardRepository.findById(1L);
+        Optional<Board> savedBoard = boardRepository.findById(board.getId());
 
         assertAll(
                 () -> assertThat(savedBoard).isNotNull(),
@@ -45,6 +46,6 @@ class BoardServiceTest {
 
         assertThat(boards.getBoards()).hasSize(4)
                 .extracting("title")
-                .containsExactly(BOARD_REQUEST_1.getName(), BOARD_REQUEST_2.getName());
+                .containsExactly("Hot 게시판", "자유게시판", "포수타", "감동크루");
     }
 }

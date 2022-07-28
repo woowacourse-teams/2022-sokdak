@@ -16,15 +16,12 @@ beforeAll(() => {
     }
     originalError.call(console, ...args);
   };
+  server.listen();
 });
 
 afterAll(() => {
   console.error = originalError;
-});
 
-beforeAll(() => server.listen());
-
-afterAll(() => {
   server.close();
   jest.resetAllMocks();
 });

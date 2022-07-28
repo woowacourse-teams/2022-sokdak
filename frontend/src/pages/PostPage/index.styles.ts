@@ -107,10 +107,9 @@ export const ListButton = styled(Link)`
   font-family: 'BMHANNAAir';
   background-color: ${props => props.theme.colors.sub};
   color: white;
-  border-radius: 15px;
-  font-size: 17px;
-  width: 100px;
-  height: 55px;
+  border-radius: 8px;
+  font-size: 13px;
+  padding: 4% 6%;
   cursor: pointer;
   display: flex;
   align-items: center;

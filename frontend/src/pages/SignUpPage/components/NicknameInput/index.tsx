@@ -92,7 +92,13 @@ const NicknameInput = ({
           {isSet ? '중복 확인 완료' : '중복 확인'}
         </InputBox.SubmitButton>
       </Styled.InputForm>
-      <InputBox.ErrorMessage />
+      {error ? (
+        <InputBox.ErrorMessage />
+      ) : (
+        <Styled.MessageContainer>
+          <Styled.Message>우아한테크코스 닉네임은 익명성을 헤칠수 있습니다.</Styled.Message>
+        </Styled.MessageContainer>
+      )}
     </InputBox>
   );
 };

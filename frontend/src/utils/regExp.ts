@@ -14,6 +14,4 @@ export const isValidNickname = (id: string) =>
   ).test(id);
 
 export const isValidPassword = (password: string) =>
-  new RegExp(
-    `^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{${MEMBER.LIMIT.PASSWORD.MINIMUM_LENGTH},${MEMBER.LIMIT.PASSWORD.MAXIMUM_LENGTH}}$`,
-  ).test(password);
+  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/.test(password);

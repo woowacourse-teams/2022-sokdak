@@ -161,7 +161,7 @@ const postHandlers = [
       return res(ctx.status(400), ctx.json({ message: '해당 글이 존재하지 않습니다.' }));
     }
 
-    commentList.unshift({
+    commentList.push({
       id: commentList.length + 1,
       content,
       createdAt: new Date().toISOString(),

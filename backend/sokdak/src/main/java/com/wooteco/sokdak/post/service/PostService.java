@@ -1,6 +1,9 @@
 package com.wooteco.sokdak.post.service;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.board.domain.PostBoard;
+import com.wooteco.sokdak.board.repository.BoardRepository;
+import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.board.service.BoardService;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.hashtag.domain.Hashtags;
@@ -32,16 +35,21 @@ public class PostService {
     private final BoardService boardService;
 
     private final PostRepository postRepository;
+    private final PostBoardRepository postBoardRepository;
+    private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
 
     public PostService(HashtagService hashtagService, BoardService boardService,
-                       PostRepository postRepository, MemberRepository memberRepository,
+                       PostRepository postRepository, PostBoardRepository postBoardRepository,
+                       BoardRepository boardRepository, MemberRepository memberRepository,
                        CommentRepository commentRepository, LikeRepository likeRepository) {
         this.hashtagService = hashtagService;
         this.boardService = boardService;
         this.postRepository = postRepository;
+        this.postBoardRepository = postBoardRepository;
+        this.boardRepository = boardRepository;
         this.memberRepository = memberRepository;
         this.commentRepository = commentRepository;
         this.likeRepository = likeRepository;
@@ -73,13 +81,15 @@ public class PostService {
         return PostDetailResponse.of(foundPost, liked, foundPost.isAuthenticated(authInfo.getId()), hashtags);
     }
 
-    public PostsResponse findPosts(Pageable pageable) {
-        Slice<Post> posts = postRepository.findSliceBy(pageable);
-        List<PostsElementResponse> postsElementResponses = posts.getContent()
+    public PostsResponse findPostsByBoard(Long boardId, Pageable pageable) {
+        Slice<PostBoard> postBoards = postBoardRepository.findPostBoardsByBoardId(boardId, pageable);
+        List<PostsElementResponse> postsElementResponses = postBoards.getContent()
                 .stream()
+                .map(PostBoard::getPost)
                 .map(PostsElementResponse::from)
-                .collect(Collectors.toUnmodifiableList());
-        return new PostsResponse(postsElementResponses, posts.isLast());
+                .collect(Collectors.toList());
+
+        return new PostsResponse(postsElementResponses, postBoards.isLast());
     }
 
     @Transactional

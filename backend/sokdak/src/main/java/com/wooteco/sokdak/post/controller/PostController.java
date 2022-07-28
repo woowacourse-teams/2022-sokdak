@@ -49,7 +49,7 @@ public class PostController {
     public ResponseEntity<PostsResponse> findPosts(
             @PathVariable Long boardId,
             @PageableDefault(sort = "createdAt", direction = DESC) Pageable pageable) {
-        PostsResponse postsResponse = postService.findPosts(pageable);
+        PostsResponse postsResponse = postService.findPostsByBoard(boardId, pageable);
         return ResponseEntity.ok(postsResponse);
     }
 

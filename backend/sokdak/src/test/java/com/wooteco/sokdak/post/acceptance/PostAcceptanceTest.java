@@ -75,6 +75,26 @@ class PostAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("특정 게시판에 글을 쓰고 그 게시판에서 글 조회가 가능하다.")
+    @Test
+    void findPostsInBoard() {
+        String token = getToken();
+        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", Collections.emptyList());
+        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", Collections.emptyList());
+        NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", Collections.emptyList());
+        httpPostWithAuthorization(postRequest1, CREATE_POST_URI, token);
+        httpPostWithAuthorization(postRequest2, CREATE_POST_URI, token);
+        httpPostWithAuthorization(postRequest3, "/boards/2/posts", token);
+
+        ExtractableResponse<Response> response = httpGet("/boards/2/posts?size=2&page=0");
+        List<String> postNames = parsePostTitles(response);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(postNames).isEqualTo(List.of("제목3"))
+        );
+    }
+
     @DisplayName("특정 게시글 조회할 수 있다.")
     @Test
     void findPost() {

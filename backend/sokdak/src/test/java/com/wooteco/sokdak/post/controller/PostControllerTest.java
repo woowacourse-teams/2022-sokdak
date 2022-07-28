@@ -111,7 +111,7 @@ class PostControllerTest extends ControllerTest {
     void findPosts_Authorized() {
         doReturn(new PostsResponse(List.of(POSTS_ELEMENT_RESPONSE_1, POSTS_ELEMENT_RESPONSE_2), true))
                 .when(postService)
-                .findPosts(any());
+                .findPostsByBoard(any(), any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -126,7 +126,7 @@ class PostControllerTest extends ControllerTest {
     void findPosts_UnAuthorized() {
         doReturn(new PostsResponse(List.of(POSTS_ELEMENT_RESPONSE_1, POSTS_ELEMENT_RESPONSE_2), true))
                 .when(postService)
-                .findPosts(any());
+                .findPostsByBoard(any(), any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

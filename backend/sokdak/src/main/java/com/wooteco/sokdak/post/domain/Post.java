@@ -126,10 +126,16 @@ public class Post {
     }
 
     public int getLikeCount() {
+        if (likes == null) {
+            return 0;
+        }
         return likes.size();
     }
 
     public int getCommentCount() {
+        if (comments == null) {
+            return 0;
+        }
         return comments.size();
     }
 

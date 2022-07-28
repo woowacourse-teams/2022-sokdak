@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.post.domain;
 
 import com.wooteco.sokdak.auth.exception.AuthenticationException;
+import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.hashtag.domain.PostHashtag;
 import com.wooteco.sokdak.like.domain.Like;
@@ -53,6 +54,10 @@ public class Post {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<PostHashtag> postHashtags;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private List<PostBoard> postBoards;
+
     @CreatedDate
     private LocalDateTime createdAt;
 

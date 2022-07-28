@@ -2,7 +2,6 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 require('dotenv').config();
@@ -45,7 +44,7 @@ module.exports = {
             ],
             '@babel/typescript',
           ],
-          plugins: ['@emotion', 'react-refresh/babel'].filter(Boolean),
+          plugins: ['@emotion'].filter(Boolean),
         },
       },
       {
@@ -64,7 +63,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, '../public/index.html'),
     }),
-    new ReactRefreshWebpackPlugin(),
   ],
   devtool: 'source-map',
 };

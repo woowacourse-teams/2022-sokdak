@@ -6,6 +6,8 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import com.wooteco.sokdak.auth.controller.AuthController;
 import com.wooteco.sokdak.auth.service.AuthService;
 import com.wooteco.sokdak.auth.service.RefreshTokenService;
+import com.wooteco.sokdak.board.controller.BoardController;
+import com.wooteco.sokdak.board.service.BoardService;
 import com.wooteco.sokdak.comment.controller.CommentController;
 import com.wooteco.sokdak.comment.service.CommentService;
 import com.wooteco.sokdak.like.controller.LikeController;
@@ -35,7 +37,8 @@ import org.springframework.web.context.WebApplicationContext;
         MemberController.class,
         AuthController.class,
         CommentController.class,
-        LikeController.class
+        LikeController.class,
+        BoardController.class
 })
 @ExtendWith(RestDocumentationExtension.class)
 public class ControllerTest {
@@ -62,6 +65,9 @@ public class ControllerTest {
 
     @MockBean
     protected LikeService likeService;
+
+    @MockBean
+    protected BoardService boardService;
 
     @MockBean
     protected TokenManager tokenManager;

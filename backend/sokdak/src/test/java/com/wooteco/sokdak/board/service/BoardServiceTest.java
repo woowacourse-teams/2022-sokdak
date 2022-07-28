@@ -2,6 +2,8 @@ package com.wooteco.sokdak.board.service;
 
 import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_1;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_2;
+import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_3;
+import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_4;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -12,12 +14,10 @@ import com.wooteco.sokdak.board.dto.NewBoardResponse;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.member.domain.Member;
-import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -64,14 +64,12 @@ class BoardServiceTest {
     @DisplayName("게시판 목록을 조회한다.")
     @Test
     void findBoards() {
-        boardService.createBoard(BOARD_REQUEST_1);
-        boardService.createBoard(BOARD_REQUEST_2);
-
         BoardsResponse boards = boardService.findBoards();
 
-        assertThat(boards.getBoards()).hasSize(2)
+        assertThat(boards.getBoards()).hasSize(4)
                 .extracting("title")
-                .containsExactly(BOARD_REQUEST_1.getName(), BOARD_REQUEST_2.getName());
+                .containsExactly(BOARD_REQUEST_1.getName(), BOARD_REQUEST_2.getName(), BOARD_REQUEST_3.getName(),
+                        BOARD_REQUEST_4.getName());
     }
 
     @DisplayName("게시글과 게시판을 연결한다.")

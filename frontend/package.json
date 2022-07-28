@@ -12,55 +12,6 @@
     "build-storybook": "build-storybook",
     "pretty": "prettier --write \"src/**/*.{ts,tsx,json}\""
   },
-  "eslintConfig": {
-    "env": {
-      "browser": true,
-      "node": true,
-      "es6": true
-    },
-    "extends": [
-      "eslint:recommended",
-      "plugin:prettier/recommended",
-      "plugin:react/recommended",
-      "plugin:react-hooks/recommended",
-      "plugin:jsx-a11y/recommended",
-      "prettier",
-      "plugin:jest/recommended"
-    ],
-    "parser": "@babel/eslint-parser",
-    "parserOptions": {
-      "ecmaFeatures": {
-        "modules": true,
-        "jsx": true
-      },
-      "sourceType": "module",
-      "requireConfigFile": false,
-      "babelOptions": {
-        "presets": [
-          "@babel/preset-env",
-          "@babel/preset-react",
-          "@babel/preset-typescript"
-        ]
-      }
-    },
-    "settings": {
-      "react": {
-        "version": "detect"
-      }
-    },
-    "ignorePatterns": "node_modules",
-    "rules": {
-      "react/react-in-jsx-scope": "off",
-      "react-hooks/exhaustive-deps": "off",
-      "jsx-a11y/no-autofocus": "off",
-      "no-unused-vars": [
-        "error",
-        {
-          "varsIgnorePattern": "_"
-        }
-      ]
-    }
-  },
   "prettier": {
     "printWidth": 120,
     "singleQuote": true,
@@ -118,6 +69,8 @@
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.5",
     "@types/react-test-renderer": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/parser": "^5.31.0",
     "babel-jest": "^28.0.7",
     "babel-loader": "^8.2.5",
     "clean-webpack-plugin": "^4.0.0",

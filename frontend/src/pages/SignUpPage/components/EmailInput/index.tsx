@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useLayoutEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useLayoutEffect } from 'react';
 
 import InputBox from '@/components/@shared/InputBox';
 import { useInput } from '@/components/@shared/InputBox/useInput';
@@ -55,7 +55,7 @@ const EmailInput = ({
     mutate({ email: value });
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {};
+  const handleKeyDown = () => {};
   return (
     <InputBox
       value={value}

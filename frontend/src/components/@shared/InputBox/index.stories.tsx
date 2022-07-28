@@ -11,7 +11,7 @@ export default {
   component: InputBox,
 } as ComponentMeta<typeof InputBox>;
 
-const Template: ComponentStory<typeof InputBox> = args => {
+const Template: ComponentStory<typeof InputBox> = () => {
   const { value, setValue, error, setError } = useInput();
   const [isAnimationActive, setIsAnimationActive] = useState(false);
   const handleInvalid = () => {

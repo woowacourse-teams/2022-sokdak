@@ -14,7 +14,7 @@ const Template = (args: ComponentMeta<typeof VerificationCodeInput>) => {
   const { error, setError, setValue, value } = useInput();
   const [isAnimationActive, setIsAnimationActive] = useState(false);
   const email = 'test1@gmail.com';
-  const [isEmailSet, setIsEmailSet] = useState(true);
+  const [isEmailSet] = useState(true);
   const [isSet, setIsSet] = useState(false);
 
   return (

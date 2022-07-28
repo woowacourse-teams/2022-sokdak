@@ -17,7 +17,7 @@ const useLogin = (
       ),
     {
       ...options,
-      onSettled(data, error, variables, context) {
+      onSettled(data) {
         if (data?.headers.Authorization) {
           axios.defaults.headers.common['Authorization'] = data?.headers.Authorization;
           localStorage.setItem('AccessToken', data.headers.Authorization);

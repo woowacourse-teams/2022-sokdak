@@ -60,7 +60,7 @@ const MainPage = () => {
             commentCount={commentCount}
             modified={modified}
             key={id}
-            handleClick={e => handleClickPostItem(id)}
+            handleClick={() => handleClickPostItem(id)}
             ref={index === data.pages.length - 1 ? scrollRef : null}
           />
         ))}

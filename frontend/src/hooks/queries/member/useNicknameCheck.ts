@@ -13,7 +13,7 @@ const useNicknameCheck = ({
 }) =>
   useQuery(
     [QUERY_KEYS.MEMBER_NICKNAME_CHECK, storeCode],
-    ({ queryKey: [_, nickname] }) => axios.get(`members/signup/exists?nickname=${nickname}`),
+    ({ queryKey: [, nickname] }) => axios.get(`members/signup/exists?nickname=${nickname}`),
     {
       select: data => data.data.unique,
       ...options,

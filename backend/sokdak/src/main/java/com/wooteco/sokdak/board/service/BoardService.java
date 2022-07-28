@@ -49,6 +49,8 @@ public class BoardService {
                 .orElseThrow(BoardNotFoundException::new);
 
         PostBoard postBoard = PostBoard.builder()
+//                .post(savedPost)
+//                .board(board)
                 .build();
 
         postBoard.addPost(savedPost);

@@ -3,12 +3,25 @@ import { setupServer } from 'msw/node';
 import memberHandler from './mocks/handlers/members';
 import postHandlers from './mocks/handlers/posts';
 import '@testing-library/jest-dom';
+import { cleanup } from '@testing-library/react';
 
 const server = setupServer(...memberHandler, ...postHandlers);
 
 beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+
+afterAll(() => {
+  server.close();
+  jest.resetAllMocks();
+});
+
+afterEach(() => {
+  cleanup();
+  server.resetHandlers();
+});
+
+beforeEach(() => {
+  (globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
+});
 
 jest.mock('react-router-dom', () => {
   return {

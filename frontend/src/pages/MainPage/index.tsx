@@ -52,6 +52,7 @@ const MainPage = () => {
       <Styled.PostListContainer>
         {data?.pages.map(({ id, title, content, createdAt, likeCount, commentCount, modified }, index) => (
           <PostListItem
+            testid={id}
             title={title}
             content={content}
             createdAt={createdAt}

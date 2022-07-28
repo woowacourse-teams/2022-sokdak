@@ -1,20 +1,22 @@
-import { act } from 'react-dom/test-utils';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { MemoryRouter } from 'react-router-dom';
 import * as ReactRouter from 'react-router-dom';
 
 import PostPage from '@/pages/PostPage';
 
+import { AuthContextProvider } from '@/context/Auth';
+import { SnackBarContextProvider } from '@/context/Snackbar';
+
 import MockIntersectionObserver from './fixture';
 import App from '@/App';
-import { postList } from '@/dummy';
+import { memberList, postList } from '@/dummy';
 import theme from '@/style/theme';
 import { ThemeProvider } from '@emotion/react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 
 window.IntersectionObserver = MockIntersectionObserver;
 
-describe('게시글 상세페이지', () => {
+describe('게시글 상세 페이지 테스트', () => {
   const postId = 1;
 
   beforeAll(() => {
@@ -60,7 +62,7 @@ describe('게시글 상세페이지', () => {
   });
 });
 
-describe('글 보기 테스트', () => {
+describe('게시글 확인 테스트', () => {
   const postId = 2;
 
   beforeAll(() => {
@@ -69,7 +71,6 @@ describe('글 보기 테스트', () => {
 
   beforeEach(async () => {
     const queryClient = new QueryClient();
-    const promise = Promise.resolve();
 
     render(
       <QueryClientProvider client={queryClient}>
@@ -80,10 +81,6 @@ describe('글 보기 테스트', () => {
         </MemoryRouter>
       </QueryClientProvider>,
     );
-
-    await act(async () => {
-      return promise;
-    });
   });
 
   test('글 목록에서 특정 글을 클릭하면 해당 글 정보를 볼 수 있다.', async () => {
@@ -93,5 +90,63 @@ describe('글 보기 테스트', () => {
 
     expect(await screen.findByText(targetPost.title)).toBeInTheDocument();
     expect(await screen.findByText(targetPost.content)).toBeInTheDocument();
+  });
+});
+
+describe('게시글 작성 테스트', () => {
+  beforeEach(async () => {
+    const queryClient = new QueryClient();
+    const snackBarElement = document.createElement('div');
+    snackBarElement.id = 'snackbar';
+
+    render(
+      <SnackBarContextProvider>
+        <AuthContextProvider>
+          <QueryClientProvider client={queryClient}>
+            <MemoryRouter initialEntries={[`/`]}>
+              <ThemeProvider theme={theme}>
+                <App />
+              </ThemeProvider>
+            </MemoryRouter>
+          </QueryClientProvider>
+        </AuthContextProvider>
+      </SnackBarContextProvider>,
+    );
+
+    if (!document.getElementById('snackbar')) document.body.appendChild(snackBarElement);
+
+    async function login() {
+      fireEvent.click(await screen.findByText('로그인'));
+
+      const IDInput = await screen.findByPlaceholderText('아이디');
+      const passwordInput = await screen.findByPlaceholderText('비밀번호');
+      const submitButton = (await screen.findAllByText('로그인')).find(button => button.tagName === 'BUTTON');
+
+      fireEvent.change(IDInput, { target: { value: memberList[0].username } });
+      fireEvent.change(passwordInput, { target: { value: memberList[0].password } });
+      fireEvent.click(submitButton!);
+
+      expect(await screen.findByText(memberList[0].username[0])).toBeInTheDocument();
+      expect(screen.queryByText('로그인')).toBe(null);
+    }
+
+    await login();
+  });
+
+  test('로그인한 사용자는 글을 작성할 수 있다.', async () => {
+    fireEvent.click(await screen.findByText('+'));
+
+    const titleInput = await screen.findByPlaceholderText('제목을 입력해주세요.');
+    const contentInput = await screen.findByPlaceholderText('내용을 작성해주세요.');
+    const tagInput = await screen.findByPlaceholderText('태그를 입력해주세요.');
+
+    fireEvent.change(titleInput, { target: { value: '입력된 제목' } });
+    fireEvent.change(contentInput, { target: { value: '입력된 내용' } });
+    fireEvent.change(tagInput, { target: { value: '새로운 태그,' } });
+    fireEvent.click(await screen.findByText('글 작성하기'));
+
+    expect(await screen.findByTestId(postList.length + 1)).toBeInTheDocument();
+    expect(await screen.findByText('입력된 제목')).toBeInTheDocument();
+    expect(await screen.findByText('입력된 내용')).toBeInTheDocument();
   });
 });

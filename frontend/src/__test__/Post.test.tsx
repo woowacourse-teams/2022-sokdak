@@ -7,14 +7,11 @@ import PostPage from '@/pages/PostPage';
 import { AuthContextProvider } from '@/context/Auth';
 import { SnackBarContextProvider } from '@/context/Snackbar';
 
-import MockIntersectionObserver from './fixture';
 import App from '@/App';
 import { memberList, postList } from '@/dummy';
 import theme from '@/style/theme';
 import { ThemeProvider } from '@emotion/react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-
-window.IntersectionObserver = MockIntersectionObserver;
 
 describe('게시글 상세 페이지 테스트', () => {
   const postId = 1;

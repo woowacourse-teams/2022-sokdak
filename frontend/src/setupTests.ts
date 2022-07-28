@@ -2,6 +2,7 @@ import { setupServer } from 'msw/node';
 
 import memberHandler from './mocks/handlers/members';
 import postHandlers from './mocks/handlers/posts';
+import MockIntersectionObserver from '@/__test__/fixture';
 import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
 
@@ -17,6 +18,7 @@ beforeAll(() => {
     originalError.call(console, ...args);
   };
   server.listen();
+  window.IntersectionObserver = MockIntersectionObserver;
 });
 
 afterAll(() => {

@@ -20,6 +20,7 @@ import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
+import com.wooteco.sokdak.util.fixture.BoardFixture;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -63,7 +64,7 @@ class PostServiceTest {
                 .build();
     }
 
-    @DisplayName("글 작성 기능")
+    @DisplayName("특정 게시판에 글 작성 기능")
     @Test
     void addPost() {
         NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", Collections.emptyList());
@@ -75,7 +76,8 @@ class PostServiceTest {
                 () -> assertThat(actual.getTitle()).isEqualTo(newPostRequest.getTitle()),
                 () -> assertThat(actual.getContent()).isEqualTo(newPostRequest.getContent()),
                 () -> assertThat(actual.getMember().getId()).isEqualTo(1L),
-                () -> assertThat(actual.getCreatedAt()).isNotNull()
+                () -> assertThat(actual.getCreatedAt()).isNotNull(),
+                () -> assertThat(actual.getPostBoards().get(0).getBoard().getTitle()).isNotNull()
         );
     }
 
@@ -199,9 +201,9 @@ class PostServiceTest {
     @DisplayName("댓글이 있는 게시글 삭제")
     @Test
     void deletePostWithComment() {
-        Long savedPostId = postRepository.save(post).getId();
+        postRepository.save(post).getId();
         NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
-        Long commentId = commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
+        commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
 
         postService.deletePost(post.getId(), AUTH_INFO);
 

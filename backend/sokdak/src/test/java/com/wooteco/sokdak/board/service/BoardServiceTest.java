@@ -5,12 +5,14 @@ import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_2;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_3;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_4;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.board.dto.BoardsResponse;
 import com.wooteco.sokdak.board.dto.NewBoardResponse;
+import com.wooteco.sokdak.board.exception.BoardNotFoundException;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.member.domain.Member;
@@ -96,5 +98,21 @@ class BoardServiceTest {
                 () -> assertThat(postBoard.get().getBoard().getTitle()).isEqualTo("Hot 게시판"),
                 () -> assertThat(postBoard.get().getPost().getTitle()).isEqualTo("제목")
         );
+    }
+
+    @DisplayName("게시글을 존재하지 않는 게시판에 작성하면 예외가 발생한다.")
+    @Test
+    void savePostBoard_Exception_NoBoard() {
+        Member member = memberRepository.findById(1L).get();
+        post = Post.builder()
+                .title("제목")
+                .content("본문")
+                .member(member)
+                .likes(new ArrayList<>())
+                .build();
+        postRepository.save(post);
+
+        assertThatThrownBy(() -> boardService.savePostBoard(post, 9999L))
+                .isInstanceOf(BoardNotFoundException.class);
     }
 }

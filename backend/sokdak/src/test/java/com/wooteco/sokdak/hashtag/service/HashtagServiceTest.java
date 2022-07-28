@@ -73,7 +73,7 @@ class HashtagServiceTest {
         final List<String> expected = List.of("태그1", "태그2");
         NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", expected);
 
-        Long postId = postService.addPost(newPostRequest, AUTH_INFO);
+        Long postId = postService.addPost(1L, newPostRequest, AUTH_INFO);
         List<PostHashtag> postHashtags = postHashtagRepository.findAllByPostId(postId);
 
         final List<String> hashtags = postHashtags

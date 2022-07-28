@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.post.service;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.board.service.BoardService;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.hashtag.domain.Hashtags;
 import com.wooteco.sokdak.hashtag.service.HashtagService;
@@ -28,17 +29,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
 
     private final HashtagService hashtagService;
+    private final BoardService boardService;
 
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
 
-    public PostService(HashtagService hashtagService, PostRepository postRepository,
-                       MemberRepository memberRepository,
-                       CommentRepository commentRepository,
-                       LikeRepository likeRepository) {
+    public PostService(HashtagService hashtagService, BoardService boardService,
+                       PostRepository postRepository, MemberRepository memberRepository,
+                       CommentRepository commentRepository, LikeRepository likeRepository) {
         this.hashtagService = hashtagService;
+        this.boardService = boardService;
         this.postRepository = postRepository;
         this.memberRepository = memberRepository;
         this.commentRepository = commentRepository;
@@ -46,7 +48,7 @@ public class PostService {
     }
 
     @Transactional
-    public Long addPost(NewPostRequest newPostRequest, AuthInfo authInfo) {
+    public Long addPost(Long boardId, NewPostRequest newPostRequest, AuthInfo authInfo) {
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
 
@@ -58,6 +60,7 @@ public class PostService {
         Post savedPost = postRepository.save(post);
 
         hashtagService.saveHashtag(newPostRequest.getHashtags(), savedPost);
+        boardService.savePostBoard(savedPost, boardId);
         return savedPost.getId();
     }
 

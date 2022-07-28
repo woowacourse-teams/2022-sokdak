@@ -68,7 +68,7 @@ class PostServiceTest {
     void addPost() {
         NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", Collections.emptyList());
 
-        Long postId = postService.addPost(newPostRequest, AUTH_INFO);
+        Long postId = postService.addPost(1L, newPostRequest, AUTH_INFO);
         Post actual = postRepository.findById(postId).orElseThrow();
 
         assertAll(

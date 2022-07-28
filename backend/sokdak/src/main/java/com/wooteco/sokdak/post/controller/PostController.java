@@ -41,7 +41,7 @@ public class PostController {
     public ResponseEntity<Void> addPost(@PathVariable Long boardId,
                                         @Valid @RequestBody NewPostRequest newPostRequest,
                                         @Login AuthInfo authInfo) {
-        Long postId = postService.addPost(newPostRequest, authInfo);
+        Long postId = postService.addPost(boardId, newPostRequest, authInfo);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
     }
 

@@ -1,11 +1,12 @@
 import React, { useContext, useState } from 'react';
 
+import HashTag from '@/components/HashTag';
+
 import SnackbarContext from '@/context/Snackbar';
 
 import * as Styled from './index.styles';
 
-import HashTag from '../HashTag';
-import useHashTag from '../HashTag/useHashTag';
+import useHashTag from './useHashTag';
 
 interface PostFormProps {
   heading: string;

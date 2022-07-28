@@ -47,13 +47,13 @@ describe('게시글 상세 페이지 테스트', () => {
   });
 
   test('게시글에 댓글을 남길 수 있다.', async () => {
-    const input = await screen.findByPlaceholderText('댓글을 작성하세요.');
+    const commentInput = await screen.findByPlaceholderText('댓글을 작성하세요.');
 
-    input.textContent = '새로운 댓글';
+    commentInput.textContent = '새로운 댓글';
     fireEvent.click(screen.getByText('댓글 작성'));
 
     waitFor(() => {
-      expect(input.textContent).toBeEmptyDOMElement();
+      expect(commentInput.textContent).toBeEmptyDOMElement();
       expect(screen.getByText('새로운 댓글')).toBeInTheDocument();
     });
   });
@@ -118,12 +118,13 @@ describe('게시글 작성 테스트', () => {
       const IDInput = await screen.findByPlaceholderText('아이디');
       const passwordInput = await screen.findByPlaceholderText('비밀번호');
       const submitButton = (await screen.findAllByText('로그인')).find(button => button.tagName === 'BUTTON');
+      const [targetMember] = memberList;
 
-      fireEvent.change(IDInput, { target: { value: memberList[0].username } });
-      fireEvent.change(passwordInput, { target: { value: memberList[0].password } });
+      fireEvent.change(IDInput, { target: { value: targetMember.username } });
+      fireEvent.change(passwordInput, { target: { value: targetMember.password } });
       fireEvent.click(submitButton!);
 
-      expect(await screen.findByText(memberList[0].username[0])).toBeInTheDocument();
+      expect(await screen.findByText(targetMember.username[0])).toBeInTheDocument();
       expect(screen.queryByText('로그인')).toBe(null);
     }
 

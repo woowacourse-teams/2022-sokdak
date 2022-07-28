@@ -50,11 +50,14 @@ const MainPage = () => {
   return (
     <Layout>
       <Styled.PostListContainer>
-        {data?.pages.map(({ id, title, content, createdAt }, index) => (
+        {data?.pages.map(({ id, title, content, createdAt, likeCount, commentCount, modified }, index) => (
           <PostListItem
             title={title}
             content={content}
             createdAt={createdAt}
+            likeCount={likeCount}
+            commentCount={commentCount}
+            modified={modified}
             key={id}
             handleClick={e => handleClickPostItem(id)}
             ref={index === data.pages.length - 1 ? scrollRef : null}

@@ -6,18 +6,28 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import SnackbarContext from '@/context/Snackbar';
 
 import QUERY_KEYS from '@/constants/queries';
+import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
 const useCreatePost = (
-  options?: UseMutationOptions<AxiosResponse<string, string>, AxiosError, Pick<Post, 'title' | 'content'>>,
+  options?: UseMutationOptions<
+    AxiosResponse<string, string>,
+    AxiosError,
+    Pick<Post, 'title' | 'content'> & { hashtags: string[] }
+  >,
 ) => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useContext(SnackbarContext);
 
   return useMutation(
-    ({ title, content }: { title: string; content: string }): Promise<AxiosResponse<string, string>> =>
+    ({
+      title,
+      content,
+      hashtags,
+    }: Pick<Post, 'title' | 'content'> & { hashtags: string[] }): Promise<AxiosResponse<string, string>> =>
       axios.post('/posts', {
         title,
         content,
+        hashtags,
       }),
     {
       ...options,

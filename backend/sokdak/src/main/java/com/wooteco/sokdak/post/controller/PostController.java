@@ -40,6 +40,7 @@ public class PostController {
     }
 
     @PostMapping
+
     public ResponseEntity<Void> addPost(@Valid @RequestBody NewPostRequest newPostRequest, @Login AuthInfo authInfo) {
         Long postId = postService.addPost(newPostRequest, authInfo);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();

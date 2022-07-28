@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.comment.domain;
 
+import com.wooteco.sokdak.auth.exception.AuthenticationException;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.domain.Nickname;
 import com.wooteco.sokdak.post.domain.Post;
@@ -52,6 +53,12 @@ public class Comment {
         this.post = post;
         this.nickname = new Nickname(nickname);
         this.message = new Message(message);
+    }
+
+    public void validateOwner(Long accessMemberId) {
+        if (accessMemberId != member.getId()) {
+            throw new AuthenticationException();
+        }
     }
 
     public Long getId() {

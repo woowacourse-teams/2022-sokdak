@@ -28,9 +28,29 @@ export const Title = styled.p`
   font-family: 'BMYEONSUNG';
 `;
 
-export const Avartar = styled.div`
+export const Avartar = styled.button`
   width: 40px;
   height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 100%;
+  background-color: inherit;
   border: 1px solid ${props => props.theme.colors.main};
+  cursor: pointer;
+  font-family: 'BMHANNAPro';
+`;
+
+export const LoginLink = styled(Link)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 50px;
+  height: 20px;
+  font-family: 'BMHANNAPro';
+  font-size: 12px;
+  color: ${props => props.theme.colors.gray_900};
+  border: 1px solid black;
+  border-radius: 8px;
 `;

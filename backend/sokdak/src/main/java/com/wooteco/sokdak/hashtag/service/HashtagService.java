@@ -2,14 +2,19 @@ package com.wooteco.sokdak.hashtag.service;
 
 import com.wooteco.sokdak.hashtag.domain.Hashtag;
 import com.wooteco.sokdak.hashtag.domain.Hashtags;
+import com.wooteco.sokdak.hashtag.dto.HashtagSearchElementResponse;
+import com.wooteco.sokdak.hashtag.dto.HashtagsSearchResponse;
 import com.wooteco.sokdak.hashtag.exception.HashtagNotFoundException;
 import com.wooteco.sokdak.hashtag.repository.HashtagRepository;
 import com.wooteco.sokdak.hashtag.repository.PostHashtagRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.persistence.Tuple;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -63,7 +68,22 @@ public class HashtagService {
     public PostsResponse findPostsWithHashtag(String name, Pageable pageable) {
         Hashtag hashtag = hashtagRepository.findByName(name)
                 .orElseThrow(HashtagNotFoundException::new);
-        Slice<Post> posts = postHashtagRepository.findAllByHashtagId(hashtag.getId(), pageable);
+        Slice<Post> posts = postHashtagRepository.findAllPostByHashtagId(hashtag.getId(), pageable);
         return PostsResponse.ofSlice(posts);
+    }
+
+    public HashtagsSearchResponse findHashtagsWithTagName(String include, int limit) {
+        List<Hashtag> contains = hashtagRepository.findAllByNameContains(include);
+        if (contains.isEmpty()) {
+            return new HashtagsSearchResponse(new ArrayList<>());
+        }
+
+        List<Tuple> hashtagOrderByCount = postHashtagRepository.findAllByHashtagOrderByCount(
+                contains, PageRequest.of(0, limit));
+
+        List<HashtagSearchElementResponse> hashtagSearchElementResponses = hashtagOrderByCount.stream()
+                .map(tuple -> new HashtagSearchElementResponse(tuple.get(0, Hashtag.class), tuple.get(1, Long.class)))
+                .collect(Collectors.toList());
+        return new HashtagsSearchResponse(hashtagSearchElementResponses);
     }
 }

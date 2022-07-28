@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.auth.dto.LoginRequest;
+import com.wooteco.sokdak.hashtag.domain.Hashtag;
 import com.wooteco.sokdak.hashtag.dto.HashtagResponse;
 import com.wooteco.sokdak.hashtag.dto.HashtagSearchElementResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
@@ -119,21 +120,44 @@ public class HashtagAcceptanceTest extends AcceptanceTest {
     @DisplayName("특정 키워드로 검색하면 이름에 해당 키워드가 포함된 해시태그들을 조회한다.")
     @Test
     void searchHashtagsWithName() {
-        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", List.of("태그1","태그2"));
+        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", List.of("태그1", "태그2"));
         NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", List.of("태그2"));
         httpPostWithAuthorization(postRequest1, "/posts", getToken());
         httpPostWithAuthorization(postRequest2, "/posts", getToken());
 
         ExtractableResponse<Response> response = httpGet("/hashtags/popular?limit=3&include=태그");
 
-        List<HashtagSearchElementResponse> hashtagSearchElementResponses = response.body().jsonPath()
-                .getList("boards", HashtagSearchElementResponse.class);
+        List<HashtagSearchElementResponse> hashtagsSearchResponse = response.body()
+                .jsonPath()
+                .getList("hashtags", HashtagSearchElementResponse.class);
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(hashtagSearchElementResponses).hasSize(2),
-                () -> assertThat(hashtagSearchElementResponses).usingRecursiveComparison()
+                () -> assertThat(hashtagsSearchResponse).hasSize(2),
+                () -> assertThat(hashtagsSearchResponse).usingRecursiveComparison()
                         .comparingOnlyFields("name")
-                        .isEqualTo(List.of("태그2","태그1"))
+                        .isEqualTo(List.of(
+                                new HashtagSearchElementResponse(Hashtag.builder().name("태그2").build(), 2L),
+                                new HashtagSearchElementResponse(Hashtag.builder().name("태그1").build(), 1L)
+                        ))
+        );
+    }
+
+    @DisplayName("없는 해시태그 키워드로 검색하면 빈 검색결과를 조회한다.")
+    @Test
+    void searchHashtagsWithName_NoResult() {
+        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", List.of("태그1", "태그2"));
+        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", List.of("태그2"));
+        httpPostWithAuthorization(postRequest1, "/posts", getToken());
+        httpPostWithAuthorization(postRequest2, "/posts", getToken());
+
+        ExtractableResponse<Response> response = httpGet("/hashtags/popular?limit=3&include=없는태그");
+
+        List<HashtagSearchElementResponse> hashtagsSearchResponse = response.body()
+                .jsonPath()
+                .getList("hashtags", HashtagSearchElementResponse.class);
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(hashtagsSearchResponse).hasSize(0)
         );
     }
 

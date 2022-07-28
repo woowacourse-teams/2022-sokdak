@@ -64,12 +64,6 @@ public class HashtagService {
         Hashtag hashtag = hashtagRepository.findByName(name)
                 .orElseThrow(HashtagNotFoundException::new);
         Slice<Post> posts = postHashtagRepository.findAllByHashtagId(hashtag.getId(), pageable);
-
-        List<PostsElementResponse> postsElementResponses = posts.getContent()
-                .stream()
-                .map(PostsElementResponse::from)
-                .collect(Collectors.toList());
-        boolean last = posts.isLast();
-        return new PostsResponse(postsElementResponses, last);
+        return PostsResponse.ofSlice(posts);
     }
 }

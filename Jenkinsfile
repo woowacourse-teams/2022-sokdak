@@ -49,6 +49,7 @@ pipeline{
                 sh "scp -o StrictHostKeyChecking=no -i ${my_private_key_file} *.jar ubuntu@${env.DEV_BACK_IP}:/home/ubuntu/sokdak"
             }
             sh "ssh -o StrictHostKeyChecking=no -i ${my_private_key_file} ubuntu@${env.DEV_BACK_IP} 'cd sokdak && ls && ./deploy.sh'"
+            sh "echo 'Spring Boot Running'"
           } 
         }
       }

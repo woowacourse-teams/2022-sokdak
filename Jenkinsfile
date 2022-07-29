@@ -34,7 +34,8 @@ pipeline{
     }
     
     stage('Deploy'){
-      withCredentials([sshUserPrivateKey(credentialsId: "sokdak-pem", keyFileVariable: 'my_private_key_file')]) {
+      steps{
+        withCredentials([sshUserPrivateKey(credentialsId: "sokdak-pem", keyFileVariable: 'my_private_key_file')]) {
         def remote = [:]
         remote.name = "sokdak-pem"
         remote.host = "54.180.116.136"
@@ -47,6 +48,7 @@ pipeline{
             sh 'scp -o StrictHostKeyChecking=no -i ${my_private_key_file} *.jar ubuntu@54.180.116.136:/home/ubuntu/sokdak'
         }
         sh 'ssh -o StrictHostKeyChecking=no -i ${my_private_key_file} ubuntu@54.180.116.136 "cd sokdak && ls && ./deploy.sh"'
+      }
       }
     }
   }

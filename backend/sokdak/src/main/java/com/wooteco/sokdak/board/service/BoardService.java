@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class BoardService {
 
-    public static final int PAGE_SIZE = 3;
+    private static final int PAGE_SIZE = 3;
     private final BoardRepository boardRepository;
     private final PostBoardRepository postBoardRepository;
 
@@ -71,7 +71,7 @@ public class BoardService {
         List<BoardContentElement> boardContentElements = new ArrayList<>();
 
         List<Board> boards = boardRepository.findAll();
-        PageRequest page = PageRequest.of(0, 3, Sort.by("createdAt").descending());
+        PageRequest page = PageRequest.of(0, PAGE_SIZE, Sort.by("createdAt").descending());
 
         for (Board board : boards) {
             List<PostsElementResponse> postsElementResponses = findPostsByBoard(board.getId(),page).getPosts();

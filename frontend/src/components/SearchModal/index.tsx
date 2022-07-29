@@ -6,14 +6,17 @@ import useQueryDebounce from '@/hooks/queries/hashtag/useQueryDebounce';
 
 import * as Styled from './index.styles';
 
+import useModalHistory from './useModalClose';
+
 interface SearchModalProps {
   handleSearchModal: React.DispatchWithoutAction;
 }
 
-const SearchModal = ({ handleSearchModal }: SearchModalProps) => {
+const SearchModal = ({ handleSearchModal: closeModal }: SearchModalProps) => {
   const [limit] = useState(10);
   const [include, setInclude] = useState('');
   const { debounceValue: debouncedInclude } = useQueryDebounce(include);
+  useModalHistory({ closeModal });
 
   const { data } = useHashtags({
     storeCode: [limit, debouncedInclude],
@@ -33,7 +36,7 @@ const SearchModal = ({ handleSearchModal }: SearchModalProps) => {
                 autoFocus
               />
             </Styled.InputContainer>
-            <Styled.CloseButton onClick={handleSearchModal}>취소</Styled.CloseButton>
+            <Styled.CloseButton onClick={closeModal}>취소</Styled.CloseButton>
           </Styled.Header>
 
           <Styled.Content>

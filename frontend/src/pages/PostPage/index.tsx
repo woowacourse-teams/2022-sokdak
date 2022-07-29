@@ -2,10 +2,10 @@ import { useReducer, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import CommentList from './components/CommentList';
+import PostContent from './components/PostContent';
 import PostHeader from './components/PostHeader';
 import Layout from '@/components/@styled/Layout';
 import ConfirmModal from '@/components/ConfirmModal';
-import HashTag from '@/components/HashTag';
 import Spinner from '@/components/Spinner';
 
 import useLike from '@/hooks/queries/likes/useLike';
@@ -75,8 +75,6 @@ const PostPage = () => {
     );
   }
 
-  const { content, hashtags } = data!;
-
   return (
     <Layout>
       <Styled.Container>
@@ -86,15 +84,7 @@ const PostPage = () => {
           onClickDeleteButton={handleConfirmModal}
           onClickLikeButton={handleLikeButton}
         />
-
-        <Styled.ContentContainer>
-          <Styled.Content>{content}</Styled.Content>
-          <Styled.TagContainer>
-            {hashtags?.map(({ name }) => (
-              <HashTag key={name} name={name} />
-            ))}
-          </Styled.TagContainer>
-        </Styled.ContentContainer>
+        <PostContent content={data?.content!} hashtags={data?.hashtags!} />
         <CommentList id={id!} />
       </Styled.Container>
 

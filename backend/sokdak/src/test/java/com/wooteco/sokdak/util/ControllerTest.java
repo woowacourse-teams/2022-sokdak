@@ -20,6 +20,10 @@ import com.wooteco.sokdak.member.service.EmailService;
 import com.wooteco.sokdak.member.service.MemberService;
 import com.wooteco.sokdak.post.controller.PostController;
 import com.wooteco.sokdak.post.service.PostService;
+import com.wooteco.sokdak.report.controller.CommentReportController;
+import com.wooteco.sokdak.report.controller.PostReportController;
+import com.wooteco.sokdak.report.service.CommentReportService;
+import com.wooteco.sokdak.report.service.PostReportService;
 import com.wooteco.sokdak.support.AuthInterceptor;
 import com.wooteco.sokdak.support.token.AuthenticationPrincipalArgumentResolver;
 import com.wooteco.sokdak.support.token.TokenManager;
@@ -40,6 +44,8 @@ import org.springframework.web.context.WebApplicationContext;
         AuthController.class,
         CommentController.class,
         LikeController.class,
+        PostReportController.class,
+        CommentReportController.class,
         BoardController.class,
         HashtagController.class
 })
@@ -68,6 +74,12 @@ public class ControllerTest {
 
     @MockBean
     protected LikeService likeService;
+
+    @MockBean
+    protected PostReportService postReportService;
+
+    @MockBean
+    protected CommentReportService commentReportService;
 
     @MockBean
     protected BoardService boardService;

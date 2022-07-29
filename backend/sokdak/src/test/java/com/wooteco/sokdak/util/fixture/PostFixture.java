@@ -1,0 +1,6 @@
+package com.wooteco.sokdak.util.fixture;
+
+public class PostFixture {
+
+    public static final String CREATE_POST_URI = "/boards/1/posts";
+}

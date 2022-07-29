@@ -20,11 +20,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/posts")
 public class PostController {
 
     private final PostService postService;
@@ -33,27 +31,29 @@ public class PostController {
         this.postService = postService;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/posts/{id}")
     public ResponseEntity<PostDetailResponse> findPost(@PathVariable Long id, @Login AuthInfo authInfo) {
         PostDetailResponse postResponse = postService.findPost(id, authInfo);
         return ResponseEntity.ok(postResponse);
     }
 
-    @PostMapping
-
-    public ResponseEntity<Void> addPost(@Valid @RequestBody NewPostRequest newPostRequest, @Login AuthInfo authInfo) {
-        Long postId = postService.addPost(newPostRequest, authInfo);
+    @PostMapping("/boards/{boardId}/posts")
+    public ResponseEntity<Void> addPost(@PathVariable Long boardId,
+                                        @Valid @RequestBody NewPostRequest newPostRequest,
+                                        @Login AuthInfo authInfo) {
+        Long postId = postService.addPost(boardId, newPostRequest, authInfo);
         return ResponseEntity.created(URI.create("/posts/" + postId)).build();
     }
 
-    @GetMapping
+    @GetMapping("/boards/{boardId}/posts")
     public ResponseEntity<PostsResponse> findPosts(
+            @PathVariable Long boardId,
             @PageableDefault(sort = "createdAt", direction = DESC) Pageable pageable) {
-        PostsResponse postsResponse = postService.findPosts(pageable);
+        PostsResponse postsResponse = postService.findPostsByBoard(boardId, pageable);
         return ResponseEntity.ok(postsResponse);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/posts/{id}")
     public ResponseEntity<Void> updatePost(@PathVariable Long id,
                                            @Valid @RequestBody PostUpdateRequest postUpdateRequest,
                                            @Login AuthInfo authInfo) {
@@ -61,7 +61,7 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/posts/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable Long id, @Login AuthInfo authInfo) {
         postService.deletePost(id, authInfo);
         return ResponseEntity.noContent().build();

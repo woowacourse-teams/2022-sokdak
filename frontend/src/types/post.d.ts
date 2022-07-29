@@ -1,6 +1,7 @@
 type Hashtag = {
   id: number;
   name: string;
+  count: number;
 };
 
 interface Post {
@@ -12,6 +13,6 @@ interface Post {
   commentCount: number;
   modified: boolean;
   like: boolean;
-  hashtags: Hashtag[];
+  hashtags: Omit<Hashtag, 'count'>[];
   authorized: boolean;
 }

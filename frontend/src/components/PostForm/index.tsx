@@ -11,7 +11,7 @@ interface PostFormProps {
   submitType: string;
   prevTitle?: string;
   prevContent?: string;
-  prevHashTags?: Hashtag[];
+  prevHashTags?: Omit<Hashtag, 'count'>[];
   handlePost: (post: Pick<Post, 'title' | 'content'> & { hashtags: string[] }) => void;
 }
 

@@ -8,7 +8,7 @@ import PATH from '@/constants/path';
 import timeConverter from '@/utils/timeConverter';
 
 interface PostHeaderProps {
-  post: { content: string; title: string; createdAt: string; hashtags: Hashtag[]; authorized: boolean };
+  post: { content: string; title: string; createdAt: string; hashtags: Omit<Hashtag, 'count'>[]; authorized: boolean };
   like: { isLiked: boolean; likeCount: number };
   onClickDeleteButton: () => void;
   onClickLikeButton: () => void;

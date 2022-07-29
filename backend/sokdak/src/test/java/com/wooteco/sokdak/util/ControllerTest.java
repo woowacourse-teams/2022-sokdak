@@ -5,6 +5,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 
 import com.wooteco.sokdak.auth.controller.AuthController;
 import com.wooteco.sokdak.auth.service.AuthService;
+import com.wooteco.sokdak.auth.service.RefreshTokenService;
 import com.wooteco.sokdak.board.controller.BoardController;
 import com.wooteco.sokdak.board.service.BoardService;
 import com.wooteco.sokdak.comment.controller.CommentController;
@@ -94,6 +95,9 @@ public class ControllerTest {
 
     @MockBean
     protected AuthenticationPrincipalArgumentResolver authenticationPrincipalArgumentResolver;
+
+    @MockBean
+    protected RefreshTokenService refreshTokenService;
 
     @BeforeEach
     void setRestDocs(WebApplicationContext webApplicationContext,

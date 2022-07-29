@@ -31,7 +31,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         }
 
         validateExistHeader(request);
-        String token = AuthorizationExtractor.extract(request);
+        String token = AuthorizationExtractor.extractAccessToken(request);
         validateToken(token);
         return true;
     }

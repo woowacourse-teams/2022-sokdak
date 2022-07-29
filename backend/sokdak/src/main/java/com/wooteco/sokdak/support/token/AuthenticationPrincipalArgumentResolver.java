@@ -26,7 +26,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
-        String token = AuthorizationExtractor.extract(Objects.requireNonNull(request));
+        String token = AuthorizationExtractor.extractAccessToken(Objects.requireNonNull(request));
         if (token == null) {
             return new AuthInfo(null);
         }

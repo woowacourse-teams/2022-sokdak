@@ -14,10 +14,11 @@ class JwtTokenProviderTest {
     @Autowired
     private TokenManager tokenManager;
 
-    @DisplayName("토큰매니저가 payload를 가져온다")
+    @DisplayName("access token을 parsing 하여 정보를 뽑아내는 기능")
     @Test
     void getPayload() {
-        String token = tokenManager.createToken(new AuthInfo(1L));
+        String token = tokenManager.createAccessToken(new AuthInfo(1L));
+
         assertThat(tokenManager.getPayload(token)).isEqualTo("1");
     }
 }

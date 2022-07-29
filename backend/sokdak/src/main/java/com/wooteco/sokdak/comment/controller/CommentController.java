@@ -5,6 +5,7 @@ import com.wooteco.sokdak.comment.dto.CommentsResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.service.CommentService;
 import com.wooteco.sokdak.support.token.Login;
+import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,8 +29,8 @@ public class CommentController {
     public ResponseEntity<Void> addComment(@PathVariable(name = "id") Long postId,
                                            @Valid @RequestBody NewCommentRequest newCommentRequest,
                                            @Login AuthInfo authInfo) {
-        commentService.addComment(postId, newCommentRequest, authInfo);
-        return ResponseEntity.noContent().build();
+        Long commentId = commentService.addComment(postId, newCommentRequest, authInfo);
+        return ResponseEntity.created(URI.create("/comments/" + commentId)).build();
     }
 
     @GetMapping("/posts/{id}/comments")

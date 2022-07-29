@@ -43,10 +43,11 @@ class CommentReportAcceptanceTest extends AcceptanceTest {
                 .header("Location").split("/posts/")[1]);
 
         NewCommentRequest newCommentRequest = new NewCommentRequest(VALID_COMMENT_MESSAGE, true);
-        httpPostWithAuthorization(newCommentRequest, "/posts/" + postId + "/comments", getToken());
-        // addComment 해주는 api에 Location을 안넣어줘서 id를 알 방법이 없음.(repository 사용 안하면서)
-        // 그래서 하드코딩으로 리턴
-        return 1L;
+        Long commentId = Long.parseLong(
+                httpPostWithAuthorization(newCommentRequest, "/posts/" + postId + "/comments", getToken())
+                .header("Location").split("/comments/")[1]);
+
+        return commentId;
     }
 
     private String getToken() {

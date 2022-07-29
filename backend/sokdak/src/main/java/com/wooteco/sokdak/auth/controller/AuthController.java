@@ -55,7 +55,7 @@ public class AuthController {
 
         String accessToken = tokenManager.createAccessToken(authInfo);
 
-        return ResponseEntity.ok()
+        return ResponseEntity.noContent()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .build();
     }

@@ -21,15 +21,16 @@ public class RefreshTokenService {
     }
 
     @Transactional
-    public void saveToken(String token, Long userId) {
-        final RefreshToken refreshToken = new RefreshToken(userId, token);
+    public void saveToken(String token, Long memberId) {
+        deleteToken(memberId);
+        RefreshToken refreshToken = new RefreshToken(memberId, token);
         refreshTokenRepository.save(refreshToken);
     }
 
     @Transactional
     public void matches(String refreshToken, Long memberId) {
-        final RefreshToken savedToken = refreshTokenRepository.findByMemberId(memberId)
-                .orElseThrow();//Todo: 예외 메시지 정하기, db에 해당 멤버 id로 저장된 토큰이 없을 경우
+        RefreshToken savedToken = refreshTokenRepository.findByMemberId(memberId)
+                .orElseThrow(InvalidRefreshTokenException::new);
 
         if (!tokenManager.isValid(savedToken.getToken())) {
             refreshTokenRepository.delete(savedToken);

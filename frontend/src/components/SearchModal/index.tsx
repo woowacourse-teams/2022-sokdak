@@ -2,6 +2,7 @@ import { useState } from 'react';
 import ReactDOM from 'react-dom';
 
 import useHashtags from '@/hooks/queries/hashtag/useHashtags';
+import useQueryDebounce from '@/hooks/queries/hashtag/useQueryDebounce';
 
 import * as Styled from './index.styles';
 
@@ -12,9 +13,10 @@ interface SearchModalProps {
 const SearchModal = ({ handleSearchModal }: SearchModalProps) => {
   const [limit] = useState(10);
   const [include, setInclude] = useState('');
+  const { debounceValue: debouncedInclude } = useQueryDebounce(include);
 
   const { data } = useHashtags({
-    storeCode: [limit, include],
+    storeCode: [limit, debouncedInclude],
   });
 
   return (

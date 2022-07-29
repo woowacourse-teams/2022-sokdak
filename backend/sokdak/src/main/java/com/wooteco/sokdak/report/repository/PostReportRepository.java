@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostReportRepository extends JpaRepository<PostReport, Long> {
 
-    Optional<PostReport> findByReporterIdAndPostId(Long memberId, Long postId);
-
     int countByPostId(Long postId);
+
+    boolean existsByReporterIdAndPostId(Long id, Long postId);
 }

@@ -2,11 +2,16 @@ package com.wooteco.sokdak.hashtag.service;
 
 import com.wooteco.sokdak.hashtag.domain.Hashtag;
 import com.wooteco.sokdak.hashtag.domain.Hashtags;
+import com.wooteco.sokdak.hashtag.exception.HashtagNotFoundException;
 import com.wooteco.sokdak.hashtag.repository.HashtagRepository;
 import com.wooteco.sokdak.hashtag.repository.PostHashtagRepository;
 import com.wooteco.sokdak.post.domain.Post;
+import com.wooteco.sokdak.post.dto.PostsElementResponse;
+import com.wooteco.sokdak.post.dto.PostsResponse;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,10 +31,15 @@ public class HashtagService {
     @Transactional
     public void saveHashtag(List<String> names, Post savedPost) {
         Hashtags hashtags = new Hashtags(names.stream()
-                .map(name -> hashtagRepository.findByName(name)
-                        .orElse(hashtagRepository.save(Hashtag.builder().name(name).build())))
+                .map(this::saveOrFind)
                 .collect(Collectors.toList()));
         postHashtagRepository.saveAll(hashtags.getPostHashtags(savedPost));
+    }
+
+    private Hashtag saveOrFind(String name) {
+        return hashtagRepository
+                .findByName(name)
+                .orElseGet(() -> hashtagRepository.save(Hashtag.builder().name(name).build()));
     }
 
     public Hashtags findHashtagsByPostId(Long postId) {
@@ -48,5 +58,12 @@ public class HashtagService {
                 hashtagRepository.delete(hashtag);
             }
         }
+    }
+
+    public PostsResponse findPostsWithHashtag(String name, Pageable pageable) {
+        Hashtag hashtag = hashtagRepository.findByName(name)
+                .orElseThrow(HashtagNotFoundException::new);
+        Slice<Post> posts = postHashtagRepository.findAllByHashtagId(hashtag.getId(), pageable);
+        return PostsResponse.ofSlice(posts);
     }
 }

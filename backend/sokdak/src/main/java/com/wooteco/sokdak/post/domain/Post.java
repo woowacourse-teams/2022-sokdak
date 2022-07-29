@@ -56,7 +56,7 @@ public class Post {
     private List<PostHashtag> postHashtags;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    private List<PostBoard> postBoards;
+    private List<PostBoard> postBoards = new ArrayList<>();
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -126,10 +126,16 @@ public class Post {
     }
 
     public int getLikeCount() {
+        if (likes == null) {
+            return 0;
+        }
         return likes.size();
     }
 
     public int getCommentCount() {
+        if (comments == null) {
+            return 0;
+        }
         return comments.size();
     }
 
@@ -139,5 +145,9 @@ public class Post {
 
     public List<PostHashtag> getPostHashtags() {
         return postHashtags;
+    }
+
+    public List<PostBoard> getPostBoards() {
+        return postBoards;
     }
 }

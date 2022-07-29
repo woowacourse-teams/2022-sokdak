@@ -32,6 +32,18 @@ class PostReportAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
+    @DisplayName("이미 신고한 게시물은 다시 신고할 수 없다.")
+    @Test
+    void reportPost_Exception_AlreadyReport() {
+        Long postId = addPostAndGetPostId();
+        httpPostWithAuthorization(REPORT_REQUEST, "/posts/" + postId + "/report", getToken());
+
+        ExtractableResponse<Response> response = httpPostWithAuthorization(REPORT_REQUEST,
+                "/posts/" + postId + "/report", getToken());
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
     private String getToken() {
         LoginRequest loginRequest = new LoginRequest("chris", "Abcd123!@");
         return httpPost(loginRequest, "/login").header(AUTHORIZATION);

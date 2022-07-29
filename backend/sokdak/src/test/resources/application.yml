@@ -20,7 +20,7 @@ spring:
   mail:
     host: smtp.gmail.com
     username: sokdakX2@gmail.com
-    password: ljngmlufjlbushhy
+    password: ENC(riKrbWpRpcbz/9ZrGFh+351kItDNzxXZYYOftJppqmA=)
     port: 587
     properties:
       mail:
@@ -46,3 +46,7 @@ server:
     session:
       cookie:
         http-only: false
+
+jasypt:
+  encryptor:
+    password: encryptKey

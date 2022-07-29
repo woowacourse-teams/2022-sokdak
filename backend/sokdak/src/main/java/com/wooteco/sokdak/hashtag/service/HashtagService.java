@@ -69,7 +69,7 @@ public class HashtagService {
         Hashtag hashtag = hashtagRepository.findByName(name)
                 .orElseThrow(HashtagNotFoundException::new);
         Slice<Post> posts = postHashtagRepository.findAllPostByHashtagId(hashtag.getId(), pageable);
-        return PostsResponse.ofSlice(posts);
+        return PostsResponse.ofPostSlice(posts);
     }
 
     public HashtagsSearchResponse findHashtagsWithTagName(HashtagsSearchRequest hashtagsSearchRequest) {

@@ -56,7 +56,7 @@ public class Post {
     private List<PostHashtag> postHashtags;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    private List<PostBoard> postBoards;
+    private List<PostBoard> postBoards = new ArrayList<>();
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -145,5 +145,9 @@ public class Post {
 
     public List<PostHashtag> getPostHashtags() {
         return postHashtags;
+    }
+
+    public List<PostBoard> getPostBoards() {
+        return postBoards;
     }
 }

@@ -101,7 +101,7 @@ class HashtagServiceTest {
     void addPostWithHashtag() {
         NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", List.of("태그1", "태그2"));
 
-        Long postId = postService.addPost(newPostRequest, AUTH_INFO);
+        Long postId = postService.addPost(1L, newPostRequest, AUTH_INFO);
 
         final List<String> hashtags = postHashtagRepository.findAllByPostId(postId)
                 .stream()
@@ -132,8 +132,8 @@ class HashtagServiceTest {
     @Test
     void updatePostWithDeletingHashtag() {
         Long postId = savePostWithHashtags(post, List.of(tag1, tag2));
-        PostUpdateRequest postUpdateRequest = new PostUpdateRequest("변경된 제목", "변경된 본문", List.of("태그1"));
 
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest("변경된 제목", "변경된 본문", List.of("태그1"));
         postService.updatePost(postId, postUpdateRequest, AUTH_INFO);
 
         List<String> hashtagNames = postHashtagRepository.findAllByPostId(postId)
@@ -246,6 +246,6 @@ class HashtagServiceTest {
     private Long savePostWithHashtags(Post post, List<Hashtag> tags) {
         NewPostRequest newPostRequest = new NewPostRequest(
                 post.getTitle(), post.getContent(), new Hashtags(tags).getNames());
-        return postService.addPost(newPostRequest, AUTH_INFO);
+        return postService.addPost(1L, newPostRequest, AUTH_INFO);
     }
 }

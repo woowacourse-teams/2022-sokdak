@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 
-import HashTag from '@/components/HashTag';
+import HashTagInput from './components/HashTagInput';
 
 import useSnackbar from '@/hooks/useSnackbar';
 
 import * as Styled from './index.styles';
-
-import useHashTag from './useHashTag';
 
 interface PostFormProps {
   heading: string;
@@ -29,15 +27,7 @@ const PostForm = ({
 
   const [title, setTitle] = useState(prevTitle);
   const [content, setContent] = useState(prevContent);
-  const {
-    hashtags,
-    setHashtags,
-    tagInputValue,
-    handleTagInputChange,
-    handleTagInputKeyDown,
-    isTagInputFocus,
-    handleTagInputFocus,
-  } = useHashTag(prevHashTags.map(hashtag => hashtag.name));
+  const [hashtags, setHashtags] = useState(prevHashTags.map(hashtag => hashtag.name));
 
   const [isValidTitle, setIsValidTitle] = useState(true);
   const [isValidContent, setIsValidContent] = useState(true);
@@ -88,30 +78,7 @@ const PostForm = ({
         isAnimationActive={isContentAnimationActive}
         required
       />
-      <Styled.TagContainer>
-        {isTagInputFocus && (
-          <Styled.TagTooltip>
-            쉼표 혹은 엔터를 통해, <br />
-            태그를 등록해보세요
-          </Styled.TagTooltip>
-        )}
-        {hashtags.map(hashtagName => (
-          <HashTag
-            key={hashtagName}
-            name={hashtagName}
-            handleTagClick={() => setHashtags(tags => tags.filter(tag => tag !== hashtagName))}
-          />
-        ))}
-        <Styled.TagInput
-          placeholder="태그를 입력해주세요."
-          value={tagInputValue}
-          maxLength={15}
-          onChange={handleTagInputChange}
-          onKeyDown={handleTagInputKeyDown}
-          onFocus={handleTagInputFocus}
-          onBlur={handleTagInputFocus}
-        />
-      </Styled.TagContainer>
+      <HashTagInput hashtags={hashtags} setHashtags={setHashtags} />
       <Styled.SubmitButton>{submitType}</Styled.SubmitButton>
     </Styled.Container>
   );

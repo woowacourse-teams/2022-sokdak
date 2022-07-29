@@ -47,7 +47,7 @@ describe('멤버 테스트', () => {
   }
 
   async function registerNickname(nickname: string) {
-    const [_, nicknameSubmitButton] = await screen.findAllByText('중복 확인');
+    const [, nicknameSubmitButton] = await screen.findAllByText('중복 확인');
     const nickNameInput = await screen.findByPlaceholderText('닉네임');
 
     fireEvent.change(nickNameInput, { target: { value: nickname } });

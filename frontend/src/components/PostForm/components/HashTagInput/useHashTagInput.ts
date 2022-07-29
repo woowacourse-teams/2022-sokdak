@@ -4,8 +4,12 @@ import useSnackbar from '@/hooks/useSnackbar';
 
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
-const useHashTag = (prevHashTags: string[]) => {
-  const [hashtags, setHashtags] = useState<string[]>(prevHashTags);
+interface UseHashTagProps {
+  hashtags: string[];
+  setHashtags: React.Dispatch<React.SetStateAction<string[]>>;
+}
+
+const useHashTagInput = ({ hashtags, setHashtags }: UseHashTagProps) => {
   const [tagInputValue, setTagInputValue] = useState('');
   const [isTagInputFocus, handleTagInputFocus] = useReducer(state => !state, false);
   const { showSnackbar } = useSnackbar();
@@ -48,8 +52,6 @@ const useHashTag = (prevHashTags: string[]) => {
   };
 
   return {
-    hashtags,
-    setHashtags,
     tagInputValue,
     handleTagInputChange,
     handleTagInputKeyDown,
@@ -58,4 +60,4 @@ const useHashTag = (prevHashTags: string[]) => {
   };
 };
 
-export default useHashTag;
+export default useHashTagInput;

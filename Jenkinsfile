@@ -37,16 +37,16 @@ pipeline{
       withCredentials([sshUserPrivateKey(credentialsId: "sokdak-pem", keyFileVariable: 'my_private_key_file')]) {
         def remote = [:]
         remote.name = "sokdak-pem"
-        remote.host = "192.168.1.196"
+        remote.host = "54.180.116.136"
         remote.user = "ubuntu"
         remote.allowAnyHosts = true
         remote.identityFile = my_private_key_file
                 
         sh "echo 'Deploy AWS'"
         dir('backend/sokdak/build/libs'){
-            sh 'scp -o StrictHostKeyChecking=no -i ${my_private_key_file} *.jar ubuntu@192.168.1.196:/home/ubuntu/sokdak'
+            sh 'scp -o StrictHostKeyChecking=no -i ${my_private_key_file} *.jar ubuntu@54.180.116.136:/home/ubuntu/sokdak'
         }
-        sh 'ssh -o StrictHostKeyChecking=no -i ${my_private_key_file} ubuntu@192.168.1.196 "cd sokdak && ls && ./deploy.sh"'
+        sh 'ssh -o StrictHostKeyChecking=no -i ${my_private_key_file} ubuntu@54.180.116.136 "cd sokdak && ls && ./deploy.sh"'
       }
     }
   }

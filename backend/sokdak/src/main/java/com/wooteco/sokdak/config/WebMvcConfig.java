@@ -28,8 +28,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", "http://3.34.1.220", "http://sokdaksokdak.com"
-                , "http://www.sokdaksokdak.com", "https://sokdaksokdak.com", "https://www.sokdaksokdak.com")
+                .allowedOrigins("http://localhost:3000",
+                        "http://sokdaksokdak.com",
+                        "http://www.sokdaksokdak.com",
+                        "https://sokdaksokdak.com",
+                        "https://www.sokdaksokdak.com",
+                        "http://dev.sokdaksokdak.com",
+                        "https://dev.sokdaksokdak.com")
                 .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
                 .allowCredentials(true)
                 .exposedHeaders(HttpHeaders.LOCATION)

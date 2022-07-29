@@ -3,6 +3,7 @@ package com.wooteco.sokdak.comment.controller;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.SESSION_ID;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 
 import com.wooteco.sokdak.comment.dto.CommentResponse;
@@ -72,5 +73,18 @@ class CommentControllerTest extends ControllerTest {
                 .when().get("/posts/1/comments")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("특정 댓글 삭제 요청이 오면 해당 댓글을 삭제한다.")
+    @Test
+    void deleteComment() {
+        doNothing()
+                .when(commentService)
+                .deleteComment(any(), any());
+
+        restDocs
+                .when().delete("/comments/1")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }

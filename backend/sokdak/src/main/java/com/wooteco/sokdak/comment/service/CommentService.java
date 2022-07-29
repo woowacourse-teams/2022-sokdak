@@ -5,6 +5,7 @@ import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.CommentsResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
+import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
@@ -76,5 +77,13 @@ public class CommentService {
                 .map(CommentResponse::of)
                 .collect(Collectors.toList());
         return new CommentsResponse(commentResponses);
+    }
+
+    public void deleteComment(Long commentId, AuthInfo authInfo) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(CommentNotFoundException::new);
+        comment.validateOwner(authInfo.getId());
+
+        commentRepository.delete(comment);
     }
 }

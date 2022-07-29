@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <springProfile name="local">
+        <include resource="logback/console-logger.xml"/>
+        <logger name="com.wooteco.sokdak" level="DEBUG">
+            <appender-ref ref="STDOUT"/>
+        </logger>
+
+        <logger name="org.springframework" level="INFO">
+            <appender-ref ref="STDOUT"/>
+        </logger>
+
+        <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
+            <appender-ref ref="STDOUT"/>
+        </logger>
+
+        <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE">
+            <appender-ref ref="STDOUT"/>
+        </logger>
+
+        <logger name="org.hibernate.type.descriptor.sql.BasicExtractor" level="TRACE">
+            <appender-ref ref="STDOUT"/>
+        </logger>
+    </springProfile>
+
+    <springProfile name="dev">
+        <include resource="logback/file-logger.xml"/>
+
+        <logger name="com.wooteco.sokdak" level="DEBUG">
+            <appender-ref ref="FILE"/>
+        </logger>
+
+        <logger name="org.springframework" level="INFO">
+            <appender-ref ref="FILE"/>
+        </logger>
+    </springProfile>
+</configuration>

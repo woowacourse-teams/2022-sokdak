@@ -73,7 +73,7 @@ class PostControllerTest extends ControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "any")
                 .body(postRequest)
-                .when().post("/posts")
+                .when().post("/boards/1/posts")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
@@ -87,7 +87,7 @@ class PostControllerTest extends ControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "any")
                 .body(postRequest)
-                .when().post("/posts")
+                .when().post("/boards/1/posts")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
@@ -101,40 +101,41 @@ class PostControllerTest extends ControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "any")
                 .body(postRequest)
-                .when().post("/posts")
+                .when().post("/boards/1/posts")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("세션 정보를 가진 게시글 목록 조회 요청을 받으면 해당되는 게시글들을 반환한다.")
+    @DisplayName("인증된 상태로 게시글 목록 조회 요청을 받으면 해당되는 게시글들을 반환한다.")
     @Test
-    void findPosts() {
+    void findPosts_Authorized() {
         doReturn(new PostsResponse(List.of(POSTS_ELEMENT_RESPONSE_1, POSTS_ELEMENT_RESPONSE_2), true))
                 .when(postService)
-                .findPosts(any());
+                .findPostsByBoard(any(), any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/posts?size=3&page=0")
+                .header("Authorization", "any")
+                .when().get("/boards/1/posts?size=3&page=0")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("세션 정보가 없는 게시글 목록 조회 요청을 받으면 해당되는 게시글들을 반환한다.")
+    @DisplayName("인증 없이 게시글 목록 조회 요청을 받으면 해당되는 게시글들을 반환한다.")
     @Test
-    void findPosts_NoSession() {
+    void findPosts_UnAuthorized() {
         doReturn(new PostsResponse(List.of(POSTS_ELEMENT_RESPONSE_1, POSTS_ELEMENT_RESPONSE_2), true))
                 .when(postService)
-                .findPosts(any());
+                .findPostsByBoard(any(), any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/posts?size=3&page=0")
+                .when().get("/boards/1/posts?size=3&page=0")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("세션 정보를 가진 특정 게시글 조회 요청을 받으면 게시글을 반환한다.")
+    @DisplayName("특정 게시글 조회 요청을 받으면 게시글을 반환한다.")
     @Test
     void findPost() {
         PostDetailResponse postResponse = PostDetailResponse.builder()
@@ -159,7 +160,7 @@ class PostControllerTest extends ControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("세션 정보 없이 특정 게시글 조회 요청을 받으면 게시글을 반환한다.")
+    @DisplayName("특정 게시글 조회 요청을 받으면 게시글을 반환한다.")
     @Test
     void findPost_NoSession() {
         PostDetailResponse postResponse = PostDetailResponse.builder()

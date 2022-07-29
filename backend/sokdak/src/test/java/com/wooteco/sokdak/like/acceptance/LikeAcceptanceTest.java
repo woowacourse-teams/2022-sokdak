@@ -5,6 +5,7 @@ import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.PostFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -13,6 +14,7 @@ import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.like.dto.LikeFlipResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
+import com.wooteco.sokdak.util.fixture.PostFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Collections;
@@ -27,7 +29,7 @@ class LikeAcceptanceTest extends AcceptanceTest {
     void flipLike_Create() {
         NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT,
                 Collections.emptyList());
-        httpPostWithAuthorization(newPostRequest, "/posts", getToken());
+        httpPostWithAuthorization(newPostRequest, CREATE_POST_URI, getToken());
 
         ExtractableResponse<Response> response = httpPutWithAuthorization("/posts/1/like", getToken());
         LikeFlipResponse likeFlipResponse = response.jsonPath().getObject(".", LikeFlipResponse.class);
@@ -45,7 +47,7 @@ class LikeAcceptanceTest extends AcceptanceTest {
         NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT,
                 Collections.emptyList());
         String sessionId = getToken();
-        httpPostWithAuthorization(newPostRequest, "/posts", sessionId);
+        httpPostWithAuthorization(newPostRequest, CREATE_POST_URI, sessionId);
 
         httpPutWithAuthorization("/posts/1/like", sessionId);
 
@@ -65,7 +67,7 @@ class LikeAcceptanceTest extends AcceptanceTest {
         NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT,
                 Collections.emptyList());
         String sessionId = getToken();
-        httpPostWithAuthorization(newPostRequest, "/posts", sessionId);
+        httpPostWithAuthorization(newPostRequest, CREATE_POST_URI, sessionId);
 
         ExtractableResponse<Response> response = httpPutWithAuthorization("/posts/1/like", "");
 

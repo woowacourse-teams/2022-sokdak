@@ -5,8 +5,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.data.domain.Sort.Direction.DESC;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.board.domain.Board;
+import com.wooteco.sokdak.board.repository.BoardRepository;
+import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.service.CommentService;
 import com.wooteco.sokdak.member.domain.Member;
@@ -16,13 +20,11 @@ import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
-import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,9 +33,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
+@Sql(
+        scripts = {"classpath:truncate.sql"},
+        executionPhase = BEFORE_TEST_METHOD)
 @Transactional
 class PostServiceTest {
 
@@ -45,6 +51,12 @@ class PostServiceTest {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private PostBoardRepository postBoardRepository;
+
+    @Autowired
+    private BoardRepository boardRepository;
 
     @Autowired
     private CommentService commentService;
@@ -60,22 +72,24 @@ class PostServiceTest {
                 .content("본문")
                 .member(member)
                 .likes(new ArrayList<>())
+                .comments(new ArrayList<>())
                 .build();
     }
 
-    @DisplayName("글 작성 기능")
+    @DisplayName("특정 게시판에 글 작성 기능")
     @Test
     void addPost() {
         NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", Collections.emptyList());
 
-        Long postId = postService.addPost(newPostRequest, AUTH_INFO);
+        Long postId = postService.addPost(1L, newPostRequest, AUTH_INFO);
         Post actual = postRepository.findById(postId).orElseThrow();
 
         assertAll(
                 () -> assertThat(actual.getTitle()).isEqualTo(newPostRequest.getTitle()),
                 () -> assertThat(actual.getContent()).isEqualTo(newPostRequest.getContent()),
                 () -> assertThat(actual.getMember().getId()).isEqualTo(1L),
-                () -> assertThat(actual.getCreatedAt()).isNotNull()
+                () -> assertThat(actual.getCreatedAt()).isNotNull(),
+                () -> assertThat(actual.getPostBoards().get(0).getBoard().getTitle()).isNotNull()
         );
     }
 
@@ -137,33 +151,22 @@ class PostServiceTest {
                 .isInstanceOf(PostNotFoundException.class);
     }
 
-    @DisplayName("특정 페이지 글 목록 조회 기능")
+    @DisplayName("특정 게시판 게시글 목록 조회 기능")
     @Test
     void findPosts() {
-        Post post2 = Post.builder()
-                .title("제목2")
-                .content("본문2")
-                .likes(new ArrayList<>())
-                .comments(new ArrayList<>())
-                .build();
-        Post post3 = Post.builder()
-                .title("제목3")
-                .content("본문3")
-                .likes(new ArrayList<>())
-                .comments(new ArrayList<>())
-                .build();
-        postRepository.save(post);
-        postRepository.save(post2);
-        postRepository.save(post3);
-        Pageable pageable = PageRequest.of(0, 2, DESC, "createdAt");
+        Board board = boardRepository.save(new Board("테스트 게시판1"));
+        postService.addPost(board.getId(), new NewPostRequest("제목1", "본문1", new ArrayList<>()), new AuthInfo(1L));
+        postService.addPost(board.getId(), new NewPostRequest("제목2", "본문2", new ArrayList<>()), new AuthInfo(1L));
+        postService.addPost(board.getId(), new NewPostRequest("제목3", "본문3", new ArrayList<>()), new AuthInfo(1L));
 
-        PostsResponse postsResponse = postService.findPosts(pageable);
+        Pageable pageable = PageRequest.of(0, 2, DESC, "createdAt");
+        PostsResponse postsResponse = postService.findPostsByBoard(board.getId(), pageable);
 
         assertAll(
                 () -> assertThat(postsResponse.getPosts()).hasSize(2),
-                () -> assertThat(postsResponse.getPosts()).usingRecursiveComparison()
-                        .ignoringFields("id", "createdAt")
-                        .isEqualTo(List.of(PostsElementResponse.from(post3), PostsElementResponse.from(post2)))
+                () -> assertThat(postsResponse.getPosts())
+                        .extracting("title")
+                        .containsExactly("제목3", "제목2")
         );
     }
 
@@ -199,9 +202,9 @@ class PostServiceTest {
     @DisplayName("댓글이 있는 게시글 삭제")
     @Test
     void deletePostWithComment() {
-        Long savedPostId = postRepository.save(post).getId();
+        postRepository.save(post).getId();
         NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
-        Long commentId = commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
+        commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
 
         postService.deletePost(post.getId(), AUTH_INFO);
 

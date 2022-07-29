@@ -18,6 +18,7 @@ class JwtTokenProviderTest {
     @Test
     void getPayload() {
         String token = tokenManager.createAccessToken(new AuthInfo(1L));
+
         assertThat(tokenManager.getPayload(token)).isEqualTo("1");
     }
 }

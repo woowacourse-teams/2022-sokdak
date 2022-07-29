@@ -15,14 +15,14 @@ pipeline{
       }
     }
 
-    stage('Test'){
-      steps{
-        sh "echo 'Test'"
-        dir('backend/sokdak') {
-          sh './gradlew clean test'
-        }
-      }
-    }
+//     stage('Test'){
+//       steps{
+//         sh "echo 'Test'"
+//         dir('backend/sokdak') {
+//           sh './gradlew clean test'
+//         }
+//       }
+//     }
 
     stage('Build'){
       steps{

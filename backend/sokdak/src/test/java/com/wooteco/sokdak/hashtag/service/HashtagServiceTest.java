@@ -10,6 +10,9 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TE
 import com.wooteco.sokdak.hashtag.domain.Hashtag;
 import com.wooteco.sokdak.hashtag.domain.Hashtags;
 import com.wooteco.sokdak.hashtag.domain.PostHashtag;
+import com.wooteco.sokdak.hashtag.dto.HashtagSearchElementResponse;
+import com.wooteco.sokdak.hashtag.dto.HashtagsSearchRequest;
+import com.wooteco.sokdak.hashtag.dto.HashtagsSearchResponse;
 import com.wooteco.sokdak.hashtag.exception.HashtagNotFoundException;
 import com.wooteco.sokdak.hashtag.repository.HashtagRepository;
 import com.wooteco.sokdak.hashtag.repository.PostHashtagRepository;
@@ -98,7 +101,7 @@ class HashtagServiceTest {
     void addPostWithHashtag() {
         NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", List.of("태그1", "태그2"));
 
-        Long postId = postService.addPost(newPostRequest, AUTH_INFO);
+        Long postId = postService.addPost(1L, newPostRequest, AUTH_INFO);
 
         final List<String> hashtags = postHashtagRepository.findAllByPostId(postId)
                 .stream()
@@ -129,8 +132,8 @@ class HashtagServiceTest {
     @Test
     void updatePostWithDeletingHashtag() {
         Long postId = savePostWithHashtags(post, List.of(tag1, tag2));
-        PostUpdateRequest postUpdateRequest = new PostUpdateRequest("변경된 제목", "변경된 본문", List.of("태그1"));
 
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest("변경된 제목", "변경된 본문", List.of("태그1"));
         postService.updatePost(postId, postUpdateRequest, AUTH_INFO);
 
         List<String> hashtagNames = postHashtagRepository.findAllByPostId(postId)
@@ -200,9 +203,49 @@ class HashtagServiceTest {
         assertThat(posts).hasSize(0);
     }
 
+    @DisplayName("특정 키워드로 검색 시 해당 키워드가 이름에 포함된 해시태그들을 조회하는 기능")
+    @Test
+    void findHashtagsWithTagName() {
+        savePostWithHashtags(post, List.of(tag1, tag2));
+        savePostWithHashtags(post2, List.of(tag1));
+        List<HashtagSearchElementResponse> expectedHashtags = List.of(
+                HashtagSearchElementResponse.builder().name(tag1.getName()).count(2L).build(),
+                HashtagSearchElementResponse.builder().name(tag2.getName()).count(1L).build());
+
+        HashtagsSearchResponse hashtagsSearchResponse = hashtagService.findHashtagsWithTagName(
+                new HashtagsSearchRequest("태그", 3));
+
+        List<HashtagSearchElementResponse> responseHashtags = hashtagsSearchResponse.getHashtags();
+
+        assertAll(
+                () -> assertThat(responseHashtags).hasSize(2),
+                () -> assertThat(responseHashtags).usingRecursiveComparison()
+                        .comparingOnlyFields("name", "count")
+                        .isEqualTo(expectedHashtags)
+        );
+    }
+
+    @DisplayName("특정 키워드로 검색 시 해당 키워드가 이름에 포함된 해시태그가 없을 시 결과 값이 비어있다.")
+    @Test
+    void findHashtagsWithTagName_Exception_NoHashtagName() {
+        HashtagsSearchResponse hashtagsSearchResponse = hashtagService.findHashtagsWithTagName(
+                new HashtagsSearchRequest("태그", 3));
+
+        assertThat(hashtagsSearchResponse.getHashtags()).isEmpty();
+    }
+
+    @DisplayName("특정 키워드로 검색 시 결과 개수 설정이 0 이하일 시 결과 값이 비어있다.")
+    @Test
+    void findHashtagsWithTagName_Exception_InvalidLimit() {
+        HashtagsSearchResponse hashtagsSearchResponse = hashtagService.findHashtagsWithTagName(
+                new HashtagsSearchRequest("태그", 0));
+
+        assertThat(hashtagsSearchResponse.getHashtags()).isEmpty();
+    }
+
     private Long savePostWithHashtags(Post post, List<Hashtag> tags) {
         NewPostRequest newPostRequest = new NewPostRequest(
                 post.getTitle(), post.getContent(), new Hashtags(tags).getNames());
-        return postService.addPost(newPostRequest, AUTH_INFO);
+        return postService.addPost(1L, newPostRequest, AUTH_INFO);
     }
 }

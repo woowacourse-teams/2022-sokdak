@@ -3,10 +3,14 @@ package com.wooteco.sokdak.hashtag.controller;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.matches;
+import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
+import com.wooteco.sokdak.hashtag.dto.HashtagSearchElementResponse;
+import com.wooteco.sokdak.hashtag.dto.HashtagsSearchRequest;
+import com.wooteco.sokdak.hashtag.dto.HashtagsSearchResponse;
 import com.wooteco.sokdak.hashtag.exception.HashtagNotFoundException;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
@@ -61,7 +65,7 @@ class HashtagControllerTest extends ControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/posts?hashtag=속닥&size=5&page=0")
                 .then().log().all()
-                .apply(document("hashtag/search/success"))
+                .apply(document("search/byHashtag/success"))
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -76,7 +80,27 @@ class HashtagControllerTest extends ControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/posts?hashtag=없는태그&size=5&page=0")
                 .then().log().all()
-                .apply(document("hashtag/search/success"))
+                .apply(document("search/byHashtag/success"))
                 .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @DisplayName("해시태그 목록 조회 시 200 반환")
+    @Test
+    void findHashtagsWithTagName() {
+        HashtagsSearchResponse hashtagsSearchResponse = new HashtagsSearchResponse(List.of(
+                new HashtagSearchElementResponse(1L, "태그1", 5L),
+                new HashtagSearchElementResponse(2L, "태그2", 2L)
+        ));
+
+        doReturn(hashtagsSearchResponse)
+                .when(hashtagService)
+                .findHashtagsWithTagName(refEq(new HashtagsSearchRequest("태그", 3)));
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/hashtags/popular?include=태그&limit=3")
+                .then().log().all()
+                .apply(document("hashtags/search/success"))
+                .statusCode(HttpStatus.OK.value());
     }
 }

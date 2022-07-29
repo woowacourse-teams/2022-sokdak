@@ -56,4 +56,14 @@ public class PostBoard {
     public Post getPost() {
         return post;
     }
+
+    public void addPost(Post post) {
+        this.post = post;
+        post.getPostBoards().add(this);
+    }
+
+    public void addBoard(Board board) {
+        this.board = board;
+        board.getPostBoards().add(this);
+    }
 }

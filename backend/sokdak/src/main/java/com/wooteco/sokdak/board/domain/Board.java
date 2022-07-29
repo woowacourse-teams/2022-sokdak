@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.board.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -25,7 +26,7 @@ public class Board {
     private String title;
 
     @OneToMany(mappedBy = "board")
-    private List<PostBoard> postBoards;
+    private List<PostBoard> postBoards = new ArrayList<>();
 
     @CreatedDate
     private LocalDateTime createdAt;

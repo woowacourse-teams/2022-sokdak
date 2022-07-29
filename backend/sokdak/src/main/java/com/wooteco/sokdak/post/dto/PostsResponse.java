@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.post.dto;
 
+import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.post.domain.Post;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,11 +18,20 @@ public class PostsResponse {
         this.lastPage = lastPage;
     }
 
-    public static PostsResponse ofSlice(Slice<Post> postSlice) {
+    public static PostsResponse ofPostSlice(Slice<Post> postSlice) {
         List<PostsElementResponse> postsElementResponses = postSlice.getContent()
                 .stream()
                 .map(PostsElementResponse::from)
                 .collect(Collectors.toList());
         return new PostsResponse(postsElementResponses, postSlice.isLast());
+    }
+
+    public static PostsResponse ofPostBoardSlice(Slice<PostBoard> postBoards) {
+        List<PostsElementResponse> postsElementResponses = postBoards.getContent()
+                .stream()
+                .map(PostBoard::getPost)
+                .map(PostsElementResponse::from)
+                .collect(Collectors.toList());
+        return new PostsResponse(postsElementResponses, postBoards.isLast());
     }
 }

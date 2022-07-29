@@ -83,13 +83,7 @@ public class PostService {
 
     public PostsResponse findPostsByBoard(Long boardId, Pageable pageable) {
         Slice<PostBoard> postBoards = postBoardRepository.findPostBoardsByBoardId(boardId, pageable);
-        List<PostsElementResponse> postsElementResponses = postBoards.getContent()
-                .stream()
-                .map(PostBoard::getPost)
-                .map(PostsElementResponse::from)
-                .collect(Collectors.toList());
-
-        return new PostsResponse(postsElementResponses, postBoards.isLast());
+        return PostsResponse.ofPostBoardSlice(postBoards);
     }
 
     @Transactional

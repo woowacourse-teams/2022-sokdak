@@ -125,8 +125,8 @@ public class HashtagAcceptanceTest extends AcceptanceTest {
     void searchHashtagsWithName() {
         NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", List.of("태그1", "태그2"));
         NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", List.of("태그2"));
-        httpPostWithAuthorization(postRequest1, "/posts", getToken());
-        httpPostWithAuthorization(postRequest2, "/posts", getToken());
+        httpPostWithAuthorization(postRequest1, CREATE_POST_URI, getToken());
+        httpPostWithAuthorization(postRequest2, CREATE_POST_URI, getToken());
 
         ExtractableResponse<Response> response = httpGet("/hashtags/popular?limit=3&include=태그");
 
@@ -150,8 +150,8 @@ public class HashtagAcceptanceTest extends AcceptanceTest {
     void searchHashtagsWithName_NoKeyword() {
         NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", List.of("태그1", "태그2"));
         NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", List.of("태그2"));
-        httpPostWithAuthorization(postRequest1, "/posts", getToken());
-        httpPostWithAuthorization(postRequest2, "/posts", getToken());
+        httpPostWithAuthorization(postRequest1, CREATE_POST_URI, getToken());
+        httpPostWithAuthorization(postRequest2, CREATE_POST_URI, getToken());
 
         ExtractableResponse<Response> response = httpGet("/hashtags/popular?limit=3&include=");
 

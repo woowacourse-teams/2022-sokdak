@@ -1,17 +1,22 @@
 package com.wooteco.sokdak.board.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_1;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.BDDAssertions.tuple;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.wooteco.sokdak.board.dto.BoardContentElement;
+import com.wooteco.sokdak.board.dto.BoardContentPostElement;
 import com.wooteco.sokdak.board.dto.BoardResponse;
 import com.wooteco.sokdak.board.dto.NewBoardRequest;
-import com.wooteco.sokdak.board.dto.NewBoardResponse;
+import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -43,29 +48,49 @@ public class BoardAcceptanceTest extends AcceptanceTest {
                 .contains("포수타", "자유게시판");
     }
 
-    @DisplayName("게시판 목록을 게시글들과 함께 조회할 수 있다.")
+    @DisplayName("게시판 목록을 최신순의 게시글들과 함께 조회할 수 있다.")
     @Test
     void findBoardsContent() {
         // given
         String token = getToken();
-        NewBoardRequest newBoardRequest1 = new NewBoardRequest("포수타");
-        ExtractableResponse<Response> response1 = httpPostWithAuthorization(newBoardRequest1, "/boards", token);
-        Long boardId1 = parseBoardId(response1);
+        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", Collections.emptyList());
+        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", Collections.emptyList());
+        NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", Collections.emptyList());
+        NewPostRequest postRequest4 = new NewPostRequest("제목4", "본문4", Collections.emptyList());
 
-        NewBoardRequest newBoardRequest2 = new NewBoardRequest("자유게시판");
-        ExtractableResponse<Response> response2 = httpPostWithAuthorization(newBoardRequest2, "/boards", token);
-        Long boardId2 = parseBoardId(response2);
+        httpPostWithAuthorization(postRequest1, "/boards/" + 1 + "/posts", token);
+        httpPostWithAuthorization(postRequest2, "/boards/" + 1 + "/posts", token);
+        httpPostWithAuthorization(postRequest3, "/boards/" + 1 + "/posts", token);
+        httpPostWithAuthorization(postRequest4, "/boards/" + 2 + "/posts", token);
 
         // when
         ExtractableResponse<Response> response = httpGet("/boards/content");
 
-        assertThat(response.body().jsonPath().getList("boards", BoardResponse.class))
-                .extracting("title")
-                .containsExactly("포수타", "자유게시판");
-    }
+        // then
+        List<BoardContentElement> boardsAll = response.body().jsonPath().getList("boards", BoardContentElement.class);
+        BoardContentElement board1 = response.body().jsonPath().getList("boards", BoardContentElement.class).get(0);
+        BoardContentElement board2 = response.body().jsonPath().getList("boards", BoardContentElement.class).get(1);
+        List<BoardContentPostElement> posts1 = board1.getPosts();
+        List<BoardContentPostElement> posts2 = board2.getPosts();
 
-    private Long parseBoardId(ExtractableResponse<Response> response) {
-        return Long.parseLong(response.header("Location")
-                .split("/boards/")[1]);
+
+        assertAll(
+                () -> assertThat(boardsAll)
+                        .extracting("id", "title")
+                        .containsExactly(
+                                tuple(1L, "Hot 게시판"),
+                                tuple(2L, "자유게시판"),
+                                tuple(3L, "포수타"),
+                                tuple(4L, "감동크루")
+                        ),
+                () -> assertThat(posts1)
+                        .hasSize(3)
+                        .extracting("title")
+                        .containsExactly("제목3", "제목2", "제목1"),
+                () -> assertThat(posts2)
+                        .hasSize(1)
+                        .extracting("title")
+                        .containsExactly("제목4")
+        );
     }
 }

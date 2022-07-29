@@ -36,9 +36,9 @@ pipeline{
     stage('Deploy'){
       steps{
         script{
-          withCredentials([sshUserPrivateKey(credentialsId: "sokdak-pem", keyFileVariable: 'my_private_key_file')]) {
+          withCredentials([sshUserPrivateKey(credentialsId: "pem-key", keyFileVariable: 'my_private_key_file')]) {
             def remote = [:]
-            remote.name = "sokdak-pem"
+            remote.name = "pem-key"
             remote.host = "${env.DEV_BACK_IP}"
             remote.user = "ubuntu"
             remote.allowAnyHosts = true

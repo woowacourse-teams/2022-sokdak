@@ -7,7 +7,6 @@ import lombok.Getter;
 @Getter
 public class HashtagsSearchRequest {
 
-    @NotBlank(message = "해시태그는 1자 이상 50자 이하여야 합니다.")
     private String include;
     @Positive
     private int limit;

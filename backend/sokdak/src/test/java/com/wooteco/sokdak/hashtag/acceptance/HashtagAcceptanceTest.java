@@ -142,6 +142,31 @@ public class HashtagAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("빈 키워드로 검색하면 모든 해시태그들을 조회한다.")
+    @Test
+    void searchHashtagsWithName_NoKeyword() {
+        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", List.of("태그1", "태그2"));
+        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", List.of("태그2"));
+        httpPostWithAuthorization(postRequest1, "/posts", getToken());
+        httpPostWithAuthorization(postRequest2, "/posts", getToken());
+
+        ExtractableResponse<Response> response = httpGet("/hashtags/popular?limit=3&include=");
+
+        List<HashtagSearchElementResponse> hashtagsSearchResponse = response.body()
+                .jsonPath()
+                .getList("hashtags", HashtagSearchElementResponse.class);
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(hashtagsSearchResponse).hasSize(2),
+                () -> assertThat(hashtagsSearchResponse).usingRecursiveComparison()
+                        .comparingOnlyFields("name")
+                        .isEqualTo(List.of(
+                                new HashtagSearchElementResponse(Hashtag.builder().name("태그2").build(), 2L),
+                                new HashtagSearchElementResponse(Hashtag.builder().name("태그1").build(), 1L)
+                        ))
+        );
+    }
+
     @DisplayName("없는 해시태그 키워드로 검색하면 빈 검색결과를 조회한다.")
     @Test
     void searchHashtagsWithName_NoResult() {

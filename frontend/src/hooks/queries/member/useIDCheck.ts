@@ -13,7 +13,7 @@ const useIDCheck = ({
 }) =>
   useQuery(
     [QUERY_KEYS.MEMBER_ID_CHECK, storeCode],
-    ({ queryKey: [_, username] }) => axios.get(`members/signup/exists?username=${username}`),
+    ({ queryKey: [, username] }) => axios.get(`members/signup/exists?username=${username}`),
     {
       select: data => data.data.unique,
       ...options,

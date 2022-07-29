@@ -7,57 +7,10 @@
     "start:MSW": "eslint . && env-cmd -f ./env/.env.mocking webpack serve --open --config ./webpack/webpack.dev.js",
     "start": "eslint . && HTTPS=true SSL_CRT_FILE=./localhost.pem SSL_KEY_FILE=./localhost-key.pem env-cmd -f ./env/.env.local webpack serve --open --config ./webpack/webpack.dev.js",
     "build": "env-cmd -f ./env/.env.production webpack --config ./webpack/webpack.prod.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest src --watch --silent",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "pretty": "prettier --write \"src/**/*.{ts,tsx,json}\""
-  },
-  "eslintConfig": {
-    "env": {
-      "browser": true,
-      "node": true,
-      "es6": true
-    },
-    "extends": [
-      "eslint:recommended",
-      "plugin:prettier/recommended",
-      "plugin:react/recommended",
-      "plugin:react-hooks/recommended",
-      "plugin:jsx-a11y/recommended",
-      "prettier"
-    ],
-    "parser": "@babel/eslint-parser",
-    "parserOptions": {
-      "ecmaFeatures": {
-        "modules": true,
-        "jsx": true
-      },
-      "sourceType": "module",
-      "requireConfigFile": false,
-      "babelOptions": {
-        "presets": [
-          "@babel/preset-react",
-          "@babel/preset-typescript"
-        ]
-      }
-    },
-    "settings": {
-      "react": {
-        "version": "detect"
-      }
-    },
-    "ignorePatterns": "node_modules",
-    "rules": {
-      "react/react-in-jsx-scope": "off",
-      "react-hooks/exhaustive-deps": "off",
-      "jsx-a11y/no-autofocus": "off",
-      "no-unused-vars": [
-        "error",
-        {
-          "varsIgnorePattern": "_"
-        }
-      ]
-    }
   },
   "prettier": {
     "printWidth": 120,
@@ -95,7 +48,7 @@
   "devDependencies": {
     "@babel/core": "^7.18.6",
     "@babel/eslint-parser": "^7.18.2",
-    "@babel/preset-env": "^7.18.6",
+    "@babel/preset-env": "^7.18.9",
     "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
     "@emotion/babel-plugin": "^11.9.2",
@@ -109,25 +62,38 @@
     "@storybook/react": "^6.5.9",
     "@storybook/testing-library": "^0.0.13",
     "@svgr/webpack": "^6.2.1",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.3.0",
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",
+    "@types/jest": "^28.1.6",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.5",
+    "@types/react-test-renderer": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/parser": "^5.31.0",
+    "babel-jest": "^28.0.7",
     "babel-loader": "^8.2.5",
     "clean-webpack-plugin": "^4.0.0",
     "env-cmd": "^10.1.0",
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-jest": "^26.6.0",
     "eslint-plugin-jsx-a11y": "^6.6.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.30.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.0",
+    "jest": "^28.0.7",
+    "jest-environment-jsdom": "^28.1.3",
+    "jest-transformer-svg": "^2.0.0",
     "msw": "^0.43.0",
     "prettier": "^2.7.1",
     "react-refresh": "^0.14.0",
     "react-router-dom": "^6.3.0",
+    "react-test-renderer": "^18.2.0",
     "storybook-addon-react-router-v6": "^0.1.10",
+    "ts-jest": "^28.0.7",
     "ts-loader": "^9.3.1",
     "tsconfig-paths-webpack-plugin": "^3.5.2",
     "type-fest": "^2.15.1",

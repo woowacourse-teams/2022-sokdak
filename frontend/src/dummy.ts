@@ -4,9 +4,9 @@ export const postList: Post[] = [
     title: '오늘 날씨 맑네요',
     createdAt: '2022-07-19T19:55:31.016376300',
     content: '날씨는 참 좋네요.',
-    likeCount: 1200,
+    likeCount: 19,
     commentCount: 16,
-    like: true,
+    like: false,
     modified: false,
     hashtags: [
       {

@@ -11,5 +11,5 @@ export const Container = styled.div<{ onClick: React.MouseEventHandler<HTMLDivEl
   padding: 6px;
   box-sizing: border-box;
   user-select: none;
-  cursor: ${props => (!!props.onClick ? 'pointer' : null)};
+  cursor: ${props => (props.onClick ? 'pointer' : null)};
 `;

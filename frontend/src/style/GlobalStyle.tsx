@@ -1,6 +1,6 @@
 import emotionReset from 'emotion-reset';
 
-import { css, Global } from '@emotion/react';
+import { css, Global, keyframes } from '@emotion/react';
 
 const style = css`
   ${emotionReset}
@@ -59,5 +59,27 @@ const style = css`
 const GlobalStyle = () => {
   return <Global styles={style} />;
 };
+
+export const huduldul = keyframes`
+  0% {
+    transform: translateX(-5px);
+  }
+  20% {
+    transform: translateX(5px);
+  }
+  40% {
+    transform: translateX(-5px);
+  }
+  60% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+`;
+
+export const invalidInputAnimation = (props: { isAnimationActive?: boolean }) => css`
+  animation: ${props.isAnimationActive ? huduldul : null} 0.3s;
+`;
 
 export default GlobalStyle;

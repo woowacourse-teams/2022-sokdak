@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.board.controller;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.board.dto.BoardContentResponse;
 import com.wooteco.sokdak.board.dto.BoardsResponse;
 import com.wooteco.sokdak.board.dto.NewBoardRequest;
 import com.wooteco.sokdak.board.dto.NewBoardResponse;
@@ -29,12 +30,18 @@ public class BoardController {
     public ResponseEntity<Void> createBoard(@Valid @RequestBody NewBoardRequest newBoardRequest,
                                             @Login AuthInfo authInfo) {
         NewBoardResponse board = boardService.createBoard(newBoardRequest);
-        return ResponseEntity.created(URI.create("/posts/" + board.getId())).build();
+        return ResponseEntity.created(URI.create("/boards/" + board.getId())).build();
     }
 
     @GetMapping
     public ResponseEntity<BoardsResponse> findBoards() {
         BoardsResponse boardsResponse = boardService.findBoards();
         return ResponseEntity.ok(boardsResponse);
+    }
+
+    @GetMapping("/content")
+    public ResponseEntity<BoardContentResponse> findBoardsContent() {
+        BoardContentResponse boardContentResponse = boardService.findBoardsContent();
+        return ResponseEntity.ok(boardContentResponse);
     }
 }

@@ -1,10 +1,11 @@
 package com.wooteco.sokdak.report.acceptance;
 
-import static com.wooteco.sokdak.post.util.CommentFixture.*;
+import static com.wooteco.sokdak.post.util.CommentFixture.VALID_COMMENT_MESSAGE;
 import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -37,15 +38,16 @@ class CommentReportAcceptanceTest extends AcceptanceTest {
     }
 
     private Long addCommentAndGetCommentId() {
+        String token = getToken();
         NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT,
                 Collections.emptyList());
-        Long postId = Long.parseLong(httpPostWithAuthorization(newPostRequest, "/posts", getToken())
-                .header("Location").split("/posts/")[1]);
+        String postId = parsePostId(
+                httpPostWithAuthorization(newPostRequest, CREATE_POST_URI, getToken()));
 
         NewCommentRequest newCommentRequest = new NewCommentRequest(VALID_COMMENT_MESSAGE, true);
         Long commentId = Long.parseLong(
-                httpPostWithAuthorization(newCommentRequest, "/posts/" + postId + "/comments", getToken())
-                .header("Location").split("/comments/")[1]);
+                httpPostWithAuthorization(newCommentRequest, "/posts/" + postId + "/comments", token)
+                        .header("Location").split("/comments/")[1]);
 
         return commentId;
     }
@@ -53,5 +55,10 @@ class CommentReportAcceptanceTest extends AcceptanceTest {
     private String getToken() {
         LoginRequest loginRequest = new LoginRequest("chris", "Abcd123!@");
         return httpPost(loginRequest, "/login").header(AUTHORIZATION);
+    }
+
+    private String parsePostId(ExtractableResponse<Response> response) {
+        return response.header("Location")
+                .split("/posts/")[1];
     }
 }

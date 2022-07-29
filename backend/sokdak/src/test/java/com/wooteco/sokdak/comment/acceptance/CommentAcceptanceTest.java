@@ -3,17 +3,17 @@ package com.wooteco.sokdak.comment.acceptance;
 import static com.wooteco.sokdak.post.util.CommentFixture.VALID_COMMENT_MESSAGE;
 import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_TITLE;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.*;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
-import com.wooteco.sokdak.util.fixture.PostFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Collections;
@@ -37,7 +37,7 @@ class CommentAcceptanceTest extends AcceptanceTest {
                 "/posts/" + postId + "/comments",
                 getToken());
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
     @DisplayName("새로운 기명 댓글을 작성할 수 있다.")
@@ -49,7 +49,7 @@ class CommentAcceptanceTest extends AcceptanceTest {
                 "/posts/" + postId + "/comments",
                 getToken());
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
     @DisplayName("로그인하지 않고, 댓글을 작성할 수 없다.")

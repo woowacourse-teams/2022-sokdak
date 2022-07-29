@@ -42,7 +42,7 @@ class CommentControllerTest extends ControllerTest {
                 .body(newCommentRequest)
                 .when().post("/posts/1/comments")
                 .then().log().all()
-                .statusCode(HttpStatus.NO_CONTENT.value());
+                .statusCode(HttpStatus.CREATED.value());
     }
 
     @DisplayName("댓글 작성 요청에 댓글 내용이 없는 경우 400을 반환한다")

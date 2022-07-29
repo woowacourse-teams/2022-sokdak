@@ -17,22 +17,10 @@ import PATH from '@/constants/path';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
 const LoginPage = () => {
-  const {
-    value: ID,
-    setValue: setID,
-    error: IDError,
-    setError: setIDError,
-    isAnimationActive: isLoginAnimationActive,
-    setIsAnimationActive: setIsLoginAnimationActive,
-  } = useInput();
-  const {
-    value: password,
-    setValue: setPassword,
-    error: passwordError,
-    setError: setPasswordError,
-    isAnimationActive: isPasswordAnimationActive,
-    setIsAnimationActive: setIsPasswordAnimationActive,
-  } = useInput();
+  const form = {
+    ID: useInput(),
+    password: useInput(),
+  };
 
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -42,45 +30,32 @@ const LoginPage = () => {
     onSuccess: () => {
       showSnackbar(SNACKBAR_MESSAGE.SUCCESS_LOGIN);
       setIsLogin(true);
-      setUserName(ID);
+      setUserName(form.ID.value);
       navigate(PATH.HOME);
     },
     onError: () => {
-      setIDError(' ');
-      setPasswordError(' ');
-      setIsLoginAnimationActive(true);
-      setIsPasswordAnimationActive(true);
+      Object.values(form).forEach(({ setError, setIsAnimationActive }) => {
+        setError(' ');
+        setIsAnimationActive(true);
+      });
       showSnackbar(SNACKBAR_MESSAGE.FAIL_LOGIN);
     },
   });
 
   const handleSubmitButton = (e: React.FormEvent) => {
     e.preventDefault();
-    setIDError('');
-    setPasswordError('');
-    mutate({ username: ID, password });
+    Object.values(form).forEach(({ setError }) => {
+      setError('');
+    });
+    mutate({ username: form.ID.value, password: form.password.value });
   };
 
   return (
     <Layout>
       <Styled.LoginForm onSubmit={handleSubmitButton}>
         <Styled.Heading>로그인</Styled.Heading>
-        <IDInput
-          value={ID}
-          setValue={setID}
-          error={IDError}
-          setError={setIDError}
-          isAnimationActive={isLoginAnimationActive}
-          setIsAnimationActive={setIsLoginAnimationActive}
-        />
-        <PasswordInput
-          value={password}
-          setValue={setPassword}
-          error={passwordError}
-          setError={setPasswordError}
-          isAnimationActive={isPasswordAnimationActive}
-          setIsAnimationActive={setIsPasswordAnimationActive}
-        />
+        <IDInput {...form.ID} />
+        <PasswordInput {...form.password} />
         <Styled.SubmitButton>로그인</Styled.SubmitButton>
         <Styled.SignUpText>
           속닥속닥, <Styled.SignUpLink to={PATH.SIGN_UP}>간편 회원가입하기</Styled.SignUpLink>

@@ -70,67 +70,18 @@ const SignUpPage = () => {
     <Layout>
       <Styled.SignUpForm>
         <Styled.Heading>회원가입</Styled.Heading>
-        <EmailInput
-          value={form.email.value}
-          setValue={form.email.setValue}
-          error={form.email.error}
-          setError={form.email.setError}
-          isAnimationActive={form.email.isAnimationActive}
-          setIsAnimationActive={form.email.setIsAnimationActive}
-          isSet={isEmailSet}
-          setIsSet={setIsEmailSet}
-          isVerified={isVerificationCodeSet}
-        />
+        <EmailInput {...form.email} isSet={isEmailSet} setIsSet={setIsEmailSet} isVerified={isVerificationCodeSet} />
         <VerificationCodeInput
-          value={form.verificationCode.value}
-          setValue={form.verificationCode.setValue}
-          error={form.verificationCode.error}
-          setError={form.verificationCode.setError}
-          isAnimationActive={form.verificationCode.isAnimationActive}
-          setIsAnimationActive={form.verificationCode.setIsAnimationActive}
+          {...form.verificationCode}
           email={form.email.value}
           setIsVerified={setIsVerificationCodeSet}
           isEmailSet={isEmailSet}
           isVerified={isVerificationCodeSet}
         />
-
-        <IDInput
-          value={form.ID.value}
-          setValue={form.ID.setValue}
-          error={form.ID.error}
-          setError={form.ID.setError}
-          isAnimationActive={form.ID.isAnimationActive}
-          setIsAnimationActive={form.ID.setIsAnimationActive}
-          isSet={isIDSet}
-          setIsSet={setIDSet}
-        />
-        <NicknameInput
-          value={form.nickname.value}
-          setValue={form.nickname.setValue}
-          error={form.nickname.error}
-          setError={form.nickname.setError}
-          isAnimationActive={form.nickname.isAnimationActive}
-          setIsAnimationActive={form.nickname.setIsAnimationActive}
-          isSet={isNicknameSet}
-          setIsSet={setIsNicknameSet}
-        />
-        <PasswordInput
-          value={form.password.value}
-          setValue={form.password.setValue}
-          error={form.password.error}
-          setError={form.password.setError}
-          isAnimationActive={form.password.isAnimationActive}
-          setIsAnimationActive={form.password.setIsAnimationActive}
-        />
-        <PasswordConfirmationInput
-          value={form.passwordConfirmation.value}
-          setValue={form.passwordConfirmation.setValue}
-          error={form.passwordConfirmation.error}
-          setError={form.passwordConfirmation.setError}
-          isAnimationActive={form.passwordConfirmation.isAnimationActive}
-          setIsAnimationActive={form.passwordConfirmation.setIsAnimationActive}
-          password={form.password.value}
-        />
+        <IDInput {...form.ID} isSet={isIDSet} setIsSet={setIDSet} />
+        <NicknameInput {...form.nickname} isSet={isNicknameSet} setIsSet={setIsNicknameSet} />
+        <PasswordInput {...form.password} />
+        <PasswordConfirmationInput {...form.passwordConfirmation} password={form.password.value} />
         <Styled.SubmitButton onClick={handleSubmitButton} disabled={!isEmailSet || !isIDSet || !isNicknameSet}>
           회원가입
         </Styled.SubmitButton>

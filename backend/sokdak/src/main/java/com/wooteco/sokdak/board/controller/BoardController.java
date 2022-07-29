@@ -29,7 +29,7 @@ public class BoardController {
     public ResponseEntity<Void> createBoard(@Valid @RequestBody NewBoardRequest newBoardRequest,
                                             @Login AuthInfo authInfo) {
         NewBoardResponse board = boardService.createBoard(newBoardRequest);
-        return ResponseEntity.created(URI.create("/posts/" + board.getId())).build();
+        return ResponseEntity.created(URI.create("/boards/" + board.getId())).build();
     }
 
     @GetMapping

@@ -40,4 +40,30 @@ public class BoardAcceptanceTest extends AcceptanceTest {
                 .extracting("title")
                 .containsExactly("포수타", "자유게시판");
     }
+
+    @DisplayName("게시판 목록을 게시글들과 함께 조회할 수 있다.")
+    @Test
+    void findBoardsContent() {
+        // given
+        String token = getToken();
+        NewBoardRequest newBoardRequest1 = new NewBoardRequest("포수타");
+        ExtractableResponse<Response> response1 = httpPostWithAuthorization(newBoardRequest1, "/boards", token);
+        Long boardId1 = parseBoardId(response1);
+
+        NewBoardRequest newBoardRequest2 = new NewBoardRequest("자유게시판");
+        ExtractableResponse<Response> response2 = httpPostWithAuthorization(newBoardRequest2, "/boards", token);
+        Long boardId2 = parseBoardId(response2);
+
+        // when
+        ExtractableResponse<Response> response = httpGet("/boards/content");
+
+        assertThat(response.body().jsonPath().getList("boards", BoardResponse.class))
+                .extracting("title")
+                .containsExactly("포수타", "자유게시판");
+    }
+
+    private Long parseBoardId(ExtractableResponse<Response> response) {
+        return Long.parseLong(response.header("Location")
+                .split("/boards/")[1]);
+    }
 }

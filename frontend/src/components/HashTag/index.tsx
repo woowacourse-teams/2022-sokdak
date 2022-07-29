@@ -3,13 +3,14 @@ import * as Styled from './index.styles';
 interface HashTagProps {
   className?: string | undefined;
   name: string;
+  count?: number;
   handleTagClick?: React.MouseEventHandler<HTMLDivElement>;
 }
 
-const HashTag = ({ className, name, handleTagClick }: HashTagProps) => {
+const HashTag = ({ className, name, count, handleTagClick }: HashTagProps) => {
   return (
     <Styled.Container className={className} onClick={handleTagClick}>
-      # {name}
+      # {name} {count && <Styled.Count>({count})</Styled.Count>}
     </Styled.Container>
   );
 };

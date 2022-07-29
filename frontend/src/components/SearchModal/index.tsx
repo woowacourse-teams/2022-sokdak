@@ -39,8 +39,8 @@ const SearchModal = ({ handleSearchModal }: SearchModalProps) => {
           <Styled.Content>
             {data && (
               <Styled.HashTagContainer>
-                {data.data.hashtags.map(({ name }) => (
-                  <Styled.HashTag key={name} name={name} />
+                {data.data.hashtags.map(({ name, count }) => (
+                  <Styled.HashTag key={name} name={name} count={count} />
                 ))}
               </Styled.HashTagContainer>
             )}

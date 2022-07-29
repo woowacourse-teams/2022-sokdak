@@ -28,9 +28,9 @@ public class RandomNicknameGenerator {
                 .filter(nickname -> !usedNicknames.contains(nickname))
                 .collect(Collectors.toList());
 
-        if (usableNicknames.size() > 0) {
-            return usableNicknames.get(RANDOM.nextInt(usableNicknames.size()));
+        if (usableNicknames.isEmpty()) {
+            return "크루";
         }
-        return "크루";
+        return usableNicknames.get(RANDOM.nextInt(usableNicknames.size()));
     }
 }

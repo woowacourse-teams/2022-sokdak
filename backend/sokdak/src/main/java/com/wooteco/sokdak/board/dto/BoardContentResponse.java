@@ -8,7 +8,7 @@ public class BoardContentResponse {
 
     private List<BoardContentElement> boards;
 
-    public BoardContentResponse() {
+    protected BoardContentResponse() {
     }
 
     public BoardContentResponse(List<BoardContentElement> boards) {

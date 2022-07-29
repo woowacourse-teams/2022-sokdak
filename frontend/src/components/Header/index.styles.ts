@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 
+import SearchIcon from '@/assets/images/search.svg';
+
 import styled from '@emotion/styled';
 
 export const Container = styled.header`
@@ -20,7 +22,7 @@ export const LeftSide = styled(Link)`
 export const RightSide = styled.div`
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 `;
 
 export const Title = styled.p`
@@ -39,6 +41,11 @@ export const Avartar = styled.button`
   border: 1px solid ${props => props.theme.colors.main};
   cursor: pointer;
   font-family: 'BMHANNAPro';
+`;
+
+export const Search = styled(SearchIcon)`
+  cursor: pointer;
+  padding: 10px;
 `;
 
 export const LoginLink = styled(Link)`

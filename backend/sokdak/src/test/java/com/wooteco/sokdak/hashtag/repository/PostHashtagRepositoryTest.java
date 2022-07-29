@@ -90,8 +90,8 @@ class PostHashtagRepositoryTest {
     void findAllByHashtagId() {
         Pageable pageable = PageRequest.of(0, 3, DESC, "createdAt");
 
-        Slice<Post> posts = postHashtagRepository.findAllByHashtagId(tag1.getId(), pageable);
-        assertThat(posts.getNumberOfElements()).isEqualTo(2);
+        Slice<Post> posts = postHashtagRepository.findAllPostByHashtagId(tag1.getId(), pageable);
+        assertThat(posts.getNumberOfElements()).isEqualTo(3);
     }
 
     @Test

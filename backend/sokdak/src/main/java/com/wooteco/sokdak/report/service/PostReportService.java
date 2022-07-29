@@ -32,7 +32,7 @@ public class PostReportService {
 
     @Transactional
     public void reportPost(Long postId, ReportRequest reportRequest, AuthInfo authInfo) {
-        if (postReportRepository.findByReporterIdAndPostId(authInfo.getId(), postId).isPresent()) {
+        if (postReportRepository.existsByReporterIdAndPostId(authInfo.getId(), postId)) {
             throw new AlreadyReportPostException();
         }
         Post post = postRepository.findById(postId)

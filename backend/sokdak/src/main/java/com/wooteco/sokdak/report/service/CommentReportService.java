@@ -12,8 +12,10 @@ import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.report.exception.AlreadyReportCommentException;
 import com.wooteco.sokdak.report.repository.CommentReportRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class CommentReportService {
 
     private CommentReportRepository commentReportRepository;
@@ -28,6 +30,7 @@ public class CommentReportService {
         this.memberRepository = memberRepository;
     }
 
+    @Transactional
     public void reportComment(Long commentId, ReportRequest reportRequest, AuthInfo authInfo) {
         if (commentReportRepository.findByReporterIdAndCommentId(authInfo.getId(), commentId).isPresent()) {
             throw new AlreadyReportCommentException();

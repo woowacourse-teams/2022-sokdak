@@ -12,10 +12,11 @@ import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.report.exception.AlreadyReportPostException;
 import com.wooteco.sokdak.report.repository.PostReportRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class
-PostReportService {
+@Transactional(readOnly = true)
+public class PostReportService {
 
     private final PostReportRepository postReportRepository;
     private final PostRepository postRepository;
@@ -29,6 +30,7 @@ PostReportService {
         this.memberRepository = memberRepository;
     }
 
+    @Transactional
     public void reportPost(Long postId, ReportRequest reportRequest, AuthInfo authInfo) {
         if (postReportRepository.findByReporterIdAndPostId(authInfo.getId(), postId).isPresent()) {
             throw new AlreadyReportPostException();

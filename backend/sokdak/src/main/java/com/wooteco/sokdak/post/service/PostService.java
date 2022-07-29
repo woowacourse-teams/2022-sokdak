@@ -1,6 +1,10 @@
 package com.wooteco.sokdak.post.service;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.board.domain.PostBoard;
+import com.wooteco.sokdak.board.repository.BoardRepository;
+import com.wooteco.sokdak.board.repository.PostBoardRepository;
+import com.wooteco.sokdak.board.service.BoardService;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.hashtag.domain.Hashtags;
 import com.wooteco.sokdak.hashtag.service.HashtagService;
@@ -28,25 +32,31 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
 
     private final HashtagService hashtagService;
+    private final BoardService boardService;
 
     private final PostRepository postRepository;
+    private final PostBoardRepository postBoardRepository;
+    private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
 
-    public PostService(HashtagService hashtagService, PostRepository postRepository,
-                       MemberRepository memberRepository,
-                       CommentRepository commentRepository,
-                       LikeRepository likeRepository) {
+    public PostService(HashtagService hashtagService, BoardService boardService,
+                       PostRepository postRepository, PostBoardRepository postBoardRepository,
+                       BoardRepository boardRepository, MemberRepository memberRepository,
+                       CommentRepository commentRepository, LikeRepository likeRepository) {
         this.hashtagService = hashtagService;
+        this.boardService = boardService;
         this.postRepository = postRepository;
+        this.postBoardRepository = postBoardRepository;
+        this.boardRepository = boardRepository;
         this.memberRepository = memberRepository;
         this.commentRepository = commentRepository;
         this.likeRepository = likeRepository;
     }
 
     @Transactional
-    public Long addPost(NewPostRequest newPostRequest, AuthInfo authInfo) {
+    public Long addPost(Long boardId, NewPostRequest newPostRequest, AuthInfo authInfo) {
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
 
@@ -58,6 +68,7 @@ public class PostService {
         Post savedPost = postRepository.save(post);
 
         hashtagService.saveHashtag(newPostRequest.getHashtags(), savedPost);
+        boardService.savePostBoard(savedPost, boardId);
         return savedPost.getId();
     }
 
@@ -70,13 +81,9 @@ public class PostService {
         return PostDetailResponse.of(foundPost, liked, foundPost.isAuthenticated(authInfo.getId()), hashtags);
     }
 
-    public PostsResponse findPosts(Pageable pageable) {
-        Slice<Post> posts = postRepository.findSliceBy(pageable);
-        List<PostsElementResponse> postsElementResponses = posts.getContent()
-                .stream()
-                .map(PostsElementResponse::from)
-                .collect(Collectors.toUnmodifiableList());
-        return new PostsResponse(postsElementResponses, posts.isLast());
+    public PostsResponse findPostsByBoard(Long boardId, Pageable pageable) {
+        Slice<PostBoard> postBoards = postBoardRepository.findPostBoardsByBoardId(boardId, pageable);
+        return PostsResponse.ofPostBoardSlice(postBoards);
     }
 
     @Transactional

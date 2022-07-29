@@ -49,16 +49,19 @@ pipeline{
                 sh 'scp -o StrictHostKeyChecking=no -i ${my_private_key_file} *.jar ubuntu@192.168.1.241:/home/ubuntu/sokdak'
             }
             sh 'ssh -o StrictHostKeyChecking=no -i ${my_private_key_file} ubuntu@192.168.1.241 "cd sokdak && ls && ./deploy.sh"'
-        } 
+          } 
+        }
       }
     }
   }
+    
+      
   post {
-      success {
-          slackSend (channel: 'jenkins', color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-      }
-      failure {
-          slackSend (channel: 'jenkins', color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-      }
+    success {
+        slackSend (channel: 'jenkins', color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+    }
+    failure {
+        slackSend (channel: 'jenkins', color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+    }
   }
 }

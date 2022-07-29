@@ -9,7 +9,7 @@ public class BoardContentPostElement {
     private String title;
     private int commentCount;
 
-    public BoardContentPostElement() {
+    protected BoardContentPostElement() {
     }
 
     public BoardContentPostElement(int likeCount, String title, int commentCount) {

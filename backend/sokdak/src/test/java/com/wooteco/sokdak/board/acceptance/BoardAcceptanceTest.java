@@ -67,9 +67,9 @@ public class BoardAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = httpGet("/boards/content");
 
         // then
-        List<BoardContentElement> boardsAll = response.body().jsonPath().getList("boards", BoardContentElement.class);
-        BoardContentElement board1 = response.body().jsonPath().getList("boards", BoardContentElement.class).get(0);
-        BoardContentElement board2 = response.body().jsonPath().getList("boards", BoardContentElement.class).get(1);
+        List<BoardContentElement> boardsAll = getBoardContentElements(response);
+        BoardContentElement board1 = getBoardContentElements(response).get(0);
+        BoardContentElement board2 = getBoardContentElements(response).get(1);
         List<BoardContentPostElement> posts1 = board1.getPosts();
         List<BoardContentPostElement> posts2 = board2.getPosts();
 
@@ -92,5 +92,9 @@ public class BoardAcceptanceTest extends AcceptanceTest {
                         .extracting("title")
                         .containsExactly("제목4")
         );
+    }
+
+    private List<BoardContentElement> getBoardContentElements(ExtractableResponse<Response> response) {
+        return response.body().jsonPath().getList("boards", BoardContentElement.class);
     }
 }

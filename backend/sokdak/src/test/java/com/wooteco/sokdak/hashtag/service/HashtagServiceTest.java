@@ -11,6 +11,7 @@ import com.wooteco.sokdak.hashtag.domain.Hashtag;
 import com.wooteco.sokdak.hashtag.domain.Hashtags;
 import com.wooteco.sokdak.hashtag.domain.PostHashtag;
 import com.wooteco.sokdak.hashtag.dto.HashtagSearchElementResponse;
+import com.wooteco.sokdak.hashtag.dto.HashtagsSearchRequest;
 import com.wooteco.sokdak.hashtag.dto.HashtagsSearchResponse;
 import com.wooteco.sokdak.hashtag.exception.HashtagNotFoundException;
 import com.wooteco.sokdak.hashtag.repository.HashtagRepository;
@@ -211,14 +212,15 @@ class HashtagServiceTest {
                 HashtagSearchElementResponse.builder().name(tag1.getName()).count(2L).build(),
                 HashtagSearchElementResponse.builder().name(tag2.getName()).count(1L).build());
 
-        HashtagsSearchResponse hashtagsSearchResponse = hashtagService.findHashtagsWithTagName("태그", 3);
+        HashtagsSearchResponse hashtagsSearchResponse = hashtagService.findHashtagsWithTagName(
+                new HashtagsSearchRequest("태그", 3));
 
         List<HashtagSearchElementResponse> responseHashtags = hashtagsSearchResponse.getHashtags();
 
         assertAll(
                 () -> assertThat(responseHashtags).hasSize(2),
                 () -> assertThat(responseHashtags).usingRecursiveComparison()
-                        .comparingOnlyFields("name","count")
+                        .comparingOnlyFields("name", "count")
                         .isEqualTo(expectedHashtags)
         );
     }
@@ -226,7 +228,8 @@ class HashtagServiceTest {
     @DisplayName("특정 키워드로 검색 시 해당 키워드가 이름에 포함된 해시태그가 없을 시 결과 값이 비어있다.")
     @Test
     void findHashtagsWithTagName_Exception_NoHashtagName() {
-        HashtagsSearchResponse hashtagsSearchResponse = hashtagService.findHashtagsWithTagName("태그", 3);
+        HashtagsSearchResponse hashtagsSearchResponse = hashtagService.findHashtagsWithTagName(
+                new HashtagsSearchRequest("태그", 3));
 
         assertThat(hashtagsSearchResponse.getHashtags()).isEmpty();
     }
@@ -234,7 +237,8 @@ class HashtagServiceTest {
     @DisplayName("특정 키워드로 검색 시 결과 개수 설정이 0 이하일 시 결과 값이 비어있다.")
     @Test
     void findHashtagsWithTagName_Exception_InvalidLimit() {
-        HashtagsSearchResponse hashtagsSearchResponse = hashtagService.findHashtagsWithTagName("태그", 0);
+        HashtagsSearchResponse hashtagsSearchResponse = hashtagService.findHashtagsWithTagName(
+                new HashtagsSearchRequest("태그", 0));
 
         assertThat(hashtagsSearchResponse.getHashtags()).isEmpty();
     }

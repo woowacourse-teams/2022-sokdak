@@ -3,12 +3,12 @@ package com.wooteco.sokdak.hashtag.service;
 import com.wooteco.sokdak.hashtag.domain.Hashtag;
 import com.wooteco.sokdak.hashtag.domain.Hashtags;
 import com.wooteco.sokdak.hashtag.dto.HashtagSearchElementResponse;
+import com.wooteco.sokdak.hashtag.dto.HashtagsSearchRequest;
 import com.wooteco.sokdak.hashtag.dto.HashtagsSearchResponse;
 import com.wooteco.sokdak.hashtag.exception.HashtagNotFoundException;
 import com.wooteco.sokdak.hashtag.repository.HashtagRepository;
 import com.wooteco.sokdak.hashtag.repository.PostHashtagRepository;
 import com.wooteco.sokdak.post.domain.Post;
-import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,14 +72,14 @@ public class HashtagService {
         return PostsResponse.ofSlice(posts);
     }
 
-    public HashtagsSearchResponse findHashtagsWithTagName(String include, int limit) {
-        List<Hashtag> contains = hashtagRepository.findAllByNameContains(include);
+    public HashtagsSearchResponse findHashtagsWithTagName(HashtagsSearchRequest hashtagsSearchRequest) {
+        List<Hashtag> contains = hashtagRepository.findAllByNameContains(hashtagsSearchRequest.getInclude());
         if (contains.isEmpty()) {
             return new HashtagsSearchResponse(new ArrayList<>());
         }
 
         List<Tuple> hashtagOrderByCount = postHashtagRepository.findAllByHashtagOrderByCount(
-                contains, PageRequest.of(0, limit));
+                contains, PageRequest.of(0, hashtagsSearchRequest.getLimit()));
 
         List<HashtagSearchElementResponse> hashtagSearchElementResponses = hashtagOrderByCount.stream()
                 .map(tuple -> new HashtagSearchElementResponse(tuple.get(0, Hashtag.class), tuple.get(1, Long.class)))

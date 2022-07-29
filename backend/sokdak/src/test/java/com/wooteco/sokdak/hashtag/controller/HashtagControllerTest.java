@@ -3,12 +3,13 @@ package com.wooteco.sokdak.hashtag.controller;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.matches;
-import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
 import com.wooteco.sokdak.hashtag.dto.HashtagSearchElementResponse;
+import com.wooteco.sokdak.hashtag.dto.HashtagsSearchRequest;
 import com.wooteco.sokdak.hashtag.dto.HashtagsSearchResponse;
 import com.wooteco.sokdak.hashtag.exception.HashtagNotFoundException;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
@@ -87,13 +88,13 @@ class HashtagControllerTest extends ControllerTest {
     @Test
     void findHashtagsWithTagName() {
         HashtagsSearchResponse hashtagsSearchResponse = new HashtagsSearchResponse(List.of(
-                new HashtagSearchElementResponse(1L,"태그1",5L),
-                new HashtagSearchElementResponse(2L,"태그2",2L)
+                new HashtagSearchElementResponse(1L, "태그1", 5L),
+                new HashtagSearchElementResponse(2L, "태그2", 2L)
         ));
 
         doReturn(hashtagsSearchResponse)
                 .when(hashtagService)
-                .findHashtagsWithTagName(matches("태그"), same(3));
+                .findHashtagsWithTagName(refEq(new HashtagsSearchRequest("태그", 3)));
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

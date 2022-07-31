@@ -6,7 +6,7 @@ import useQueryDebounce from '@/hooks/queries/hashtag/useQueryDebounce';
 
 import * as Styled from './index.styles';
 
-import useModalHistory from './useModalClose';
+import useModalHistory from './useModalHistory';
 
 interface SearchModalProps {
   handleSearchModal: React.DispatchWithoutAction;

@@ -20,7 +20,7 @@ pipeline{
     stage('Test'){
       steps{
         dir('frontend'){
-          sh 'sudo npm run test'
+          sh 'sudo npm run test --unsafe-perm=true --allow-root'
         }
       }
     }

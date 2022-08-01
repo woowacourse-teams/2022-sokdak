@@ -37,7 +37,6 @@ pipeline{
                 sh "scp -o StrictHostKeyChecking=no -i ${front_key_file} -r dist ubuntu@${env.DEV_FRONT_IP}:/home/ubuntu"
             }
             sh "ssh -o StrictHostKeyChecking=no -i ${front_key_file} ubuntu@${env.DEV_FRONT_IP} 'sudo service nginx restart'"
-            sh "echo 'HI nginx"
           }
         }
       }

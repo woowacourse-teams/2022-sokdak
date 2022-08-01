@@ -10,5 +10,7 @@ public interface TokenManager {
 
     String getPayload(String token);
 
+    AuthInfo getParsedClaims(String token);
+
     boolean isValid(String token);
 }

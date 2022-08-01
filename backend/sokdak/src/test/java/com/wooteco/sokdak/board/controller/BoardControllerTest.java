@@ -2,7 +2,6 @@ package com.wooteco.sokdak.board.controller;
 
 import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
@@ -66,8 +65,18 @@ class BoardControllerTest extends ControllerTest {
     void findBoards() {
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                //.header("Authorization", "any")
                 .when().get("/boards")
+                .then().log().all()
+                .apply(document("board/create/success"))
+                .statusCode(HttpStatus.OK.value());
+    }
+
+
+    @DisplayName("메인페이지 게시판 목록 반환")
+    @Test
+    void findBoardsContent() {
+        restDocs
+                .when().get("/boards/content")
                 .then().log().all()
                 .apply(document("board/create/success"))
                 .statusCode(HttpStatus.OK.value());

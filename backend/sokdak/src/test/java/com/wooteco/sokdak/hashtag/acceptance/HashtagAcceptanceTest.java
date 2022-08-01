@@ -58,7 +58,7 @@ public class HashtagAcceptanceTest extends AcceptanceTest {
         String postId = parsePostId(
                 httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getToken()));
         PostUpdateRequest requestBody = new PostUpdateRequest("제목", "본문", List.of("변경1", "변경2"));
-                httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getToken());
+        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getToken());
 
         httpPutWithAuthorization(requestBody, "/posts/" + postId, getToken());
 

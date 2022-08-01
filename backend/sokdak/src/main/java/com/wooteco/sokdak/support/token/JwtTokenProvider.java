@@ -2,6 +2,7 @@ package com.wooteco.sokdak.support.token;
 
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.member.domain.RoleType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -31,13 +32,13 @@ public class JwtTokenProvider implements TokenManager {
 
     @Override
     public String createAccessToken(AuthInfo authInfo) {
-        Long payload = authInfo.getId();
-        Claims claims = Jwts.claims().setSubject(String.valueOf(payload));
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
 
         return Jwts.builder()
-                .setClaims(claims)
+                .claim("id", authInfo.getId())
+                .claim("role", authInfo.getRole())
+                .claim("nickname", authInfo.getNickname())
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .signWith(signingKey)
@@ -64,6 +65,19 @@ public class JwtTokenProvider implements TokenManager {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+    }
+
+    public AuthInfo getParsedClaims(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(signingKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        Long id = claims.get("id", Long.class);
+        String role = claims.get("role", String.class);
+        String nickname = claims.get("nickname", String.class);
+        return new AuthInfo(id, role, nickname);
     }
 
     @Override

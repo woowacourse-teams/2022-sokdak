@@ -7,9 +7,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import com.wooteco.sokdak.config.JPAConfig;
 import com.wooteco.sokdak.hashtag.domain.Hashtag;
-import com.wooteco.sokdak.hashtag.domain.Hashtags;
 import com.wooteco.sokdak.hashtag.domain.PostHashtag;
-import com.wooteco.sokdak.hashtag.dto.HashtagSearchElementResponse;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
@@ -95,7 +93,7 @@ class PostHashtagRepositoryTest {
     }
 
     @Test
-    void findAllByHashtagOrderByCount(){
+    void findAllByHashtagOrderByCount() {
         List<Hashtag> hashtags = hashtagRepository.findAllByNameContains("태그");
         PageRequest pageable = PageRequest.of(0, 5);
         List<Tuple> allByHashtagOrderByCount = postHashtagRepository.findAllByHashtagOrderByCount(hashtags, pageable);
@@ -105,6 +103,6 @@ class PostHashtagRepositoryTest {
             names.add(tuple.get(0, Hashtag.class).getName());
         }
 
-        assertThat(names).containsExactly("태그1","태그3","태그2");
+        assertThat(names).containsExactly("태그1", "태그3", "태그2");
     }
 }

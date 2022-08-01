@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.comment.service;
 
+import static com.wooteco.sokdak.member.domain.RoleType.*;
 import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
@@ -13,6 +14,7 @@ import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
 import com.wooteco.sokdak.post.domain.Post;
@@ -45,6 +47,12 @@ class CommentServiceTest {
 
     @BeforeEach
     void setUp() {
+        member = Member.builder()
+                .username("name")
+                .nickname("nickname")
+                .password("Abc123!")
+                .build();
+        memberRepository.save(member);
         member = memberRepository.findById(1L).get();
         post = Post.builder()
                 .member(member)
@@ -102,7 +110,7 @@ class CommentServiceTest {
         NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
         Long commentId = commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
 
-        commentService.deleteComment(commentId, new AuthInfo(member.getId()));
+        commentService.deleteComment(commentId, new AuthInfo(member.getId(), USER.getName(), member.getNickname().getValue()));
 
         assertThat(commentRepository.findById(commentId)).isEmpty();
     }
@@ -114,7 +122,7 @@ class CommentServiceTest {
         Long commentId = commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
         Long invalidOwnerId = 9999L;
 
-        assertThatThrownBy(() -> commentService.deleteComment(commentId, new AuthInfo(invalidOwnerId)))
+        assertThatThrownBy(() -> commentService.deleteComment(commentId, new AuthInfo(invalidOwnerId, USER.getName(),  member.getNickname().getValue())))
                 .isInstanceOf(AuthenticationException.class);
     }
 }

@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.post.service;
 
+import static com.wooteco.sokdak.member.domain.RoleType.USER;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -117,7 +118,7 @@ class PostServiceTest {
     void findPost_Session_OtherPost() {
         Long savedPostId = postRepository.save(post).getId();
 
-        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(2L));
+        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(2L, USER.getName(),  "nickname"));
 
         assertAll(
                 () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
@@ -133,7 +134,7 @@ class PostServiceTest {
     void findPost_NoSession() {
         Long savedPostId = postRepository.save(post).getId();
 
-        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(null));
+        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(null, USER.getName(), "nickname"));
 
         assertAll(
                 () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
@@ -157,9 +158,9 @@ class PostServiceTest {
     @Test
     void findPosts() {
         Board board = boardRepository.save(new Board("테스트 게시판1", true));
-        postService.addPost(board.getId(), new NewPostRequest("제목1", "본문1", new ArrayList<>()), new AuthInfo(1L));
-        postService.addPost(board.getId(), new NewPostRequest("제목2", "본문2", new ArrayList<>()), new AuthInfo(1L));
-        postService.addPost(board.getId(), new NewPostRequest("제목3", "본문3", new ArrayList<>()), new AuthInfo(1L));
+        postService.addPost(board.getId(), new NewPostRequest("제목1", "본문1", new ArrayList<>()), new AuthInfo(1L, USER.getName(), "nickname"));
+        postService.addPost(board.getId(), new NewPostRequest("제목2", "본문2", new ArrayList<>()), new AuthInfo(1L, USER.getName(), "nickname"));
+        postService.addPost(board.getId(), new NewPostRequest("제목3", "본문3", new ArrayList<>()), new AuthInfo(1L, USER.getName(), "nickname"));
 
         Pageable pageable = PageRequest.of(0, 2, DESC, "createdAt");
         PostsResponse postsResponse = postService.findPostsByBoard(board.getId(), pageable);

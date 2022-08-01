@@ -28,9 +28,8 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         String token = AuthorizationExtractor.extract(Objects.requireNonNull(request));
         if (token == null) {
-            return new AuthInfo(null);
+            return new AuthInfo(null, null, null);
         }
-        Long payLoad = Long.parseLong(tokenManager.getPayload(token));
-        return new AuthInfo(payLoad);
+        return tokenManager.getParsedClaims(token);
     }
 }

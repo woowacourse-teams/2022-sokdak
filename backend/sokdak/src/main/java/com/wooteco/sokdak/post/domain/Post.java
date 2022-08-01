@@ -6,6 +6,7 @@ import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.hashtag.domain.PostHashtag;
 import com.wooteco.sokdak.like.domain.Like;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.report.domain.PostReport;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class Post {
+
+    private static final int BLOCKED_CONDITION = 5;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,6 +60,9 @@ public class Post {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<PostBoard> postBoards = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<PostReport> postReports = new ArrayList<>();
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -105,6 +111,10 @@ public class Post {
         return member.getId().equals(accessMemberId);
     }
 
+    public boolean isBlocked() {
+        return postReports.size() >= BLOCKED_CONDITION;
+    }
+
     public Long getId() {
         return id;
     }
@@ -149,5 +159,9 @@ public class Post {
 
     public List<PostBoard> getPostBoards() {
         return postBoards;
+    }
+
+    public List<PostReport> getPostReports() {
+        return postReports;
     }
 }

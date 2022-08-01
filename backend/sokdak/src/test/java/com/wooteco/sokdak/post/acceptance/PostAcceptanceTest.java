@@ -17,11 +17,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.auth.dto.LoginRequest;
+import com.wooteco.sokdak.member.dto.SignupRequest;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
+import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -78,6 +80,26 @@ class PostAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("게시글 목록 중 누적 신고가 5개 이상인 게시글은 blocked 왼다.")
+    @Test
+    void findPosts_Blocked() {
+        String token = getToken();
+        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", Collections.emptyList());
+        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, token);
+        Long blockedPostId = Long.parseLong(
+                parsePostId(httpPostWithAuthorization(postRequest2, CREATE_POST_URI, token)));
+        reportPostToBlockPost(blockedPostId);
+
+        ExtractableResponse<Response> response = httpGet("/boards/1/posts?size=2&page=0");
+        List<PostsElementResponse> postsElementResponses = parsePostsElementResponse(response);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(postsElementResponses.get(0).isBlocked()).isTrue(),
+                () -> assertThat(postsElementResponses.get(1).isBlocked()).isFalse()
+        );
+    }
+
     @DisplayName("특정 게시판에 글을 쓰고 그 게시판에서 글 조회가 가능하다.")
     @Test
     void findPostsInBoard() {
@@ -122,6 +144,22 @@ class PostAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(postDetailResponse.getTitle()).isEqualTo(NEW_POST_REQUEST.getTitle()),
                 () -> assertThat(postDetailResponse.getContent()).isEqualTo(NEW_POST_REQUEST.getContent())
+        );
+    }
+
+    @DisplayName("누적신고가 5개 이상인 글은 blocked 된다.")
+    @Test
+    void findPost_Blocked() {
+        Long postId = Long.parseLong(
+                parsePostId(httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getToken())));
+        reportPostToBlockPost(postId);
+
+        ExtractableResponse<Response> response = httpGet("/posts/" + postId);
+        PostDetailResponse postDetailResponse = response.jsonPath().getObject(".", PostDetailResponse.class);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(postDetailResponse.isBlocked()).isTrue()
         );
     }
 
@@ -203,5 +241,25 @@ class PostAcceptanceTest extends AcceptanceTest {
                 .stream()
                 .map(PostsElementResponse::getTitle)
                 .collect(Collectors.toList());
+    }
+
+    private List<PostsElementResponse> parsePostsElementResponse(ExtractableResponse<Response> response) {
+        return response.jsonPath()
+                .getObject(".", PostsResponse.class)
+                .getPosts();
+    }
+
+    private void reportPostToBlockPost(Long postId) {
+        String token1 = getToken();
+        String token2 = httpPost(new LoginRequest("josh", "Abcd123!@"), "/login").header(AUTHORIZATION);
+        String token3 = httpPost(new LoginRequest("thor", "Abcd123!@"), "/login").header(AUTHORIZATION);
+        String token4 = httpPost(new LoginRequest("hunch", "Abcd123!@"), "/login").header(AUTHORIZATION);
+        String token5 = httpPost(new LoginRequest("east", "Abcd123!@"), "/login").header(AUTHORIZATION);
+        List<String> tokens = List.of(token1, token2, token3, token4, token5);
+
+        for (int i = 0; i < 5; ++i) {
+            ReportRequest reportRequest = new ReportRequest("글신고");
+            httpPostWithAuthorization(reportRequest, "/posts/" + postId + "/report", tokens.get(i));
+        }
     }
 }

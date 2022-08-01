@@ -21,12 +21,13 @@ public class PostDetailResponse {
     private final boolean like;
     private final boolean authorized;
     private final boolean modified;
+    private final boolean blocked;
 
     @Builder
     private PostDetailResponse(Long id, String title, String content, List<HashtagResponse> hashtagResponses,
                                LocalDateTime createdAt, int likeCount,
                                boolean like,
-                               boolean authorized, boolean modified) {
+                               boolean authorized, boolean modified, boolean blocked) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -36,6 +37,7 @@ public class PostDetailResponse {
         this.like = like;
         this.authorized = authorized;
         this.modified = modified;
+        this.blocked = blocked;
     }
 
 
@@ -50,6 +52,7 @@ public class PostDetailResponse {
                 .authorized(authorized)
                 .hashtagResponses(toResponse(hashtags))
                 .modified(post.isModified())
+                .blocked(post.isBlocked())
                 .build();
     }
 

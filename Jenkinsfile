@@ -10,13 +10,24 @@ pipeline{
         git branch: 'feature/CICD',
           credentialsId: 'sokdak_hook',
           url: 'https://github.com/woowacourse-teams/2022-sokdak'
+
+        dir('frontend'){
+          sh 'npm i'
+        }
+      }
+    }
+
+    stage('Test'){
+      steps{
+        dir('frontend'){
+          sh 'npm run test'
+        }
       }
     }
 
     stage('Build'){
       steps{
         dir('frontend'){
-          sh 'npm i'
           sh 'npm run build-dev'
         }
       }

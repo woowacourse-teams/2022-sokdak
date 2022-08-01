@@ -12,7 +12,7 @@ pipeline{
           url: 'https://github.com/woowacourse-teams/2022-sokdak'
 
         dir('frontend'){
-          sh 'npm i'
+          sh 'sudo npm install --unsafe-perm=true --allow-root'
         }
       }
     }

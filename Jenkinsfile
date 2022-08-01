@@ -4,7 +4,6 @@ pipeline{
       gradle 'gradle'
   }
   stages{
-
     stage('Ready'){
       steps{
         sh "echo 'Ready'"

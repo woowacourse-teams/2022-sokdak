@@ -21,7 +21,6 @@ class AuthControllerTest extends ControllerTest {
     @DisplayName("올바른 회원정보로 로그인하면 200 반환")
     @Test
     void login() {
-//        AuthInfo authInfo = new AuthInfo(1L);
         given(authService.login(any(LoginRequest.class)))
                 .willReturn(MemberFixture.AUTH_INFO);
 

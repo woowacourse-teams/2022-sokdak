@@ -9,6 +9,8 @@ import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.auth.exception.LoginFailedException;
 import com.wooteco.sokdak.util.ControllerTest;
+import com.wooteco.sokdak.util.fixture.MemberFixture;
+import com.wooteco.sokdak.util.fixture.PostFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -19,9 +21,9 @@ class AuthControllerTest extends ControllerTest {
     @DisplayName("올바른 회원정보로 로그인하면 200 반환")
     @Test
     void login() {
-        AuthInfo authInfo = new AuthInfo(1L);
+//        AuthInfo authInfo = new AuthInfo(1L);
         given(authService.login(any(LoginRequest.class)))
-                .willReturn(authInfo);
+                .willReturn(MemberFixture.AUTH_INFO);
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

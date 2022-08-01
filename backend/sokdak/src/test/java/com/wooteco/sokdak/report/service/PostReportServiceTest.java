@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.report.service;
 
+import static com.wooteco.sokdak.member.domain.RoleType.USER;
 import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
@@ -11,6 +12,7 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TE
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
@@ -75,7 +77,7 @@ class PostReportServiceTest {
         ReportRequest reportRequest = new ReportRequest("나쁜글");
         int reportCountBeforeReport = postReportRepository.countByPostId(post.getId());
 
-        postReportService.reportPost(post.getId(), reportRequest, new AuthInfo(member.getId()));
+        postReportService.reportPost(post.getId(), reportRequest, new AuthInfo(member.getId(), USER.getName(), "nickname"));
         int reportCountAfterReport = postReportRepository.countByPostId(post.getId());
 
         assertThat(reportCountBeforeReport + 1).isEqualTo(reportCountAfterReport);
@@ -85,10 +87,10 @@ class PostReportServiceTest {
     @Test
     void reportPost_Exception_Already_Report() {
         ReportRequest reportRequest = new ReportRequest("나쁜글");
-        postReportService.reportPost(post.getId(), reportRequest, new AuthInfo(member.getId()));
+        postReportService.reportPost(post.getId(), reportRequest, new AuthInfo(member.getId(), USER.getName(), "nickname"));
 
         assertThatThrownBy(
-                () -> postReportService.reportPost(post.getId(), reportRequest, new AuthInfo(member.getId())))
+                () -> postReportService.reportPost(post.getId(), reportRequest, new AuthInfo(member.getId(), USER.getName(), "nickname")))
                 .isInstanceOf(AlreadyReportPostException.class);
     }
 
@@ -98,7 +100,7 @@ class PostReportServiceTest {
         ReportRequest reportRequest = new ReportRequest("  ");
 
         assertThatThrownBy(
-                () -> postReportService.reportPost(post.getId(), reportRequest, new AuthInfo(member.getId())))
+                () -> postReportService.reportPost(post.getId(), reportRequest, new AuthInfo(member.getId(), USER.getName(), "nickname")))
                 .isInstanceOf(InvalidReportMessageException.class);
     }
 }

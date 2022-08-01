@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.report.service;
 
+import static com.wooteco.sokdak.member.domain.RoleType.USER;
 import static com.wooteco.sokdak.post.util.CommentFixture.VALID_COMMENT_MESSAGE;
 import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_TITLE;
@@ -14,6 +15,7 @@ import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
@@ -90,7 +92,7 @@ class CommentReportServiceTest {
         ReportRequest reportRequest = new ReportRequest("나쁜댓글");
         int commentCountBeforeReport = commentReportRepository.countByCommentId(comment.getId());
 
-        commentReportService.reportComment(comment.getId(), reportRequest, new AuthInfo(member.getId()));
+        commentReportService.reportComment(comment.getId(), reportRequest, new AuthInfo(member.getId(), USER.getName(), "nickname"));
         int commentCountAfterReport = commentReportRepository.countByCommentId(comment.getId());
 
         assertThat(commentCountBeforeReport + 1).isEqualTo(commentCountAfterReport);
@@ -100,10 +102,10 @@ class CommentReportServiceTest {
     @Test
     void reportComment_Exception_Already_Report() {
         ReportRequest reportRequest = new ReportRequest("나쁜댓글");
-        commentReportService.reportComment(comment.getId(), reportRequest, new AuthInfo(member.getId()));
+        commentReportService.reportComment(comment.getId(), reportRequest, new AuthInfo(member.getId(), USER.getName(), "nickname"));
 
         assertThatThrownBy(
-                () -> commentReportService.reportComment(comment.getId(), reportRequest, new AuthInfo(member.getId())))
+                () -> commentReportService.reportComment(comment.getId(), reportRequest, new AuthInfo(member.getId(), USER.getName(), "nickname")))
                 .isInstanceOf(AlreadyReportCommentException.class);
     }
 
@@ -113,7 +115,7 @@ class CommentReportServiceTest {
         ReportRequest reportRequest = new ReportRequest("  ");
 
         assertThatThrownBy(
-                () -> commentReportService.reportComment(comment.getId(), reportRequest, new AuthInfo(member.getId())))
+                () -> commentReportService.reportComment(comment.getId(), reportRequest, new AuthInfo(member.getId(), USER.getName(), "nickname")))
                 .isInstanceOf(InvalidReportMessageException.class);
     }
 }

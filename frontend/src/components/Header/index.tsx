@@ -14,7 +14,7 @@ const Header = () => {
     <Styled.Container>
       <Styled.LeftSide to={PATH.HOME}>
         <Logo width={35} height={35} />
-        <Styled.Title>속닥속닥</Styled.Title>
+        <Styled.Title>속닥</Styled.Title>
       </Styled.LeftSide>
       <Styled.RightSide>
         {isLogin ? (

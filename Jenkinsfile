@@ -44,3 +44,4 @@ pipeline{
         slackSend (channel: ‘jenkins’, color: ‘#FF0000’, message: “FAILED_FE: Job ‘${env.JOB_NAME} [${env.BUILD_NUMBER}]’ (${env.BUILD_URL})“)
     }
   }
+}

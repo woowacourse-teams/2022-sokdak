@@ -43,6 +43,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class PostServiceTest {
 
+    public static final long WRITABLE_BOARD_ID = 2L;
+
     @Autowired
     private PostService postService;
 
@@ -81,7 +83,7 @@ class PostServiceTest {
     void addPost() {
         NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", Collections.emptyList());
 
-        Long postId = postService.addPost(1L, newPostRequest, AUTH_INFO);
+        Long postId = postService.addPost(WRITABLE_BOARD_ID, newPostRequest, AUTH_INFO);
         Post actual = postRepository.findById(postId).orElseThrow();
 
         assertAll(
@@ -154,7 +156,7 @@ class PostServiceTest {
     @DisplayName("특정 게시판 게시글 목록 조회 기능")
     @Test
     void findPosts() {
-        Board board = boardRepository.save(new Board("테스트 게시판1"));
+        Board board = boardRepository.save(new Board("테스트 게시판1", true));
         postService.addPost(board.getId(), new NewPostRequest("제목1", "본문1", new ArrayList<>()), new AuthInfo(1L));
         postService.addPost(board.getId(), new NewPostRequest("제목2", "본문2", new ArrayList<>()), new AuthInfo(1L));
         postService.addPost(board.getId(), new NewPostRequest("제목3", "본문3", new ArrayList<>()), new AuthInfo(1L));

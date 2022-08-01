@@ -10,6 +10,7 @@ import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.PostFixture.CANNOT_CREATE_POST_URI;
 import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -36,11 +37,13 @@ class PostAcceptanceTest extends AcceptanceTest {
 
     private static final NewPostRequest NEW_POST_REQUEST = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT,
             Collections.emptyList());
+    public static final long WRITABLE_BOARD_ID = 2L;
 
     @DisplayName("새로운 게시글을 작성할 수 있다.")
     @Test
     void addPost() {
-        ExtractableResponse<Response> response = httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getToken());
+        ExtractableResponse<Response> response = httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI,
+                getToken());
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value()),
@@ -66,7 +69,7 @@ class PostAcceptanceTest extends AcceptanceTest {
         httpPostWithAuthorization(postRequest2, CREATE_POST_URI, token);
         httpPostWithAuthorization(postRequest3, CREATE_POST_URI, token);
 
-        ExtractableResponse<Response> response = httpGet("/boards/1/posts?size=2&page=0");
+        ExtractableResponse<Response> response = httpGet("/boards/" + WRITABLE_BOARD_ID + "/posts?size=2&page=0");
         List<String> postNames = parsePostTitles(response);
 
         assertAll(
@@ -84,15 +87,26 @@ class PostAcceptanceTest extends AcceptanceTest {
         NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", Collections.emptyList());
         httpPostWithAuthorization(postRequest1, CREATE_POST_URI, token);
         httpPostWithAuthorization(postRequest2, CREATE_POST_URI, token);
-        httpPostWithAuthorization(postRequest3, "/boards/2/posts", token);
+        httpPostWithAuthorization(postRequest3, "/boards/3/posts", token);
 
-        ExtractableResponse<Response> response = httpGet("/boards/2/posts?size=2&page=0");
+        ExtractableResponse<Response> response = httpGet("/boards/3/posts?size=2&page=0");
         List<String> postNames = parsePostTitles(response);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(postNames).isEqualTo(List.of("제목3"))
         );
+    }
+
+    @DisplayName("회원이 글을 작성하지 못하는 게시판에 글을 쓰면 예외를 반환한다.")
+    @Test
+    void findPostsInBoard_Exception() {
+        String token = getToken();
+        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", Collections.emptyList());
+        ExtractableResponse<Response> response = httpPostWithAuthorization(postRequest1, CANNOT_CREATE_POST_URI,
+                token);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("특정 게시글 조회할 수 있다.")

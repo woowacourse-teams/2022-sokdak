@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.hashtag.dto;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import lombok.Getter;
 
@@ -11,7 +10,8 @@ public class HashtagsSearchRequest {
     @Positive
     private int limit;
 
-    protected HashtagsSearchRequest() {}
+    protected HashtagsSearchRequest() {
+    }
 
     public HashtagsSearchRequest(String include, int limit) {
         this.include = include;

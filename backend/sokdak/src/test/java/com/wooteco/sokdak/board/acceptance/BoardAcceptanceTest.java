@@ -58,21 +58,20 @@ public class BoardAcceptanceTest extends AcceptanceTest {
         NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", Collections.emptyList());
         NewPostRequest postRequest4 = new NewPostRequest("제목4", "본문4", Collections.emptyList());
 
-        httpPostWithAuthorization(postRequest1, "/boards/" + 1 + "/posts", token);
-        httpPostWithAuthorization(postRequest2, "/boards/" + 1 + "/posts", token);
-        httpPostWithAuthorization(postRequest3, "/boards/" + 1 + "/posts", token);
-        httpPostWithAuthorization(postRequest4, "/boards/" + 2 + "/posts", token);
+        httpPostWithAuthorization(postRequest1, "/boards/" + 2 + "/posts", token);
+        httpPostWithAuthorization(postRequest2, "/boards/" + 2 + "/posts", token);
+        httpPostWithAuthorization(postRequest3, "/boards/" + 2 + "/posts", token);
+        httpPostWithAuthorization(postRequest4, "/boards/" + 3 + "/posts", token);
 
         // when
         ExtractableResponse<Response> response = httpGet("/boards/content");
 
         // then
         List<BoardContentElement> boardsAll = getBoardContentElements(response);
-        BoardContentElement board1 = getBoardContentElements(response).get(0);
-        BoardContentElement board2 = getBoardContentElements(response).get(1);
+        BoardContentElement board1 = getBoardContentElements(response).get(1);
+        BoardContentElement board2 = getBoardContentElements(response).get(2);
         List<BoardContentPostElement> posts1 = board1.getPosts();
         List<BoardContentPostElement> posts2 = board2.getPosts();
-
 
         assertAll(
                 () -> assertThat(boardsAll)

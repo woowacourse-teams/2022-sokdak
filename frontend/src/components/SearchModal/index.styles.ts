@@ -2,7 +2,17 @@ import HashTagComponent from '@/components/HashTag';
 
 import Search from '@/assets/images/search.svg';
 
+import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
+
+const appear = keyframes`
+  0% {
+    opacity: 0;
+  } 
+  100% {
+    opacity: 1;
+  }
+`;
 
 export const Container = styled.div`
   width: 380px;
@@ -25,6 +35,7 @@ export const Header = styled.div`
   display: flex;
   align-items: center;
   box-sizing: border-box;
+  animation: ${appear} 0.2s;
 `;
 
 export const InputContainer = styled.div`
@@ -34,6 +45,7 @@ export const InputContainer = styled.div`
   border-radius: 5px;
   display: flex;
   align-items: center;
+  box-sizing: border-box;
 `;
 
 export const SearchIcon = styled(Search)`
@@ -43,9 +55,10 @@ export const SearchIcon = styled(Search)`
 export const Input = styled.input`
   height: 90%;
   width: 80%;
+  padding: 0;
 
   ::placeholder {
-    font-size: 10px;
+    font-size: 12px;
   }
 `;
 
@@ -54,7 +67,7 @@ export const CloseButton = styled.button`
   height: 40px;
   background-color: transparent;
   color: ${props => props.theme.colors.gray_200};
-  font-size: 10px;
+  font-size: 12px;
 `;
 
 export const Content = styled.div`
@@ -78,8 +91,9 @@ export const HashTagContainer = styled.div`
   height: fit-content;
   row-gap: 7px;
   justify-content: center;
+  animation: ${appear} 0.2s;
 `;
 
 export const HashTag = styled(HashTagComponent)`
-  font-size: 10px;
+  font-size: 12px;
 `;

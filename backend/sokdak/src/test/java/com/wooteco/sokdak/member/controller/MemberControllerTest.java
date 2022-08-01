@@ -87,7 +87,7 @@ class MemberControllerTest extends ControllerTest {
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-    @DisplayName("인증코드가 일치하지 않으면 400 반환")
+    @DisplayName("인증코드가 일치하지 않거나 만료되었으면 400 반환")
     @Test
     void verifyAuthCode_Exception_different() {
         VerificationRequest verificationRequest = new VerificationRequest("test@gmail.com", "a1b2c3");
@@ -102,7 +102,7 @@ class MemberControllerTest extends ControllerTest {
                 .then().log().all()
                 .assertThat()
                 .body("message", equalTo("잘못된 인증번호입니다."))
-                .apply(document("member/email/success"))
+                .apply(document("member/email/fail"))
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 

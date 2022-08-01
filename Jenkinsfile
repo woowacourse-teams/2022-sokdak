@@ -20,7 +20,7 @@ pipeline{
     stage('Test'){
       steps{
         dir('frontend'){
-          sh 'npm run test'
+          sh 'sudo npm run test'
         }
       }
     }

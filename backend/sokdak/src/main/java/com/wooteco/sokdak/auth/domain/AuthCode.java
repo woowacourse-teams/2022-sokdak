@@ -49,9 +49,9 @@ public class AuthCode {
         }
     }
 
-    public void verifyTime(LocalDateTime time) {
+    public void verifyTime(LocalDateTime now) {
         LocalDateTime expireTime = this.createdAt.plusMinutes(VALID_MINUIT);
-        if (time.isAfter(expireTime)) {
+        if (now.isAfter(expireTime)) {
             throw new InvalidAuthCodeException();
         }
     }

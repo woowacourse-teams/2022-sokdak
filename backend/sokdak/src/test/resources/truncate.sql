@@ -22,8 +22,8 @@ insert into ticket (serial_number, used) values ('774dd927c9c846f2bb21b02fd139d2
 insert into ticket (serial_number, used) values ('ce89c8413662dffc17a4644ddf0386432404cd943b18eeee45740be5c35ef03b', false);
 insert into ticket (serial_number, used) values ('49d3b5b2d51e0f03cd1c0b85e2312dbd740023856ce16a725a3617f58b91da1c', false);
 
-insert into board (title) values ('Hot 게시판');
-insert into board (title) values ('자유게시판');
-insert into board (title) values ('포수타');
-insert into board (title) values ('감동크루');
+insert into board (title, user_writable) values ('Hot 게시판', false);
+insert into board (title, user_writable) values ('자유게시판', true);
+insert into board (title, user_writable) values ('포수타', true);
+insert into board (title, user_writable) values ('감동크루', true);
 

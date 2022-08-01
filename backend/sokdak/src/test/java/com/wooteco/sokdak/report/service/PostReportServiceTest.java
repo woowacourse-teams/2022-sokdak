@@ -1,7 +1,10 @@
 package com.wooteco.sokdak.report.service;
 
-import static com.wooteco.sokdak.post.util.PostFixture.*;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.*;
+import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_CONTENT;
+import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_TITLE;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
@@ -84,7 +87,8 @@ class PostReportServiceTest {
         ReportRequest reportRequest = new ReportRequest("나쁜글");
         postReportService.reportPost(post.getId(), reportRequest, new AuthInfo(member.getId()));
 
-        assertThatThrownBy(() -> postReportService.reportPost(post.getId(), reportRequest, new AuthInfo(member.getId())))
+        assertThatThrownBy(
+                () -> postReportService.reportPost(post.getId(), reportRequest, new AuthInfo(member.getId())))
                 .isInstanceOf(AlreadyReportPostException.class);
     }
 
@@ -93,7 +97,8 @@ class PostReportServiceTest {
     void reportPost_Exception_No_Content() {
         ReportRequest reportRequest = new ReportRequest("  ");
 
-        assertThatThrownBy(() -> postReportService.reportPost(post.getId(), reportRequest, new AuthInfo(member.getId())))
+        assertThatThrownBy(
+                () -> postReportService.reportPost(post.getId(), reportRequest, new AuthInfo(member.getId())))
                 .isInstanceOf(InvalidReportMessageException.class);
     }
 }

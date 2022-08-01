@@ -24,6 +24,9 @@ import org.springframework.http.HttpStatus;
 @DisplayName("게시글 관련 인수테스트")
 public class BoardAcceptanceTest extends AcceptanceTest {
 
+    public static final int WRITABLE_BOARD_FIRST_INDEX = 1;
+    public static final int WTIABLE_BOARD_SECOND_INDEX = 2;
+
     @DisplayName("게시판을 생성할 수 있다.")
     @Test
     void createBoard() {
@@ -58,21 +61,20 @@ public class BoardAcceptanceTest extends AcceptanceTest {
         NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", Collections.emptyList());
         NewPostRequest postRequest4 = new NewPostRequest("제목4", "본문4", Collections.emptyList());
 
-        httpPostWithAuthorization(postRequest1, "/boards/" + 1 + "/posts", token);
-        httpPostWithAuthorization(postRequest2, "/boards/" + 1 + "/posts", token);
-        httpPostWithAuthorization(postRequest3, "/boards/" + 1 + "/posts", token);
-        httpPostWithAuthorization(postRequest4, "/boards/" + 2 + "/posts", token);
+        httpPostWithAuthorization(postRequest1, "/boards/" + 2 + "/posts", token);
+        httpPostWithAuthorization(postRequest2, "/boards/" + 2 + "/posts", token);
+        httpPostWithAuthorization(postRequest3, "/boards/" + 2 + "/posts", token);
+        httpPostWithAuthorization(postRequest4, "/boards/" + 3 + "/posts", token);
 
         // when
         ExtractableResponse<Response> response = httpGet("/boards/content");
 
         // then
         List<BoardContentElement> boardsAll = getBoardContentElements(response);
-        BoardContentElement board1 = getBoardContentElements(response).get(0);
-        BoardContentElement board2 = getBoardContentElements(response).get(1);
+        BoardContentElement board1 = getBoardContentElements(response).get(WRITABLE_BOARD_FIRST_INDEX);
+        BoardContentElement board2 = getBoardContentElements(response).get(WTIABLE_BOARD_SECOND_INDEX);
         List<BoardContentPostElement> posts1 = board1.getPosts();
         List<BoardContentPostElement> posts2 = board2.getPosts();
-
 
         assertAll(
                 () -> assertThat(boardsAll)

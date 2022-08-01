@@ -40,7 +40,8 @@ public class PostReport {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    protected PostReport() {}
+    protected PostReport() {
+    }
 
     @Builder
     private PostReport(Post post, Member reporter, String reportMessage) {

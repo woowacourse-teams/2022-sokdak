@@ -2,7 +2,6 @@ package com.wooteco.sokdak.report.domain;
 
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.member.domain.Member;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -41,7 +40,8 @@ public class CommentReport {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    protected CommentReport() {}
+    protected CommentReport() {
+    }
 
     @Builder
     public CommentReport(Comment comment, Member reporter, String reportMessage) {

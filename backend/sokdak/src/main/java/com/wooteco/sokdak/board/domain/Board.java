@@ -28,6 +28,8 @@ public class Board {
     @OneToMany(mappedBy = "board")
     private List<PostBoard> postBoards = new ArrayList<>();
 
+    private boolean userWritable = true;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
@@ -35,7 +37,8 @@ public class Board {
     }
 
     @Builder
-    public Board(String name) {
+    public Board(String name, boolean userWritable) {
         this.title = name;
+        this.userWritable = userWritable;
     }
 }

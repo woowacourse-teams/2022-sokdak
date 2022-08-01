@@ -79,7 +79,7 @@ class BoardServiceTest {
                         BOARD_REQUEST_4.getName());
     }
 
-    @DisplayName("게시글과 작성 가능 게시판을 연결한다.")
+    @DisplayName("작성 가능 게시판에서 허용된 사용자가 게시글을 쓸 수 있다.")
     @Test
     void savePostBoard() {
         Member member = memberRepository.findById(1L).get();
@@ -106,7 +106,7 @@ class BoardServiceTest {
         );
     }
 
-    @DisplayName("게시글과 작성 불가능 게시판을 연결한다.")
+    @DisplayName("작성 불가능 게시판에서 허용되지 않은 사용자가 게시글을 쓰면 예외가 발생한다.")
     @Test
     void savePostBoard_Exception() {
         Member member = memberRepository.findById(1L).get();

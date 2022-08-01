@@ -24,6 +24,9 @@ import org.springframework.http.HttpStatus;
 @DisplayName("게시글 관련 인수테스트")
 public class BoardAcceptanceTest extends AcceptanceTest {
 
+    public static final int WRITABLE_BOARD_FIRST_INDEX = 1;
+    public static final int WTIABLE_BOARD_SECOND_INDEX = 2;
+
     @DisplayName("게시판을 생성할 수 있다.")
     @Test
     void createBoard() {
@@ -68,8 +71,8 @@ public class BoardAcceptanceTest extends AcceptanceTest {
 
         // then
         List<BoardContentElement> boardsAll = getBoardContentElements(response);
-        BoardContentElement board1 = getBoardContentElements(response).get(1);
-        BoardContentElement board2 = getBoardContentElements(response).get(2);
+        BoardContentElement board1 = getBoardContentElements(response).get(WRITABLE_BOARD_FIRST_INDEX);
+        BoardContentElement board2 = getBoardContentElements(response).get(WTIABLE_BOARD_SECOND_INDEX);
         List<BoardContentPostElement> posts1 = board1.getPosts();
         List<BoardContentPostElement> posts2 = board2.getPosts();
 

@@ -6,7 +6,7 @@
   "scripts": {
     "start:MSW": "eslint . && env-cmd -f ./env/.env.mocking webpack serve --open --config ./webpack/webpack.dev.js",
     "start": "eslint . && HTTPS=true SSL_CRT_FILE=./localhost.pem SSL_KEY_FILE=./localhost-key.pem env-cmd -f ./env/.env.local webpack serve --open --config ./webpack/webpack.dev.js",
-    "build-dev": "env-cmd -f /home/ubuntu/env/.env.development webpack --config ./webpack/webpack.prod.js",
+    "build-dev": "env-cmd -f /home/ubuntu/env webpack --config ./webpack/webpack.prod.js",
     "build-prod": "env-cmd -f /home/ubuntu/env/.env.production webpack --config ./webpack/webpack.prod.js",
     "test": "jest src --watch --silent",
     "storybook": "start-storybook -p 6006",

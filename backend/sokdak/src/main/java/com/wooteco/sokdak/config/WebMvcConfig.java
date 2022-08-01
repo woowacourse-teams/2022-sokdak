@@ -31,10 +31,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedOrigins("http://localhost:3000", "http://3.34.1.220", "http://sokdaksokdak.com"
                 , "http://www.sokdaksokdak.com", "https://sokdaksokdak.com", "https://www.sokdaksokdak.com")
                 .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
+                .allowedHeaders("*")
                 .allowCredentials(true)
-                .exposedHeaders(HttpHeaders.LOCATION)
-                .exposedHeaders(HttpHeaders.AUTHORIZATION)
-                .exposedHeaders("Refresh-Token");
+                .exposedHeaders(HttpHeaders.LOCATION, HttpHeaders.AUTHORIZATION, "Refresh-Token");
     }
 
     @Override

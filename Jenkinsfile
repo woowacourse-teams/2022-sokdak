@@ -6,7 +6,7 @@ pipeline{
   stages{
     stage('Ready'){
       steps{
-        sh "echo 'Ready'"
+        sh "echo 'Ready~'"
         git branch: 'feature/CICD',
           credentialsId: 'sokdak_hook',
           url: 'https://github.com/woowacourse-teams/2022-sokdak'

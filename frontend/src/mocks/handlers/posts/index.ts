@@ -12,11 +12,17 @@ const postHandlers = [
     }
 
     hashtags.forEach(hashtagName => {
-      if (hashtagList.some(hashtag => hashtag.name === hashtagName)) return;
+      const existedTag = hashtagList.find(hashtag => hashtag.name === hashtagName);
+
+      if (existedTag) {
+        existedTag.count += 1;
+        return;
+      }
 
       hashtagList.push({
         id: hashtagList.length + 1,
         name: hashtagName,
+        count: 1,
       });
     });
 
@@ -112,11 +118,17 @@ const postHandlers = [
     targetPost.content = content;
 
     hashtags.forEach(hashtagName => {
-      if (hashtagList.some(hashtag => hashtag.name === hashtagName)) return;
+      const existedTag = hashtagList.find(hashtag => hashtag.name === hashtagName);
+
+      if (existedTag) {
+        existedTag.count += 1;
+        return;
+      }
 
       hashtagList.push({
         id: hashtagList.length + 1,
         name: hashtagName,
+        count: 1,
       });
     });
 
@@ -130,19 +142,31 @@ const postHandlers = [
     const params = req.params;
     const id = Number(params.id);
 
-    const isTargetPostExist = postList.some(post => post.id === id);
+    const targetPostIndex = postList.findIndex(post => post.id === id);
+    const targetPost = postList[targetPostIndex];
 
-    if (!isTargetPostExist) {
+    if (!targetPost) {
       return res(ctx.status(400), ctx.json({ message: '해당 글이 존재하지 않습니다.' }));
     }
 
-    postList.splice(
-      postList.findIndex(post => post.id === id),
-      1,
-    );
+    targetPost.hashtags.forEach(({ id }) => {
+      const targetHashtagIndex = hashtagList.findIndex(tag => tag.id === id)!;
+      const targetHashtag = hashtagList[targetHashtagIndex];
+
+      if (targetHashtag.count <= 1) {
+        hashtagList.splice(targetHashtagIndex, 1);
+
+        return;
+      }
+
+      targetHashtag.count -= 1;
+    });
+
+    postList.splice(targetPostIndex, 1);
 
     return res(ctx.status(204));
   }),
+
   rest.get('/posts/:id/comments', (req, res, ctx) => {
     const params = req.params;
     const id = Number(params.id);

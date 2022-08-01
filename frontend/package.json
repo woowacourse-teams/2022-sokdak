@@ -8,7 +8,7 @@
     "start": "eslint . && HTTPS=true SSL_CRT_FILE=./localhost.pem SSL_KEY_FILE=./localhost-key.pem env-cmd -f ./env/.env.local webpack serve --open --config ./webpack/webpack.dev.js",
     "build-dev": "webpack --config ./webpack/webpack.prod.js",
     "build-prod": "env-cmd -f /home/ubuntu/env/.env.production webpack --config ./webpack/webpack.prod.js",
-    "test": "jest src --watch --silent",
+    "test": "jest",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "pretty": "prettier --write \"src/**/*.{ts,tsx,json}\""

@@ -20,6 +20,7 @@ pipeline{
     stage('Test'){
       steps{
         dir('frontend'){
+          sh 'chmod 777 node_modules'
           sh 'npm run test'
         }
       }

@@ -14,7 +14,6 @@ const config: Config.InitialOptions = {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
-  roots: ['<rootDir>/src/__tests__'],
 };
 
 export default config;

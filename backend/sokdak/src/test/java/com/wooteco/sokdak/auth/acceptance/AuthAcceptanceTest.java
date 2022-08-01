@@ -23,7 +23,8 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.header(AUTHORIZATION)).contains("Bearer")
+                () -> assertThat(response.header(AUTHORIZATION)).contains("Bearer"),
+                () -> assertThat(response.header("Refresh-Token")).contains("Bearer")
         );
     }
 

@@ -3,7 +3,6 @@ package com.wooteco.sokdak.report.controller;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.report.service.CommentReportService;
-import com.wooteco.sokdak.report.service.PostReportService;
 import com.wooteco.sokdak.support.token.Login;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

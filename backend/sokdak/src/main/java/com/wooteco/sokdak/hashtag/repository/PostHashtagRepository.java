@@ -2,7 +2,6 @@ package com.wooteco.sokdak.hashtag.repository;
 
 import com.wooteco.sokdak.hashtag.domain.Hashtag;
 import com.wooteco.sokdak.hashtag.domain.PostHashtag;
-import com.wooteco.sokdak.hashtag.dto.HashtagSearchElementResponse;
 import com.wooteco.sokdak.post.domain.Post;
 import java.util.List;
 import javax.persistence.Tuple;

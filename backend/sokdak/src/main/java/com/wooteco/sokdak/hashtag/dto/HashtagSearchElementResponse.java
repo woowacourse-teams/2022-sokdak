@@ -12,7 +12,8 @@ public class HashtagSearchElementResponse {
     private String name;
     private Long count;
 
-    protected HashtagSearchElementResponse() {}
+    protected HashtagSearchElementResponse() {
+    }
 
     public HashtagSearchElementResponse(Long id, String name, Long count) {
         this.id = id;

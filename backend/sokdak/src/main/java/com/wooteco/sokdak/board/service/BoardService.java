@@ -9,6 +9,7 @@ import com.wooteco.sokdak.board.dto.BoardsResponse;
 import com.wooteco.sokdak.board.dto.NewBoardRequest;
 import com.wooteco.sokdak.board.dto.NewBoardResponse;
 import com.wooteco.sokdak.board.exception.BoardNotFoundException;
+import com.wooteco.sokdak.board.exception.BoardNotWritableException;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.post.domain.Post;
@@ -59,12 +60,20 @@ public class BoardService {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(BoardNotFoundException::new);
 
+        validateUserWritableBoard(board);
+
         PostBoard postBoard = PostBoard.builder()
                 .build();
 
         postBoard.addPost(savedPost);
         postBoard.addBoard(board);
         postBoardRepository.save(postBoard);
+    }
+
+    private void validateUserWritableBoard(Board board) {
+        if (!board.isUserWritable()) {
+            throw new BoardNotWritableException();
+        }
     }
 
     public BoardContentResponse findBoardsContent() {
@@ -74,7 +83,7 @@ public class BoardService {
         PageRequest page = PageRequest.of(0, PAGE_SIZE, Sort.by("createdAt").descending());
 
         for (Board board : boards) {
-            List<PostsElementResponse> postsElementResponses = findPostsByBoard(board.getId(),page).getPosts();
+            List<PostsElementResponse> postsElementResponses = findPostsByBoard(board.getId(), page).getPosts();
             BoardContentElement boardContentElement = BoardContentElement.from(board, postsElementResponses);
             boardContentElements.add(boardContentElement);
         }

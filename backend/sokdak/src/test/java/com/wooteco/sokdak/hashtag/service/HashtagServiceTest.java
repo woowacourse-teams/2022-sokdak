@@ -46,6 +46,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class HashtagServiceTest {
 
+    public static final long WRITABLE_BOARD_ID = 2L;
     @Autowired
     private PostService postService;
     @Autowired
@@ -101,7 +102,7 @@ class HashtagServiceTest {
     void addPostWithHashtag() {
         NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", List.of("태그1", "태그2"));
 
-        Long postId = postService.addPost(1L, newPostRequest, AUTH_INFO);
+        Long postId = postService.addPost(WRITABLE_BOARD_ID, newPostRequest, AUTH_INFO);
 
         final List<String> hashtags = postHashtagRepository.findAllByPostId(postId)
                 .stream()
@@ -246,6 +247,6 @@ class HashtagServiceTest {
     private Long savePostWithHashtags(Post post, List<Hashtag> tags) {
         NewPostRequest newPostRequest = new NewPostRequest(
                 post.getTitle(), post.getContent(), new Hashtags(tags).getNames());
-        return postService.addPost(1L, newPostRequest, AUTH_INFO);
+        return postService.addPost(WRITABLE_BOARD_ID, newPostRequest, AUTH_INFO);
     }
 }

@@ -36,9 +36,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "http://dev.sokdaksokdak.com",
                         "https://dev.sokdaksokdak.com")
                 .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
+                .allowedHeaders("*")
                 .allowCredentials(true)
-                .exposedHeaders(HttpHeaders.LOCATION)
-                .exposedHeaders(HttpHeaders.AUTHORIZATION);
+                .exposedHeaders(HttpHeaders.LOCATION, HttpHeaders.AUTHORIZATION, "Refresh-Token");
     }
 
     @Override
@@ -46,6 +46,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/login")
+                .excludePathPatterns("/refresh")
                 .excludePathPatterns("/members/signup/**")
                 .excludePathPatterns("/hashtags/**");
     }

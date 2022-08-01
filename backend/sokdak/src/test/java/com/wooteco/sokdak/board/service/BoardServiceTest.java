@@ -7,7 +7,6 @@ import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_4;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 import com.wooteco.sokdak.board.domain.Board;
@@ -15,6 +14,7 @@ import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.board.dto.BoardsResponse;
 import com.wooteco.sokdak.board.dto.NewBoardResponse;
 import com.wooteco.sokdak.board.exception.BoardNotFoundException;
+import com.wooteco.sokdak.board.exception.BoardNotWritableException;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.member.domain.Member;
@@ -79,7 +79,7 @@ class BoardServiceTest {
                         BOARD_REQUEST_4.getName());
     }
 
-    @DisplayName("게시글과 게시판을 연결한다.")
+    @DisplayName("작성 가능 게시판에서 허용된 사용자가 게시글을 쓸 수 있다.")
     @Test
     void savePostBoard() {
         Member member = memberRepository.findById(1L).get();
@@ -92,6 +92,7 @@ class BoardServiceTest {
         postRepository.save(post);
         Board board = Board.builder()
                 .name("Hot 게시판")
+                .userWritable(true)
                 .build();
         Board savedBoard = boardRepository.save(board);
 
@@ -103,6 +104,27 @@ class BoardServiceTest {
                 () -> assertThat(postBoard.get().getBoard().getTitle()).isEqualTo("Hot 게시판"),
                 () -> assertThat(postBoard.get().getPost().getTitle()).isEqualTo("제목")
         );
+    }
+
+    @DisplayName("작성 불가능 게시판에서 허용되지 않은 사용자가 게시글을 쓰면 예외가 발생한다.")
+    @Test
+    void savePostBoard_Exception() {
+        Member member = memberRepository.findById(1L).get();
+        post = Post.builder()
+                .title("제목")
+                .content("본문")
+                .member(member)
+                .likes(new ArrayList<>())
+                .build();
+        postRepository.save(post);
+        Board board = Board.builder()
+                .name("Hot 게시판")
+                .userWritable(false)
+                .build();
+        Board savedBoard = boardRepository.save(board);
+
+        assertThatThrownBy(() -> boardService.savePostBoard(post, savedBoard.getId()))
+                .isInstanceOf(BoardNotWritableException.class);
     }
 
     @DisplayName("게시글을 존재하지 않는 게시판에 작성하면 예외가 발생한다.")

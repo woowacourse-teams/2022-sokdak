@@ -96,4 +96,13 @@ export const HashTagContainer = styled.div`
 
 export const HashTag = styled(HashTagComponent)`
   font-size: 12px;
+
+  :hover {
+    color: white;
+    background-color: ${props => props.theme.colors.sub};
+
+    span {
+      color: white;
+    }
+  }
 `;

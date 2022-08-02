@@ -1,12 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { InfiniteData } from 'react-query';
 
-interface UseInfiniteScrollProps {
-  data: InfiniteData<unknown> | undefined;
+interface UseInfiniteScrollProps<T> {
+  data: InfiniteData<T> | undefined;
   proceed: () => void;
 }
 
-const useInfiniteScroll = ({ data, proceed }: UseInfiniteScrollProps) => {
+const useInfiniteScroll = <T>({ data, proceed }: UseInfiniteScrollProps<T>) => {
   const scrollRef = useRef(null);
 
   const io = new IntersectionObserver(

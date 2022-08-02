@@ -51,7 +51,7 @@ class CommentTest {
                 .isInstanceOf(AuthenticationException.class);
     }
 
-    @DisplayName("신고가 5개 이상이면 isBlocked()가 true를 반환")
+    @DisplayName("신고가 5개 이상이면 isBlocked()가 true를 반환 그 이외는 False반환")
     @ParameterizedTest
     @CsvSource({"4, false", "5, true"})
     void isBlocked(int reportCount, boolean expected) {

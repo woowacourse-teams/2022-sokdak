@@ -17,7 +17,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 public class AuthCode {
 
-    private static final long VALID_MINUIT = 5L;
+    private static final long VALID_MINUTE = 5L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -50,7 +51,7 @@ public class AuthCode {
     }
 
     public void verifyTime(LocalDateTime now) {
-        LocalDateTime expireTime = this.createdAt.plusMinutes(VALID_MINUIT);
+        LocalDateTime expireTime = this.createdAt.plusMinutes(VALID_MINUTE);
         if (now.isAfter(expireTime)) {
             throw new InvalidAuthCodeException();
         }

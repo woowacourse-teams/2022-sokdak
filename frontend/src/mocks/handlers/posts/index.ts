@@ -180,6 +180,7 @@ const postHandlers = [
       createdAt: new Date().toISOString(),
       nickname: anonymous ? '익명' : '기명',
       postId: id,
+      authorized: true,
     });
     targetPost.commentCount += 1;
 

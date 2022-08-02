@@ -369,6 +369,7 @@ export const commentList: CommentListType[] = [
       'ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ첫댓글',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
   },
   {
     id: 2,
@@ -376,6 +377,7 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
   },
   {
     id: 3,
@@ -383,6 +385,7 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: true,
   },
   {
     id: 4,
@@ -390,6 +393,7 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: true,
   },
   {
     id: 5,
@@ -397,6 +401,7 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
   },
   {
     id: 6,
@@ -404,6 +409,7 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: true,
   },
   {
     id: 7,
@@ -411,6 +417,7 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
   },
   {
     id: 8,
@@ -418,6 +425,7 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
   },
   {
     id: 9,
@@ -425,6 +433,7 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: true,
   },
   {
     id: 10,
@@ -432,6 +441,7 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
   },
   {
     id: 11,
@@ -439,6 +449,7 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: true,
   },
   {
     id: 12,
@@ -446,6 +457,7 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
   },
   {
     id: 13,
@@ -453,6 +465,7 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: true,
   },
   {
     id: 14,
@@ -460,6 +473,7 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
   },
   {
     id: 15,
@@ -467,6 +481,7 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
   },
   {
     id: 16,
@@ -474,6 +489,7 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
   },
 ];
 

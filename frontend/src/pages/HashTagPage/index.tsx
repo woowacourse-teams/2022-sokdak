@@ -24,6 +24,7 @@ const HashTagPage = () => {
   return (
     <Layout>
       <Styled.Container>
+        <Styled.HashTag># {name}</Styled.HashTag>
         <PostList data={data} fetchNextPage={fetchNextPage} />
         {isLoading && <Spinner />}
       </Styled.Container>

@@ -4,7 +4,7 @@ import Heart from '@/assets/images/heart.svg';
 import styled from '@emotion/styled';
 
 export const Container = styled.div`
-  width: 340px;
+  width: 320px;
   height: 200px;
   display: flex;
   flex-direction: column;

@@ -17,4 +17,5 @@ interface Post {
   authorized: boolean;
   boardId: number;
   nickname: string;
+  blocked: boolean;
 }

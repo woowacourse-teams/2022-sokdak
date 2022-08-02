@@ -1,43 +1,34 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
-export const Modal = styled.div`
-  width: 260px;
-  height: 140px;
-  background: #ffffff;
-  box-shadow: 0px 1px 7px rgba(0, 0, 0, 0.25);
+export const ReportModalContainer = styled.form`
+  background-color: white;
+  padding: 1em;
+  box-shadow: 0px 1px 7px ${props => props.theme.colors.gray_150};
   border-radius: 4px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 20px;
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-
-export const Dimmer = styled.div`
-  width: 100%;
-  height: 100vh;
-  background-color: black;
-  opacity: 0.2;
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  z-index: 10;
 `;
 
 export const Title = styled.p`
   font-weight: 700;
-  font-size: 18px;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
 `;
 
 export const Notice = styled.p`
   font-weight: 400;
-  font-size: 13px;
+  font-size: 0.8rem;
+  margin-bottom: 1.8rem;
   color: ${props => props.theme.colors.gray_200};
+`;
+
+export const Message = styled.textarea`
+  resize: none;
+  width: 15rem;
+  height: 10rem;
+  border: 1px solid ${props => props.theme.colors.gray_50};
+  margin-bottom: 1.5rem;
+  padding: 10px;
+  box-sizing: border-box;
 `;
 
 export const ButtonContainer = styled.div`
@@ -46,7 +37,7 @@ export const ButtonContainer = styled.div`
 `;
 
 const button = () => css`
-  width: 58px;
+  width: 3.8rem;
   height: 28px;
   border-radius: 4px;
   font-size: 10px;

@@ -74,6 +74,23 @@ const PostPage = () => {
       </Layout>
     );
   }
+  if (data?.blocked) {
+    return (
+      <Layout>
+        <Styled.BlockContainer>
+          <p>다량의 신고로 인해</p>
+          <p> 블라인드 처리 된 게시물 입니다.</p>
+          <Styled.BackButton
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            이전 페이지로 돌아가기
+          </Styled.BackButton>
+        </Styled.BlockContainer>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>

@@ -90,7 +90,7 @@ class PostAcceptanceTest extends AcceptanceTest {
                 parsePostId(httpPostWithAuthorization(postRequest2, CREATE_POST_URI, token)));
         reportPostToBlockPost(blockedPostId);
 
-        ExtractableResponse<Response> response = httpGet("/boards/1/posts?size=2&page=0");
+        ExtractableResponse<Response> response = httpGet("/boards/" + WRITABLE_BOARD_ID + "/posts?size=2&page=0");
         List<PostsElementResponse> postsElementResponses = parsePostsElementResponse(response);
 
         assertAll(

@@ -92,7 +92,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("잘못된 이메일로로 인증할 수 없다.")
+    @DisplayName("잘못된 이메일로 인증할 수 없다.")
     @Test
     void verifyAuthCode_Exception_WrongEmail() {
         String email = "sokdak@gmail.com";

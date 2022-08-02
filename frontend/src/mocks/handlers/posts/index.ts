@@ -83,20 +83,6 @@ const postHandlers = [
     return res(ctx.status(200), ctx.json(targetPost));
   }),
 
-  rest.get('/posts', (req, res, ctx) => {
-    const size = Number(req.url.searchParams.get('size')!);
-    const page = Number(req.url.searchParams.get('page')!);
-    const posts = postList.slice(page * size, page * size + size);
-
-    return res(
-      ctx.status(200),
-      ctx.json({
-        posts,
-        lastPage: postList.length - size * page - posts.length === 0 && posts.length !== 0,
-      }),
-    );
-  }),
-
   rest.put<Pick<Post, 'title' | 'content'> & { hashtags: string[] }>('/posts/:id', (req, res, ctx) => {
     const params = req.params;
     const id = Number(params.id);
@@ -225,6 +211,23 @@ const postHandlers = [
       ctx.json({
         posts,
         lastPage: postsInBoard.length - size * page - posts.length === 0 && posts.length !== 0,
+      }),
+    );
+  }),
+
+  rest.get('/posts', (req, res, ctx) => {
+    const hashtagName = req.url.searchParams.get('hashtag');
+    const size = Number(req.url.searchParams.get('size')!);
+    const page = Number(req.url.searchParams.get('page')!);
+
+    const postsByHashtag = postList.filter(post => post.hashtags.some(hashtag => hashtag.name === hashtagName));
+    const posts = postsByHashtag.slice(page * size, page * size + size);
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        posts,
+        lastPage: postsByHashtag.length - size * page - posts.length === 0 && posts.length !== 0,
       }),
     );
   }),

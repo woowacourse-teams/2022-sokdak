@@ -5,6 +5,7 @@ export const ReportModalContainer = styled.form`
   background-color: white;
   padding: 1em;
   box-shadow: 0px 1px 7px ${props => props.theme.colors.gray_150};
+  border-radius: 4px;
 `;
 
 export const Title = styled.p`

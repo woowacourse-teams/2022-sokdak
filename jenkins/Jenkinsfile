@@ -8,7 +8,17 @@ pipeline{
   stages{
     stage('Ready'){
       steps{
-        sh "echo CHANGE_URL ${env.CHANGE_URL}"
+        def allLabels = []
+
+        Jenkins.instance.nodes.each { node ->
+          node.assignedLabels.each { label ->
+            if (label as String != node.name) {
+                allLabels += label
+            }      
+          }
+        }
+
+        println allLabels.unique().join('\n')
       }
     }
   }

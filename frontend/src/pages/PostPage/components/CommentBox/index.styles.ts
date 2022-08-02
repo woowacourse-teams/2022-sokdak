@@ -1,18 +1,13 @@
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
-const containerStyle = css`
+export const Container = styled.div`
   width: calc(100%-1em);
   padding: 1em 0.5em;
-`;
-
-export const Container = styled.div`
-  ${containerStyle}
   border-top: 0.5px solid ${props => props.theme.colors.gray_150};
 `;
 
 export const BlockContainer = styled.div`
-  ${containerStyle}
+  width: 100%;
   border-top: 0.5px solid ${props => props.theme.colors.gray_150};
   cursor: default;
   padding: 2em 0;

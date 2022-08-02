@@ -27,6 +27,8 @@ export const Message = styled.textarea`
   height: 10rem;
   border: 1px solid ${props => props.theme.colors.gray_50};
   margin-bottom: 1.5rem;
+  padding: 10px;
+  box-sizing: border-box;
 `;
 
 export const ButtonContainer = styled.div`

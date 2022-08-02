@@ -49,7 +49,7 @@ public class Board {
     }
 
     public boolean isUserWritable(String role) {
-        if (RoleType.USER.getName().equals(role) && boardType == BoardType.SPECIAL) {
+        if (RoleType.USER.getName().equals(role) && boardType == BoardType.NON_WRITABLE) {
             return false;
         }
         return true;

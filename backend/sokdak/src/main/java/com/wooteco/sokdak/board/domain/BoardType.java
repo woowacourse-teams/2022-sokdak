@@ -1,5 +1,5 @@
 package com.wooteco.sokdak.board.domain;
 
 public enum BoardType {
-    NORMAL, SPECIAL
+    WRITABLE, NON_WRITABLE
 }

@@ -1,5 +1,7 @@
 package com.wooteco.sokdak.board.service;
 
+import static com.wooteco.sokdak.board.domain.BoardType.NON_WRITABLE;
+import static com.wooteco.sokdak.board.domain.BoardType.WRITABLE;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_1;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_2;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_3;
@@ -7,7 +9,6 @@ import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_4;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.BoardType;
@@ -23,22 +24,14 @@ import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
+import com.wooteco.sokdak.util.IntegrationTest;
 import java.util.ArrayList;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
-@Sql(
-        scripts = {"classpath:truncate.sql"},
-        executionPhase = BEFORE_TEST_METHOD)
-@Transactional
-@Sql("classpath:truncate.sql")
-class BoardServiceTest {
+class BoardServiceTest extends IntegrationTest {
 
     @Autowired
     private BoardService boardService;
@@ -94,7 +87,7 @@ class BoardServiceTest {
         postRepository.save(post);
         Board board = Board.builder()
                 .name("자유게시판")
-                .boardType(BoardType.NORMAL)
+                .boardType(WRITABLE)
                 .build();
         Board savedBoard = boardRepository.save(board);
 
@@ -121,12 +114,35 @@ class BoardServiceTest {
         postRepository.save(post);
         Board board = Board.builder()
                 .name("Hot 게시판")
-                .boardType(BoardType.SPECIAL)
+                .boardType(NON_WRITABLE)
                 .build();
         Board savedBoard = boardRepository.save(board);
 
         assertThatThrownBy(() -> boardService.savePostBoard(post, savedBoard.getId(), RoleType.USER.getName()))
                 .isInstanceOf(BoardNotWritableException.class);
+    }
+
+    @DisplayName("핫게시판에 게시글이 저장될 수 있다.")
+    @Test
+    void saveInSpecialBoard() {
+        Member member = memberRepository.findById(1L).get();
+        post = Post.builder()
+                .title("제목")
+                .content("본문")
+                .member(member)
+                .likes(new ArrayList<>())
+                .build();
+        postRepository.save(post);
+        Board board = boardRepository.findByTitle("Hot 게시판").get();
+
+        boardService.saveInSpecialBoard(post);
+        Optional<PostBoard> postBoard = postBoardRepository.findPostBoardByPostAndBoard(post, board);
+
+        assertAll(
+                () -> assertThat(postBoard).isNotEmpty(),
+                () -> assertThat(postBoard.get().getBoard().getTitle()).isEqualTo("Hot 게시판"),
+                () -> assertThat(postBoard.get().getPost().getTitle()).isEqualTo("제목")
+        );
     }
 
     @DisplayName("게시글을 존재하지 않는 게시판에 작성하면 예외가 발생한다.")

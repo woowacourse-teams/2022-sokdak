@@ -40,13 +40,6 @@ pipeline{
       steps{
         script{
           withCredentials([sshUserPrivateKey(credentialsId: "back-key", keyFileVariable: 'my_private_key_file')]) {
-            def remote = [:]
-            remote.name = "back-key"
-            remote.host = "${env.DEV_BACK_IP}"
-            remote.user = "ubuntu"
-            remote.allowAnyHosts = true
-            remote.identityFile = my_private_key_file
-
             sh "echo '########### BE DEPLOY START ###########'"
             dir('backend/sokdak/build/libs'){
                 sh "scp -o StrictHostKeyChecking=no -i ${my_private_key_file} *.jar ubuntu@${env.DEV_BACK_IP}:/home/ubuntu/sokdak"
@@ -83,13 +76,6 @@ pipeline{
       steps{
         script{
           withCredentials([sshUserPrivateKey(credentialsId: "front-key", keyFileVariable: 'front_key_file')]) {
-            def remote = [:]
-            remote.name = "back-key"
-            remote.host = "${env.DEV_FRONT_IP}"
-            remote.user = "ubuntu"
-            remote.allowAnyHosts = true
-            remote.identityFile = front_key_file
-
             sh "echo '########### FE DEPLOY START ###########'"
             dir('frontend'){
                 sh "scp -o StrictHostKeyChecking=no -i ${front_key_file} -r dist ubuntu@${env.DEV_FRONT_IP}:/home/ubuntu"

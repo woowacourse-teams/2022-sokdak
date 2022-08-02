@@ -76,7 +76,7 @@ class BoardControllerTest extends ControllerTest {
     @Test
     void findBoardsContent() {
         restDocs
-                .when().get("/boards/content")
+                .when().get("/boards/contents")
                 .then().log().all()
                 .apply(document("board/create/success"))
                 .statusCode(HttpStatus.OK.value());

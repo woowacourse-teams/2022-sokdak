@@ -8,8 +8,8 @@ module.exports = merge(common, {
   mode: 'production',
   plugins: [
     new DefinePlugin({
-      'process.env.API_URL': JSON.stringify('https://was.sokdaksokdak.com'),
-      'process.env.MODE': JSON.stringify('production'),
+      'process.env.API_URL': JSON.stringify(process.env.API_URL),
+      'process.env.MODE': JSON.stringify(process.env.MODE),
     }),
   ],
 });

@@ -56,11 +56,11 @@ public class BoardService {
     }
 
     @Transactional
-    public void savePostBoard(Post savedPost, Long boardId) {
+    public void savePostBoard(Post savedPost, Long boardId, String role) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(BoardNotFoundException::new);
 
-        validateUserWritableBoard(board);
+        validateUserWritableBoard(board, role);
 
         PostBoard postBoard = PostBoard.builder()
                 .build();
@@ -70,8 +70,21 @@ public class BoardService {
         postBoardRepository.save(postBoard);
     }
 
-    private void validateUserWritableBoard(Board board) {
-        if (!board.isUserWritable()) {
+    @Transactional
+    public void saveInSpecialBoard(Post originalPost) {
+        Board specialBoard = boardRepository.findByTitle("Hot 게시판")
+                .orElseThrow(BoardNotFoundException::new);
+
+        PostBoard postBoard = PostBoard.builder()
+                .build();
+
+        postBoard.addPost(originalPost);
+        postBoard.addBoard(specialBoard);
+        postBoardRepository.save(postBoard);
+    }
+
+    private void validateUserWritableBoard(Board board, String role) {
+        if (!board.isUserWritable(role)) {
             throw new BoardNotWritableException();
         }
     }

@@ -29,11 +29,13 @@ export const Label = styled.label`
 `;
 
 export const SubmitButton = styled.button`
-  padding: 4% 6%;
+  width: 30%;
+  min-width: 70px;
   float: right;
-  font-size: 13px;
+  font-size: 12px;
   background-color: ${props => props.theme.colors.sub};
   color: white;
   font-family: 'BMHANNAAir';
+  height: 40px;
   border-radius: 8px;
 `;

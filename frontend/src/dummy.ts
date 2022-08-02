@@ -4,9 +4,9 @@ export const postList: Post[] = [
     title: '오늘 날씨 맑네요',
     createdAt: '2022-07-19T19:55:31.016376300',
     content: '날씨는 참 좋네요.',
-    likeCount: 19,
+    likeCount: 1200,
     commentCount: 16,
-    like: false,
+    like: true,
     modified: false,
     hashtags: [
       {
@@ -19,14 +19,13 @@ export const postList: Post[] = [
       },
     ],
     authorized: true,
-    boardId: 1,
   },
   {
     id: 2,
     title: '오늘 날씨 좋네요',
     createdAt: '2022-07-18T19:55:31.016376300',
     content: '어항에 있는 것 같아요.',
-    likeCount: 1200,
+    likeCount: 4,
     commentCount: 0,
     like: false,
     modified: true,
@@ -41,9 +40,7 @@ export const postList: Post[] = [
       },
     ],
     authorized: false,
-    boardId: 1,
   },
-
   {
     id: 3,
     title: '오늘 날씨 싫어요',
@@ -60,7 +57,6 @@ export const postList: Post[] = [
       },
     ],
     authorized: true,
-    boardId: 2,
   },
   {
     id: 4,
@@ -78,7 +74,6 @@ export const postList: Post[] = [
       },
     ],
     authorized: false,
-    boardId: 3,
   },
   {
     id: 5,
@@ -91,7 +86,6 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: true,
-    boardId: 4,
   },
   {
     id: 6,
@@ -104,7 +98,6 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
-    boardId: 3,
   },
   {
     id: 7,
@@ -117,7 +110,6 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
-    boardId: 3,
   },
   {
     id: 8,
@@ -130,7 +122,6 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
-    boardId: 2,
   },
   {
     id: 9,
@@ -143,7 +134,6 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
-    boardId: 1,
   },
   {
     id: 10,
@@ -156,7 +146,6 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
-    boardId: 3,
   },
   {
     id: 11,
@@ -169,7 +158,6 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
-    boardId: 4,
   },
   {
     id: 12,
@@ -182,7 +170,6 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
-    boardId: 4,
   },
   {
     id: 13,
@@ -195,7 +182,6 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
-    boardId: 3,
   },
   {
     id: 14,
@@ -208,7 +194,6 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
-    boardId: 2,
   },
   {
     id: 15,
@@ -221,7 +206,6 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
-    boardId: 3,
   },
   {
     id: 16,
@@ -234,7 +218,6 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
-    boardId: 2,
   },
   {
     id: 17,
@@ -247,7 +230,6 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
-    boardId: 3,
   },
   {
     id: 18,
@@ -260,7 +242,6 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
-    boardId: 1,
   },
   {
     id: 19,
@@ -273,7 +254,6 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
-    boardId: 2,
   },
   {
     id: 20,
@@ -286,7 +266,6 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
-    boardId: 3,
   },
 ];
 
@@ -440,24 +419,5 @@ export const hashtagList: Hashtag[] = [
   {
     id: 4,
     name: '속닥속닥',
-  },
-];
-
-export const boardList = [
-  {
-    id: 1,
-    title: '🔥Hot 게시판🔥',
-  },
-  {
-    id: 2,
-    title: '📮포수타',
-  },
-  {
-    id: 3,
-    title: '️💌감동 크루',
-  },
-  {
-    id: 4,
-    title: '🗽자유게시판',
   },
 ];

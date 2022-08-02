@@ -1,11 +1,10 @@
-import React, { Dispatch, SetStateAction, useLayoutEffect } from 'react';
+import React, { Dispatch, SetStateAction, useLayoutEffect, useState } from 'react';
 
 import InputBox from '@/components/@shared/InputBox';
 import { useInput } from '@/components/@shared/InputBox/useInput';
 
 import useEmailCheck from '@/hooks/queries/member/useEmailCheck';
 
-import { SIGN_UP_ERROR } from '@/constants/signUp';
 import { isValidEmail } from '@/utils/regExp';
 
 import * as Styled from '../../index.styles';
@@ -43,7 +42,7 @@ const EmailInput = ({
       return;
     }
     if (!isValidEmail(value)) {
-      setError(SIGN_UP_ERROR.INVALID_EMAIL);
+      setError('올바른 이메일 형식을 입력해주세요');
     }
     if (isValidEmail(value)) {
       setError('');
@@ -55,7 +54,7 @@ const EmailInput = ({
     mutate({ email: value });
   };
 
-  const handleKeyDown = () => {};
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {};
   return (
     <InputBox
       value={value}
@@ -68,7 +67,7 @@ const EmailInput = ({
       <Styled.InputForm onSubmit={handleEmailFormSubmit}>
         <InputBox.Input
           handleInvalid={() => {
-            setError(SIGN_UP_ERROR.INVALID_EMAIL);
+            setError('올바른 이메일 형식을 입력해주세요');
           }}
           type="email"
           placeholder="이메일"

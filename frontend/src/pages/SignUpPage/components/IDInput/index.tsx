@@ -1,12 +1,12 @@
-import React, { Dispatch, SetStateAction, useLayoutEffect } from 'react';
+import React, { Dispatch, SetStateAction, useContext, useLayoutEffect } from 'react';
 
 import InputBox from '@/components/@shared/InputBox';
 import { useInput } from '@/components/@shared/InputBox/useInput';
 
-import useIdCheck from '@/hooks/queries/member/useIDCheck';
-import useSnackbar from '@/hooks/useSnackbar';
+import SnackbarContext from '@/context/Snackbar';
 
-import { SIGN_UP_ERROR } from '@/constants/signUp';
+import useIdCheck from '@/hooks/queries/member/useIDCheck';
+
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 import { isValidID } from '@/utils/regExp';
 
@@ -29,7 +29,7 @@ const IDInput = ({
   isSet,
   setIsSet,
 }: IDInputProps) => {
-  const { showSnackbar } = useSnackbar();
+  const { showSnackbar } = useContext(SnackbarContext);
   const { refetch } = useIdCheck({
     storeCode: [value],
     options: {
@@ -39,7 +39,7 @@ const IDInput = ({
           setIsSet(true);
         }
         if (!data) {
-          setError(SIGN_UP_ERROR.DUPLICATED_ID);
+          setError('중복된 아이디입니다.');
           setIsAnimationActive(true);
         }
       },
@@ -57,7 +57,7 @@ const IDInput = ({
     }
     setIsSet(false);
     if (!isValidID(value)) {
-      setError(SIGN_UP_ERROR.INVALID_ID);
+      setError('아이디는 4자에서 16자 사이입니다.');
     }
     if (isValidID(value)) {
       setError('');
@@ -82,7 +82,7 @@ const IDInput = ({
       <Styled.InputForm onSubmit={handleIDCheckForm}>
         <InputBox.Input
           handleInvalid={() => {
-            setError(SIGN_UP_ERROR.BLANK_ID);
+            setError('아이디를 입력해주세요');
           }}
           placeholder="아이디"
           required

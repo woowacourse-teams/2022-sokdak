@@ -65,7 +65,7 @@ public class PostService {
         Post savedPost = postRepository.save(post);
 
         hashtagService.saveHashtag(newPostRequest.getHashtags(), savedPost);
-        boardService.savePostBoard(savedPost, boardId);
+        boardService.savePostBoard(savedPost, boardId, authInfo.getRole());
         return savedPost.getId();
     }
 

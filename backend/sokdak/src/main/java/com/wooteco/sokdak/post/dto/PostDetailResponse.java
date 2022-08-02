@@ -12,21 +12,23 @@ import lombok.Getter;
 @Getter
 public class PostDetailResponse {
 
-    private final Long id;
-    private final String title;
-    private final String content;
-    private final List<HashtagResponse> hashtags;
-    private final LocalDateTime createdAt;
-    private final int likeCount;
-    private final boolean like;
-    private final boolean authorized;
-    private final boolean modified;
+    private Long id;
+    private String title;
+    private String content;
+    private List<HashtagResponse> hashtags;
+    private LocalDateTime createdAt;
+    private int likeCount;
+    private boolean like;
+    private boolean authorized;
+    private boolean modified;
+
+    public PostDetailResponse() {
+    }
 
     @Builder
     private PostDetailResponse(Long id, String title, String content, List<HashtagResponse> hashtagResponses,
                                LocalDateTime createdAt, int likeCount,
-                               boolean like,
-                               boolean authorized, boolean modified) {
+                               boolean like, boolean authorized, boolean modified) {
         this.id = id;
         this.title = title;
         this.content = content;

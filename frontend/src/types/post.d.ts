@@ -14,5 +14,4 @@ interface Post {
   like: boolean;
   hashtags: Hashtag[];
   authorized: boolean;
-  boardId: number;
 }

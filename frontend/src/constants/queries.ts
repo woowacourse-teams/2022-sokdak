@@ -4,7 +4,6 @@ const QUERY_KEYS = {
   MEMBER_ID_CHECK: 'member-id-check',
   MEMBER_NICKNAME_CHECK: 'member-nickname-check',
   COMMENTS: 'comments',
-  POSTS_BY_BOARDS: 'posts-by-boards',
 };
 
 export default QUERY_KEYS;

@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import CreatePostPage from './pages/CreatePostPage';
@@ -11,12 +12,12 @@ import UpdatePostPage from './pages/UpdatePostPage';
 import Snackbar from './components/Snackbar';
 import Header from '@/components/Header';
 
-import useSnackbar from './hooks/useSnackbar';
+import SnackbarContext from './context/Snackbar';
 
 import PATH from './constants/path';
 
 const App = () => {
-  const { isVisible, message } = useSnackbar();
+  const { isVisible, message } = useContext(SnackbarContext);
 
   return (
     <>

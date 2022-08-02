@@ -53,6 +53,18 @@ public class DatabaseCleaner implements InitializingBean {
         entityManager.createNativeQuery(
                 "insert into member (username, nickname, password, role_type) values ('testAdmin', 'adminNick', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');")
                 .executeUpdate();
+        entityManager.createNativeQuery(
+                "insert into member (username, nickname, password, role_type) values ('josh', 'joshNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');")
+                .executeUpdate();
+        entityManager.createNativeQuery(
+                "insert into member (username, nickname, password, role_type) values ('east', 'eastNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');")
+                .executeUpdate();
+        entityManager.createNativeQuery(
+                "insert into member (username, nickname, password, role_type) values ('thor', 'thorNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');")
+                .executeUpdate();
+        entityManager.createNativeQuery(
+                "insert into member (username, nickname, password, role_type) values ('hunch', 'hunchNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');")
+                .executeUpdate();
 
         //티켓 추가
         entityManager.createNativeQuery(
@@ -79,16 +91,16 @@ public class DatabaseCleaner implements InitializingBean {
 
         // 게시판 추가
         entityManager.createNativeQuery(
-                "insert into board (title, user_writable) values ('Hot 게시판', false);")
+                "insert into board (title, board_type) values ('Hot 게시판', 'NON_WRITABLE');")
                 .executeUpdate();
         entityManager.createNativeQuery(
-                "insert into board (title, user_writable) values ('자유게시판', true);")
+                "insert into board (title, board_type) values ('자유게시판', 'WRITABLE');")
                 .executeUpdate();
         entityManager.createNativeQuery(
-                "insert into board (title, user_writable) values ('포수타', true);")
+                "insert into board (title, board_type) values ('포수타', 'WRITABLE');")
                 .executeUpdate();
         entityManager.createNativeQuery(
-                "insert into board (title, user_writable) values ('감동크루', true);")
+                "insert into board (title, board_type) values ('감동크루', 'WRITABLE');")
                 .executeUpdate();
     }
 }

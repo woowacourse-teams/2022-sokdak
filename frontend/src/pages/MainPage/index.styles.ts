@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 
-export const MainPageContainer = styled.div`
+export const PostListContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 3rem;
-  padding-bottom: 5em;
+  align-items: center;
+  gap: 2em;
 `;

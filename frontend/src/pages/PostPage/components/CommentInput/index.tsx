@@ -1,7 +1,8 @@
-import { useId, useRef, useState } from 'react';
+import { useContext, useId, useRef, useState } from 'react';
+
+import SnackbarContext from '@/context/Snackbar';
 
 import usePostComments from '@/hooks/queries/comment/usePostComments';
-import useSnackbar from '@/hooks/useSnackbar';
 
 import * as Styled from './index.styles';
 
@@ -17,7 +18,7 @@ const CommentInput = ({ amount = 0, id }: CommentInputProps) => {
   const contentElement = useRef<HTMLTextAreaElement>(null);
   const formElement = useRef<HTMLFormElement>(null);
   const [anonymous, setAnonymous] = useState(true);
-  const { showSnackbar } = useSnackbar();
+  const { showSnackbar } = useContext(SnackbarContext);
 
   const { mutate } = usePostComments({
     onSuccess: () => {

@@ -10,11 +10,11 @@ export default {
   component: VerificationCodeInput,
 } as ComponentMeta<typeof VerificationCodeInput>;
 
-const Template = (args: ComponentMeta<typeof VerificationCodeInput>) => {
+const Template = () => {
   const { error, setError, setValue, value } = useInput();
   const [isAnimationActive, setIsAnimationActive] = useState(false);
   const email = 'test1@gmail.com';
-  const [isEmailSet] = useState(true);
+  const [isEmailSet, setIsEmailSet] = useState(false);
   const [isSet, setIsSet] = useState(false);
 
   return (
@@ -29,12 +29,8 @@ const Template = (args: ComponentMeta<typeof VerificationCodeInput>) => {
       isVerified={isSet}
       isEmailSet={isEmailSet}
       setIsVerified={setIsSet}
-      {...args}
     />
   );
 };
 
-export const VerificationCodeInputTemplate = Template.bind({
-  isEmailSet: true,
-  isVerified: false,
-});
+export const VerificationCodeInputTemplate = Template.bind({});

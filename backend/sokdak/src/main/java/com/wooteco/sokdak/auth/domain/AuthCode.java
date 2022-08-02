@@ -2,6 +2,7 @@ package com.wooteco.sokdak.auth.domain;
 
 import com.wooteco.sokdak.member.exception.InvalidAuthCodeException;
 import java.time.LocalDateTime;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
@@ -21,6 +22,7 @@ public class AuthCode {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "auth_code_id")
     private Long id;
 
     private String code;

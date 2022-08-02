@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.hashtag.domain;
 
 import com.wooteco.sokdak.post.domain.Post;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -17,6 +18,7 @@ public class PostHashtag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "post_hashtag_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

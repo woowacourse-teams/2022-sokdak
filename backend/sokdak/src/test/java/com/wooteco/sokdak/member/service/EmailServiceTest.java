@@ -3,7 +3,6 @@ package com.wooteco.sokdak.member.service;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 import com.wooteco.sokdak.auth.domain.Ticket;
 import com.wooteco.sokdak.auth.service.AuthCodeGenerator;
@@ -11,20 +10,13 @@ import com.wooteco.sokdak.auth.service.Encryptor;
 import com.wooteco.sokdak.member.dto.EmailRequest;
 import com.wooteco.sokdak.member.repository.AuthCodeRepository;
 import com.wooteco.sokdak.member.repository.TicketRepository;
+import com.wooteco.sokdak.util.IntegrationTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
-@Sql(
-        scripts = {"classpath:truncate.sql"},
-        executionPhase = BEFORE_TEST_METHOD)
-@Transactional
-class EmailServiceTest {
+class EmailServiceTest extends IntegrationTest {
 
     @Autowired
     private EmailService emailService;

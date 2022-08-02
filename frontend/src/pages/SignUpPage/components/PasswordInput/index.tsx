@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction } from 'react';
 import InputBox from '@/components/@shared/InputBox';
 import { useInput } from '@/components/@shared/InputBox/useInput';
 
+import { MEMBER, SIGN_UP_ERROR } from '@/constants/signUp';
 import { isValidPassword } from '@/utils/regExp';
 
 import * as Styled from '../../index.styles';
@@ -22,7 +23,7 @@ const PasswordInput = ({
 }: PasswordInputProps) => {
   const handleBlur = () => {
     if (!isValidPassword(value)) {
-      setError('비밀번호는 영어,숫자,특수문자가 포함된 8~20자입니다.');
+      setError(SIGN_UP_ERROR.INVALID_PASSWORD);
     }
   };
   return (
@@ -38,7 +39,7 @@ const PasswordInput = ({
         <InputBox.Input
           type="password"
           handleInvalid={() => {
-            setError('비밀번호를 입력해주세요');
+            setError(SIGN_UP_ERROR.BLANK_PASSWORD);
           }}
           placeholder="비밀번호"
           onBlur={handleBlur}
@@ -49,7 +50,7 @@ const PasswordInput = ({
           <InputBox.ErrorMessage />
         ) : (
           <Styled.MessageContainer>
-            <Styled.Message>영어,숫자,특수문자가 포함된 8~20자</Styled.Message>
+            <Styled.Message>{`영어,숫자,특수문자가 포함된 ${MEMBER.LIMIT.PASSWORD.MINIMUM_LENGTH}~${MEMBER.LIMIT.PASSWORD.MAXIMUM_LENGTH}자`}</Styled.Message>
           </Styled.MessageContainer>
         )}
       </Styled.PasswordInputContainer>

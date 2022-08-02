@@ -32,20 +32,6 @@ module.exports = {
         test: /\.(ts|tsx)$/,
         exclude: '/node_modules',
         loader: 'babel-loader',
-        options: {
-          presets: [
-            ['@babel/preset-env', { targets: { esmodules: true, browsers: ['last 2 versions'] } }],
-            [
-              '@babel/preset-react',
-              {
-                runtime: 'automatic',
-                importSource: '@emotion/react',
-              },
-            ],
-            '@babel/typescript',
-          ],
-          plugins: ['@emotion'].filter(Boolean),
-        },
       },
       {
         test: /\.svg$/i,

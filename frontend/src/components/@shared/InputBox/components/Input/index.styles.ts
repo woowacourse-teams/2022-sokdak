@@ -1,4 +1,4 @@
-import { keyframes } from '@emotion/react';
+import { invalidInputAnimation } from '@/style/GlobalStyle';
 import styled from '@emotion/styled';
 
 export const Input = styled.input<{ hasError: boolean; isAnimationActive?: boolean }>`
@@ -6,23 +6,9 @@ export const Input = styled.input<{ hasError: boolean; isAnimationActive?: boole
   width: 100%;
   display: inline-block;
   padding: 8px 0px 10px 8px;
-  animation: ${props => (props.isAnimationActive ? huduldul : null)} 0.3s;
+  ${invalidInputAnimation}
+
   ::placeholder {
     color: ${props => props.theme.colors.gray_150};
-  }
-`;
-
-// animation 재활용 필요
-export const huduldul = keyframes`
-  0%{
-    transform:translateX(-5px)
-  }20%{
-    transform:translateX(5px)
-  }40%{
-    transform:translateX(-5px)
-  }60%{
-    transform:translateX(5px)
-  }100%{
-    transform:translateX(0px)
   }
 `;

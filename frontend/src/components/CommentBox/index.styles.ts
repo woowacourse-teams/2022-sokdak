@@ -6,9 +6,25 @@ export const Container = styled.div`
   padding: 1em 0.5em;
 `;
 
+export const CommentHeader = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1em;
+`;
+
+export const DeleteButton = styled.button`
+  background-color: transparent;
+  color: ${props => props.theme.colors.red_200};
+  font-size: 0.6rem;
+`;
+export const ReportButton = styled.button`
+  background-color: transparent;
+`;
+
 export const Nickname = styled.p`
   font-weight: bold;
-  margin-bottom: 1em;
 `;
 
 export const Content = styled.p`

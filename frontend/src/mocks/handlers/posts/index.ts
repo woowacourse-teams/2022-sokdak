@@ -221,6 +221,11 @@ const postHandlers = [
     const page = Number(req.url.searchParams.get('page')!);
 
     const postsByHashtag = postList.filter(post => post.hashtags.some(hashtag => hashtag.name === hashtagName));
+
+    if (postsByHashtag.length <= 0) {
+      return res(ctx.status(404), ctx.json({ message: '해당 해시태그 관련 글이 존재하지 않습니다.' }));
+    }
+
     const posts = postsByHashtag.slice(page * size, page * size + size);
 
     return res(

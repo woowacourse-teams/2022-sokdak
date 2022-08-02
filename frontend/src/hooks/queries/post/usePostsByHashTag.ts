@@ -30,6 +30,7 @@ const usePostsByHashTag = ({
         pageParams: [...data.pageParams, data.pageParams.length],
       }),
       getNextPageParam: (lastPage, allPages) => (lastPage.data.lastPage ? undefined : allPages.length),
+      retry: false,
       ...options,
     },
   );

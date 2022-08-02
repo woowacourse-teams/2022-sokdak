@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 
-import { hashtagList, commentList, postList, boardList } from '@/dummy';
+import { hashtagList, commentList, postList, boardList, reportList } from '@/dummy';
 
 const postHandlers = [
   rest.post<Pick<Post, 'title' | 'content'> & { hashtags: string[]; anonymous: boolean }>('/posts', (req, res, ctx) => {
@@ -39,6 +39,7 @@ const postHandlers = [
       authorized: true,
       boardId: 1,
       nickname: anonymous ? '짜증난 파이썬' : '테스트 계정',
+      blocked: false,
     };
 
     postList.unshift(newPost);
@@ -236,6 +237,25 @@ const postHandlers = [
         lastPage: postsByHashtag.length - size * page - posts.length === 0 && posts.length !== 0,
       }),
     );
+  }),
+  rest.post<{ message: string }>('/posts/:id/report', (req, res, ctx) => {
+    const { id } = req.params;
+    const { message } = req.body;
+
+    const existedReport = reportList.find(({ postId }) => postId === Number(id));
+    if (existedReport) {
+      return res(ctx.status(400), ctx.json({ message: '이미 신고한 게시글입니다.' }));
+    }
+
+    const targetPost = postList.find(post => post.id === Number(id));
+    if (!targetPost) {
+      return res(ctx.status(400), ctx.json({ message: '존재하지 않는 게시글입니다.' }));
+    }
+    reportList.push({
+      postId: Number(id),
+      message,
+    });
+    return res(ctx.status(201));
   }),
 ];
 

@@ -1,7 +1,11 @@
-import { useReducer } from 'react';
+import { useContext, useReducer } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import LikeButton from '@/components/LikeButton';
+
+import SnackbarContext from '@/context/Snackbar';
+
+import useReportPost from '@/hooks/queries/post/useReportPost';
 
 import * as Styled from './index.styles';
 
@@ -26,10 +30,26 @@ interface PostHeaderProps {
 
 const PostHeader = ({ post, like, onClickDeleteButton, onClickLikeButton }: PostHeaderProps) => {
   const navigate = useNavigate();
+  const { showSnackbar } = useContext(SnackbarContext);
   const [isReportModalOpen, handleReportModal] = useReducer(state => !state, false);
+
+  const { mutate: submitReport } = useReportPost({
+    onSuccess: () => {
+      showSnackbar('신고에 성공하였습니다.');
+      handleReportModal();
+    },
+    onError: err => {
+      showSnackbar(err.message);
+      handleReportModal();
+    },
+  });
 
   const handleReportModalOpen = () => {
     handleReportModal();
+  };
+
+  const handleSubmitReport = (message: string) => {
+    submitReport({ id: String(post.id), message });
   };
 
   return (
@@ -56,7 +76,7 @@ const PostHeader = ({ post, like, onClickDeleteButton, onClickLikeButton }: Post
       <Styled.LikeButtonContainer>
         <LikeButton {...like} onClick={onClickLikeButton} />
       </Styled.LikeButtonContainer>
-      <ReportModal isModalOpen={isReportModalOpen} onClose={handleReportModal} />
+      <ReportModal isModalOpen={isReportModalOpen} onClose={handleReportModal} submitReport={handleSubmitReport} />
     </Styled.HeadContainer>
   );
 };

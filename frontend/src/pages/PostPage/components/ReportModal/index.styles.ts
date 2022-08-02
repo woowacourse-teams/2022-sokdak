@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
-export const ReportModalContainer = styled.div`
+export const ReportModalContainer = styled.form`
   background-color: white;
   padding: 1em;
   box-shadow: 0px 1px 7px ${props => props.theme.colors.gray_150};

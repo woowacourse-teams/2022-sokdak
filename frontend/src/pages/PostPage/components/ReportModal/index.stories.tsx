@@ -11,7 +11,9 @@ export default {
 const Template: ComponentStory<typeof ReportModal> = () => {
   const [isReportModalOpen, handleReportModal] = useReducer(state => !state, true);
 
-  return <ReportModal isModalOpen={isReportModalOpen} onClose={handleReportModal} />;
+  return (
+    <ReportModal isModalOpen={isReportModalOpen} onClose={handleReportModal} submitReport={text => console.log(text)} />
+  );
 };
 
 export const ReportModalTemplate: ComponentStory<typeof ReportModal> = Template.bind({});

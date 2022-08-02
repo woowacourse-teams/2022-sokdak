@@ -63,7 +63,7 @@ const CommentBox = ({ id, nickname, content, createdAt, authorized, blocked }: C
       {isDeleteModalOpen && (
         <ConfirmModal
           title="삭제"
-          notice="해당 글을 삭제하시겠습니까?"
+          notice="해당 댓글을 삭제하시겠습니까?"
           handleCancel={handleClickDeleteButton}
           handleConfirm={() => {
             deleteComment({ id });

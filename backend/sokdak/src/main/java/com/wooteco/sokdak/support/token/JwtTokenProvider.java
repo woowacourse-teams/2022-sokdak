@@ -2,8 +2,8 @@ package com.wooteco.sokdak.support.token;
 
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
-import com.wooteco.sokdak.member.domain.RoleType;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -68,11 +68,19 @@ public class JwtTokenProvider implements TokenManager {
     }
 
     public AuthInfo getParsedClaims(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(signingKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        Claims claims;
+        try {
+            claims = Jwts.parserBuilder()
+                    .setSigningKey(signingKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException ex) {
+            Long id = ex.getClaims().get("id", Long.class);
+            String role = ex.getClaims().get("role", String.class);
+            String nickname = ex.getClaims().get("nickname", String.class);
+            return new AuthInfo(id, role, nickname);
+        }
 
         Long id = claims.get("id", Long.class);
         String role = claims.get("role", String.class);

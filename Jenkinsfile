@@ -12,51 +12,100 @@ pipeline{
         git branch: 'dev',
           credentialsId: 'sokdak_hook',
           url: 'https://github.com/woowacourse-teams/2022-sokdak'
+        sh "echo '########### CLONE DEV ###########'"
       }
     }
 
-    stage('Test'){
+    stage('BE-Test'){
       steps{
-        sh "echo 'Test'"
+        sh "echo '########### BE TEST START ###########'"
         dir('backend/sokdak') {
           sh './gradlew clean test'
         }
+        sh "echo '########### BE TEST SUCCESS ###########'"
       }
     }
 
-    stage('Build'){
+    stage('BE-Build'){
       steps{
-        sh "echo 'Build Jar'"
+        sh "echo '########### BE BUILD START ###########'"
         dir('backend/sokdak') {
           sh './gradlew bootJar'
         }
+        sh "echo '########### BE BUILD SUCCESS ###########'"
       }
     }
-    
-    stage('Deploy'){
+
+    stage('BE-Deploy'){
       steps{
         script{
-          withCredentials([sshUserPrivateKey(credentialsId: "pem-key", keyFileVariable: 'my_private_key_file')]) {
+          withCredentials([sshUserPrivateKey(credentialsId: "back-key", keyFileVariable: 'my_private_key_file')]) {
             def remote = [:]
-            remote.name = "pem-key"
+            remote.name = "back-key"
             remote.host = "${env.DEV_BACK_IP}"
             remote.user = "ubuntu"
             remote.allowAnyHosts = true
             remote.identityFile = my_private_key_file
 
-            sh "echo 'Deploy AWS'"
+            sh "echo '########### BE DEPLOY START ###########'"
             dir('backend/sokdak/build/libs'){
                 sh "scp -o StrictHostKeyChecking=no -i ${my_private_key_file} *.jar ubuntu@${env.DEV_BACK_IP}:/home/ubuntu/sokdak"
             }
             sh "ssh -o StrictHostKeyChecking=no -i ${my_private_key_file} ubuntu@${env.DEV_BACK_IP} 'cd sokdak && ./deploy.sh'"
-            sh "echo 'Spring Boot Running'"
-          } 
+            sh "echo '########### BE DEPLOY SUCCESS ###########'"
+            sh "echo '########### BE COMPLETE ###########'"
+          }
         }
       }
     }
   }
-    
-      
+
+
+  stages{
+      stage('FE-Install'){
+        steps{
+          sh "echo '########### FE MODULE INSTALL START ###########'"
+          dir('frontend'){
+            sh 'npm i'
+          }
+          sh "echo '########### FE MODULE INSTALL SUCCESS ###########'"
+        }
+      }
+
+      stage('FE-Build'){
+        steps{
+          sh "echo '########### FE BUILD START ###########'"
+          dir('frontend'){
+            sh 'npm run build-dev'
+          }
+          sh "echo '########### FE BUILD SUCCESS ###########'"
+        }
+      }
+
+      stage('FE-Deploy'){
+        steps{
+          script{
+            withCredentials([sshUserPrivateKey(credentialsId: "front-key", keyFileVariable: 'front_key_file')]) {
+              def remote = [:]
+              remote.name = "back-key"
+              remote.host = "${env.DEV_FRONT_IP}"
+              remote.user = "ubuntu"
+              remote.allowAnyHosts = true
+              remote.identityFile = front_key_file
+
+              sh "echo '########### FE DEPLOY START ###########'"
+              dir('frontend'){
+                  sh "scp -o StrictHostKeyChecking=no -i ${front_key_file} -r dist ubuntu@${env.DEV_FRONT_IP}:/home/ubuntu"
+              }
+              sh "ssh -o StrictHostKeyChecking=no -i ${front_key_file} ubuntu@${env.DEV_FRONT_IP} 'sudo service nginx restart'"
+              sh "echo '########### FE DEPLOY SUCCESS ###########'"
+              sh "echo '########### FE COMPLETE ###########'"
+            }
+          }
+        }
+      }
+    }
+
   post {
     success {
         slackSend (channel: 'jenkins', color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")

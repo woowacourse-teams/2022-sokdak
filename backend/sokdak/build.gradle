@@ -1,27 +1,28 @@
 plugins {
 	id 'org.springframework.boot' version '2.7.1'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id "org.asciidoctor.jvm.convert" version "3.3.2"
 	id 'java'
+	id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
+
 
 group = 'com.wooteco'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
-configurations {
-	asciidoctorExt
-	compileOnly {
-		extendsFrom annotationProcessor
+ext {
+	set('snippetsDir', file("build/generated-snippets"))
+}
+
+bootJar {
+	dependsOn asciidoctor
+	from ("${asciidoctor.outputDir}") {
+		into "src/main/resources/static/docs"
 	}
 }
 
 repositories {
 	mavenCentral()
-}
-
-ext {
-	set('snippetsDir', file("build/generated-snippets"))
 }
 
 dependencies {
@@ -40,7 +41,6 @@ dependencies {
 
 	annotationProcessor 'org.projectlombok:lombok'
 
-	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -54,33 +54,25 @@ dependencies {
 }
 
 test {
+	useJUnitPlatform()
 	outputs.dir snippetsDir
 }
 
 asciidoctor {
 	inputs.dir snippetsDir
-	configurations 'asciidoctorExt'
 	dependsOn test
-
-
-	sources {
-		include("**/*.adoc", "**/common/*.adoc")
-	}
 }
 
-bootJar {
+asciidoctor.doFirst {
+	delete file('src/main/resources/static/docs')
+}
+
+task copyDocument(type: Copy) {
 	dependsOn asciidoctor
-	from ("${asciidoctor.outputDir}/html5") {
-		into 'static/docs'
-	}
+	from file("build/docs/asciidoc")
+	into file("src/main/resources/static/docs")
 }
 
-tasks.named('test') {
-	outputs.dir snippetsDir
-	useJUnitPlatform()
-}
-
-tasks.named('asciidoctor') {
-	inputs.dir snippetsDir
-	dependsOn test
+build {
+	dependsOn copyDocument
 }

@@ -41,7 +41,7 @@ public class Comment {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "comment")
     private List<CommentReport> commentReports = new ArrayList<>();
 
     @Embedded

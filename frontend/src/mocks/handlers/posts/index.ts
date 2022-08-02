@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 
-import { hashtagList, commentList, postList, boardList, reportList } from '@/dummy';
+import { hashtagList, commentList, postList, boardList, reportList, reportCommentList } from '@/dummy';
 
 const postHandlers = [
   rest.post<Pick<Post, 'title' | 'content'> & { hashtags: string[]; anonymous: boolean }>('/posts', (req, res, ctx) => {
@@ -256,6 +256,16 @@ const postHandlers = [
       postId: Number(id),
       message,
     });
+    return res(ctx.status(201));
+  }),
+
+  rest.post<{ message: string }>('/comments/:id/report', (req, res, ctx) => {
+    const { id } = req.params;
+    const { message } = req.body;
+    if (reportCommentList.some(({ commentId }) => commentId === Number(id))) {
+      return res(ctx.status(400), ctx.json({ message: '이미 신고한 댓글입니다.' }));
+    }
+    reportCommentList.push({ commentId: Number(id), message });
     return res(ctx.status(201));
   }),
 ];

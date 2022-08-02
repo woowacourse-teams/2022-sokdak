@@ -1,6 +1,4 @@
-import { useContext, useReducer } from 'react';
-
-import SnackbarContext from '@/context/Snackbar';
+import { useReducer } from 'react';
 
 import useReportComment from '@/hooks/queries/comment/useReportComment';
 

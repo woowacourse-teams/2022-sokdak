@@ -3,10 +3,11 @@ pipeline{
   tools {
       gradle 'gradle'
   }
+
   stages{
     stage('Ready'){
       steps{
-        sh "echo 'Ready~'"
+        sh "echo 'Ready'"
         git branch: 'feature/CICD',
           credentialsId: 'sokdak_hook',
           url: 'https://github.com/woowacourse-teams/2022-sokdak'
@@ -20,7 +21,6 @@ pipeline{
     stage('Test'){
       steps{
         dir('frontend'){
-          sh 'chmod 777 tmp'
           sh 'npm run test'
         }
       }

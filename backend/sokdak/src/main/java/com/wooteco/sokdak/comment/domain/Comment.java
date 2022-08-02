@@ -74,6 +74,13 @@ public class Comment {
         return commentReports.size() >= BLOCKED_CONDITION;
     }
 
+    public boolean isAuthenticated(Long accessMemberId) {
+        if (accessMemberId == null) {
+            return false;
+        }
+        return member.getId().equals(accessMemberId);
+    }
+
     public Long getId() {
         return id;
     }

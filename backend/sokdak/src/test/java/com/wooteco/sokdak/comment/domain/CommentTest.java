@@ -65,4 +65,11 @@ class CommentTest {
 
         assertThat(comment.isBlocked()).isEqualTo(expected);
     }
+
+    @DisplayName("내가 작성한 댓글이면 true를 반환")
+    @ParameterizedTest
+    @CsvSource({"1, true", "2, false"})
+    void isAuthenticated(Long userId, boolean expected) {
+        assertThat(comment.isAuthenticated(userId)).isEqualTo(expected);
+    }
 }

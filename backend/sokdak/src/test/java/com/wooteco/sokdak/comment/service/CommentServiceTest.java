@@ -11,6 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.exception.AuthenticationException;
 import com.wooteco.sokdak.comment.domain.Comment;
+import com.wooteco.sokdak.comment.dto.CommentResponse;
+import com.wooteco.sokdak.comment.dto.CommentsResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.member.domain.Member;
@@ -19,6 +21,8 @@ import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -98,13 +102,57 @@ class CommentServiceTest {
         assertThat(secondComment.getNickname()).isEqualTo(firstComment.getNickname());
     }
 
+    @DisplayName("특정 게시물의 달린 댓글을 가져옴")
+    @Test
+    void findComments() {
+        Post otherPost = Post.builder()
+                .member(member)
+                .title("다른 게시글")
+                .content("본문")
+                .build();
+        postRepository.save(otherPost);
+        NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
+        NewCommentRequest newCommentRequestToOtherPost = new NewCommentRequest("다른 게시글의 댓글", true);
+        commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
+        commentService.addComment(otherPost.getId(), newCommentRequestToOtherPost, AUTH_INFO);
+
+        List<CommentResponse> commentResponses = commentService.findComments(post.getId(), AUTH_INFO).getComments();
+
+        assertAll(
+                () -> assertThat(commentResponses.size()).isEqualTo(1),
+                () -> assertThat(commentResponses.get(0).getContent()).isEqualTo("댓글")
+        );
+    }
+
+    @DisplayName("특정 게시글의 댓글 목록을 가져오고 내가 작성한 댓글을 표시함")
+    @Test
+    void findComments_authorized() {
+        Member otherMember = Member.builder()
+                .username("otherUser")
+                .password("test1234!")
+                .nickname("다른유저")
+                .build();
+        memberRepository.save(otherMember);
+        NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
+        commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
+        commentService.addComment(
+                post.getId(), newCommentRequest, new AuthInfo(otherMember.getId(), "USER", member.getNickname()));
+
+        List<CommentResponse> commentResponses = commentService.findComments(post.getId(), AUTH_INFO).getComments();
+
+        assertAll(
+                () -> assertThat(commentResponses.get(0).isAuthorized()).isTrue(),
+                () -> assertThat(commentResponses.get(1).isAuthorized()).isFalse()
+        );
+    }
+
     @DisplayName("댓글 삭제")
     @Test
     void deleteComment() {
         NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
         Long commentId = commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
 
-        commentService.deleteComment(commentId, new AuthInfo(member.getId(), USER.getName(), member.getNickname().getValue()));
+        commentService.deleteComment(commentId, new AuthInfo(member.getId(), USER.getName(), member.getNickname()));
 
         assertThat(commentRepository.findById(commentId)).isEmpty();
     }
@@ -116,7 +164,7 @@ class CommentServiceTest {
         Long commentId = commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
         Long invalidOwnerId = 9999L;
 
-        assertThatThrownBy(() -> commentService.deleteComment(commentId, new AuthInfo(invalidOwnerId, USER.getName(),  member.getNickname().getValue())))
+        assertThatThrownBy(() -> commentService.deleteComment(commentId, new AuthInfo(invalidOwnerId, USER.getName(),  member.getNickname())))
                 .isInstanceOf(AuthenticationException.class);
     }
 }

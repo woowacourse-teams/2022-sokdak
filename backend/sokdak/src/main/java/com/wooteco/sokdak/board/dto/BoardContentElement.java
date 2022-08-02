@@ -25,7 +25,7 @@ public class BoardContentElement {
 
     public static BoardContentElement from(Board board, List<PostsElementResponse> postsElementResponses) {
         List<BoardContentPostElement> boardContentPostElements = postsElementResponses.stream()
-                .map(it -> new BoardContentPostElement(it.getLikeCount(), it.getTitle(), it.getCommentCount()))
+                .map(BoardContentPostElement::of)
                 .collect(Collectors.toList());
         return new BoardContentElement(board.getId(), board.getTitle(), boardContentPostElements);
     }

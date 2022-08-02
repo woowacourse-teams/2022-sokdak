@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 
-import { hashtagList, commentList, postList } from '@/dummy';
+import { hashtagList, commentList, postList, boardList } from '@/dummy';
 
 const postHandlers = [
   rest.post<Pick<Post, 'title' | 'content'> & { hashtags: string[] }>('/posts', (req, res, ctx) => {
@@ -31,6 +31,7 @@ const postHandlers = [
       like: false,
       hashtags: hashtags.map(hashtagName => hashtagList.find(hashtag => hashtag.name === hashtagName)!),
       authorized: true,
+      boardId: 1,
     };
 
     postList.unshift(newPost);
@@ -171,6 +172,19 @@ const postHandlers = [
     targetPost.commentCount += 1;
 
     return res(ctx.status(204));
+  }),
+
+  rest.get('/boards/contents', (req, res, ctx) => {
+    const boards = boardList.map(board => {
+      return {
+        ...board,
+        posts: postList
+          .filter(({ boardId }) => board.id === boardId)
+          .slice(0, 3)
+          .map(({ id, likeCount, commentCount, title }) => ({ id, likeCount, commentCount, title })),
+      };
+    });
+    return res(ctx.status(200), ctx.json({ boards: boards }));
   }),
 ];
 

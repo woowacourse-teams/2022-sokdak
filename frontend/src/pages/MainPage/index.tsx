@@ -1,74 +1,32 @@
-import { useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-
+import BoardItem from './components/BoardItem';
 import Layout from '@/components/@styled/Layout';
-import FAB from '@/components/FAB';
-import PostListItem from '@/components/PostListItem';
 import Spinner from '@/components/Spinner';
 
-import usePosts from '@/hooks/queries/post/usePosts';
+import usePostByBoards from '@/hooks/queries/post/usePostsByBoard';
 
 import * as Styled from './index.styles';
 
-import PATH from '@/constants/path';
-
 const MainPage = () => {
-  const navigate = useNavigate();
-  const scrollRef = useRef(null);
-  const { isLoading, data, fetchNextPage } = usePosts({ storeCode: [3] });
+  const { isLoading, data } = usePostByBoards({});
 
-  const io = new IntersectionObserver(
-    (entries, io) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          io.unobserve(entry.target);
-          fetchNextPage();
-        }
-      });
-    },
-    { threshold: 0.7 },
-  );
-
-  const handleClickFAB = () => {
-    navigate(PATH.CREATE_POST);
-  };
-
-  const handleClickPostItem = (id: number) => {
-    navigate(`${PATH.POST}/${id}`);
-  };
-
-  useEffect(() => {
-    if (!data) {
-      fetchNextPage();
-    }
-
-    if (scrollRef.current) {
-      io.observe(scrollRef.current);
-    }
-  }, [data]);
-
-  return (
-    <Layout>
-      <Styled.PostListContainer>
-        {data?.pages.map(({ id, title, content, createdAt, likeCount, commentCount, modified }, index) => (
-          <PostListItem
-            testid={id}
-            title={title}
-            content={content}
-            createdAt={createdAt}
-            likeCount={likeCount}
-            commentCount={commentCount}
-            modified={modified}
-            key={id}
-            handleClick={() => handleClickPostItem(id)}
-            ref={index === data.pages.length - 1 ? scrollRef : null}
-          />
-        ))}
-        {isLoading && <Spinner />}
-      </Styled.PostListContainer>
-      <FAB handleClick={handleClickFAB} />
-    </Layout>
-  );
+  if (isLoading) {
+    return (
+      <Layout>
+        <Spinner />
+      </Layout>
+    );
+  }
+  if (data)
+    return (
+      <Layout>
+        <Styled.MainPageContainer>
+          {data.boards.map(board => (
+            <BoardItem key={board.id} {...board} />
+          ))}
+        </Styled.MainPageContainer>
+      </Layout>
+    );
+  return <div />;
 };
 
 export default MainPage;

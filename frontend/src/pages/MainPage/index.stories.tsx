@@ -9,7 +9,11 @@ export default {
   decorators: [withRouter],
 } as ComponentMeta<typeof MainPage>;
 
-const Template = () => <MainPage />;
+const Template = () => (
+  <div style={{ width: '400px' }}>
+    <MainPage />
+  </div>
+);
 
 export const MainPageTemplate: ComponentStory<typeof MainPage> = Template.bind({});
 MainPageTemplate.args = {};

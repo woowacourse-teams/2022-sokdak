@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useLayoutEffect } from 'react';
 import InputBox from '@/components/@shared/InputBox';
 import { useInput } from '@/components/@shared/InputBox/useInput';
 
-import { isValidPassword } from '@/utils/regExp';
+import { SIGN_UP_ERROR } from '@/constants/signUp';
 
 import * as Styled from '../../index.styles';
 
@@ -25,7 +25,7 @@ const PasswordConfirmationInput = ({
   useLayoutEffect(() => {
     if (!value) return;
     if (value !== password) {
-      return setError('비밀번호와 일치하지 않습니다');
+      return setError(SIGN_UP_ERROR.INVALID_PASSWORD_CONFIRMATION);
     }
 
     if (value === password) {
@@ -46,7 +46,7 @@ const PasswordConfirmationInput = ({
         <InputBox.Input
           type="password"
           handleInvalid={() => {
-            setError('비밀번호를 입력해주세요');
+            setError(SIGN_UP_ERROR.BLANK_PASSWORD);
           }}
           placeholder="비밀번호 확인"
           required

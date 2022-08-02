@@ -20,7 +20,7 @@ const useComments = ({
     QueryKey[]
   >;
 }) =>
-  useQuery([QUERY_KEYS.COMMENTS, storeCode], ({ queryKey: [_, id] }) => axios.get(`/posts/${id}/comments`), {
+  useQuery([QUERY_KEYS.COMMENTS, storeCode], ({ queryKey: [, id] }) => axios.get(`/posts/${id}/comments`), {
     select: data => data.data.comments,
     ...options,
   });

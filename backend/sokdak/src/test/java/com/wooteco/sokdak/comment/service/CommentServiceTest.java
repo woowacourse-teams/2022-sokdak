@@ -47,12 +47,6 @@ class CommentServiceTest {
 
     @BeforeEach
     void setUp() {
-        member = Member.builder()
-                .username("name")
-                .nickname("nickname")
-                .password("Abc123!")
-                .build();
-        memberRepository.save(member);
         member = memberRepository.findById(1L).get();
         post = Post.builder()
                 .member(member)

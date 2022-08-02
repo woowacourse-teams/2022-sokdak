@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 import com.wooteco.sokdak.board.domain.Board;
+import com.wooteco.sokdak.board.domain.BoardType;
 import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.board.dto.BoardsResponse;
 import com.wooteco.sokdak.board.dto.NewBoardResponse;
@@ -91,8 +92,8 @@ class BoardServiceTest {
                 .build();
         postRepository.save(post);
         Board board = Board.builder()
-                .name("Hot 게시판")
-                .userWritable(true)
+                .name("자유게시판")
+                .boardType(BoardType.NORMAL)
                 .build();
         Board savedBoard = boardRepository.save(board);
 
@@ -101,7 +102,7 @@ class BoardServiceTest {
 
         assertAll(
                 () -> assertThat(postBoard).isNotEmpty(),
-                () -> assertThat(postBoard.get().getBoard().getTitle()).isEqualTo("Hot 게시판"),
+                () -> assertThat(postBoard.get().getBoard().getTitle()).isEqualTo("자유게시판"),
                 () -> assertThat(postBoard.get().getPost().getTitle()).isEqualTo("제목")
         );
     }
@@ -119,7 +120,7 @@ class BoardServiceTest {
         postRepository.save(post);
         Board board = Board.builder()
                 .name("Hot 게시판")
-                .userWritable(false)
+                .boardType(BoardType.SPECIAL)
                 .build();
         Board savedBoard = boardRepository.save(board);
 

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,7 +30,8 @@ public class Board {
     @OneToMany(mappedBy = "board")
     private List<PostBoard> postBoards = new ArrayList<>();
 
-    private boolean userWritable = true;
+    @Enumerated(EnumType.STRING)
+    private BoardType boardType;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -37,8 +40,12 @@ public class Board {
     }
 
     @Builder
-    public Board(String name, boolean userWritable) {
+    public Board(String name, BoardType boardType) {
         this.title = name;
-        this.userWritable = userWritable;
+        this.boardType = boardType;
+    }
+
+    public boolean isUserWritable() {
+        return boardType == BoardType.NORMAL;
     }
 }

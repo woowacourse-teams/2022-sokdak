@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 import com.wooteco.sokdak.board.domain.Board;
+import com.wooteco.sokdak.board.domain.BoardType;
 import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.board.dto.BoardsResponse;
 import com.wooteco.sokdak.board.dto.NewBoardResponse;
@@ -18,6 +19,7 @@ import com.wooteco.sokdak.board.exception.BoardNotWritableException;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
@@ -91,17 +93,17 @@ class BoardServiceTest {
                 .build();
         postRepository.save(post);
         Board board = Board.builder()
-                .name("Hot 게시판")
-                .userWritable(true)
+                .name("자유게시판")
+                .boardType(BoardType.NORMAL)
                 .build();
         Board savedBoard = boardRepository.save(board);
 
-        boardService.savePostBoard(post, savedBoard.getId());
+        boardService.savePostBoard(post, savedBoard.getId(), RoleType.USER.getName());
         Optional<PostBoard> postBoard = postBoardRepository.findPostBoardByPostAndBoard(post, board);
 
         assertAll(
                 () -> assertThat(postBoard).isNotEmpty(),
-                () -> assertThat(postBoard.get().getBoard().getTitle()).isEqualTo("Hot 게시판"),
+                () -> assertThat(postBoard.get().getBoard().getTitle()).isEqualTo("자유게시판"),
                 () -> assertThat(postBoard.get().getPost().getTitle()).isEqualTo("제목")
         );
     }
@@ -119,11 +121,11 @@ class BoardServiceTest {
         postRepository.save(post);
         Board board = Board.builder()
                 .name("Hot 게시판")
-                .userWritable(false)
+                .boardType(BoardType.SPECIAL)
                 .build();
         Board savedBoard = boardRepository.save(board);
 
-        assertThatThrownBy(() -> boardService.savePostBoard(post, savedBoard.getId()))
+        assertThatThrownBy(() -> boardService.savePostBoard(post, savedBoard.getId(), RoleType.USER.getName()))
                 .isInstanceOf(BoardNotWritableException.class);
     }
 
@@ -139,7 +141,7 @@ class BoardServiceTest {
                 .build();
         postRepository.save(post);
 
-        assertThatThrownBy(() -> boardService.savePostBoard(post, 9999L))
+        assertThatThrownBy(() -> boardService.savePostBoard(post, 9999L, RoleType.USER.getName()))
                 .isInstanceOf(BoardNotFoundException.class);
     }
 }

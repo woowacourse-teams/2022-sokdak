@@ -10,6 +10,7 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TE
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.board.domain.Board;
+import com.wooteco.sokdak.board.domain.BoardType;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
@@ -157,7 +158,7 @@ class PostServiceTest {
     @DisplayName("특정 게시판 게시글 목록 조회 기능")
     @Test
     void findPosts() {
-        Board board = boardRepository.save(new Board("테스트 게시판1", true));
+        Board board = boardRepository.save(new Board("테스트 게시판1", BoardType.NORMAL));
         postService.addPost(board.getId(), new NewPostRequest("제목1", "본문1", new ArrayList<>()), new AuthInfo(1L, USER.getName(), "nickname"));
         postService.addPost(board.getId(), new NewPostRequest("제목2", "본문2", new ArrayList<>()), new AuthInfo(1L, USER.getName(), "nickname"));
         postService.addPost(board.getId(), new NewPostRequest("제목3", "본문3", new ArrayList<>()), new AuthInfo(1L, USER.getName(), "nickname"));

@@ -39,7 +39,7 @@ public class BoardController {
         return ResponseEntity.ok(boardsResponse);
     }
 
-    @GetMapping("/content")
+    @GetMapping("/contents")
     public ResponseEntity<BoardContentResponse> findBoardsContent() {
         BoardContentResponse boardContentResponse = boardService.findBoardsContent();
         return ResponseEntity.ok(boardContentResponse);

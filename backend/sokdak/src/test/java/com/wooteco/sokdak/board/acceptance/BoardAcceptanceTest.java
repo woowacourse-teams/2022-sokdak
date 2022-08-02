@@ -67,7 +67,7 @@ public class BoardAcceptanceTest extends AcceptanceTest {
         httpPostWithAuthorization(postRequest4, "/boards/" + 3 + "/posts", token);
 
         // when
-        ExtractableResponse<Response> response = httpGet("/boards/content");
+        ExtractableResponse<Response> response = httpGet("/boards/contents");
 
         // then
         List<BoardContentElement> boardsAll = getBoardContentElements(response);

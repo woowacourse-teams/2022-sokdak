@@ -56,11 +56,11 @@ public class BoardService {
     }
 
     @Transactional
-    public void savePostBoard(Post savedPost, Long boardId) {
+    public void savePostBoard(Post savedPost, Long boardId, String role) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(BoardNotFoundException::new);
 
-        validateUserWritableBoard(board);
+        validateUserWritableBoard(board, role);
 
         PostBoard postBoard = PostBoard.builder()
                 .build();
@@ -70,8 +70,8 @@ public class BoardService {
         postBoardRepository.save(postBoard);
     }
 
-    private void validateUserWritableBoard(Board board) {
-        if (!board.isUserWritable()) {
+    private void validateUserWritableBoard(Board board, String role) {
+        if (!board.isUserWritable(role)) {
             throw new BoardNotWritableException();
         }
     }

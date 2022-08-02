@@ -7,6 +7,7 @@ import com.wooteco.sokdak.comment.service.CommentService;
 import com.wooteco.sokdak.support.token.Login;
 import java.net.URI;
 import javax.validation.Valid;
+import lombok.extern.java.Log;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,8 +34,9 @@ public class CommentController {
     }
 
     @GetMapping("/posts/{id}/comments")
-    public ResponseEntity<CommentsResponse> findComments(@PathVariable(name = "id") Long postId) {
-        CommentsResponse commentsResponse = commentService.findComments(postId);
+    public ResponseEntity<CommentsResponse> findComments(@PathVariable(name = "id") Long postId,
+                                                         @Login AuthInfo authInfo) {
+        CommentsResponse commentsResponse = commentService.findComments(postId, authInfo);
         return ResponseEntity.ok(commentsResponse);
     }
 

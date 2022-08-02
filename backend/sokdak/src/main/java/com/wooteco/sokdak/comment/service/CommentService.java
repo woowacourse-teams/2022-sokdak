@@ -71,10 +71,10 @@ public class CommentService {
                 .orElseGet(() -> RandomNicknameGenerator.generate(new HashSet<>(usedNicknames)));
     }
 
-    public CommentsResponse findComments(Long postId) {
+    public CommentsResponse findComments(Long postId, AuthInfo authInfo) {
         List<CommentResponse> commentResponses = commentRepository.findAllByPostId(postId)
                 .stream()
-                .map(CommentResponse::of)
+                .map(it -> CommentResponse.of(it, authInfo.getId()))
                 .collect(Collectors.toList());
         return new CommentsResponse(commentResponses);
     }

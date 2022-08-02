@@ -14,7 +14,7 @@ public class Ticket {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "email_id")
+    @Column(name = "ticket_id")
     private Long id;
 
     private String serialNumber;

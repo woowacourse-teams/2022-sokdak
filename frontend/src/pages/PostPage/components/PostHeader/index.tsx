@@ -16,6 +16,7 @@ import ReportModal from '../ReportModal';
 
 interface PostHeaderProps {
   post: {
+    id: number;
     content: string;
     title: string;
     createdAt: string;
@@ -49,7 +50,7 @@ const PostHeader = ({ post, like, onClickDeleteButton, onClickLikeButton }: Post
   };
 
   const handleSubmitReport = (message: string) => {
-    submitReport({ id: String(post.id), message });
+    submitReport({ id: post.id, message });
   };
 
   return (

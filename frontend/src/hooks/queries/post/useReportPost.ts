@@ -3,7 +3,7 @@ import { useMutation, UseMutationOptions } from 'react-query';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
 interface PostReportProps {
-  id: string;
+  id: number;
   message: string;
 }
 

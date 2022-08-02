@@ -12,11 +12,17 @@ const postHandlers = [
     }
 
     hashtags.forEach(hashtagName => {
-      if (hashtagList.some(hashtag => hashtag.name === hashtagName)) return;
+      const existedTag = hashtagList.find(hashtag => hashtag.name === hashtagName);
+
+      if (existedTag) {
+        existedTag.count += 1;
+        return;
+      }
 
       hashtagList.push({
         id: hashtagList.length + 1,
         name: hashtagName,
+        count: 1,
       });
     });
 
@@ -77,20 +83,6 @@ const postHandlers = [
     return res(ctx.status(200), ctx.json(targetPost));
   }),
 
-  rest.get('/posts', (req, res, ctx) => {
-    const size = Number(req.url.searchParams.get('size')!);
-    const page = Number(req.url.searchParams.get('page')!);
-    const posts = postList.slice(page * size, page * size + size);
-
-    return res(
-      ctx.status(200),
-      ctx.json({
-        posts,
-        lastPage: postList.length - size * page - posts.length === 0 && posts.length !== 0,
-      }),
-    );
-  }),
-
   rest.put<Pick<Post, 'title' | 'content'> & { hashtags: string[] }>('/posts/:id', (req, res, ctx) => {
     const params = req.params;
     const id = Number(params.id);
@@ -112,11 +104,17 @@ const postHandlers = [
     targetPost.content = content;
 
     hashtags.forEach(hashtagName => {
-      if (hashtagList.some(hashtag => hashtag.name === hashtagName)) return;
+      const existedTag = hashtagList.find(hashtag => hashtag.name === hashtagName);
+
+      if (existedTag) {
+        existedTag.count += 1;
+        return;
+      }
 
       hashtagList.push({
         id: hashtagList.length + 1,
         name: hashtagName,
+        count: 1,
       });
     });
 
@@ -130,19 +128,31 @@ const postHandlers = [
     const params = req.params;
     const id = Number(params.id);
 
-    const isTargetPostExist = postList.some(post => post.id === id);
+    const targetPostIndex = postList.findIndex(post => post.id === id);
+    const targetPost = postList[targetPostIndex];
 
-    if (!isTargetPostExist) {
+    if (!targetPost) {
       return res(ctx.status(400), ctx.json({ message: '해당 글이 존재하지 않습니다.' }));
     }
 
-    postList.splice(
-      postList.findIndex(post => post.id === id),
-      1,
-    );
+    targetPost.hashtags.forEach(({ id }) => {
+      const targetHashtagIndex = hashtagList.findIndex(tag => tag.id === id)!;
+      const targetHashtag = hashtagList[targetHashtagIndex];
+
+      if (targetHashtag.count <= 1) {
+        hashtagList.splice(targetHashtagIndex, 1);
+
+        return;
+      }
+
+      targetHashtag.count -= 1;
+    });
+
+    postList.splice(targetPostIndex, 1);
 
     return res(ctx.status(204));
   }),
+
   rest.get('/posts/:id/comments', (req, res, ctx) => {
     const params = req.params;
     const id = Number(params.id);
@@ -185,6 +195,46 @@ const postHandlers = [
       };
     });
     return res(ctx.status(200), ctx.json({ boards: boards }));
+  }),
+
+  rest.get('/boards/:id/posts', (req, res, ctx) => {
+    const params = req.params;
+    const boardId = Number(params.id);
+
+    const size = Number(req.url.searchParams.get('size')!);
+    const page = Number(req.url.searchParams.get('page')!);
+    const postsInBoard = postList.filter(post => post.boardId === boardId);
+    const posts = postsInBoard.slice(page * size, page * size + size);
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        posts,
+        lastPage: postsInBoard.length - size * page - posts.length === 0 && posts.length !== 0,
+      }),
+    );
+  }),
+
+  rest.get('/posts', (req, res, ctx) => {
+    const hashtagName = req.url.searchParams.get('hashtag');
+    const size = Number(req.url.searchParams.get('size')!);
+    const page = Number(req.url.searchParams.get('page')!);
+
+    const postsByHashtag = postList.filter(post => post.hashtags.some(hashtag => hashtag.name === hashtagName));
+
+    if (postsByHashtag.length <= 0) {
+      return res(ctx.status(404), ctx.json({ message: '해당 해시태그 관련 글이 존재하지 않습니다.' }));
+    }
+
+    const posts = postsByHashtag.slice(page * size, page * size + size);
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        posts,
+        lastPage: postsByHashtag.length - size * page - posts.length === 0 && posts.length !== 0,
+      }),
+    );
   }),
 ];
 

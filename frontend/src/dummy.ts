@@ -17,6 +17,14 @@ export const postList: Post[] = [
         id: 2,
         name: '조현근',
       },
+      {
+        id: 5,
+        name: '오늘 날씨',
+      },
+      {
+        id: 6,
+        name: '조시',
+      },
     ],
     authorized: true,
     boardId: 1,
@@ -89,7 +97,12 @@ export const postList: Post[] = [
     commentCount: 0,
     like: false,
     modified: false,
-    hashtags: [],
+    hashtags: [
+      {
+        id: 6,
+        name: '조시',
+      },
+    ],
     authorized: true,
     boardId: 4,
   },
@@ -428,18 +441,32 @@ export const hashtagList: Hashtag[] = [
   {
     id: 1,
     name: '생활',
+    count: 1,
   },
   {
     id: 2,
     name: '조현근',
+    count: 1,
   },
   {
     id: 3,
     name: '날씨',
+    count: 3,
   },
   {
     id: 4,
     name: '속닥속닥',
+    count: 1,
+  },
+  {
+    id: 5,
+    name: '오늘 날씨',
+    count: 1,
+  },
+  {
+    id: 6,
+    name: '조시',
+    count: 2,
   },
 ];
 

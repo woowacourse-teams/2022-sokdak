@@ -1,4 +1,4 @@
-import CommentBox from '@/components/CommentBox';
+import CommentBox from '@/pages/PostPage/components/CommentBox';
 
 import useComments from '@/hooks/queries/comment/useComments';
 
@@ -19,6 +19,7 @@ const CommentList = ({ id }: CommentListProps) => {
         {data?.map(comment => (
           <CommentBox
             key={comment.id}
+            id={comment.id}
             authorized={comment.authorized}
             nickname={comment.nickname}
             content={comment.content}

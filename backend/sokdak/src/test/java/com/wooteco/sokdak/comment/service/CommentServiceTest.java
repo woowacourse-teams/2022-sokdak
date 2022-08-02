@@ -1,6 +1,6 @@
 package com.wooteco.sokdak.comment.service;
 
-import static com.wooteco.sokdak.member.domain.RoleType.*;
+import static com.wooteco.sokdak.member.domain.RoleType.USER;
 import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
@@ -14,21 +14,17 @@ import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.member.domain.Member;
-import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
+import com.wooteco.sokdak.util.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
-@Transactional
-class CommentServiceTest {
+class CommentServiceTest extends IntegrationTest {
 
     @Autowired
     private CommentService commentService;

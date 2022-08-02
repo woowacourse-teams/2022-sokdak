@@ -158,7 +158,7 @@ class PostServiceTest {
     @DisplayName("특정 게시판 게시글 목록 조회 기능")
     @Test
     void findPosts() {
-        Board board = boardRepository.save(new Board("테스트 게시판1", BoardType.NORMAL));
+        Board board = boardRepository.save(new Board("테스트 게시판1", BoardType.WRITABLE));
         postService.addPost(board.getId(), new NewPostRequest("제목1", "본문1", new ArrayList<>()), new AuthInfo(1L, USER.getName(), "nickname"));
         postService.addPost(board.getId(), new NewPostRequest("제목2", "본문2", new ArrayList<>()), new AuthInfo(1L, USER.getName(), "nickname"));
         postService.addPost(board.getId(), new NewPostRequest("제목3", "본문3", new ArrayList<>()), new AuthInfo(1L, USER.getName(), "nickname"));

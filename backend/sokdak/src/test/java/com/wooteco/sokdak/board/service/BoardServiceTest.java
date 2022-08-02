@@ -1,5 +1,7 @@
 package com.wooteco.sokdak.board.service;
 
+import static com.wooteco.sokdak.board.domain.BoardType.NON_WRITABLE;
+import static com.wooteco.sokdak.board.domain.BoardType.WRITABLE;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_1;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_2;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_3;
@@ -94,7 +96,7 @@ class BoardServiceTest {
         postRepository.save(post);
         Board board = Board.builder()
                 .name("자유게시판")
-                .boardType(BoardType.NORMAL)
+                .boardType(WRITABLE)
                 .build();
         Board savedBoard = boardRepository.save(board);
 
@@ -121,7 +123,7 @@ class BoardServiceTest {
         postRepository.save(post);
         Board board = Board.builder()
                 .name("Hot 게시판")
-                .boardType(BoardType.SPECIAL)
+                .boardType(NON_WRITABLE)
                 .build();
         Board savedBoard = boardRepository.save(board);
 

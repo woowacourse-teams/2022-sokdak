@@ -6,6 +6,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import SnackbarContext from '@/context/Snackbar';
 
 import QUERY_KEYS from '@/constants/queries';
+import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
 interface DeleteCommentProps {
   id: number;
@@ -24,7 +25,7 @@ const useDeleteComment = (
     {
       onSuccess: () => {
         queryClient.resetQueries(QUERY_KEYS.COMMENTS);
-        showSnackbar('성공적으로 댓글이 삭제되었습니다.');
+        showSnackbar(SNACKBAR_MESSAGE.SUCCESS_DELETE_COMMENT);
       },
       onError: err => {
         showSnackbar(err.response?.data.message!);

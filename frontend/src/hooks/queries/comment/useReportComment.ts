@@ -5,6 +5,8 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 
 import SnackbarContext from '@/context/Snackbar';
 
+import SNACKBAR_MESSAGE from '@/constants/snackbar';
+
 interface PostReportProps {
   id: number;
   message: string;
@@ -21,7 +23,7 @@ const useReportComment = (
     },
     {
       onSuccess: () => {
-        showSnackbar('신고에 성공하였습니다.');
+        showSnackbar(SNACKBAR_MESSAGE.SUCCESS_REPORT_COMMENT);
       },
       onError: err => {
         showSnackbar(err.response?.data.message!);

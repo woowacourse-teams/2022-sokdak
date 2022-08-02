@@ -10,6 +10,7 @@ import useReportPost from '@/hooks/queries/post/useReportPost';
 import * as Styled from './index.styles';
 
 import PATH from '@/constants/path';
+import SNACKBAR_MESSAGE from '@/constants/snackbar';
 import timeConverter from '@/utils/timeConverter';
 
 import ReportModal from '../ReportModal';
@@ -36,7 +37,7 @@ const PostHeader = ({ post, like, onClickDeleteButton, onClickLikeButton }: Post
 
   const { mutate: submitReport } = useReportPost({
     onSuccess: () => {
-      showSnackbar('신고에 성공하였습니다.');
+      showSnackbar(SNACKBAR_MESSAGE.SUCCESS_REPORT_POST);
       handleReportModal();
     },
     onError: err => {

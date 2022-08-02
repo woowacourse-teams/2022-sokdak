@@ -1,7 +1,7 @@
 import * as Styled from './index.styles';
 
 interface HashTagProps {
-  className?: string | undefined;
+  className?: string;
   name: string;
   count?: number;
   handleTagClick?: React.MouseEventHandler<HTMLDivElement>;

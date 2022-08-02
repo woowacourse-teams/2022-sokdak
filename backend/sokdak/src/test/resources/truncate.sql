@@ -10,10 +10,29 @@ TRUNCATE TABLE member;
 TRUNCATE TABLE board;
 TRUNCATE TABLE post_board;
 TRUNCATE TABLE post_report;
+TRUNCATE TABLE comment_report;
+
+ALTER TABLE post_hashtag ALTER COLUMN post_hashtag_id RESTART WITH 1;
+ALTER TABLE likes ALTER COLUMN likes_id RESTART WITH 1;
+ALTER TABLE comment ALTER COLUMN comment_id RESTART WITH 1;
+ALTER TABLE hashtag ALTER COLUMN hashtag_id RESTART WITH 1;
+ALTER TABLE post ALTER COLUMN post_id RESTART WITH 1;
+ALTER TABLE auth_code ALTER COLUMN auth_code_id RESTART WITH 1;
+ALTER TABLE ticket ALTER COLUMN ticket_id RESTART WITH 1;
+ALTER TABLE member ALTER COLUMN member_id RESTART WITH 1;
+ALTER TABLE board ALTER COLUMN board_id RESTART WITH 1;
+ALTER TABLE post_board ALTER COLUMN post_board_id RESTART WITH 1;
+ALTER TABLE post_report ALTER COLUMN post_report_id RESTART WITH 1;
+ALTER TABLE comment_report ALTER COLUMN comment_report_id RESTART WITH 1;
+
 SET
 FOREIGN_KEY_CHECKS = 1;
 
 insert into member (username, nickname, password, role_type) values ('chris', 'chrisNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'USER');
+insert into member (username, nickname, password, role_type) values ('josh', 'joshNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'USER');
+insert into member (username, nickname, password, role_type) values ('east', 'eastNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'USER');
+insert into member (username, nickname, password, role_type) values ('thor', 'thorNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'USER');
+insert into member (username, nickname, password, role_type) values ('hunch', 'hunchNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'USER');
 insert into member (username, nickname, password, role_type) values ('testAdmin', 'adminNick', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');
 insert into member (username, nickname, password, role_type) values ('josh', 'joshNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');
 insert into member (username, nickname, password, role_type) values ('east', 'eastNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');

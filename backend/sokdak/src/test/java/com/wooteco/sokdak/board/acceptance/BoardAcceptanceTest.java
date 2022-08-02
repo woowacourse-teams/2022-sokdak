@@ -77,7 +77,7 @@ public class BoardAcceptanceTest extends AcceptanceTest {
         httpPostWithAuthorization(postRequest4, "/boards/" + POSUTA_BOARD_ID + "/posts", token);
 
         // when
-        ExtractableResponse<Response> response = httpGet("/boards/content");
+        ExtractableResponse<Response> response = httpGet("/boards/contents");
 
         // then
         List<BoardContentElement> boardsAll = getBoardContentElements(response);
@@ -97,12 +97,18 @@ public class BoardAcceptanceTest extends AcceptanceTest {
                         ),
                 () -> assertThat(posts1)
                         .hasSize(3)
-                        .extracting("title")
-                        .containsExactly("제목3", "제목2", "제목1"),
+                        .extracting("id", "title")
+                        .containsExactly(
+                                tuple(3L, "제목3"),
+                                tuple(2L, "제목2"),
+                                tuple(1L, "제목1")
+                        ),
                 () -> assertThat(posts2)
                         .hasSize(1)
-                        .extracting("title")
-                        .containsExactly("제목4")
+                        .extracting("id", "title")
+                        .containsExactly(
+                                tuple(4L, "제목4")
+                        )
         );
     }
 

@@ -41,7 +41,6 @@ export const PostInfoContainer = styled.div`
   display: flex;
   gap: 10px;
   font-family: 'NotoSansKR';
-  opacity: 0.7;
 `;
 
 export const IconContainer = styled.div`

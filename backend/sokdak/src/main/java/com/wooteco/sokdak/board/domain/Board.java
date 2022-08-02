@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.board.domain;
 
+import com.wooteco.sokdak.member.domain.RoleType;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,10 @@ public class Board {
         this.boardType = boardType;
     }
 
-    public boolean isUserWritable() {
-        return boardType == BoardType.NORMAL;
+    public boolean isUserWritable(String role) {
+        if (RoleType.USER.getName().equals(role) && boardType == BoardType.SPECIAL) {
+            return false;
+        }
+        return true;
     }
 }

@@ -19,6 +19,7 @@ import com.wooteco.sokdak.board.exception.BoardNotWritableException;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
@@ -97,7 +98,7 @@ class BoardServiceTest {
                 .build();
         Board savedBoard = boardRepository.save(board);
 
-        boardService.savePostBoard(post, savedBoard.getId());
+        boardService.savePostBoard(post, savedBoard.getId(), RoleType.USER.getName());
         Optional<PostBoard> postBoard = postBoardRepository.findPostBoardByPostAndBoard(post, board);
 
         assertAll(
@@ -124,7 +125,7 @@ class BoardServiceTest {
                 .build();
         Board savedBoard = boardRepository.save(board);
 
-        assertThatThrownBy(() -> boardService.savePostBoard(post, savedBoard.getId()))
+        assertThatThrownBy(() -> boardService.savePostBoard(post, savedBoard.getId(), RoleType.USER.getName()))
                 .isInstanceOf(BoardNotWritableException.class);
     }
 
@@ -140,7 +141,7 @@ class BoardServiceTest {
                 .build();
         postRepository.save(post);
 
-        assertThatThrownBy(() -> boardService.savePostBoard(post, 9999L))
+        assertThatThrownBy(() -> boardService.savePostBoard(post, 9999L, RoleType.USER.getName()))
                 .isInstanceOf(BoardNotFoundException.class);
     }
 }

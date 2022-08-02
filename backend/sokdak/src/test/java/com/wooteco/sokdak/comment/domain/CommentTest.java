@@ -3,6 +3,7 @@ package com.wooteco.sokdak.comment.domain;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.wooteco.sokdak.auth.exception.AuthenticationException;
@@ -11,6 +12,8 @@ import com.wooteco.sokdak.post.domain.Post;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class CommentTest {
 
@@ -44,5 +47,12 @@ class CommentTest {
 
         assertThatThrownBy(() -> comment.validateOwner(invalidOwnerId))
                 .isInstanceOf(AuthenticationException.class);
+    }
+
+    @DisplayName("내가 작성한 댓글이면 true를 반환")
+    @ParameterizedTest
+    @CsvSource({"1, true", "2, false"})
+    void isAuthenticated(Long userId, boolean expected) {
+        assertThat(comment.isAuthenticated(userId)).isEqualTo(expected);
     }
 }

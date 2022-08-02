@@ -8,7 +8,14 @@ import PATH from '@/constants/path';
 import timeConverter from '@/utils/timeConverter';
 
 interface PostHeaderProps {
-  post: { content: string; title: string; createdAt: string; hashtags: Omit<Hashtag, 'count'>[]; authorized: boolean };
+  post: {
+    content: string;
+    title: string;
+    createdAt: string;
+    hashtags: Omit<Hashtag, 'count'>[];
+    authorized: boolean;
+    nickname: string;
+  };
   like: { isLiked: boolean; likeCount: number };
   onClickDeleteButton: () => void;
   onClickLikeButton: () => void;
@@ -31,7 +38,7 @@ const PostHeader = ({ post, like, onClickDeleteButton, onClickLikeButton }: Post
         </Styled.PostController>
       )}
       <Styled.PostInfo>
-        <Styled.Author>익명</Styled.Author>
+        <Styled.Author>{post.nickname}</Styled.Author>
         <Styled.Date>{timeConverter(post.createdAt)}</Styled.Date>
       </Styled.PostInfo>
       <Styled.LikeButtonContainer>

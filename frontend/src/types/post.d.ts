@@ -16,4 +16,5 @@ interface Post {
   hashtags: Omit<Hashtag, 'count'>[];
   authorized: boolean;
   boardId: number;
+  nickname: string;
 }

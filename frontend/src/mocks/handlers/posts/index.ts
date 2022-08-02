@@ -3,8 +3,8 @@ import { rest } from 'msw';
 import { hashtagList, commentList, postList, boardList } from '@/dummy';
 
 const postHandlers = [
-  rest.post<Pick<Post, 'title' | 'content'> & { hashtags: string[] }>('/posts', (req, res, ctx) => {
-    const { title, content, hashtags } = req.body;
+  rest.post<Pick<Post, 'title' | 'content'> & { hashtags: string[]; anonymous: boolean }>('/posts', (req, res, ctx) => {
+    const { title, content, hashtags, anonymous } = req.body;
     const id = postList.length + 1;
 
     if (!title || !content) {
@@ -38,6 +38,7 @@ const postHandlers = [
       hashtags: hashtags.map(hashtagName => hashtagList.find(hashtag => hashtag.name === hashtagName)!),
       authorized: true,
       boardId: 1,
+      nickname: anonymous ? '짜증난 파이썬' : '테스트 계정',
     };
 
     postList.unshift(newPost);

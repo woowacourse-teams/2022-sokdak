@@ -6,13 +6,18 @@ import useSnackbar from '@/hooks/useSnackbar';
 
 import * as Styled from './index.styles';
 
+const SubmitType = {
+  POST: '글 작성하기',
+  PUT: '글 수정하기',
+} as const;
+
 interface PostFormProps {
   heading: string;
-  submitType: string;
+  submitType: typeof SubmitType[keyof typeof SubmitType];
   prevTitle?: string;
   prevContent?: string;
   prevHashTags?: Omit<Hashtag, 'count'>[];
-  handlePost: (post: Pick<Post, 'title' | 'content'> & { hashtags: string[] }) => void;
+  handlePost: (post: Pick<Post, 'title' | 'content'> & { hashtags: string[]; anonymous?: boolean }) => void;
 }
 
 const PostForm = ({
@@ -28,6 +33,7 @@ const PostForm = ({
   const [title, setTitle] = useState(prevTitle);
   const [content, setContent] = useState(prevContent);
   const [hashtags, setHashtags] = useState(prevHashTags.map(hashtag => hashtag.name));
+  const [anonymous, setAnonymous] = useState(true);
 
   const [isValidTitle, setIsValidTitle] = useState(true);
   const [isValidContent, setIsValidContent] = useState(true);
@@ -36,7 +42,8 @@ const PostForm = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    handlePost({ title, content, hashtags });
+
+    handlePost({ title, content, hashtags, anonymous });
   };
 
   return (
@@ -80,6 +87,9 @@ const PostForm = ({
       />
       <HashTagInput hashtags={hashtags} setHashtags={setHashtags} />
       <Styled.SubmitButton>{submitType}</Styled.SubmitButton>
+      {submitType === SubmitType.POST && (
+        <Styled.CheckBox isChecked={anonymous} setIsChecked={setAnonymous} labelText="익명" />
+      )}
     </Styled.Container>
   );
 };

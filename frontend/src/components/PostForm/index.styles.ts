@@ -1,3 +1,5 @@
+import CheckBoxComponent from '@/components/CheckBox';
+
 import { invalidInputAnimation } from '@/style/GlobalStyle';
 import styled from '@emotion/styled';
 
@@ -65,17 +67,6 @@ export const SubmitButton = styled.button`
   cursor: pointer;
 `;
 
-export const CheckBoxContainer = styled.div`
+export const CheckBox = styled(CheckBoxComponent)`
   width: 100%;
-  margin: 15px 0;
-`;
-
-export const CheckBox = styled.input``;
-
-export const Label = styled.label`
-  font-size: 12px;
-  color: ${props => props.theme.colors.gray_200};
-  display: flex;
-  align-items: center;
-  user-select: none;
 `;

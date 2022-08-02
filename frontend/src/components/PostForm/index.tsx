@@ -88,16 +88,7 @@ const PostForm = ({
       <HashTagInput hashtags={hashtags} setHashtags={setHashtags} />
       <Styled.SubmitButton>{submitType}</Styled.SubmitButton>
       {submitType === SubmitType.POST && (
-        <Styled.CheckBoxContainer>
-          <Styled.Label>
-            <Styled.CheckBox
-              type="checkbox"
-              checked={anonymous}
-              onChange={e => setAnonymous(e.currentTarget.checked)}
-            />
-            익명
-          </Styled.Label>
-        </Styled.CheckBoxContainer>
+        <Styled.CheckBox isChecked={anonymous} setIsChecked={setAnonymous} labelText="익명" />
       )}
     </Styled.Container>
   );

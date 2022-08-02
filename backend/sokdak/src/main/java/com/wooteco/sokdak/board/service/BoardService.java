@@ -70,6 +70,19 @@ public class BoardService {
         postBoardRepository.save(postBoard);
     }
 
+    @Transactional
+    public void saveInSpecialBoard(Post originalPost) {
+        Board specialBoard = boardRepository.findByTitle("Hot 게시판")
+                .orElseThrow(BoardNotFoundException::new);
+
+        PostBoard postBoard = PostBoard.builder()
+                .build();
+
+        postBoard.addPost(originalPost);
+        postBoard.addBoard(specialBoard);
+        postBoardRepository.save(postBoard);
+    }
+
     private void validateUserWritableBoard(Board board, String role) {
         if (!board.isUserWritable(role)) {
             throw new BoardNotWritableException();

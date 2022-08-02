@@ -129,6 +129,29 @@ class BoardServiceTest {
                 .isInstanceOf(BoardNotWritableException.class);
     }
 
+    @DisplayName("핫게시판에 게시글이 저장될 수 있다.")
+    @Test
+    void saveInSpecialBoard() {
+        Member member = memberRepository.findById(1L).get();
+        post = Post.builder()
+                .title("제목")
+                .content("본문")
+                .member(member)
+                .likes(new ArrayList<>())
+                .build();
+        postRepository.save(post);
+        Board board = boardRepository.findByTitle("Hot 게시판").get();
+
+        boardService.saveInSpecialBoard(post);
+        Optional<PostBoard> postBoard = postBoardRepository.findPostBoardByPostAndBoard(post, board);
+
+        assertAll(
+                () -> assertThat(postBoard).isNotEmpty(),
+                () -> assertThat(postBoard.get().getBoard().getTitle()).isEqualTo("Hot 게시판"),
+                () -> assertThat(postBoard.get().getPost().getTitle()).isEqualTo("제목")
+        );
+    }
+
     @DisplayName("게시글을 존재하지 않는 게시판에 작성하면 예외가 발생한다.")
     @Test
     void savePostBoard_Exception_NoBoard() {

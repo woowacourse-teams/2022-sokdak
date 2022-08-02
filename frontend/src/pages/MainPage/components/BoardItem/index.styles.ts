@@ -11,6 +11,12 @@ export const Title = styled.p`
   margin-bottom: 0.5em;
 `;
 
+export const ItemTitle = styled.p`
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+`;
+
 export const Item = styled(Link)`
   width: calc(100%-2em);
   display: flex;
@@ -32,12 +38,14 @@ export const ItemContainer = styled.section`
 `;
 
 export const PostInfoContainer = styled.div`
-  align-self: flex-end;
   display: flex;
-  justify-content: space-between;
-  gap: 1px;
+  gap: 10px;
   font-family: 'NotoSansKR';
   opacity: 0.7;
+`;
+
+export const IconContainer = styled.div`
+  min-width: 2.5rem;
 `;
 
 export const LikeIcon = styled(Heart)`
@@ -45,7 +53,7 @@ export const LikeIcon = styled(Heart)`
   stroke: ${props => props.theme.colors.pink_300};
   width: 16px;
   height: 14px;
-  margin: 0 4px 0 10px;
+  margin: 0 4px 0 0;
 `;
 
 export const LikeCount = styled.span`
@@ -55,7 +63,7 @@ export const LikeCount = styled.span`
 export const CommentIcon = styled(Comment)`
   width: 16px;
   height: 15px;
-  margin: 0 4px 0 10px;
+  margin: 0 4px 0 0;
 `;
 
 export const CommentCount = styled.span`

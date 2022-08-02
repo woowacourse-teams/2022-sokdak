@@ -10,6 +10,8 @@ TRUNCATE TABLE member;
 TRUNCATE TABLE board;
 TRUNCATE TABLE post_board;
 TRUNCATE TABLE post_report;
+TRUNCATE TABLE comment_report;
+TRUNCATE TABLE refresh_token;
 SET
 FOREIGN_KEY_CHECKS = 1;
 

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ReactDOM from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 
 import useHashtags from '@/hooks/queries/hashtag/useHashtags';
 import useQueryDebounce from '@/hooks/queries/hashtag/useQueryDebounce';
@@ -13,6 +14,7 @@ interface SearchModalProps {
 }
 
 const SearchModal = ({ handleSearchModal: closeModal }: SearchModalProps) => {
+  const navigate = useNavigate();
   const [limit] = useState(10);
   const [include, setInclude] = useState('');
   const { debounceValue: debouncedInclude } = useQueryDebounce(include);
@@ -21,6 +23,11 @@ const SearchModal = ({ handleSearchModal: closeModal }: SearchModalProps) => {
   const { data } = useHashtags({
     storeCode: [limit, debouncedInclude],
   });
+
+  const handleHashTagClick = (name: string) => {
+    closeModal();
+    navigate(`/hashtag/${name}`);
+  };
 
   return (
     <>
@@ -43,7 +50,12 @@ const SearchModal = ({ handleSearchModal: closeModal }: SearchModalProps) => {
             {data && (
               <Styled.HashTagContainer>
                 {data.data.hashtags.map(({ name, count }) => (
-                  <Styled.HashTag key={name} name={name} count={count} />
+                  <Styled.HashTag
+                    key={name}
+                    name={name}
+                    count={count}
+                    handleTagClick={() => handleHashTagClick(name)}
+                  />
                 ))}
               </Styled.HashTagContainer>
             )}

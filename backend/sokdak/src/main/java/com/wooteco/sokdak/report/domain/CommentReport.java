@@ -48,6 +48,11 @@ public class CommentReport {
         this.comment = comment;
         this.reporter = reporter;
         this.reportMessage = new ReportMessage(reportMessage);
+        addComment();
+    }
+
+    private void addComment() {
+        this.comment.getCommentReports().add(this);
     }
 
     public Long getId() {

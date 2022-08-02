@@ -7,6 +7,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -15,6 +16,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class AuthCode {
+
+    private static final long VALID_MINUTE = 5L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +32,13 @@ public class AuthCode {
     protected AuthCode() {
     }
 
+    @Builder
+    public AuthCode(String code, String serialNumber, LocalDateTime createdAt) {
+        this.code = code;
+        this.serialNumber = serialNumber;
+        this.createdAt = createdAt;
+    }
+
     public AuthCode(String code, String serialNumber) {
         this.code = code;
         this.serialNumber = serialNumber;
@@ -36,6 +46,13 @@ public class AuthCode {
 
     public void verify(String code) {
         if (!this.code.equals(code)) {
+            throw new InvalidAuthCodeException();
+        }
+    }
+
+    public void verifyTime(LocalDateTime now) {
+        LocalDateTime expireTime = this.createdAt.plusMinutes(VALID_MINUTE);
+        if (now.isAfter(expireTime)) {
             throw new InvalidAuthCodeException();
         }
     }

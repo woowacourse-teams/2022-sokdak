@@ -9,7 +9,6 @@ import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_4;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.BoardType;
@@ -25,22 +24,14 @@ import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
+import com.wooteco.sokdak.util.IntegrationTest;
 import java.util.ArrayList;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
-@Sql(
-        scripts = {"classpath:truncate.sql"},
-        executionPhase = BEFORE_TEST_METHOD)
-@Transactional
-@Sql("classpath:truncate.sql")
-class BoardServiceTest {
+class BoardServiceTest extends IntegrationTest {
 
     @Autowired
     private BoardService boardService;

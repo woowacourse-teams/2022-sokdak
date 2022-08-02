@@ -268,6 +268,17 @@ const postHandlers = [
     reportCommentList.push({ commentId: Number(id), message });
     return res(ctx.status(201));
   }),
+
+  rest.delete('/comments/:id', (req, res, ctx) => {
+    const { id } = req.params;
+    const targetCommentIdx = commentList.findIndex(comment => comment.id === Number(id));
+
+    if (targetCommentIdx === -1) {
+      return res(ctx.status(400), ctx.json({ message: '해당 댓글이 존재하지 않습니다.' }));
+    }
+    commentList.splice(targetCommentIdx, 1);
+    return res(ctx.status(204));
+  }),
 ];
 
 export default postHandlers;

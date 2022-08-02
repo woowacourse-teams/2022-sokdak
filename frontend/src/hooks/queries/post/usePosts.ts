@@ -19,10 +19,10 @@ const usePosts = ({
 }) =>
   useInfiniteQuery(
     [QUERY_KEYS.POSTS, storeCode],
-    ({ pageParam = 0, queryKey: [_, size] }) => axios.get(`/posts?size=${size}&page=${pageParam}`),
+    ({ pageParam = 0, queryKey: [, size] }) => axios.get(`/posts?size=${size}&page=${pageParam}`),
     {
       select: data => ({
-        pages: data.pages.flatMap((x: any) => x.data.posts),
+        pages: data.pages.flatMap((x: AxiosResponse) => x.data.posts),
         pageParams: [...data.pageParams, data.pageParams.length],
       }),
       enabled: false,

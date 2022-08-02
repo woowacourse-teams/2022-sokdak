@@ -1,12 +1,12 @@
-import React, { Dispatch, SetStateAction, useContext, useEffect, useLayoutEffect } from 'react';
+import React, { Dispatch, SetStateAction, useLayoutEffect } from 'react';
 
 import InputBox from '@/components/@shared/InputBox';
 import { useInput } from '@/components/@shared/InputBox/useInput';
 
-import SnackbarContext from '@/context/Snackbar';
-
 import useNicknameCheck from '@/hooks/queries/member/useNicknameCheck';
+import useSnackbar from '@/hooks/useSnackbar';
 
+import { SIGN_UP_ERROR } from '@/constants/signUp';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 import { isValidNickname } from '@/utils/regExp';
 
@@ -29,7 +29,7 @@ const NicknameInput = ({
   isSet,
   setIsSet,
 }: NicknameInputProps) => {
-  const { showSnackbar } = useContext(SnackbarContext);
+  const { showSnackbar } = useSnackbar();
   const { refetch } = useNicknameCheck({
     storeCode: [value],
     options: {
@@ -39,7 +39,7 @@ const NicknameInput = ({
           setIsSet(true);
         }
         if (!data) {
-          setError('중복된 닉네임입니다.');
+          setError(SIGN_UP_ERROR.DUPLICATED_NICKNAME);
           setIsAnimationActive(true);
         }
       },
@@ -57,7 +57,7 @@ const NicknameInput = ({
     }
     setIsSet(false);
     if (!isValidNickname(value)) {
-      setError('닉네임는 1자에서 16자 사이입니다.');
+      setError(SIGN_UP_ERROR.INVALID_NICKNAME);
     }
     if (isValidNickname(value)) {
       setError('');
@@ -82,7 +82,7 @@ const NicknameInput = ({
       <Styled.InputForm onSubmit={handleIDCheckForm}>
         <InputBox.Input
           handleInvalid={() => {
-            setError('닉네임를 입력해주세요');
+            setError(SIGN_UP_ERROR.BLANK_NICKNAME);
           }}
           placeholder="닉네임"
           required
@@ -90,8 +90,14 @@ const NicknameInput = ({
         <InputBox.SubmitButton disabled={error !== '' || value === ''}>
           {isSet ? '중복 확인 완료' : '중복 확인'}
         </InputBox.SubmitButton>
+        {error ? (
+          <InputBox.ErrorMessage />
+        ) : (
+          <Styled.MessageContainer>
+            <Styled.Message>테크코스 닉네임은 익명성을 헤칠수 있습니다.</Styled.Message>
+          </Styled.MessageContainer>
+        )}
       </Styled.InputForm>
-      <InputBox.ErrorMessage />
     </InputBox>
   );
 };

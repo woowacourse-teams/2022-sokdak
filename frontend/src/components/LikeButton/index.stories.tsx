@@ -12,9 +12,7 @@ const Template: ComponentStory<typeof LikeButton> = args => {
   const [state, setState] = useState(false);
   const [count, setCount] = useState(3);
   const handleClick = () => {
-    console.log('hi');
     setState(prev => !prev);
-    console.log(state);
   };
   useEffect(() => {
     setCount(prev => (state ? prev + 1 : prev - 1));

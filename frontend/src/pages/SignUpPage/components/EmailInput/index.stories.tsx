@@ -14,7 +14,7 @@ const Template = () => {
   const { error, setError, setValue, value } = useInput();
   const [isAnimationActive, setIsAnimationActive] = useState(false);
   const [isSet, setIsSet] = useState(false);
-  const [isVerified, setIsVerified] = useState(false);
+  const [isVerified] = useState(false);
 
   return (
     <EmailInput

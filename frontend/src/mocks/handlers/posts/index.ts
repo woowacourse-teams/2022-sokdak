@@ -210,6 +210,24 @@ const postHandlers = [
     });
     return res(ctx.status(200), ctx.json({ boards: boards }));
   }),
+
+  rest.get('/boards/:id/posts', (req, res, ctx) => {
+    const params = req.params;
+    const boardId = Number(params.id);
+
+    const size = Number(req.url.searchParams.get('size')!);
+    const page = Number(req.url.searchParams.get('page')!);
+    const postsInBoard = postList.filter(post => post.boardId === boardId);
+    const posts = postsInBoard.slice(page * size, page * size + size);
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        posts,
+        lastPage: postsInBoard.length - size * page - posts.length === 0 && posts.length !== 0,
+      }),
+    );
+  }),
 ];
 
 export default postHandlers;

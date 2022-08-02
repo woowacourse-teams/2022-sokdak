@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 
+import BoardPage from './pages/BoardPage';
 import CreatePostPage from './pages/CreatePostPage';
 import LoginPage from './pages/LoginPage';
 import MainPage from './pages/MainPage';
@@ -28,6 +29,7 @@ const App = () => {
         <Route path={PATH.LOGIN} element={<LoginPage />} />
         <Route path={PATH.SIGN_UP} element={<SignUpPage />} />
         <Route path={PATH.UPDATE_POST} element={<UpdatePostPage />} />
+        <Route path={`${PATH.BOARD}/:id`} element={<BoardPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       {isVisible && <Snackbar message={message} />}

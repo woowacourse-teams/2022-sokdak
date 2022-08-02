@@ -26,9 +26,10 @@ const PostList = ({ data, fetchNextPage }: PostListProps) => {
 
   return (
     <Styled.Container>
-      {data?.pages.map(({ id, title, content, createdAt, likeCount, commentCount, modified }, index) => (
+      {data?.pages.map(({ id, title, content, createdAt, likeCount, commentCount, modified, blocked }, index) => (
         <PostListItem
           testid={id}
+          blocked={blocked}
           title={title}
           content={content}
           createdAt={createdAt}

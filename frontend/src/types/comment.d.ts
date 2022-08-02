@@ -1,5 +1,5 @@
 interface CommentType {
-  id: string;
+  id: number;
   nickname: string;
   content: string;
   createdAt: string;

@@ -19,7 +19,7 @@ const CommentList = ({ id }: CommentListProps) => {
         {data?.map(comment => (
           <CommentBox
             key={comment.id}
-            id={comment.id}
+            id={Number(comment.id)}
             authorized={comment.authorized}
             nickname={comment.nickname}
             content={comment.content}

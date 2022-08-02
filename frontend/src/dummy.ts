@@ -357,7 +357,6 @@ export const validMemberEmail: { email: string; isSignedUp: boolean; code: strin
   ];
 
 interface CommentListType extends CommentType {
-  id: number;
   postId: number;
 }
 
@@ -546,3 +545,5 @@ export const boardList = [
 ];
 
 export const reportList = [{ postId: 1, message: '그냥 마음에 들지 않는다' }];
+
+export const reportCommentList = [{ commentId: 1, message: '그냥 마음에 들지 않는다' }];

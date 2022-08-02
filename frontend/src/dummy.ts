@@ -358,6 +358,7 @@ export const validMemberEmail: { email: string; isSignedUp: boolean; code: strin
 
 interface CommentListType extends CommentType {
   postId: number;
+  blocked: boolean;
 }
 
 export const commentList: CommentListType[] = [
@@ -369,6 +370,7 @@ export const commentList: CommentListType[] = [
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
     authorized: false,
+    blocked: false,
   },
   {
     id: 2,
@@ -377,6 +379,7 @@ export const commentList: CommentListType[] = [
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
     authorized: false,
+    blocked: false,
   },
   {
     id: 3,
@@ -385,6 +388,7 @@ export const commentList: CommentListType[] = [
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
     authorized: true,
+    blocked: true,
   },
   {
     id: 4,
@@ -393,6 +397,7 @@ export const commentList: CommentListType[] = [
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
     authorized: true,
+    blocked: false,
   },
   {
     id: 5,
@@ -401,6 +406,7 @@ export const commentList: CommentListType[] = [
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
     authorized: false,
+    blocked: false,
   },
   {
     id: 6,
@@ -409,6 +415,7 @@ export const commentList: CommentListType[] = [
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
     authorized: true,
+    blocked: false,
   },
   {
     id: 7,
@@ -417,14 +424,16 @@ export const commentList: CommentListType[] = [
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
     authorized: false,
+    blocked: false,
   },
   {
     id: 8,
     postId: 1,
     content: '안녕하세요.',
-    createdAt: '2022-07-04T19:55:31.016376300',
+    createdAt: '  2022-07-04T19:55:31.016376300',
     nickname: '익명',
     authorized: false,
+    blocked: true,
   },
   {
     id: 9,
@@ -433,6 +442,7 @@ export const commentList: CommentListType[] = [
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
     authorized: true,
+    blocked: false,
   },
   {
     id: 10,
@@ -441,6 +451,7 @@ export const commentList: CommentListType[] = [
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
     authorized: false,
+    blocked: false,
   },
   {
     id: 11,
@@ -449,6 +460,7 @@ export const commentList: CommentListType[] = [
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
     authorized: true,
+    blocked: false,
   },
   {
     id: 12,
@@ -457,6 +469,7 @@ export const commentList: CommentListType[] = [
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
     authorized: false,
+    blocked: false,
   },
   {
     id: 13,
@@ -465,6 +478,7 @@ export const commentList: CommentListType[] = [
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
     authorized: true,
+    blocked: false,
   },
   {
     id: 14,
@@ -473,6 +487,7 @@ export const commentList: CommentListType[] = [
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
     authorized: false,
+    blocked: false,
   },
   {
     id: 15,
@@ -481,6 +496,7 @@ export const commentList: CommentListType[] = [
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
     authorized: false,
+    blocked: false,
   },
   {
     id: 16,
@@ -489,6 +505,7 @@ export const commentList: CommentListType[] = [
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
     authorized: false,
+    blocked: false,
   },
 ];
 

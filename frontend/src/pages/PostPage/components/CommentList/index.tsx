@@ -24,6 +24,7 @@ const CommentList = ({ id }: CommentListProps) => {
             nickname={comment.nickname}
             content={comment.content}
             createdAt={comment.createdAt}
+            blocked={comment.blocked}
           />
         ))}
       </Styled.CommentsContainer>

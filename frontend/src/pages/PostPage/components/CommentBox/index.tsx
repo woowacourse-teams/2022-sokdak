@@ -11,7 +11,11 @@ import timeConverter from '@/utils/timeConverter';
 
 import ReportModal from '../ReportModal';
 
-const CommentBox = ({ id, nickname, content, createdAt, authorized }: CommentType) => {
+interface CommentBoxProps extends CommentType {
+  blocked: boolean;
+}
+
+const CommentBox = ({ id, nickname, content, createdAt, authorized, blocked }: CommentBoxProps) => {
   const [isReportModalOpen, handleReportModal] = useReducer(state => !state, false);
   const [isDeleteModalOpen, handleDeleteModal] = useReducer(state => !state, false);
 
@@ -33,6 +37,14 @@ const CommentBox = ({ id, nickname, content, createdAt, authorized }: CommentTyp
   const submitReportComment = (message: string) => {
     reportComment({ id, message });
   };
+
+  if (blocked) {
+    return (
+      <Styled.BlockContainer>
+        <Styled.BlockedContent>신고에 의해 블라인드 처리되었습니다</Styled.BlockedContent>
+      </Styled.BlockContainer>
+    );
+  }
 
   return (
     <>

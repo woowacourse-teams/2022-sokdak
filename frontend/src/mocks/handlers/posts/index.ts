@@ -181,6 +181,7 @@ const postHandlers = [
       nickname: anonymous ? '익명' : '기명',
       postId: id,
       authorized: true,
+      blocked: false,
     });
     targetPost.commentCount += 1;
 

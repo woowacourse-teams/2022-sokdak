@@ -1,9 +1,26 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
-export const Container = styled.div`
+const containerStyle = css`
   width: calc(100%-1em);
-  border-top: 0.5px solid ${props => props.theme.colors.gray_150};
   padding: 1em 0.5em;
+`;
+
+export const Container = styled.div`
+  ${containerStyle}
+  border-top: 0.5px solid ${props => props.theme.colors.gray_150};
+`;
+
+export const BlockContainer = styled.div`
+  ${containerStyle}
+  border-top: 0.5px solid ${props => props.theme.colors.gray_150};
+  cursor: default;
+  padding: 2em 0;
+`;
+
+export const BlockedContent = styled.p`
+  color: ${props => props.theme.colors.gray_200};
+  font-size: 12px;
 `;
 
 export const CommentHeader = styled.div`

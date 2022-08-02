@@ -63,7 +63,7 @@ public class AuthController {
     @GetMapping("/logout")
     public ResponseEntity<Void> logout(@Login AuthInfo authInfo) {
         refreshTokenService.deleteToken(authInfo.getId());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     private void validateExistHeader(HttpServletRequest request) {

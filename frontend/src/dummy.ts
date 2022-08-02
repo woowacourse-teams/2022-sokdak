@@ -28,6 +28,7 @@ export const postList: Post[] = [
     ],
     authorized: true,
     boardId: 1,
+    nickname: '테스트 계정',
   },
   {
     id: 2,
@@ -50,6 +51,7 @@ export const postList: Post[] = [
     ],
     authorized: false,
     boardId: 1,
+    nickname: '짜증난 파이썬',
   },
 
   {
@@ -69,6 +71,7 @@ export const postList: Post[] = [
     ],
     authorized: true,
     boardId: 2,
+    nickname: '테스트 계정',
   },
   {
     id: 4,
@@ -87,6 +90,7 @@ export const postList: Post[] = [
     ],
     authorized: false,
     boardId: 3,
+    nickname: '짜증난 파이썬',
   },
   {
     id: 5,
@@ -105,6 +109,7 @@ export const postList: Post[] = [
     ],
     authorized: true,
     boardId: 4,
+    nickname: '테스트 계정',
   },
   {
     id: 6,
@@ -118,6 +123,7 @@ export const postList: Post[] = [
     hashtags: [],
     authorized: false,
     boardId: 3,
+    nickname: '못된 젠킨스',
   },
   {
     id: 7,
@@ -131,6 +137,7 @@ export const postList: Post[] = [
     hashtags: [],
     authorized: false,
     boardId: 3,
+    nickname: '행복한 리액트',
   },
   {
     id: 8,
@@ -144,6 +151,7 @@ export const postList: Post[] = [
     hashtags: [],
     authorized: false,
     boardId: 2,
+    nickname: '슬픈 자바',
   },
   {
     id: 9,
@@ -157,6 +165,7 @@ export const postList: Post[] = [
     hashtags: [],
     authorized: false,
     boardId: 1,
+    nickname: '짜증난 파이썬',
   },
   {
     id: 10,
@@ -170,6 +179,7 @@ export const postList: Post[] = [
     hashtags: [],
     authorized: false,
     boardId: 3,
+    nickname: '짜증난 파이썬',
   },
   {
     id: 11,
@@ -183,6 +193,7 @@ export const postList: Post[] = [
     hashtags: [],
     authorized: false,
     boardId: 4,
+    nickname: '짜증난 파이썬',
   },
   {
     id: 12,
@@ -196,6 +207,7 @@ export const postList: Post[] = [
     hashtags: [],
     authorized: false,
     boardId: 4,
+    nickname: '짜증난 파이썬',
   },
   {
     id: 13,
@@ -209,6 +221,7 @@ export const postList: Post[] = [
     hashtags: [],
     authorized: false,
     boardId: 3,
+    nickname: '짜증난 파이썬',
   },
   {
     id: 14,
@@ -222,6 +235,7 @@ export const postList: Post[] = [
     hashtags: [],
     authorized: false,
     boardId: 2,
+    nickname: '짜증난 파이썬',
   },
   {
     id: 15,
@@ -235,6 +249,7 @@ export const postList: Post[] = [
     hashtags: [],
     authorized: false,
     boardId: 3,
+    nickname: '짜증난 파이썬',
   },
   {
     id: 16,
@@ -248,6 +263,7 @@ export const postList: Post[] = [
     hashtags: [],
     authorized: false,
     boardId: 2,
+    nickname: '짜증난 파이썬',
   },
   {
     id: 17,
@@ -261,6 +277,7 @@ export const postList: Post[] = [
     hashtags: [],
     authorized: false,
     boardId: 3,
+    nickname: '짜증난 파이썬',
   },
   {
     id: 18,
@@ -274,6 +291,7 @@ export const postList: Post[] = [
     hashtags: [],
     authorized: false,
     boardId: 1,
+    nickname: '짜증난 파이썬',
   },
   {
     id: 19,
@@ -287,6 +305,7 @@ export const postList: Post[] = [
     hashtags: [],
     authorized: false,
     boardId: 2,
+    nickname: '짜증난 파이썬',
   },
   {
     id: 20,
@@ -300,6 +319,7 @@ export const postList: Post[] = [
     hashtags: [],
     authorized: false,
     boardId: 3,
+    nickname: '못된 젠킨스',
   },
 ];
 

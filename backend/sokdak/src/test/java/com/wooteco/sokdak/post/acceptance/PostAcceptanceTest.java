@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.auth.dto.LoginRequest;
-import com.wooteco.sokdak.member.dto.SignupRequest;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
@@ -80,7 +79,7 @@ class PostAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("게시글 목록 중 누적 신고가 5개 이상인 게시글은 blocked 왼다.")
+    @DisplayName("게시글 목록 중 누적 신고가 5개 이상인 게시글은 blocked 된다.")
     @Test
     void findPosts_Blocked() {
         String token = getToken();
@@ -88,7 +87,7 @@ class PostAcceptanceTest extends AcceptanceTest {
         httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, token);
         Long blockedPostId = Long.parseLong(
                 parsePostId(httpPostWithAuthorization(postRequest2, CREATE_POST_URI, token)));
-        reportPostToBlockPost(blockedPostId);
+        blockPost(blockedPostId);
 
         ExtractableResponse<Response> response = httpGet("/boards/" + WRITABLE_BOARD_ID + "/posts?size=2&page=0");
         List<PostsElementResponse> postsElementResponses = parsePostsElementResponse(response);
@@ -152,7 +151,7 @@ class PostAcceptanceTest extends AcceptanceTest {
     void findPost_Blocked() {
         Long postId = Long.parseLong(
                 parsePostId(httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getToken())));
-        reportPostToBlockPost(postId);
+        blockPost(postId);
 
         ExtractableResponse<Response> response = httpGet("/posts/" + postId);
         PostDetailResponse postDetailResponse = response.jsonPath().getObject(".", PostDetailResponse.class);
@@ -249,7 +248,7 @@ class PostAcceptanceTest extends AcceptanceTest {
                 .getPosts();
     }
 
-    private void reportPostToBlockPost(Long postId) {
+    private void blockPost(Long postId) {
         String token1 = getToken();
         String token2 = httpPost(new LoginRequest("josh", "Abcd123!@"), "/login").header(AUTHORIZATION);
         String token3 = httpPost(new LoginRequest("thor", "Abcd123!@"), "/login").header(AUTHORIZATION);

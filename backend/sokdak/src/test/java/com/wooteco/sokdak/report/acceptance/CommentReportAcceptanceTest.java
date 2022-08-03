@@ -4,10 +4,12 @@ import static com.wooteco.sokdak.util.fixture.CommentFixture.*;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.*;
 import static com.wooteco.sokdak.util.fixture.PostFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
+import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
@@ -32,6 +34,32 @@ class CommentReportAcceptanceTest extends AcceptanceTest {
                 "/comments/" + commentId + "/report", getToken());
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
+    @DisplayName("이미 신고한 댓글은 다시 신고할 수 없다.")
+    @Test
+    void reportComment_Exception_AlreadyReport() {
+        addPostAndGetPostId();
+        Long commentId = addCommentAndGetCommentId();
+        httpPostWithAuthorization(REPORT_REQUEST,
+                "/comments/" + commentId + "/report", getToken());
+
+        ExtractableResponse<Response> response = httpPostWithAuthorization(REPORT_REQUEST,
+                "/comments/" + commentId + "/report", getToken());
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("없는 댓글은 신고할 수 없다.")
+    @Test
+    void reportComment_Exception_NotFoundComment() {
+        addPostAndGetPostId();
+        Long invalidCommentId = 9999L;
+
+        ExtractableResponse<Response> response = httpPostWithAuthorization(REPORT_REQUEST,
+                "/comments/" + invalidCommentId + "/report", getToken());
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
     private Long addCommentAndGetCommentId() {

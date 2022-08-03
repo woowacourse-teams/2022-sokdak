@@ -44,6 +44,17 @@ class PostReportAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
+    @DisplayName("없는 게시글을 신고할 순 없다.")
+    @Test
+    void reportPost_Exception_NotFoundPost() {
+        Long invalidPostId = 9999L;
+
+        ExtractableResponse<Response> response = httpPostWithAuthorization(REPORT_REQUEST,
+                "/posts/" + invalidPostId + "/report", getToken());
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
     private String getToken() {
         LoginRequest loginRequest = new LoginRequest("chris", "Abcd123!@");
         return httpPost(loginRequest, "/login").header(AUTHORIZATION);

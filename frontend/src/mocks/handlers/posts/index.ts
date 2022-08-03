@@ -182,10 +182,11 @@ const postHandlers = [
       id: commentList.length + 1,
       content,
       createdAt: new Date().toISOString(),
-      nickname: anonymous ? '익명' : '기명',
+      nickname: anonymous ? '짜증난 파이썬' : '테스트 계정',
       postId: id,
       authorized: true,
       blocked: false,
+      postWriter: targetPost.authorized,
     });
     targetPost.commentCount += 1;
 

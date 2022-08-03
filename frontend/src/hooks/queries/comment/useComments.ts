@@ -7,6 +7,7 @@ import QUERY_KEYS from '@/constants/queries';
 interface CommentResponse extends CommentType {
   id: number;
   blocked: boolean;
+  postWriter: boolean;
 }
 
 const useComments = ({

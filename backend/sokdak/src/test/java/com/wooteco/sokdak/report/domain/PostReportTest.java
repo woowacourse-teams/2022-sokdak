@@ -39,9 +39,9 @@ class PostReportTest {
                 .build();
     }
 
-    @DisplayName("신고자와 멤버가 같으면 true를 반환한다.")
+    @DisplayName("같은 게시글을 같은 신고자가 중복신고하면 예외발생")
     @Test
-    void isSameReporter() {
+    void addPost_Exception_AlreadyReport() {
         PostReport.builder()
                 .post(post)
                 .reporter(member)

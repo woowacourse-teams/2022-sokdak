@@ -97,12 +97,7 @@ class CommentAcceptanceTest extends AcceptanceTest {
         Long postId = addPostAndGetPostId();
         Long commentId = addCommentAndGetCommentId(postId);
         addCommentAndGetCommentId(postId);
-        String token1 = getToken();
-        String token2 = httpPost(new LoginRequest("josh", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        String token3 = httpPost(new LoginRequest("thor", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        String token4 = httpPost(new LoginRequest("hunch", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        String token5 = httpPost(new LoginRequest("east", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        List<String> tokens = List.of(token1, token2, token3, token4, token5);
+        List<String> tokens = ReportFixture.getTokensForReport();
 
         for (int i = 0; i < 5; ++i) {
             ReportRequest reportRequest = new ReportRequest("댓글신고");
@@ -133,13 +128,6 @@ class CommentAcceptanceTest extends AcceptanceTest {
     private String getToken() {
         LoginRequest loginRequest = new LoginRequest("chris", "Abcd123!@");
         return httpPost(loginRequest, "/login").header(AUTHORIZATION);
-    }
-
-    private Long addPostAndGetPostId() {
-        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT,
-                Collections.emptyList());
-        return Long.parseLong(httpPostWithAuthorization(newPostRequest, CREATE_POST_URI, getToken())
-                .header("Location").split("/posts/")[1]);
     }
 
     private Long addCommentAndGetCommentId(Long postId) {

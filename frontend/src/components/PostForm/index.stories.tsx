@@ -1,3 +1,5 @@
+import { MemoryRouter as Router, Routes, Route } from 'react-router';
+
 import PostForm from '.';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
@@ -6,7 +8,15 @@ export default {
   component: PostForm,
 } as ComponentMeta<typeof PostForm>;
 
-const Template: ComponentStory<typeof PostForm> = args => <PostForm {...args} />;
+const Template: ComponentStory<typeof PostForm> = args => {
+  return (
+    <Router initialEntries={['/', { pathname: '/', state: { boardId: 1 } }]}>
+      <Routes>
+        <Route path="/" element={<PostForm {...args} />} />
+      </Routes>
+    </Router>
+  );
+};
 
 export const PostFormTemplate = Template.bind({});
 PostFormTemplate.args = {

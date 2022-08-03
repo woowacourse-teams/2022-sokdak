@@ -11,10 +11,10 @@ import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.BoardType;
 import com.wooteco.sokdak.board.repository.BoardRepository;
-import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.service.CommentService;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.Nickname;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
@@ -49,9 +49,6 @@ class PostServiceTest extends IntegrationTest {
     private PostRepository postRepository;
 
     @Autowired
-    private PostBoardRepository postBoardRepository;
-
-    @Autowired
     private BoardRepository boardRepository;
 
     @Autowired
@@ -66,16 +63,17 @@ class PostServiceTest extends IntegrationTest {
         post = Post.builder()
                 .title("제목")
                 .content("본문")
+                .writerNickname(new Nickname(member.getNickname()))
                 .member(member)
                 .likes(new ArrayList<>())
                 .comments(new ArrayList<>())
                 .build();
     }
 
-    @DisplayName("특정 게시판에 글 작성 기능")
+    @DisplayName("특정 게시판에 익명으로 글 작성 기능")
     @Test
-    void addPost() {
-        NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", Collections.emptyList());
+    void addPost_Anonymous() {
+        NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", true, Collections.emptyList());
 
         Long postId = postService.addPost(WRITABLE_BOARD_ID, newPostRequest, AUTH_INFO);
         Post actual = postRepository.findById(postId).orElseThrow();
@@ -84,6 +82,27 @@ class PostServiceTest extends IntegrationTest {
                 () -> assertThat(actual.getTitle()).isEqualTo(newPostRequest.getTitle()),
                 () -> assertThat(actual.getContent()).isEqualTo(newPostRequest.getContent()),
                 () -> assertThat(actual.getMember().getId()).isEqualTo(1L),
+                () -> assertThat(actual.getNickname()).isNotEqualTo(actual.getMember().getNickname()),
+                () -> assertThat(actual.getCreatedAt()).isNotNull(),
+                () -> assertThat(actual.getPostBoards().get(0).getBoard().getTitle()).isNotNull()
+        );
+    }
+
+    @DisplayName("특정 게시판에 기명으로 글 작성 기능")
+    @Test
+    void addPost_Identified() {
+        NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", false, Collections.emptyList());
+
+        Long postId = postService.addPost(WRITABLE_BOARD_ID, newPostRequest, AUTH_INFO);
+        Post actual = postRepository.findById(postId).orElseThrow();
+
+        actual.getMember();
+
+        assertAll(
+                () -> assertThat(actual.getTitle()).isEqualTo(newPostRequest.getTitle()),
+                () -> assertThat(actual.getContent()).isEqualTo(newPostRequest.getContent()),
+                () -> assertThat(actual.getMember().getId()).isEqualTo(1L),
+                () -> assertThat(actual.getNickname()).isEqualTo(actual.getMember().getNickname()),
                 () -> assertThat(actual.getCreatedAt()).isNotNull(),
                 () -> assertThat(actual.getPostBoards().get(0).getBoard().getTitle()).isNotNull()
         );
@@ -104,7 +123,6 @@ class PostServiceTest extends IntegrationTest {
                 () -> assertThat(response.getCreatedAt()).isNotNull()
         );
     }
-
 
     @DisplayName("로그인을 하고, 다른 회원이 작성한 게시글 조회 기능")
     @Test
@@ -151,9 +169,12 @@ class PostServiceTest extends IntegrationTest {
     @Test
     void findPosts() {
         Board board = boardRepository.save(new Board("테스트 게시판1", BoardType.WRITABLE));
-        postService.addPost(board.getId(), new NewPostRequest("제목1", "본문1", new ArrayList<>()), new AuthInfo(1L, USER.getName(), "nickname"));
-        postService.addPost(board.getId(), new NewPostRequest("제목2", "본문2", new ArrayList<>()), new AuthInfo(1L, USER.getName(), "nickname"));
-        postService.addPost(board.getId(), new NewPostRequest("제목3", "본문3", new ArrayList<>()), new AuthInfo(1L, USER.getName(), "nickname"));
+        postService.addPost(board.getId(), new NewPostRequest("제목1", "본문1", false, new ArrayList<>()),
+                new AuthInfo(1L, USER.getName(), "nickname"));
+        postService.addPost(board.getId(), new NewPostRequest("제목2", "본문2", false, new ArrayList<>()),
+                new AuthInfo(1L, USER.getName(), "nickname"));
+        postService.addPost(board.getId(), new NewPostRequest("제목3", "본문3", false, new ArrayList<>()),
+                new AuthInfo(1L, USER.getName(), "nickname"));
 
         Pageable pageable = PageRequest.of(0, 2, DESC, "createdAt");
         PostsResponse postsResponse = postService.findPostsByBoard(board.getId(), pageable);

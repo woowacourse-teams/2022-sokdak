@@ -1,8 +1,7 @@
 package com.wooteco.sokdak.comment.acceptance;
 
 import static com.wooteco.sokdak.post.util.CommentFixture.VALID_COMMENT_MESSAGE;
-import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_CONTENT;
-import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_TITLE;
+import static com.wooteco.sokdak.post.util.PostFixture.NEW_POST_REQUEST;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
@@ -16,13 +15,10 @@ import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.CommentsResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
-import com.wooteco.sokdak.post.dto.NewPostRequest;
-import com.wooteco.sokdak.post.util.CommentFixture;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -143,9 +139,7 @@ class CommentAcceptanceTest extends AcceptanceTest {
     }
 
     private Long addPostAndGetPostId() {
-        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT,
-                Collections.emptyList());
-        return Long.parseLong(httpPostWithAuthorization(newPostRequest, CREATE_POST_URI, getToken())
+        return Long.parseLong(httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getToken())
                 .header("Location").split("/posts/")[1]);
     }
 

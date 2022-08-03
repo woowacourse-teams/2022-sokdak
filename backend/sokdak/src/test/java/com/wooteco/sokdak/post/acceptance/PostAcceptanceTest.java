@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.post.acceptance;
 
+import static com.wooteco.sokdak.post.util.PostFixture.NEW_POST_REQUEST;
 import static com.wooteco.sokdak.post.util.PostFixture.UPDATED_POST_CONTENT;
 import static com.wooteco.sokdak.post.util.PostFixture.UPDATED_POST_TITLE;
 import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_CONTENT;
@@ -35,8 +36,6 @@ import org.springframework.http.HttpStatus;
 @DisplayName("게시글 관련 인수테스트")
 class PostAcceptanceTest extends AcceptanceTest {
 
-    private static final NewPostRequest NEW_POST_REQUEST = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT,
-            Collections.emptyList());
     public static final long WRITABLE_BOARD_ID = 2L;
 
     @DisplayName("새로운 게시글을 작성할 수 있다.")
@@ -63,8 +62,8 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void findPosts() {
         String token = getToken();
-        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", Collections.emptyList());
-        NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", Collections.emptyList());
+        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", false, Collections.emptyList());
+        NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", false, Collections.emptyList());
         httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, token);
         httpPostWithAuthorization(postRequest2, CREATE_POST_URI, token);
         httpPostWithAuthorization(postRequest3, CREATE_POST_URI, token);
@@ -82,9 +81,9 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void findPostsInBoard() {
         String token = getToken();
-        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", Collections.emptyList());
-        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", Collections.emptyList());
-        NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", Collections.emptyList());
+        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", false, Collections.emptyList());
+        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", false, Collections.emptyList());
+        NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", false, Collections.emptyList());
         httpPostWithAuthorization(postRequest1, CREATE_POST_URI, token);
         httpPostWithAuthorization(postRequest2, CREATE_POST_URI, token);
         httpPostWithAuthorization(postRequest3, "/boards/3/posts", token);
@@ -102,16 +101,15 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void findPostsInBoard_Exception() {
         String token = getToken();
-        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", Collections.emptyList());
-        ExtractableResponse<Response> response = httpPostWithAuthorization(postRequest1, CANNOT_CREATE_POST_URI,
+        ExtractableResponse<Response> response = httpPostWithAuthorization(NEW_POST_REQUEST, CANNOT_CREATE_POST_URI,
                 token);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("특정 게시글 조회할 수 있다.")
+    @DisplayName("닉네임으로 작성된 게시글 조회할 수 있다.")
     @Test
-    void findPost() {
+    void findPost_IdentifiedNickname() {
         String postId = parsePostId(
                 httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getToken()));
 
@@ -121,7 +119,27 @@ class PostAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(postDetailResponse.getTitle()).isEqualTo(NEW_POST_REQUEST.getTitle()),
-                () -> assertThat(postDetailResponse.getContent()).isEqualTo(NEW_POST_REQUEST.getContent())
+                () -> assertThat(postDetailResponse.getContent()).isEqualTo(NEW_POST_REQUEST.getContent()),
+                () -> assertThat(postDetailResponse.getNickname()).isEqualTo("chrisNickname")
+        );
+    }
+
+    @DisplayName("닉네임으로 작성된 게시글 조회할 수 있다.")
+    @Test
+    void findPost_Anonymous() {
+        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT, true,
+                Collections.emptyList());
+        String postId = parsePostId(
+                httpPostWithAuthorization(newPostRequest, CREATE_POST_URI, getToken()));
+
+        ExtractableResponse<Response> response = httpGet("/posts/" + postId);
+        PostDetailResponse postDetailResponse = response.jsonPath().getObject(".", PostDetailResponse.class);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(postDetailResponse.getTitle()).isEqualTo(NEW_POST_REQUEST.getTitle()),
+                () -> assertThat(postDetailResponse.getContent()).isEqualTo(NEW_POST_REQUEST.getContent()),
+                () -> assertThat(postDetailResponse.getNickname()).isNotEqualTo("chrisNickname")
         );
     }
 
@@ -129,7 +147,7 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void addPost_Exception_NoTitle() {
         NewPostRequest newPostRequestWithoutTitle = new NewPostRequest(null, VALID_POST_CONTENT,
-                Collections.emptyList());
+                false, Collections.emptyList());
         ExtractableResponse<Response> response =
                 httpPostWithAuthorization(newPostRequestWithoutTitle, CREATE_POST_URI, getToken());
 

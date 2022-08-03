@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <included>
-<!--    /Users/easth/logfiles-->
-<!--    /home/ubuntu/sokdak/logfiles/access/-->
-    <property name="DIR" value="/Users/easth/logfiles"/>
+    <property name="DIR" value="/home/ubuntu/sokdak/logfiles/access/"/>
     <appender name="file-access-logger" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${DIR}access.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">

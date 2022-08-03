@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+    <springProperty name="SLACK_WEBHOOK_URI" source="logging.slack.webhook-uri"/>
+
+    <appender name="SLACK-PROD" class="com.github.maricn.logback.SlackAppender">
+        <webhookUri>${SLACK_WEBHOOK_URI}</webhookUri>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>PROD%n %d{yyyy-MM-dd HH:mm:ss.SSS} %msg %n</pattern>
+        </layout>
+        <iconEmoji>:eyes:</iconEmoji>
+        <username>당직병</username>
+        <colorCoding>true</colorCoding>
+    </appender>
+
+    <appender name="SLACK-DEV" class="com.github.maricn.logback.SlackAppender">
+        <webhookUri>${SLACK_WEBHOOK_URI}</webhookUri>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>DEV%n %d{yyyy-MM-dd HH:mm:ss.SSS} %msg %n</pattern>
+        </layout>
+        <iconEmoji>:eyes:</iconEmoji>
+        <username>당직병</username>
+        <colorCoding>true</colorCoding>
+    </appender>
+
+    <appender name="ASYNC-SLACK-PROD" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="SLACK-PROD"/>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name="ASYNC-SLACK-DEV" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="SLACK-DEV"/>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+</included>

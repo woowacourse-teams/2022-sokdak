@@ -8,7 +8,6 @@ import com.wooteco.sokdak.report.domain.CommentReport;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -68,6 +67,10 @@ public class Comment {
         if (accessMemberId != member.getId()) {
             throw new AuthenticationException();
         }
+    }
+
+    public boolean isPostWriter() {
+        return post.getMember().equals(member);
     }
 
     public boolean isBlocked() {

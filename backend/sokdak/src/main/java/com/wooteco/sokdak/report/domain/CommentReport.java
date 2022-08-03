@@ -52,7 +52,11 @@ public class CommentReport {
     }
 
     private void addComment() {
-        this.comment.getCommentReports().add(this);
+        this.comment.addReport(this);
+    }
+
+    public boolean isSameReporter(CommentReport other) {
+        return this.reporter.equals(other.reporter);
     }
 
     public Long getId() {

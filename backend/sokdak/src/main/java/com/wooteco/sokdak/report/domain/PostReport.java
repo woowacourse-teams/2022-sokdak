@@ -51,8 +51,12 @@ public class PostReport {
         addPost();
     }
 
+    public boolean isSameReporter(PostReport other) {
+        return this.reporter.equals(other.reporter);
+    }
+
     private void addPost() {
-        this.post.getPostReports().add(this);
+        this.post.addReport(this);
     }
 
     public Long getId() {

@@ -3,49 +3,53 @@ import { rest } from 'msw';
 import { hashtagList, commentList, postList, boardList, reportList, reportCommentList } from '@/dummy';
 
 const postHandlers = [
-  rest.post<Pick<Post, 'title' | 'content'> & { hashtags: string[]; anonymous: boolean }>('/posts', (req, res, ctx) => {
-    const { title, content, hashtags, anonymous } = req.body;
-    const id = postList.length + 1;
+  rest.post<Pick<Post, 'title' | 'content'> & { hashtags: string[]; anonymous: boolean }>(
+    '/boards/:boardId/posts',
+    (req, res, ctx) => {
+      const { title, content, hashtags, anonymous } = req.body;
+      const boardId = Number(req.params.boardId!);
+      const id = postList.length + 1;
 
-    if (!title || !content) {
-      return res(ctx.status(400), ctx.json({ message: '제목 혹은 본문이 없습니다.' }));
-    }
-
-    hashtags.forEach(hashtagName => {
-      const existedTag = hashtagList.find(hashtag => hashtag.name === hashtagName);
-
-      if (existedTag) {
-        existedTag.count += 1;
-        return;
+      if (!title || !content) {
+        return res(ctx.status(400), ctx.json({ message: '제목 혹은 본문이 없습니다.' }));
       }
 
-      hashtagList.push({
-        id: hashtagList.length + 1,
-        name: hashtagName,
-        count: 1,
+      hashtags.forEach(hashtagName => {
+        const existedTag = hashtagList.find(hashtag => hashtag.name === hashtagName);
+
+        if (existedTag) {
+          existedTag.count += 1;
+          return;
+        }
+
+        hashtagList.push({
+          id: hashtagList.length + 1,
+          name: hashtagName,
+          count: 1,
+        });
       });
-    });
 
-    const newPost: Post = {
-      id,
-      title,
-      content,
-      createdAt: new Date().toISOString(),
-      likeCount: 0,
-      commentCount: 0,
-      modified: false,
-      like: false,
-      hashtags: hashtags.map(hashtagName => hashtagList.find(hashtag => hashtag.name === hashtagName)!),
-      authorized: true,
-      boardId: 1,
-      nickname: anonymous ? '짜증난 파이썬' : '테스트 계정',
-      blocked: false,
-    };
+      const newPost: Post = {
+        id,
+        title,
+        content,
+        boardId,
+        createdAt: new Date().toISOString(),
+        likeCount: 0,
+        commentCount: 0,
+        modified: false,
+        like: false,
+        hashtags: hashtags.map(hashtagName => hashtagList.find(hashtag => hashtag.name === hashtagName)!),
+        authorized: true,
+        nickname: anonymous ? '짜증난 파이썬' : '테스트 계정',
+        blocked: false,
+      };
 
-    postList.unshift(newPost);
+      postList.unshift(newPost);
 
-    return res(ctx.status(200), ctx.set('Location', `/posts/${id}`));
-  }),
+      return res(ctx.status(200), ctx.set('Location', `/posts/${id}`));
+    },
+  ),
 
   rest.put('/posts/:id/like', (req, res, ctx) => {
     const id = Number(req.params.id!);

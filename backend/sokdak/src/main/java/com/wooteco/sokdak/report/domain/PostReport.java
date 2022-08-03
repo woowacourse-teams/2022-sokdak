@@ -48,6 +48,11 @@ public class PostReport {
         this.post = post;
         this.reporter = reporter;
         this.reportMessage = new ReportMessage(reportMessage);
+        addPost();
+    }
+
+    private void addPost() {
+        this.post.getPostReports().add(this);
     }
 
     public Long getId() {

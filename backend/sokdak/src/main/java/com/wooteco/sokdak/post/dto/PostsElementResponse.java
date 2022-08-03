@@ -15,10 +15,11 @@ public class PostsElementResponse {
     private final int likeCount;
     private final int commentCount;
     private final boolean modified;
+    private final boolean blocked;
 
     @Builder
     private PostsElementResponse(Long id, String title, String content, LocalDateTime createdAt,
-                                 int likeCount, int commentCount, boolean modified) {
+                                 int likeCount, int commentCount, boolean modified, boolean blocked) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -26,6 +27,7 @@ public class PostsElementResponse {
         this.likeCount = likeCount;
         this.commentCount = commentCount;
         this.modified = modified;
+        this.blocked = blocked;
     }
 
     public static PostsElementResponse from(Post post) {
@@ -37,6 +39,7 @@ public class PostsElementResponse {
                 .likeCount(post.getLikeCount())
                 .commentCount(post.getCommentCount())
                 .modified(post.isModified())
+                .blocked(post.isBlocked())
                 .build();
     }
 }

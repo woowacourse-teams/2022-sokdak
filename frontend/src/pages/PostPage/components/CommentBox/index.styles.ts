@@ -31,12 +31,22 @@ export const DeleteButton = styled.button`
   color: ${props => props.theme.colors.red_200};
   font-size: 0.6rem;
 `;
+
 export const ReportButton = styled.button`
   background-color: transparent;
 `;
 
 export const Nickname = styled.p`
   font-weight: bold;
+  display: flex;
+`;
+
+export const PostWriter = styled.span`
+  color: ${props => props.theme.colors.sub};
+  font-weight: normal;
+  font-size: 10px;
+  align-self: center;
+  margin-left: 5px;
 `;
 
 export const Content = styled.p`

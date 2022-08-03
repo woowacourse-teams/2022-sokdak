@@ -13,9 +13,10 @@ import ReportModal from '../ReportModal';
 
 interface CommentBoxProps extends CommentType {
   blocked: boolean;
+  postWriter: boolean;
 }
 
-const CommentBox = ({ id, nickname, content, createdAt, authorized, blocked }: CommentBoxProps) => {
+const CommentBox = ({ id, nickname, content, createdAt, authorized, blocked, postWriter }: CommentBoxProps) => {
   const [isReportModalOpen, handleReportModal] = useReducer(state => !state, false);
   const [isDeleteModalOpen, handleDeleteModal] = useReducer(state => !state, false);
 
@@ -50,11 +51,13 @@ const CommentBox = ({ id, nickname, content, createdAt, authorized, blocked }: C
     <>
       <Styled.Container>
         <Styled.CommentHeader>
-          <Styled.Nickname>{nickname}</Styled.Nickname>
+          <Styled.Nickname>
+            {nickname} {postWriter && <Styled.PostWriter>작성자</Styled.PostWriter>}
+          </Styled.Nickname>
           {authorized ? (
-            <Styled.ReportButton onClick={handleClickReportButton}>🚨</Styled.ReportButton>
-          ) : (
             <Styled.DeleteButton onClick={handleClickDeleteButton}>삭제</Styled.DeleteButton>
+          ) : (
+            <Styled.ReportButton onClick={handleClickReportButton}>🚨</Styled.ReportButton>
           )}
         </Styled.CommentHeader>
         <Styled.Content>{content}</Styled.Content>

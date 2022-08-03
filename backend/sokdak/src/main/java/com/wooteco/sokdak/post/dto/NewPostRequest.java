@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.post.dto;
 
-import com.wooteco.sokdak.post.domain.Post;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -12,21 +11,16 @@ public class NewPostRequest {
     private String title;
     @NotBlank(message = "본문은 1자 이상 5000자 이하여야 합니다.")
     private String content;
+    private boolean anonymous;
     private List<String> hashtags;
 
     public NewPostRequest() {
     }
 
-    public NewPostRequest(String title, String content, List<String> hashtags) {
+    public NewPostRequest(String title, String content, boolean anonymous, List<String> hashtags) {
         this.title = title;
         this.content = content;
+        this.anonymous = anonymous;
         this.hashtags = hashtags;
-    }
-
-    public Post toEntity() {
-        return Post.builder()
-                .title(title)
-                .content(content)
-                .build();
     }
 }

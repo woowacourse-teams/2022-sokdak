@@ -6,6 +6,7 @@ import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.hashtag.domain.PostHashtag;
 import com.wooteco.sokdak.like.domain.Like;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.Nickname;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,9 @@ public class Post {
     @Embedded
     private Content content;
 
+    @Embedded
+    private Nickname writerNickname;
+
     @OneToMany(mappedBy = "post")
     private List<Like> likes = new ArrayList<>();
 
@@ -68,12 +72,13 @@ public class Post {
     }
 
     @Builder
-    private Post(String title, String content, Member member, List<Like> likes, List<Comment> comments,
-                 List<PostHashtag> postHashtags) {
+    private Post(String title, String content, Member member, Nickname writerNickname, List<Like> likes,
+                 List<Comment> comments, List<PostHashtag> postHashtags) {
         this.title = new Title(title);
         this.content = new Content(content);
         this.member = member;
         this.likes = likes;
+        this.writerNickname = writerNickname;
         this.comments = comments;
         this.postHashtags = postHashtags;
     }
@@ -149,5 +154,9 @@ public class Post {
 
     public List<PostBoard> getPostBoards() {
         return postBoards;
+    }
+
+    public String getNickname() {
+        return writerNickname.getValue();
     }
 }

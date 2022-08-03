@@ -1,8 +1,7 @@
 package com.wooteco.sokdak.report.acceptance;
 
 import static com.wooteco.sokdak.post.util.CommentFixture.VALID_COMMENT_MESSAGE;
-import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_CONTENT;
-import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_TITLE;
+import static com.wooteco.sokdak.post.util.PostFixture.NEW_POST_REQUEST;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
@@ -11,12 +10,10 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
-import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.Collections;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -39,10 +36,8 @@ class CommentReportAcceptanceTest extends AcceptanceTest {
 
     private Long addCommentAndGetCommentId() {
         String token = getToken();
-        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT,
-                Collections.emptyList());
         String postId = parsePostId(
-                httpPostWithAuthorization(newPostRequest, CREATE_POST_URI, getToken()));
+                httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getToken()));
 
         NewCommentRequest newCommentRequest = new NewCommentRequest(VALID_COMMENT_MESSAGE, true);
         Long commentId = Long.parseLong(

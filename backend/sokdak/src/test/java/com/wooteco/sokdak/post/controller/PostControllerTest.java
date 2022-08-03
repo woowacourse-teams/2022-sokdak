@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.post.controller;
 
+import static com.wooteco.sokdak.post.util.PostFixture.NEW_POST_REQUEST;
 import static com.wooteco.sokdak.post.util.PostFixture.UPDATED_POST_CONTENT;
 import static com.wooteco.sokdak.post.util.PostFixture.UPDATED_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
@@ -63,8 +64,6 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("글 작성 요청을 받으면 새로운 게시글을 등록한다.")
     @Test
     void addPost() {
-        NewPostRequest postRequest = new NewPostRequest("제목", "본문", List.of("태그1"));
-
         doReturn(true)
                 .when(authInterceptor)
                 .preHandle(any(), any(), any());
@@ -72,7 +71,7 @@ class PostControllerTest extends ControllerTest {
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "any")
-                .body(postRequest)
+                .body(NEW_POST_REQUEST)
                 .when().post("/boards/1/posts")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
@@ -81,7 +80,7 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("게시글 제목이 없는 경우 400을 반환한다.")
     @Test
     void addPost_Exception_NoTitle() {
-        NewPostRequest postRequest = new NewPostRequest(null, "본문", Collections.emptyList());
+        NewPostRequest postRequest = new NewPostRequest(null, "본문", false, Collections.emptyList());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -95,7 +94,7 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("게시글 내용이 없는 경우 400을 반환한다.")
     @Test
     void addPost_Exception_NoContent() {
-        NewPostRequest postRequest = new NewPostRequest("제목", null, Collections.emptyList());
+        NewPostRequest postRequest = new NewPostRequest("제목", null, false, Collections.emptyList());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

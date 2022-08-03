@@ -1,9 +1,9 @@
 package com.wooteco.sokdak.post.acceptance;
 
+import static com.wooteco.sokdak.post.util.PostFixture.NEW_POST_REQUEST;
 import static com.wooteco.sokdak.post.util.PostFixture.UPDATED_POST_CONTENT;
 import static com.wooteco.sokdak.post.util.PostFixture.UPDATED_POST_TITLE;
 import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_CONTENT;
-import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getExceptionMessage;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
@@ -35,8 +35,6 @@ import org.springframework.http.HttpStatus;
 @DisplayName("게시글 관련 인수테스트")
 class PostAcceptanceTest extends AcceptanceTest {
 
-    private static final NewPostRequest NEW_POST_REQUEST = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT,
-            Collections.emptyList());
     public static final long WRITABLE_BOARD_ID = 2L;
 
     @DisplayName("새로운 게시글을 작성할 수 있다.")
@@ -63,8 +61,8 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void findPosts() {
         String token = getToken();
-        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", Collections.emptyList());
-        NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", Collections.emptyList());
+        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", false, Collections.emptyList());
+        NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", false, Collections.emptyList());
         httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, token);
         httpPostWithAuthorization(postRequest2, CREATE_POST_URI, token);
         httpPostWithAuthorization(postRequest3, CREATE_POST_URI, token);
@@ -82,9 +80,9 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void findPostsInBoard() {
         String token = getToken();
-        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", Collections.emptyList());
-        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", Collections.emptyList());
-        NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", Collections.emptyList());
+        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", false, Collections.emptyList());
+        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", false, Collections.emptyList());
+        NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", false, Collections.emptyList());
         httpPostWithAuthorization(postRequest1, CREATE_POST_URI, token);
         httpPostWithAuthorization(postRequest2, CREATE_POST_URI, token);
         httpPostWithAuthorization(postRequest3, "/boards/3/posts", token);
@@ -102,8 +100,7 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void findPostsInBoard_Exception() {
         String token = getToken();
-        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", Collections.emptyList());
-        ExtractableResponse<Response> response = httpPostWithAuthorization(postRequest1, CANNOT_CREATE_POST_URI,
+        ExtractableResponse<Response> response = httpPostWithAuthorization(NEW_POST_REQUEST, CANNOT_CREATE_POST_URI,
                 token);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -129,7 +126,7 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void addPost_Exception_NoTitle() {
         NewPostRequest newPostRequestWithoutTitle = new NewPostRequest(null, VALID_POST_CONTENT,
-                Collections.emptyList());
+                false, Collections.emptyList());
         ExtractableResponse<Response> response =
                 httpPostWithAuthorization(newPostRequestWithoutTitle, CREATE_POST_URI, getToken());
 

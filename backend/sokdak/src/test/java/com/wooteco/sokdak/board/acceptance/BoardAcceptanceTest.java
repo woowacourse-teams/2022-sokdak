@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.board.acceptance;
 
+import static com.wooteco.sokdak.post.util.PostFixture.NEW_POST_REQUEST;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.HOT_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.POSUTA_BOARD_ID;
@@ -21,7 +22,6 @@ import com.wooteco.sokdak.board.dto.BoardContentPostElement;
 import com.wooteco.sokdak.board.dto.BoardResponse;
 import com.wooteco.sokdak.board.dto.NewBoardRequest;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
-import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.util.AcceptanceTest;
@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 @DisplayName("게시글 관련 인수테스트")
-public class BoardAcceptanceTest extends AcceptanceTest {
+class BoardAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("게시판을 생성할 수 있다.")
     @Test
@@ -66,10 +66,10 @@ public class BoardAcceptanceTest extends AcceptanceTest {
     void findBoardsContent() {
         // given
         String token = getToken();
-        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", Collections.emptyList());
-        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", Collections.emptyList());
-        NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", Collections.emptyList());
-        NewPostRequest postRequest4 = new NewPostRequest("제목4", "본문4", Collections.emptyList());
+        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", false, Collections.emptyList());
+        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", false, Collections.emptyList());
+        NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", false, Collections.emptyList());
+        NewPostRequest postRequest4 = new NewPostRequest("제목4", "본문4", false, Collections.emptyList());
 
         httpPostWithAuthorization(postRequest1, "/boards/" + FREE_BOARD_ID + "/posts", token);
         httpPostWithAuthorization(postRequest2, "/boards/" + FREE_BOARD_ID + "/posts", token);
@@ -123,8 +123,7 @@ public class BoardAcceptanceTest extends AcceptanceTest {
         String token5 = httpPost(new LoginRequest("east", "Abcd123!@"), "/login").header(AUTHORIZATION);
         List<String> tokens = List.of(token1, token2, token3, token4, token5);
 
-        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", Collections.emptyList());
-        httpPostWithAuthorization(postRequest1, CREATE_POST_URI, token1);
+        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, token1);
 
         // when
         for (String token : tokens) {
@@ -138,9 +137,9 @@ public class BoardAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(hotBoardResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(hotBoardPostNames).isEqualTo(List.of("제목1")),
+                () -> assertThat(hotBoardPostNames).isEqualTo(List.of("제목")),
                 () -> assertThat(boardResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(boardPostNames).isEqualTo(List.of("제목1"))
+                () -> assertThat(boardPostNames).isEqualTo(List.of("제목"))
         );
     }
 
@@ -155,8 +154,7 @@ public class BoardAcceptanceTest extends AcceptanceTest {
         String token5 = httpPost(new LoginRequest("east", "Abcd123!@"), "/login").header(AUTHORIZATION);
         List<String> tokens = List.of(token1, token2, token3, token4, token5);
 
-        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", Collections.emptyList());
-        httpPostWithAuthorization(postRequest1, CREATE_POST_URI, token1);
+        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, token1);
 
         for (String token : tokens) {
             httpPutWithAuthorization("/posts/1/like", token);
@@ -174,9 +172,9 @@ public class BoardAcceptanceTest extends AcceptanceTest {
         // then
         assertAll(
                 () -> assertThat(hotBoardResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(hotBoardPostNames).isEqualTo(List.of("제목1")),
+                () -> assertThat(hotBoardPostNames).isEqualTo(List.of("제목")),
                 () -> assertThat(boardResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(boardPostNames).isEqualTo(List.of("제목1"))
+                () -> assertThat(boardPostNames).isEqualTo(List.of("제목"))
         );
     }
 
@@ -191,8 +189,7 @@ public class BoardAcceptanceTest extends AcceptanceTest {
         String token5 = httpPost(new LoginRequest("east", "Abcd123!@"), "/login").header(AUTHORIZATION);
         List<String> tokens = List.of(token1, token2, token3, token4, token5);
 
-        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", Collections.emptyList());
-        httpPostWithAuthorization(postRequest1, CREATE_POST_URI, token1);
+        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, token1);
 
         for (String token : tokens) {
             httpPutWithAuthorization("/posts/1/like", token);

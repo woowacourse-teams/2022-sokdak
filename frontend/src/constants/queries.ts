@@ -8,6 +8,7 @@ const QUERY_KEYS = {
   POSTS_BY_BOARDS: 'posts-by-boards',
   HASHTAGS: 'hashtags',
   BOARDS: 'boards',
+  LOGOUT: 'logout',
 };
 
 export default QUERY_KEYS;

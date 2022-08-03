@@ -11,7 +11,7 @@ const useCreatePost = (
   options?: UseMutationOptions<
     AxiosResponse<string, string>,
     AxiosError,
-    Pick<Post, 'title' | 'content'> & { hashtags: string[]; anonymous?: boolean }
+    Pick<Post, 'title' | 'content'> & { hashtags: string[]; anonymous?: boolean; boardId?: string | number }
   >,
 ) => {
   const queryClient = useQueryClient();
@@ -23,10 +23,13 @@ const useCreatePost = (
       content,
       hashtags,
       anonymous,
-    }: Pick<Post, 'title' | 'content'> & { hashtags: string[]; anonymous?: boolean }): Promise<
-      AxiosResponse<string, string>
-    > =>
-      axios.post('/posts', {
+      boardId,
+    }: Pick<Post, 'title' | 'content'> & {
+      hashtags: string[];
+      anonymous?: boolean;
+      boardId?: string | number;
+    }): Promise<AxiosResponse<string, string>> =>
+      axios.post(`/boards/${boardId}/posts`, {
         title,
         content,
         hashtags,

@@ -12,6 +12,8 @@ import usePosts from '@/hooks/queries/post/usePosts';
 
 import PATH from '@/constants/path';
 
+const HOT_BOARD_ID = '1';
+
 const BoardPage = () => {
   const navigate = useNavigate();
   const { id: boardId } = useParams();
@@ -23,7 +25,7 @@ const BoardPage = () => {
   }, [boardId]);
 
   const handleClickFAB = () => {
-    navigate(PATH.CREATE_POST);
+    navigate(PATH.CREATE_POST, { state: { boardId } });
   };
 
   if (boardIsLoading) {
@@ -43,7 +45,7 @@ const BoardPage = () => {
       <BoardCategory id={boardId!} boards={boards!} />
       <PostList data={data} fetchNextPage={fetchNextPage} />
       {isLoading && <Spinner />}
-      <FAB handleClick={handleClickFAB} />
+      {boardId !== HOT_BOARD_ID && <FAB handleClick={handleClickFAB} />}
     </Layout>
   );
 };

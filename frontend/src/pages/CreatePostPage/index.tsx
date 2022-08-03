@@ -8,13 +8,11 @@ import useCreatePost from '@/hooks/queries/post/useCreatePost';
 
 import * as Styled from './index.styles';
 
-import PATH from '@/constants/path';
-
 const CreatePostPage = () => {
   const navigate = useNavigate();
   const { mutate: registerPost, isLoading } = useCreatePost({
     onSuccess: () => {
-      navigate(PATH.HOME);
+      navigate(-1);
     },
   });
 

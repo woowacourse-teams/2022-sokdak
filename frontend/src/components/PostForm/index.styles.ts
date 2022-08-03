@@ -15,7 +15,12 @@ export const Container = styled.form`
 export const Heading = styled.h1`
   font-family: 'BMHANNAPro';
   font-size: 27px;
-  margin: 40px 0;
+`;
+
+export const Board = styled.p`
+  font-family: 'BMHANNAAir';
+  margin: 15px 0 30px 0;
+  color: ${props => props.theme.colors.gray_200};
 `;
 
 interface InputProps {

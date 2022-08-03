@@ -55,11 +55,11 @@ public class PostService {
     public Long addPost(Long boardId, NewPostRequest newPostRequest, AuthInfo authInfo) {
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
-        String randomNickname = createPostWriterNickname(newPostRequest.isAnonymous(), member);
+        String writerNickname = createPostWriterNickname(newPostRequest.isAnonymous(), member);
         Post post = Post.builder()
                 .title(newPostRequest.getTitle())
                 .content(newPostRequest.getContent())
-                .writerNickname(new Nickname(randomNickname))
+                .writerNickname(new Nickname(writerNickname))
                 .member(member)
                 .build();
         Post savedPost = postRepository.save(post);

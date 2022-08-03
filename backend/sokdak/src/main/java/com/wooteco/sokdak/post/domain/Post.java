@@ -110,6 +110,10 @@ public class Post {
         return member.getId().equals(accessMemberId);
     }
 
+    public boolean isAnonymous() {
+        return !getNickname().equals(member.getNickname());
+    }
+
     public Long getId() {
         return id;
     }

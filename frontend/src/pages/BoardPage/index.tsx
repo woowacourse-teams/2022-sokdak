@@ -15,7 +15,7 @@ const BoardPage = () => {
   const { isLoading, data, fetchNextPage } = usePosts({ storeCode: [boardId!, 3] });
 
   const handleClickFAB = () => {
-    navigate(PATH.CREATE_POST);
+    navigate(PATH.CREATE_POST, { state: { boardId } });
   };
 
   return (

@@ -2,7 +2,9 @@ package com.wooteco.sokdak.util.fixture;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.dto.LoginRequest;
+import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.domain.RoleType;
+import java.util.List;
 
 public class MemberFixture {
 
@@ -19,4 +21,14 @@ public class MemberFixture {
 
     public static final String SESSION_ID = "mySessionId";
     public static final AuthInfo AUTH_INFO = new AuthInfo(1L, RoleType.ADMIN.getName(), "nickname");
+
+    public static List<Member> getMembersForReport() {
+        return List.of(
+                Member.builder().username("chris").password("Abcd123!@").nickname("chrisNickname").build(),
+                Member.builder().username("josh").password("Abcd123!@").nickname("joshNickname").build(),
+                Member.builder().username("hunch").password("Abcd123!@").nickname("hunchNickname").build(),
+                Member.builder().username("east").password("Abcd123!@").nickname("eastNickname").build(),
+                Member.builder().username("thor").password("Abcd123!@").nickname("thorNickname").build()
+        );
+    }
 }

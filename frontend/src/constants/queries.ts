@@ -3,6 +3,7 @@ const QUERY_KEYS = {
   POSTS: 'posts',
   MEMBER_ID_CHECK: 'member-id-check',
   MEMBER_NICKNAME_CHECK: 'member-nickname-check',
+  MEMBER_REFRESH: 'member-refresh',
   COMMENTS: 'comments',
   POSTS_BY_BOARDS: 'posts-by-boards',
   HASHTAGS: 'hashtags',

@@ -1,12 +1,9 @@
-import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import IDInput from './components/IDInput';
 import PasswordInput from './components/PasswordInput';
 import { useInput } from '@/components/@shared/InputBox/useInput';
 import Layout from '@/components/@styled/Layout';
-
-import AuthContext from '@/context/Auth';
 
 import useLogin from '@/hooks/queries/member/useLogin';
 import useSnackbar from '@/hooks/useSnackbar';
@@ -24,13 +21,9 @@ const LoginPage = () => {
 
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const { setIsLogin, setUserName } = useContext(AuthContext);
 
   const { mutate } = useLogin({
     onSuccess: () => {
-      showSnackbar(SNACKBAR_MESSAGE.SUCCESS_LOGIN);
-      setIsLogin(true);
-      setUserName(form.ID.value);
       navigate(PATH.HOME);
     },
     onError: () => {

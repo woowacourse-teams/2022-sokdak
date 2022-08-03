@@ -22,7 +22,7 @@ const Header = () => {
       </Styled.LeftSide>
       <Styled.RightSide>
         <Styled.Search onClick={handleSearchModal} />
-        {isLogin ? (
+        {isLogin && username ? (
           <>
             <Styled.Avartar>{username[0]}</Styled.Avartar>
             <DropDownCaret />

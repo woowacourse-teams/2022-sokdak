@@ -2,6 +2,9 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 import axios from 'axios';
 
+import { STORAGE_KEY } from '@/constants/localStorage';
+import { parseJwt, isExpired } from '@/utils/decodeJwt';
+
 interface AuthContextValue {
   isLogin: boolean;
   setIsLogin: Dispatch<SetStateAction<boolean>>;
@@ -12,17 +15,25 @@ interface AuthContextValue {
 
 const AuthContext = React.createContext<AuthContextValue>({} as AuthContextValue);
 
-// 자동로그인 구현 필요
-
 export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLogin, setIsLogin] = useState(false);
   const [username, setUserName] = useState('');
 
   useEffect(() => {
-    const accessToken = localStorage.getItem('AccessToken');
+    const refreshToken = localStorage.getItem(STORAGE_KEY.REFRESH_TOKEN);
+    if (refreshToken && isExpired(parseJwt(refreshToken)!)) {
+      localStorage.setItem(STORAGE_KEY.ACCESS_TOKEN, '');
+      localStorage.setItem(STORAGE_KEY.REFRESH_TOKEN, '');
+      return;
+    }
+
+    if (refreshToken) {
+      axios.defaults.headers.common['Refresh-Token'] = refreshToken;
+    }
+    const accessToken = localStorage.getItem(STORAGE_KEY.ACCESS_TOKEN);
     if (accessToken) {
       setIsLogin(true);
-      setUserName('자동로그인');
+      setUserName(parseJwt(accessToken)?.nickname!);
       axios.defaults.headers.common['Authorization'] = accessToken;
     }
   }, []);

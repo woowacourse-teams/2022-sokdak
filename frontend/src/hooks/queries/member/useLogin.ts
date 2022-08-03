@@ -1,26 +1,48 @@
+import { useContext } from 'react';
 import { useMutation, UseMutationOptions } from 'react-query';
 
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
-const useLogin = (
-  options?: UseMutationOptions<AxiosResponse<string, string>, AxiosError<{ message: string }>, Member>,
-) => {
+import AuthContext from '@/context/Auth';
+
+import useSnackbar from '@/hooks/useSnackbar';
+
+import { STORAGE_KEY } from '@/constants/localStorage';
+import SNACKBAR_MESSAGE from '@/constants/snackbar';
+import { parseJwt } from '@/utils/decodeJwt';
+
+const useLogin = (options?: UseMutationOptions<AxiosResponse<never>, AxiosError<{ message: string }>, Member>) => {
+  const { showSnackbar } = useSnackbar();
+  const { setIsLogin, setUserName } = useContext(AuthContext);
   return useMutation(
-    ({ username, password }): Promise<AxiosResponse<string, string>> =>
-      axios.post(
+    ({ username, password }): Promise<AxiosResponse<never>> =>
+      axios.post<never>(
         '/login',
         {
           username,
           password,
         },
-        { withCredentials: true },
+        { withCredentials: true, headers: { 'Refresh-Token': localStorage.getItem(STORAGE_KEY.REFRESH_TOKEN)! } },
       ),
     {
       ...options,
-      onSettled(data) {
-        if (data?.headers.Authorization) {
-          axios.defaults.headers.common['Authorization'] = data?.headers.Authorization;
-          localStorage.setItem('AccessToken', data.headers.Authorization);
+      onSuccess(data, variables, context) {
+        showSnackbar(SNACKBAR_MESSAGE.SUCCESS_LOGIN);
+        setIsLogin(true);
+
+        const accessToken = data?.headers.authorization;
+        const refreshToken = data?.headers['refresh-token'];
+        if (accessToken) {
+          axios.defaults.headers.common['Authorization'] = accessToken;
+          localStorage.setItem('AccessToken', accessToken);
+          setUserName(parseJwt(accessToken)?.nickname!);
+        }
+        if (refreshToken) {
+          axios.defaults.headers.common['Refresh-Token'] = refreshToken;
+          localStorage.setItem(STORAGE_KEY.REFRESH_TOKEN, refreshToken);
+        }
+        if (options && options.onSuccess) {
+          options.onSuccess(data, variables, context);
         }
       },
     },

@@ -3,6 +3,7 @@ package com.wooteco.sokdak.comment.domain;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getMembersForReport;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -10,6 +11,7 @@ import com.wooteco.sokdak.auth.exception.AuthenticationException;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.report.domain.CommentReport;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,10 +57,11 @@ class CommentTest {
     @ParameterizedTest
     @CsvSource({"4, false", "5, true"})
     void isBlocked(int reportCount, boolean expected) {
+        List<Member> members = getMembersForReport();
         for (int i = 0; i < reportCount; ++i) {
             CommentReport.builder()
                     .comment(comment)
-                    .reporter(member)
+                    .reporter(members.get(i))
                     .reportMessage("신고")
                     .build();
         }

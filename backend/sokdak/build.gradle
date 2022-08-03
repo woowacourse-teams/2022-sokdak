@@ -28,6 +28,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'ch.qos.logback:logback-access:1.2.11'
+	implementation 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
+
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.3'
 	implementation 'com.google.guava:guava:31.0.1-jre'
 	implementation 'com.github.maricn:logback-slack-appender:1.4.0'

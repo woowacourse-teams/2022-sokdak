@@ -21,4 +21,22 @@
         <username>당직병</username>
         <colorCoding>true</colorCoding>
     </appender>
+
+    <appender name="ASYNC-SLACK-PROD" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="SLACK-PROD"/>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name="ASYNC-SLACK-DEV" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="SLACK-DEV"/>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
 </included>

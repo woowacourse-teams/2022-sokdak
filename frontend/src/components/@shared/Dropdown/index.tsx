@@ -10,6 +10,8 @@ import {
   useCallback,
 } from 'react';
 
+import * as Styled from './index.styles';
+
 interface DropdownProps {
   children: ReactNode;
 }
@@ -37,7 +39,7 @@ const Dropdown = ({ children }: DropdownProps) => {
 
   return (
     <DropdownContext.Provider value={{ open, setOpen }}>
-      <div ref={ref}>{children}</div>
+      <Styled.DropdownContainer ref={ref}>{children}</Styled.DropdownContainer>
     </DropdownContext.Provider>
   );
 };
@@ -52,7 +54,7 @@ const Trigger = ({ children }: DropdownProps) => {
     dropdown.setOpen(prev => !prev);
   };
 
-  return <button onClick={handleTrigger}>{children}</button>;
+  return <Styled.DropdownTrigger onClick={handleTrigger}>{children}</Styled.DropdownTrigger>;
 };
 
 const OptionList = ({ children }: DropdownProps) => {
@@ -61,7 +63,7 @@ const OptionList = ({ children }: DropdownProps) => {
     throw new Error('');
   }
 
-  return <ul>{dropdown.open ? children : null}</ul>;
+  return <Styled.DropdownList>{dropdown.open ? children : null}</Styled.DropdownList>;
 };
 
 Dropdown.Trigger = Trigger;

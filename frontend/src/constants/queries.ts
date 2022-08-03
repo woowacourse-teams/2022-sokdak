@@ -6,6 +6,7 @@ const QUERY_KEYS = {
   COMMENTS: 'comments',
   POSTS_BY_BOARDS: 'posts-by-boards',
   HASHTAGS: 'hashtags',
+  BOARDS: 'boards',
 };
 
 export default QUERY_KEYS;

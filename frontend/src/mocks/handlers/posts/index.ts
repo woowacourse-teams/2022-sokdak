@@ -280,6 +280,10 @@ const postHandlers = [
     commentList.splice(targetCommentIdx, 1);
     return res(ctx.status(204));
   }),
+
+  rest.get('/boards', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json({ boards: boardList }));
+  }),
 ];
 
 export default postHandlers;

@@ -1,8 +1,7 @@
 package com.wooteco.sokdak.post.controller;
 
-import static com.wooteco.sokdak.post.util.PostFixture.UPDATED_POST_CONTENT;
-import static com.wooteco.sokdak.post.util.PostFixture.UPDATED_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
+import static com.wooteco.sokdak.util.fixture.PostFixture.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;

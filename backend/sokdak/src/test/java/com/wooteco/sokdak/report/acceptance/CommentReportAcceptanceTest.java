@@ -1,11 +1,8 @@
 package com.wooteco.sokdak.report.acceptance;
 
-import static com.wooteco.sokdak.post.util.CommentFixture.VALID_COMMENT_MESSAGE;
-import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_CONTENT;
-import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_TITLE;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
+import static com.wooteco.sokdak.util.fixture.CommentFixture.*;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.*;
+import static com.wooteco.sokdak.util.fixture.PostFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 

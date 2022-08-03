@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.post.util;
+package com.wooteco.sokdak.util.fixture;
 
 public class CommentFixture {
 

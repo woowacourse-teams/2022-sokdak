@@ -26,7 +26,13 @@ public class AuthorizationExtractor {
         while (headers.hasMoreElements()) {
             String value = headers.nextElement();
             if ((value.toLowerCase().startsWith(BEARER_TYPE.toLowerCase()))) {
-                return value.substring(BEARER_TYPE.length()).trim();
+                String authHeaderValue = value.substring(BEARER_TYPE.length()).trim();
+
+                int commaIndex = authHeaderValue.indexOf(',');
+                if (commaIndex > 0) {
+                    authHeaderValue = authHeaderValue.substring(0, commaIndex);
+                }
+                return authHeaderValue;
             }
         }
         return null;

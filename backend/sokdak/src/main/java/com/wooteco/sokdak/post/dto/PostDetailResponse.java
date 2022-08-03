@@ -13,6 +13,7 @@ import lombok.Getter;
 public class PostDetailResponse {
 
     private Long id;
+    private String nickname;
     private String title;
     private String content;
     private List<HashtagResponse> hashtags;
@@ -26,10 +27,11 @@ public class PostDetailResponse {
     }
 
     @Builder
-    private PostDetailResponse(Long id, String title, String content, List<HashtagResponse> hashtagResponses,
-                               LocalDateTime createdAt, int likeCount,
+    private PostDetailResponse(Long id, String nickname, String title, String content,
+                               List<HashtagResponse> hashtagResponses, LocalDateTime createdAt, int likeCount,
                                boolean like, boolean authorized, boolean modified) {
         this.id = id;
+        this.nickname = nickname;
         this.title = title;
         this.content = content;
         this.hashtags = hashtagResponses;
@@ -44,6 +46,7 @@ public class PostDetailResponse {
     public static PostDetailResponse of(Post post, boolean liked, boolean authorized, Hashtags hashtags) {
         return PostDetailResponse.builder()
                 .id(post.getId())
+                .nickname(post.getNickname())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .createdAt(post.getCreatedAt())

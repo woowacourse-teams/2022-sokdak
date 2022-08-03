@@ -4,6 +4,7 @@ import static com.wooteco.sokdak.post.util.PostFixture.NEW_POST_REQUEST;
 import static com.wooteco.sokdak.post.util.PostFixture.UPDATED_POST_CONTENT;
 import static com.wooteco.sokdak.post.util.PostFixture.UPDATED_POST_TITLE;
 import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_CONTENT;
+import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getExceptionMessage;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
@@ -106,9 +107,9 @@ class PostAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("특정 게시글 조회할 수 있다.")
+    @DisplayName("닉네임으로 작성된 게시글 조회할 수 있다.")
     @Test
-    void findPost() {
+    void findPost_IdentifiedNickname() {
         String postId = parsePostId(
                 httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getToken()));
 
@@ -118,7 +119,27 @@ class PostAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(postDetailResponse.getTitle()).isEqualTo(NEW_POST_REQUEST.getTitle()),
-                () -> assertThat(postDetailResponse.getContent()).isEqualTo(NEW_POST_REQUEST.getContent())
+                () -> assertThat(postDetailResponse.getContent()).isEqualTo(NEW_POST_REQUEST.getContent()),
+                () -> assertThat(postDetailResponse.getNickname()).isEqualTo("chrisNickname")
+        );
+    }
+
+    @DisplayName("닉네임으로 작성된 게시글 조회할 수 있다.")
+    @Test
+    void findPost_Anonymous() {
+        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT, true,
+                Collections.emptyList());
+        String postId = parsePostId(
+                httpPostWithAuthorization(newPostRequest, CREATE_POST_URI, getToken()));
+
+        ExtractableResponse<Response> response = httpGet("/posts/" + postId);
+        PostDetailResponse postDetailResponse = response.jsonPath().getObject(".", PostDetailResponse.class);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(postDetailResponse.getTitle()).isEqualTo(NEW_POST_REQUEST.getTitle()),
+                () -> assertThat(postDetailResponse.getContent()).isEqualTo(NEW_POST_REQUEST.getContent()),
+                () -> assertThat(postDetailResponse.getNickname()).isNotEqualTo("chrisNickname")
         );
     }
 

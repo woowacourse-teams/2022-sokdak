@@ -11,10 +11,10 @@ import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.BoardType;
 import com.wooteco.sokdak.board.repository.BoardRepository;
-import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.service.CommentService;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.Nickname;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
@@ -49,9 +49,6 @@ class PostServiceTest extends IntegrationTest {
     private PostRepository postRepository;
 
     @Autowired
-    private PostBoardRepository postBoardRepository;
-
-    @Autowired
     private BoardRepository boardRepository;
 
     @Autowired
@@ -66,6 +63,7 @@ class PostServiceTest extends IntegrationTest {
         post = Post.builder()
                 .title("제목")
                 .content("본문")
+                .writerNickname(new Nickname(member.getNickname()))
                 .member(member)
                 .likes(new ArrayList<>())
                 .comments(new ArrayList<>())

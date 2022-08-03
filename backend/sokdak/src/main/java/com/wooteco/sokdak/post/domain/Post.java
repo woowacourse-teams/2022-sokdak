@@ -148,10 +148,6 @@ public class Post {
         return likes;
     }
 
-    public List<PostHashtag> getPostHashtags() {
-        return postHashtags;
-    }
-
     public List<PostBoard> getPostBoards() {
         return postBoards;
     }

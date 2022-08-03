@@ -30,6 +30,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.3'
 	implementation 'com.google.guava:guava:31.0.1-jre'
+	implementation 'com.github.maricn:logback-slack-appender:1.4.0'
 
 
 	compileOnly 'org.projectlombok:lombok'

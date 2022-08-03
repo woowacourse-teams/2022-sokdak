@@ -3,6 +3,7 @@
 <configuration>
     <springProfile name="local">
         <include resource="logback/console-logger.xml"/>
+        <include resource="logback/slack-logger.xml"/>
         <logger name="com.wooteco.sokdak" level="DEBUG">
             <appender-ref ref="STDOUT"/>
         </logger>
@@ -11,7 +12,7 @@
             <appender-ref ref="STDOUT"/>
         </logger>
 
-        <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
+        <logger name="org.hibernate.SQL" level="DErBUG" additivity="false">
             <appender-ref ref="STDOUT"/>
         </logger>
 
@@ -29,6 +30,19 @@
 
         <logger name="com.wooteco.sokdak" level="DEBUG">
             <appender-ref ref="FILE"/>
+        </logger>
+
+        <logger name="org.springframework" level="INFO">
+            <appender-ref ref="FILE"/>
+        </logger>
+    </springProfile>
+
+    <springProfile name="prod">
+        <include resource="logback/file-logger.xml"/>
+
+        <logger name="com.wooteco.sokdak" level="ERROR">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="SLACK-PROD"/>
         </logger>
 
         <logger name="org.springframework" level="INFO">

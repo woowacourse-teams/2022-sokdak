@@ -5,24 +5,19 @@ plugins {
 	id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
-
 group = 'com.wooteco'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
-ext {
-	set('snippetsDir', file("build/generated-snippets"))
-}
-
-bootJar {
-	dependsOn asciidoctor
-	from ("${asciidoctor.outputDir}") {
-		into "src/main/resources/static/docs"
-	}
+configurations {
+	asciidoctorExtensions
 }
 
 repositories {
 	mavenCentral()
+}
+ext {
+	set('snippetsDir', file("build/generated-snippets"))
 }
 
 dependencies {
@@ -34,6 +29,7 @@ dependencies {
 	implementation 'com.google.guava:guava:31.0.1-jre'
 
 
+	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 	compileOnly 'org.projectlombok:lombok'
 
 	runtimeOnly 'com.h2database:h2'
@@ -54,12 +50,18 @@ dependencies {
 }
 
 test {
-	useJUnitPlatform()
 	outputs.dir snippetsDir
+	useJUnitPlatform()
 }
 
 asciidoctor {
+	configurations 'asciidoctorExtensions'
+	sources{
+		include("**/index.adoc","**/common/*.adoc")
+	}
+	baseDirFollowsSourceFile()
 	inputs.dir snippetsDir
+
 	dependsOn test
 }
 
@@ -67,12 +69,17 @@ asciidoctor.doFirst {
 	delete file('src/main/resources/static/docs')
 }
 
-task copyDocument(type: Copy) {
+task createDocument(type: Copy) {
 	dependsOn asciidoctor
+
 	from file("build/docs/asciidoc")
-	into file("src/main/resources/static/docs")
+	into file("src/main/resources/static")
+}
+
+bootJar {
+	dependsOn createDocument
 }
 
 build {
-	dependsOn copyDocument
+	dependsOn createDocument
 }

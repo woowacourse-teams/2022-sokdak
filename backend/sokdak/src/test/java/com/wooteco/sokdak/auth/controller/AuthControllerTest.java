@@ -2,15 +2,18 @@ package com.wooteco.sokdak.auth.controller;
 
 import static com.wooteco.sokdak.util.fixture.MemberFixture.INVALID_LOGIN_REQUEST;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_LOGIN_REQUEST;
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
-import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.auth.exception.LoginFailedException;
 import com.wooteco.sokdak.util.ControllerTest;
 import com.wooteco.sokdak.util.fixture.MemberFixture;
-import com.wooteco.sokdak.util.fixture.PostFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -29,20 +32,42 @@ class AuthControllerTest extends ControllerTest {
                 .body(VALID_LOGIN_REQUEST)
                 .when().post("/login")
                 .then().log().all()
+                .assertThat()
+                .apply(document("login/success"))
                 .statusCode(HttpStatus.OK.value());
     }
 
     @DisplayName("존재하지 않는 회원정보로 로그인하면 400 반환")
     @Test
     void login_Exception() {
-        given(authService.login(any(LoginRequest.class)))
-                .willThrow(LoginFailedException.class);
+        doThrow(new LoginFailedException())
+                .when(authService).login(any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(INVALID_LOGIN_REQUEST)
                 .when().post("/login")
                 .then().log().all()
+                .assertThat()
+                .body("message", equalTo("아이디나 비밀번호가 잘못되었습니다"))
+                .apply(document("login/fail"))
                 .statusCode(HttpStatus.BAD_REQUEST.value());
+
+    }
+
+    @DisplayName("로그아웃하면 204 반환")
+    @Test
+    void logout() {
+        doReturn(true)
+                .when(authInterceptor)
+                        .preHandle(any(),any(),any());
+
+        restDocs
+                .header("Authorization", "any")
+                .when().get("/logout")
+                .then().log().all()
+                .assertThat()
+                .apply(document("logout/success"))
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }

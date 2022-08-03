@@ -65,6 +65,7 @@ class HashtagControllerTest extends ControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/posts?hashtag=속닥&size=5&page=0")
                 .then().log().all()
+                .assertThat()
                 .apply(document("search/byHashtag/success"))
                 .statusCode(HttpStatus.OK.value());
     }
@@ -80,7 +81,8 @@ class HashtagControllerTest extends ControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/posts?hashtag=없는태그&size=5&page=0")
                 .then().log().all()
-                .apply(document("search/byHashtag/success"))
+                .assertThat()
+                .apply(document("search/byHashtag/fail/noHashtag"))
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
@@ -100,6 +102,7 @@ class HashtagControllerTest extends ControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/hashtags/popular?include=태그&limit=3")
                 .then().log().all()
+                .assertThat()
                 .apply(document("hashtags/search/success"))
                 .statusCode(HttpStatus.OK.value());
     }

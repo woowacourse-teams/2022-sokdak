@@ -28,6 +28,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class Comment {
 
     private static final int BLOCKED_CONDITION = 5;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")

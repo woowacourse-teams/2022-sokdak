@@ -33,6 +33,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class Post {
 
     private static final int BLOCKED_CONDITION = 5;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")

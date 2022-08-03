@@ -5,6 +5,7 @@ import { isExpired, parseJwt } from '@/utils/decodeJwt';
 
 const authFetcher = axios.create();
 authFetcher.defaults.baseURL = process.env.API_URL;
+authFetcher.defaults.withCredentials = true;
 
 authFetcher.interceptors.request.use(
   async function (request) {

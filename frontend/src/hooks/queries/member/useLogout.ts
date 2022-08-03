@@ -10,6 +10,7 @@ import useSnackbar from '@/hooks/useSnackbar';
 import authFetcher from '@/apis';
 import { STORAGE_KEY } from '@/constants/localStorage';
 import QUERY_KEYS from '@/constants/queries';
+import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
 const useLogout = (options?: UseQueryOptions<AxiosResponse<never>, AxiosError<{ message: string }>, never, string>) => {
   const { showSnackbar } = useSnackbar();
@@ -17,7 +18,7 @@ const useLogout = (options?: UseQueryOptions<AxiosResponse<never>, AxiosError<{ 
   return useQuery(QUERY_KEYS.LOGOUT, () => authFetcher.get<never>('/logout'), {
     ...options,
     onSuccess(data) {
-      showSnackbar('로그아웃에 성공하였습니다.');
+      showSnackbar(SNACKBAR_MESSAGE.SUCCESS_LOGOUT);
       setIsLogin(false);
       setUserName('');
       authFetcher.defaults.headers.common = {};

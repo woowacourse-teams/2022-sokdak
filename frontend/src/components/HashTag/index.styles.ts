@@ -13,3 +13,8 @@ export const Container = styled.div<{ onClick: React.MouseEventHandler<HTMLDivEl
   user-select: none;
   cursor: ${props => (props.onClick ? 'pointer' : null)};
 `;
+
+export const Count = styled.span`
+  color: ${props => props.theme.colors.gray_200};
+  font-size: 11px;
+`;

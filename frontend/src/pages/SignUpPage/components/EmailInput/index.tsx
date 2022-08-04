@@ -80,7 +80,15 @@ const EmailInput = ({
           <InputBox.SubmitButton disabled={true}>로딩중</InputBox.SubmitButton>
         ) : (
           <InputBox.SubmitButton disabled={error !== '' || value === '' || isSet}>
-            {isSet ? (isVerified ? '인증 완료' : '인증 중') : '인증번호 받기'}
+            {isSet ? (
+              isVerified ? (
+                '인증 완료'
+              ) : (
+                <Styled.Timer startMinute={5} callback={() => setIsSet(false)} />
+              )
+            ) : (
+              '인증번호 받기'
+            )}
           </InputBox.SubmitButton>
         )}
       </Styled.InputForm>

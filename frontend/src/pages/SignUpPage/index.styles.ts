@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 
+import TimerComponent from '@/components/Timer';
+
 import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -106,4 +108,8 @@ export const MessageContainer = styled.div`
 export const Message = styled.p`
   font-size: 12px;
   color: ${props => props.theme.colors.gray_200};
+`;
+
+export const Timer = styled(TimerComponent)`
+  width: 100%;
 `;

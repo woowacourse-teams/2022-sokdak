@@ -1,8 +1,9 @@
 import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 
-import QUERY_KEYS from '@/constants/queries';
+import authFetcher from '@/apis';
+import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 
 const useLike = (
   options?: UseMutationOptions<
@@ -14,7 +15,8 @@ const useLike = (
   const queryClient = useQueryClient();
 
   return useMutation(
-    ({ id }): Promise<AxiosResponse<{ like: boolean; likeCount: number }, string>> => axios.put(`/posts/${id}/like`),
+    ({ id }): Promise<AxiosResponse<{ like: boolean; likeCount: number }, string>> =>
+      authFetcher.put(`/posts/${id}/like`),
     {
       ...options,
       onSuccess: (data, variables, context) => {
@@ -24,6 +26,7 @@ const useLike = (
           options.onSuccess(data, variables, context);
         }
       },
+      mutationKey: MUTATION_KEY.CREATE_LIKE,
     },
   );
 };

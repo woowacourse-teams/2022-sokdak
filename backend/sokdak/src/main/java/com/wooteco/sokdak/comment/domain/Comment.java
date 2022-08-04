@@ -45,8 +45,7 @@ public class Comment {
     @OneToMany(mappedBy = "comment")
     private List<CommentReport> commentReports = new ArrayList<>();
 
-    @Embedded
-    private Nickname nickname;
+    private String nickname;
 
     @Embedded
     private Message message;
@@ -61,7 +60,7 @@ public class Comment {
     public Comment(Member member, Post post, String nickname, String message) {
         this.member = member;
         this.post = post;
-        this.nickname = new Nickname(nickname);
+        this.nickname = nickname;
         this.message = new Message(message);
     }
 
@@ -105,7 +104,7 @@ public class Comment {
     }
 
     public String getNickname() {
-        return nickname.getValue();
+        return nickname;
     }
 
     public String getMessage() {

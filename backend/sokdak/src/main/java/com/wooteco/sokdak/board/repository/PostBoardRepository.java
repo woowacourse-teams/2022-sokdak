@@ -13,4 +13,7 @@ public interface PostBoardRepository extends JpaRepository<PostBoard, Long> {
     Optional<PostBoard> findPostBoardByPostAndBoard(Post post, Board board);
 
     Slice<PostBoard> findPostBoardsByBoardId(Long boardId, Pageable pageable);
+
+    Optional<PostBoard> findPostBoardByPostId(Long id);
 }
+

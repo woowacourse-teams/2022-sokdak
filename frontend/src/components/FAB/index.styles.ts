@@ -18,5 +18,5 @@ export const Container = styled.div`
   cursor: pointer;
   position: fixed;
   bottom: 20px;
-  right: 20px;
+  right: calc((100% - 325px) / 2);
 `;

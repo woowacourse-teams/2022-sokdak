@@ -15,7 +15,7 @@ const BoardItem = ({ id, title, posts }: BoardItemProps) => {
       <Styled.Title>{title}</Styled.Title>
       <Styled.ItemContainer>
         {posts.map(post => (
-          <Styled.Item key={post.id} to={`${PATH.POST}/${post.id}`}>
+          <Styled.Item key={post.id} to={`${PATH.POST}/${post.id}`} data-testid={post.id}>
             <Styled.ItemTitle>{post.title}</Styled.ItemTitle>
             <Styled.PostInfoContainer>
               <Styled.IconContainer>

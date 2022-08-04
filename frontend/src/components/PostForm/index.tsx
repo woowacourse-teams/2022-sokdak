@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import HashTagInput from './components/HashTagInput';
 
@@ -6,13 +7,22 @@ import useSnackbar from '@/hooks/useSnackbar';
 
 import * as Styled from './index.styles';
 
+import { BOARDS } from '@/constants/board';
+
+const SubmitType = {
+  POST: '글 작성하기',
+  PUT: '글 수정하기',
+} as const;
+
 interface PostFormProps {
   heading: string;
-  submitType: string;
+  submitType: typeof SubmitType[keyof typeof SubmitType];
   prevTitle?: string;
   prevContent?: string;
-  prevHashTags?: Hashtag[];
-  handlePost: (post: Pick<Post, 'title' | 'content'> & { hashtags: string[] }) => void;
+  prevHashTags?: Omit<Hashtag, 'count'>[];
+  handlePost: (
+    post: Pick<Post, 'title' | 'content'> & { hashtags: string[]; anonymous?: boolean; boardId: string | number },
+  ) => void;
 }
 
 const PostForm = ({
@@ -28,7 +38,11 @@ const PostForm = ({
   const [title, setTitle] = useState(prevTitle);
   const [content, setContent] = useState(prevContent);
   const [hashtags, setHashtags] = useState(prevHashTags.map(hashtag => hashtag.name));
+  const [anonymous, setAnonymous] = useState(true);
 
+  const { boardId } = useLocation().state as Pick<Post, 'boardId'>;
+
+  const { title: boardTitle } = BOARDS.find(board => board.id === Number(boardId))!;
   const [isValidTitle, setIsValidTitle] = useState(true);
   const [isValidContent, setIsValidContent] = useState(true);
   const [isAnimationActive, setIsAnimationActive] = useState(false);
@@ -36,7 +50,8 @@ const PostForm = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    handlePost({ title, content, hashtags });
+
+    handlePost({ title, content, hashtags, anonymous, boardId });
   };
 
   return (
@@ -48,6 +63,7 @@ const PostForm = ({
       }}
     >
       <Styled.Heading>{heading}</Styled.Heading>
+      <Styled.Board>{boardTitle}</Styled.Board>
       <Styled.TitleInput
         placeholder="제목을 입력해주세요."
         value={title}
@@ -80,6 +96,9 @@ const PostForm = ({
       />
       <HashTagInput hashtags={hashtags} setHashtags={setHashtags} />
       <Styled.SubmitButton>{submitType}</Styled.SubmitButton>
+      {submitType === SubmitType.POST && (
+        <Styled.CheckBox isChecked={anonymous} setIsChecked={setAnonymous} labelText="익명" />
+      )}
     </Styled.Container>
   );
 };

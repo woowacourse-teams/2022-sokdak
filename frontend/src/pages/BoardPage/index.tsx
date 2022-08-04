@@ -10,6 +10,8 @@ import Spinner from '@/components/Spinner';
 import useBoards from '@/hooks/queries/board/useBoards';
 import usePosts from '@/hooks/queries/post/usePosts';
 
+import * as Styled from './index.styles';
+
 import PATH from '@/constants/path';
 
 const HOT_BOARD_ID = '1';
@@ -28,10 +30,12 @@ const BoardPage = () => {
     navigate(PATH.CREATE_POST, { state: { boardId } });
   };
 
-  if (boardIsLoading) {
+  if (boardIsLoading || isLoading) {
     return (
       <Layout>
-        <Spinner />
+        <Styled.SpinnerContainer>
+          <Spinner />
+        </Styled.SpinnerContainer>
       </Layout>
     );
   }
@@ -44,7 +48,6 @@ const BoardPage = () => {
     <Layout>
       <BoardCategory id={boardId!} boards={boards!} />
       <PostList data={data} fetchNextPage={fetchNextPage} />
-      {isLoading && <Spinner />}
       {boardId !== HOT_BOARD_ID && <FAB handleClick={handleClickFAB} />}
     </Layout>
   );

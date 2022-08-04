@@ -13,6 +13,7 @@ import {
 import * as Styled from './index.styles';
 
 interface DropdownProps {
+  className?: string;
   children: ReactNode;
 }
 const DropdownContext = createContext<{ open: boolean; setOpen: Dispatch<SetStateAction<boolean>> } | undefined>(
@@ -57,13 +58,13 @@ const Trigger = ({ children }: DropdownProps) => {
   return <Styled.DropdownTrigger onClick={handleTrigger}>{children}</Styled.DropdownTrigger>;
 };
 
-const OptionList = ({ children }: DropdownProps) => {
+const OptionList = ({ className, children }: DropdownProps) => {
   const dropdown = useContext(DropdownContext);
   if (!dropdown) {
     throw new Error('');
   }
 
-  return <Styled.DropdownList>{dropdown.open ? children : null}</Styled.DropdownList>;
+  return <Styled.DropdownList className={className}>{dropdown.open ? children : null}</Styled.DropdownList>;
 };
 
 Dropdown.Trigger = Trigger;

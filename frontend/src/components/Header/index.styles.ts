@@ -23,7 +23,6 @@ export const LeftSide = styled(Link)`
 export const RightSide = styled.div`
   display: flex;
   align-items: center;
-  gap: 5px;
 `;
 
 export const Title = styled.p`
@@ -62,11 +61,13 @@ export const LoginLink = styled(Link)`
   color: ${props => props.theme.colors.gray_900};
   border: 1px solid black;
   border-radius: 8px;
+  margin-left: 5px;
 `;
 
 export const AvatarContainer = styled.div`
   display: flex;
   align-items: center;
+  gap: 5px;
 `;
 
 export const OptionsContainer = styled.div`

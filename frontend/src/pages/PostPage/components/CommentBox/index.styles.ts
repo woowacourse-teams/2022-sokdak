@@ -10,12 +10,13 @@ export const BlockContainer = styled.div`
   width: 100%;
   border-top: 0.5px solid ${props => props.theme.colors.gray_150};
   cursor: default;
-  padding: 2em 0;
+  padding: 3em 0;
 `;
 
 export const BlockedContent = styled.p`
   color: ${props => props.theme.colors.gray_200};
   font-size: 12px;
+  margin-left: 10px;
 `;
 
 export const CommentHeader = styled.div`

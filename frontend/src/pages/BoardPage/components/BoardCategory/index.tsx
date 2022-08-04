@@ -22,7 +22,7 @@ const BoardCategory = ({ id, boards }: BoardCategoryProps) => {
               <Styled.DropdownIcon />
             </Styled.TitleContainer>
           </Dropdown.Trigger>
-          <Dropdown.OptionList>
+          <Styled.OptionList>
             <Styled.BoardList>
               {boardList.map(({ id }) => (
                 <Styled.BoardItem key={id} to={`/board/${id}`}>
@@ -30,7 +30,7 @@ const BoardCategory = ({ id, boards }: BoardCategoryProps) => {
                 </Styled.BoardItem>
               ))}
             </Styled.BoardList>
-          </Dropdown.OptionList>
+          </Styled.OptionList>
         </Dropdown>
       </div>
     </Styled.BoardCategoryContainer>

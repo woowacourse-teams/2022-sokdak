@@ -22,7 +22,7 @@ export const Item = styled(Link)`
   display: flex;
   justify-content: space-between;
   font-family: 'BMHANNAPro';
-  padding: 1em;
+  padding: 1em 0;
 `;
 
 export const ItemContainer = styled.section`

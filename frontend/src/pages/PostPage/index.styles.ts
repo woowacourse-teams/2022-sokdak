@@ -51,11 +51,11 @@ export const ListButton = styled(Link)`
 `;
 
 export const SpinnerContainer = styled.div`
-  position: fixed;
-  top: 20%;
-  left: 50%;
-  transform: translateY(-50%);
-  transform: translateX(-50%);
+  width: 100%;
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const ErrorContainer = styled.div`

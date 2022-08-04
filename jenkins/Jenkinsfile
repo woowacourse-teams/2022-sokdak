@@ -16,42 +16,6 @@ pipeline{
       }
     }
 
-    stage('BE-Test'){
-      steps{
-        sh "echo '########### BE TEST START ###########'"
-        dir('backend/sokdak') {
-          sh './gradlew clean test'
-        }
-        sh "echo '########### BE TEST SUCCESS ###########'"
-      }
-    }
-
-    stage('BE-Build'){
-      steps{
-        sh "echo '########### BE BUILD START ###########'"
-        dir('backend/sokdak') {
-          sh './gradlew bootJar'
-        }
-        sh "echo '########### BE BUILD SUCCESS ###########'"
-      }
-    }
-
-    stage('BE-Deploy'){
-      steps{
-        script{
-          withCredentials([sshUserPrivateKey(credentialsId: "back-key", keyFileVariable: 'my_private_key_file')]) {
-            sh "echo '########### BE DEPLOY START ###########'"
-            dir('backend/sokdak/build/libs'){
-                sh "scp -o StrictHostKeyChecking=no -i ${my_private_key_file} *.jar ubuntu@${env.DEV_BACK_IP}:/home/ubuntu/sokdak"
-            }
-            sh "ssh -o StrictHostKeyChecking=no -i ${my_private_key_file} ubuntu@${env.DEV_BACK_IP} 'cd sokdak && ./deploy.sh'"
-            sh "echo '########### BE DEPLOY SUCCESS ###########'"
-            sh "echo '########### BE COMPLETE ###########'"
-          }
-        }
-      }
-    }
-
     stage('FE-Install'){
       steps{
         sh "echo '########### FE MODULE INSTALL START ###########'"
@@ -72,6 +36,16 @@ pipeline{
       }
     }
 
+    stage('BE-Test'){
+      steps{
+        sh "echo '########### BE TEST START ###########'"
+        dir('backend/sokdak') {
+          sh './gradlew clean test'
+        }
+        sh "echo '########### BE TEST SUCCESS ###########'"
+      }
+    }
+
     stage('FE-Build'){
       steps{
         sh "echo '########### FE BUILD START ###########'"
@@ -79,6 +53,16 @@ pipeline{
           sh 'npm run build-dev'
         }
         sh "echo '########### FE BUILD SUCCESS ###########'"
+      }
+    }
+
+    stage('BE-Build'){
+      steps{
+        sh "echo '########### BE BUILD START ###########'"
+        dir('backend/sokdak') {
+          sh './gradlew bootJar'
+        }
+        sh "echo '########### BE BUILD SUCCESS ###########'"
       }
     }
 
@@ -97,6 +81,22 @@ pipeline{
         }
       }
     }
+
+    stage('BE-Deploy'){
+      steps{
+        script{
+          withCredentials([sshUserPrivateKey(credentialsId: "back-key", keyFileVariable: 'my_private_key_file')]) {
+            sh "echo '########### BE DEPLOY START ###########'"
+            dir('backend/sokdak/build/libs'){
+                sh "scp -o StrictHostKeyChecking=no -i ${my_private_key_file} *.jar ubuntu@${env.DEV_BACK_IP}:/home/ubuntu/sokdak"
+            }
+            sh "ssh -o StrictHostKeyChecking=no -i ${my_private_key_file} ubuntu@${env.DEV_BACK_IP} 'cd sokdak && ./deploy.sh'"
+            sh "echo '########### BE DEPLOY SUCCESS ###########'"
+            sh "echo '########### BE COMPLETE ###########'"
+          }
+        }
+      }
+    }
   }
 
   post {
@@ -108,4 +108,3 @@ pipeline{
     }
   }
 }
-

@@ -5,6 +5,7 @@ import static com.wooteco.sokdak.util.fixture.ReportFixture.getToken;
 
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import java.util.Collections;
+import java.util.List;
 
 public class PostFixture {
 
@@ -21,8 +22,11 @@ public class PostFixture {
     public static final String INVALID_POST_TITLE = "A".repeat(51);
     public static final String INVALID_POST_CONTENT = "A".repeat(5001);
 
+    public static final NewPostRequest NEW_POST_REQUEST =
+            new NewPostRequest("제목", "본문", false, List.of("태그1", "태그2"));
+
     public static Long addPostAndGetPostId() {
-        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT,
+        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT, false,
                 Collections.emptyList());
         return Long.parseLong(httpPostWithAuthorization(newPostRequest, CREATE_POST_URI, getToken("chris", "Abcd123!@"))
                 .header("Location").split("/posts/")[1]);

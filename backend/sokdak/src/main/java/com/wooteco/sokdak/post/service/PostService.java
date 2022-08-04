@@ -2,7 +2,6 @@ package com.wooteco.sokdak.post.service;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.board.domain.PostBoard;
-import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.board.service.BoardService;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
@@ -10,8 +9,10 @@ import com.wooteco.sokdak.hashtag.domain.Hashtags;
 import com.wooteco.sokdak.hashtag.service.HashtagService;
 import com.wooteco.sokdak.like.repository.LikeRepository;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.Nickname;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
+import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
@@ -19,6 +20,7 @@ import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
+import java.util.Collections;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -30,23 +32,20 @@ public class PostService {
 
     private final HashtagService hashtagService;
     private final BoardService boardService;
-
     private final PostRepository postRepository;
     private final PostBoardRepository postBoardRepository;
-    private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
 
     public PostService(HashtagService hashtagService, BoardService boardService,
                        PostRepository postRepository, PostBoardRepository postBoardRepository,
-                       BoardRepository boardRepository, MemberRepository memberRepository,
-                       CommentRepository commentRepository, LikeRepository likeRepository) {
+                       MemberRepository memberRepository, CommentRepository commentRepository,
+                       LikeRepository likeRepository) {
         this.hashtagService = hashtagService;
         this.boardService = boardService;
         this.postRepository = postRepository;
         this.postBoardRepository = postBoardRepository;
-        this.boardRepository = boardRepository;
         this.memberRepository = memberRepository;
         this.commentRepository = commentRepository;
         this.likeRepository = likeRepository;
@@ -56,10 +55,11 @@ public class PostService {
     public Long addPost(Long boardId, NewPostRequest newPostRequest, AuthInfo authInfo) {
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
-
+        String writerNickname = createPostWriterNickname(newPostRequest.isAnonymous(), member);
         Post post = Post.builder()
                 .title(newPostRequest.getTitle())
                 .content(newPostRequest.getContent())
+                .writerNickname(new Nickname(writerNickname))
                 .member(member)
                 .build();
         Post savedPost = postRepository.save(post);
@@ -67,6 +67,13 @@ public class PostService {
         hashtagService.saveHashtag(newPostRequest.getHashtags(), savedPost);
         boardService.savePostBoard(savedPost, boardId, authInfo.getRole());
         return savedPost.getId();
+    }
+
+    private String createPostWriterNickname(boolean anonymous, Member member) {
+        if (anonymous) {
+            return RandomNicknameGenerator.generate(Collections.emptySet());
+        }
+        return member.getNickname();
     }
 
     public PostDetailResponse findPost(Long postId, AuthInfo authInfo) {

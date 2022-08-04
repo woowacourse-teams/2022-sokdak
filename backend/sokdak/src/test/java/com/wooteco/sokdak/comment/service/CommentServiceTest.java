@@ -1,7 +1,7 @@
 package com.wooteco.sokdak.comment.service;
 
 import static com.wooteco.sokdak.member.domain.RoleType.USER;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.*;
 import static com.wooteco.sokdak.util.fixture.PostFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -14,11 +14,13 @@ import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.Nickname;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.util.IntegrationTest;
+import java.util.HashSet;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,18 +41,31 @@ class CommentServiceTest extends IntegrationTest {
     @Autowired
     private CommentRepository commentRepository;
 
-    private Post post;
+    private Post anonymousPost;
+    private Post identifiedPost;
     private Member member;
+    private Member member2;
+    private String randomNickname;
 
     @BeforeEach
     void setUp() {
         member = memberRepository.findById(1L).get();
-        post = Post.builder()
+        member2 = memberRepository.findById(2L).get();
+        randomNickname = RandomNicknameGenerator.generate(new HashSet<>());
+        anonymousPost = Post.builder()
                 .member(member)
                 .title(VALID_POST_TITLE)
                 .content(VALID_POST_CONTENT)
+                .writerNickname(new Nickname(randomNickname))
                 .build();
-        postRepository.save(post);
+        identifiedPost = Post.builder()
+                .member(member)
+                .title(VALID_POST_TITLE)
+                .content(VALID_POST_CONTENT)
+                .writerNickname(new Nickname(member.getNickname()))
+                .build();
+        postRepository.save(anonymousPost);
+        postRepository.save(identifiedPost);
     }
 
     @DisplayName("기명으로 댓글을 등록")
@@ -58,20 +73,96 @@ class CommentServiceTest extends IntegrationTest {
     void addComment_Identified() {
         NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", false);
 
-        Long commentId = commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
+        Long commentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, AUTH_INFO);
 
         Comment foundComment = commentRepository.findById(commentId).get();
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
-                () -> assertThat(foundComment.getMember()).isEqualTo(member)
+                () -> assertThat(foundComment.getMember()).isEqualTo(member),
+                () -> assertThat(foundComment.getNickname()).isEqualTo(member.getNickname())
         );
     }
 
-    @DisplayName("익명으로 첫 댓글 작성")
+    @DisplayName("익명 게시글에서 게시글 작성자가 기명으로 댓글 등록")
     @Test
-    void addComment_FirstAnonymous() {
+    void addComment_Identified_PostWriterAnonymous_PostWriterCommentWriterSame() {
+        NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", false);
+        Long commentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, AUTH_INFO);
+
+        Comment foundComment = commentRepository.findById(commentId).get();
+
+        assertAll(
+                () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
+                () -> assertThat(foundComment.getMember()).isEqualTo(member),
+                () -> assertThat(foundComment.getNickname()).isEqualTo(member.getNickname())
+        );
+    }
+
+    @DisplayName("익명 게시글에서 게시글 작성자가 아닌 유저가 기명으로 댓글 등록")
+    @Test
+    void addComment_Identified_PostWriterAnonymous_PostWriterCommentWriterDifferent() {
+        NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", false);
+        Long commentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, AUTH_INFO2);
+
+        Comment foundComment = commentRepository.findById(commentId).get();
+
+        assertAll(
+                () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
+                () -> assertThat(foundComment.getMember()).isEqualTo(member2),
+                () -> assertThat(foundComment.getNickname()).isEqualTo(member2.getNickname())
+        );
+    }
+
+    @DisplayName("익명 게시글에서 게시글 작성자가 익명으로 댓글 등록")
+    @Test
+    void addComment_Anonymous_PostWriterAnonymous_PostWriterCommentWriterSame() {
         NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
-        Long commentId = commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
+        Long commentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, AUTH_INFO);
+
+        Comment foundComment = commentRepository.findById(commentId).get();
+
+        assertAll(
+                () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
+                () -> assertThat(foundComment.getMember()).isEqualTo(member),
+                () -> assertThat(foundComment.getNickname()).isEqualTo(randomNickname)
+        );
+    }
+
+    @DisplayName("기명 게시글에서 게시글 작성자가 익명으로 댓글 등록")
+    @Test
+    void addComment_Anonymous_PostWriterIdentified_PostWriterCommentWriterSame() {
+        NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
+        Long commentId = commentService.addComment(identifiedPost.getId(), newCommentRequest, AUTH_INFO);
+
+        Comment foundComment = commentRepository.findById(commentId).get();
+
+        assertAll(
+                () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
+                () -> assertThat(foundComment.getMember()).isEqualTo(member),
+                () -> assertThat(foundComment.getNickname()).isNotEqualTo(member.getNickname())
+        );
+    }
+
+    @DisplayName("익명 게시글에서 게시글 작성자 아닌 사용자가 익명으로 댓글 등록")
+    @Test
+    void addComment_Anonymous_PostWriterAnonymous_PostWriterCommentWriterDifferent() {
+        NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
+        Long commentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, AUTH_INFO2);
+
+        Comment foundComment = commentRepository.findById(commentId).get();
+
+        assertAll(
+                () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
+                () -> assertThat(foundComment.getMember()).isEqualTo(member2),
+                () -> assertThat(foundComment.getNickname()).isNotEqualTo(anonymousPost.getNickname())
+        );
+    }
+
+    @DisplayName("기명 게시글에서 게시글 작성자가 아난 사용자가 익명으로 첫 댓글 작성")
+    @Test
+    void addComment_Anonymous_PostWriterIdentified_PostWriterCommentWriterDifferent_firstComment() {
+        NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
+        Long commentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, AUTH_INFO);
 
         Comment foundComment = commentRepository.findById(commentId).get();
 
@@ -82,17 +173,20 @@ class CommentServiceTest extends IntegrationTest {
         );
     }
 
-    @DisplayName("익명으로 댓글을 단 후, 다시 익명으로 댓글 작성")
+    @DisplayName("익명 게시글에서 게시글 작성자가 익명으로 댓글을 단 후, 다시 익명으로 댓글 작성")
     @Test
-    void addComment_SecondAnonymous() {
+    void addComment_Anonymous_PostWriterIdentified_PostWriterCommentWriterDifferent_SComment() {
         NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
-        Long firstCommentId = commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
-        Long secondCommentId = commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
+        Long firstCommentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, AUTH_INFO);
+        Long secondCommentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, AUTH_INFO);
 
         Comment firstComment = commentRepository.findById(firstCommentId).get();
         Comment secondComment = commentRepository.findById(secondCommentId).get();
 
-        assertThat(secondComment.getNickname()).isEqualTo(firstComment.getNickname());
+        assertAll(
+                () -> assertThat(firstComment.getNickname()).isEqualTo(secondComment.getNickname()),
+                () -> assertThat(anonymousPost.getNickname()).isEqualTo(firstComment.getNickname())
+        );
     }
 
     @DisplayName("특정 게시물의 달린 댓글을 가져옴")
@@ -100,16 +194,18 @@ class CommentServiceTest extends IntegrationTest {
     void findComments() {
         Post otherPost = Post.builder()
                 .member(member)
+                .writerNickname(new Nickname(member.getNickname()))
                 .title("다른 게시글")
                 .content("본문")
                 .build();
         postRepository.save(otherPost);
         NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
         NewCommentRequest newCommentRequestToOtherPost = new NewCommentRequest("다른 게시글의 댓글", true);
-        commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
+        commentService.addComment(anonymousPost.getId(), newCommentRequest, AUTH_INFO);
         commentService.addComment(otherPost.getId(), newCommentRequestToOtherPost, AUTH_INFO);
 
-        List<CommentResponse> commentResponses = commentService.findComments(post.getId(), AUTH_INFO).getComments();
+        List<CommentResponse> commentResponses = commentService.findComments(anonymousPost.getId(), AUTH_INFO)
+                .getComments();
 
         assertAll(
                 () -> assertThat(commentResponses.size()).isEqualTo(1),
@@ -127,11 +223,13 @@ class CommentServiceTest extends IntegrationTest {
                 .build();
         memberRepository.save(otherMember);
         NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
-        commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
+        commentService.addComment(anonymousPost.getId(), newCommentRequest, AUTH_INFO);
         commentService.addComment(
-                post.getId(), newCommentRequest, new AuthInfo(otherMember.getId(), "USER", member.getNickname()));
+                anonymousPost.getId(), newCommentRequest,
+                new AuthInfo(otherMember.getId(), "USER", member.getNickname()));
 
-        List<CommentResponse> commentResponses = commentService.findComments(post.getId(), AUTH_INFO).getComments();
+        List<CommentResponse> commentResponses = commentService.findComments(anonymousPost.getId(), AUTH_INFO)
+                .getComments();
 
         assertAll(
                 () -> assertThat(commentResponses.get(0).isAuthorized()).isTrue(),
@@ -143,7 +241,7 @@ class CommentServiceTest extends IntegrationTest {
     @Test
     void deleteComment() {
         NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
-        Long commentId = commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
+        Long commentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, AUTH_INFO);
 
         commentService.deleteComment(commentId, new AuthInfo(member.getId(), USER.getName(), member.getNickname()));
 
@@ -154,7 +252,7 @@ class CommentServiceTest extends IntegrationTest {
     @Test
     void deleteComment_Exception_NotOwner() {
         NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
-        Long commentId = commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
+        Long commentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, AUTH_INFO);
         Long invalidOwnerId = 9999L;
 
         assertThatThrownBy(() -> commentService

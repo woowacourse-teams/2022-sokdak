@@ -12,14 +12,18 @@ import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.report.domain.CommentReport;
 import java.util.List;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class CommentTest {
 
+    private Post post;
     private Comment comment;
     private Member member;
 
@@ -31,7 +35,7 @@ class CommentTest {
                 .password(VALID_PASSWORD)
                 .nickname(VALID_NICKNAME)
                 .build();
-        Post post = Post.builder()
+        post = Post.builder()
                 .title("제목")
                 .content("본문")
                 .member(member)
@@ -74,5 +78,40 @@ class CommentTest {
     @CsvSource({"1, true", "2, false"})
     void isAuthenticated(Long userId, boolean expected) {
         assertThat(comment.isAuthenticated(userId)).isEqualTo(expected);
+    }
+
+    @DisplayName("게시글 작성자의 댓글인지 반환")
+    @ParameterizedTest
+    @MethodSource("provideMemberAndExpected")
+    void isPostWriter_True(Member member, boolean expected) {
+        Comment comment = Comment.builder()
+                .member(member)
+                .post(post)
+                .nickname(VALID_NICKNAME)
+                .message("댓글")
+                .build();
+
+        boolean actual = comment.isPostWriter();
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    private static Stream<Arguments> provideMemberAndExpected() {
+        Member member1 = Member.builder()
+                .id(1L)
+                .username(VALID_USERNAME)
+                .password(VALID_PASSWORD)
+                .nickname(VALID_NICKNAME)
+                .build();
+        Member member2 = Member.builder()
+                .id(2L)
+                .username(VALID_USERNAME)
+                .password(VALID_PASSWORD)
+                .nickname(VALID_NICKNAME)
+                .build();
+        return Stream.of(
+                Arguments.of(member1, true),
+                Arguments.of(member2, false)
+        );
     }
 }

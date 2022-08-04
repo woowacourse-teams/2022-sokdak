@@ -5,6 +5,7 @@ import static com.wooteco.sokdak.util.fixture.MemberFixture.SESSION_ID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
 import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.CommentsResponse;
@@ -42,6 +43,8 @@ class CommentControllerTest extends ControllerTest {
                 .body(newCommentRequest)
                 .when().post("/posts/1/comments")
                 .then().log().all()
+                .apply(document("comment/create/success"))
+                .assertThat()
                 .statusCode(HttpStatus.CREATED.value());
     }
 
@@ -57,14 +60,18 @@ class CommentControllerTest extends ControllerTest {
                 .body(newCommentRequest)
                 .when().post("/posts/1/comments")
                 .then().log().all()
+                .apply(document("comment/create/fail/noMessage"))
+                .assertThat()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("특정 글의 댓글 조회 요청이 오면 모든 댓글들을 반환한다.")
     @Test
     void findComments() {
-        CommentResponse commentResponse1 = new CommentResponse(1L, "조시1", "댓글1", LocalDateTime.now(), false, false);
-        CommentResponse commentResponse2 = new CommentResponse(2L, "조시2", "댓글2", LocalDateTime.now(), false, false);
+        CommentResponse commentResponse1 = new CommentResponse(1L, "조시1", "댓글1", LocalDateTime.now(), false, false,
+                false);
+        CommentResponse commentResponse2 = new CommentResponse(2L, "조시2", "댓글2", LocalDateTime.now(), false, true,
+                false);
         doReturn(new CommentsResponse(List.of(commentResponse1, commentResponse2)))
                 .when(commentService)
                 .findComments(any(), any());
@@ -72,6 +79,8 @@ class CommentControllerTest extends ControllerTest {
         restDocs
                 .when().get("/posts/1/comments")
                 .then().log().all()
+                .apply(document("comment/find/all/success"))
+                .assertThat()
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -85,6 +94,8 @@ class CommentControllerTest extends ControllerTest {
         restDocs
                 .when().delete("/comments/1")
                 .then().log().all()
+                .apply(document("comment/delete/success"))
+                .assertThat()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }

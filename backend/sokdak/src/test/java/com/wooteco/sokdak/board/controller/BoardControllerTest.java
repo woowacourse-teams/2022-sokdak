@@ -56,7 +56,7 @@ class BoardControllerTest extends ControllerTest {
                 .body(newBoardRequest)
                 .when().post("/boards")
                 .then().log().all()
-                .apply(document("board/create/success"))
+                .apply(document("board/create/fail"))
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
@@ -67,7 +67,7 @@ class BoardControllerTest extends ControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/boards")
                 .then().log().all()
-                .apply(document("board/create/success"))
+                .apply(document("board/find/board"))
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -78,7 +78,7 @@ class BoardControllerTest extends ControllerTest {
         restDocs
                 .when().get("/boards/contents")
                 .then().log().all()
-                .apply(document("board/create/success"))
+                .apply(document("board/find/content"))
                 .statusCode(HttpStatus.OK.value());
     }
 }

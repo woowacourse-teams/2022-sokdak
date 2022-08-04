@@ -8,6 +8,7 @@ import com.wooteco.sokdak.like.domain.Like;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.report.domain.PostReport;
 import com.wooteco.sokdak.report.exception.AlreadyReportPostException;
+import com.wooteco.sokdak.member.domain.Nickname;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,9 @@ public class Post {
     @Embedded
     private Content content;
 
+    @Embedded
+    private Nickname writerNickname;
+
     @OneToMany(mappedBy = "post")
     private List<Like> likes = new ArrayList<>();
 
@@ -75,12 +79,13 @@ public class Post {
     }
 
     @Builder
-    private Post(String title, String content, Member member, List<Like> likes, List<Comment> comments,
-                 List<PostHashtag> postHashtags) {
+    private Post(String title, String content, Member member, Nickname writerNickname, List<Like> likes,
+                 List<Comment> comments, List<PostHashtag> postHashtags) {
         this.title = new Title(title);
         this.content = new Content(content);
         this.member = member;
         this.likes = likes;
+        this.writerNickname = writerNickname;
         this.comments = comments;
         this.postHashtags = postHashtags;
     }
@@ -118,12 +123,16 @@ public class Post {
 
     public void addReport(PostReport other) {
         postReports.stream()
-                .filter(it -> it.isSameReporter(other))
+                .filter(it -> other.isSameReporter(it))
                 .findAny()
-                .ifPresent(it -> {
+                 .ifPresent(it -> {
                     throw new AlreadyReportPostException();
                 });
         postReports.add(other);
+    }
+
+    public boolean isAnonymous() {
+        return !getNickname().equals(member.getNickname());
     }
 
     public Long getId() {
@@ -164,15 +173,15 @@ public class Post {
         return likes;
     }
 
-    public List<PostHashtag> getPostHashtags() {
-        return postHashtags;
-    }
-
     public List<PostBoard> getPostBoards() {
         return postBoards;
     }
 
     public List<PostReport> getPostReports() {
         return postReports;
+    }
+
+    public String getNickname() {
+        return writerNickname.getValue();
     }
 }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <included>
-    <property name="DIR" value="/home/ubuntu/logfiles/"/>
+    <property name="DIR" value="/home/ubuntu/sokdak/logfiles/"/>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${DIR}log-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
-            <maxFileSize>30MB</maxFileSize>
+            <maxFileSize>10MB</maxFileSize>
         </rollingPolicy>
         <encoder>
             <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>

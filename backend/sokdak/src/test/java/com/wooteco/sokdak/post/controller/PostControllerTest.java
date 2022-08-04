@@ -1,11 +1,12 @@
 package com.wooteco.sokdak.post.controller;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.*;
 import static com.wooteco.sokdak.util.fixture.PostFixture.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
 import com.wooteco.sokdak.auth.exception.AuthenticationException;
 import com.wooteco.sokdak.hashtag.dto.HashtagResponse;
@@ -62,8 +63,6 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("글 작성 요청을 받으면 새로운 게시글을 등록한다.")
     @Test
     void addPost() {
-        NewPostRequest postRequest = new NewPostRequest("제목", "본문", List.of("태그1"));
-
         doReturn(true)
                 .when(authInterceptor)
                 .preHandle(any(), any(), any());
@@ -71,16 +70,17 @@ class PostControllerTest extends ControllerTest {
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "any")
-                .body(postRequest)
+                .body(NEW_POST_REQUEST)
                 .when().post("/boards/1/posts")
                 .then().log().all()
+                .apply(document("post/create/success"))
                 .statusCode(HttpStatus.CREATED.value());
     }
 
     @DisplayName("게시글 제목이 없는 경우 400을 반환한다.")
     @Test
     void addPost_Exception_NoTitle() {
-        NewPostRequest postRequest = new NewPostRequest(null, "본문", Collections.emptyList());
+        NewPostRequest postRequest = new NewPostRequest(null, "본문", false, Collections.emptyList());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -88,13 +88,14 @@ class PostControllerTest extends ControllerTest {
                 .body(postRequest)
                 .when().post("/boards/1/posts")
                 .then().log().all()
+                .apply(document("post/create/fail/noTitle"))
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("게시글 내용이 없는 경우 400을 반환한다.")
     @Test
     void addPost_Exception_NoContent() {
-        NewPostRequest postRequest = new NewPostRequest("제목", null, Collections.emptyList());
+        NewPostRequest postRequest = new NewPostRequest("제목", null, false, Collections.emptyList());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -102,6 +103,7 @@ class PostControllerTest extends ControllerTest {
                 .body(postRequest)
                 .when().post("/boards/1/posts")
                 .then().log().all()
+                .apply(document("post/create/fail/noContent"))
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
@@ -117,20 +119,7 @@ class PostControllerTest extends ControllerTest {
                 .header("Authorization", "any")
                 .when().get("/boards/1/posts?size=3&page=0")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
-    }
-
-    @DisplayName("인증 없이 게시글 목록 조회 요청을 받으면 해당되는 게시글들을 반환한다.")
-    @Test
-    void findPosts_UnAuthorized() {
-        doReturn(new PostsResponse(List.of(POSTS_ELEMENT_RESPONSE_1, POSTS_ELEMENT_RESPONSE_2), true))
-                .when(postService)
-                .findPostsByBoard(any(), any());
-
-        restDocs
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/boards/1/posts?size=3&page=0")
-                .then().log().all()
+                .apply(document("post/find/all/success"))
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -156,31 +145,7 @@ class PostControllerTest extends ControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/posts/1")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
-    }
-
-    @DisplayName("특정 게시글 조회 요청을 받으면 게시글을 반환한다.")
-    @Test
-    void findPost_NoSession() {
-        PostDetailResponse postResponse = PostDetailResponse.builder()
-                .id(1L)
-                .title("제목1")
-                .content("본문1")
-                .createdAt(LocalDateTime.now())
-                .likeCount(0)
-                .like(false)
-                .modified(false)
-                .hashtagResponses(List.of(new HashtagResponse(1L, "gogo")))
-                .authorized(false)
-                .build();
-        doReturn(postResponse)
-                .when(postService)
-                .findPost(any(), any());
-
-        restDocs
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/posts/1")
-                .then().log().all()
+                .apply(document("post/find/one/success"))
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -196,6 +161,7 @@ class PostControllerTest extends ControllerTest {
                 .header("Authorization", "any")
                 .when().get("/posts/9999")
                 .then().log().all()
+                .apply(document("post/find/one/fail"))
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
@@ -213,6 +179,7 @@ class PostControllerTest extends ControllerTest {
                 .body(postUpdateRequest)
                 .when().put("/posts/1")
                 .then().log().all()
+                .apply(document("post/update/success"))
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
@@ -231,7 +198,27 @@ class PostControllerTest extends ControllerTest {
                 .header("Authorization", "any")
                 .when().put("/posts/1")
                 .then().log().all()
+                .apply(document("post/update/fail/noAuth"))
                 .statusCode(HttpStatus.FORBIDDEN.value());
+    }
+
+    @DisplayName("게시물 수정시 제목 혹은 본문에 내용이 없는 경우 400을 반환한다.")
+    @Test
+    void updatePost_Exception_NoContentTitle() {
+        PostUpdateRequest postUpdateRequest = new PostUpdateRequest(null, UPDATED_POST_CONTENT,
+                List.of("tag"));
+        doThrow(new AuthenticationException())
+                .when(postService)
+                .updatePost(any(), any(), any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(postUpdateRequest)
+                .header("Authorization", "any")
+                .when().put("/posts/1")
+                .then().log().all()
+                .apply(document("post/update/fail/noContent"))
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("게시글을 삭제한다.")
@@ -245,6 +232,7 @@ class PostControllerTest extends ControllerTest {
                 .header("Authorization", "any")
                 .when().delete("/posts/1")
                 .then().log().all()
+                .apply(document("post/delete/success"))
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
@@ -260,6 +248,7 @@ class PostControllerTest extends ControllerTest {
                 .header("Authorization", "any")
                 .when().delete("/posts/1")
                 .then().log().all()
+                .apply(document("post/delete/fail/noAuth"))
                 .statusCode(HttpStatus.FORBIDDEN.value());
     }
 }

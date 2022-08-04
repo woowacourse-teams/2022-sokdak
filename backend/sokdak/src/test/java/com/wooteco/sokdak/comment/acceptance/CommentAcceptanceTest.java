@@ -1,6 +1,6 @@
 package com.wooteco.sokdak.comment.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.CommentFixture.VALID_COMMENT_MESSAGE;
+import static com.wooteco.sokdak.util.fixture.CommentFixture.*;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.*;
 import static com.wooteco.sokdak.util.fixture.PostFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;

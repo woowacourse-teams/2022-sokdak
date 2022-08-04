@@ -1,8 +1,8 @@
 plugins {
 	id 'org.springframework.boot' version '2.7.1'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'org.asciidoctor.convert' version '1.5.8'
 	id 'java'
+	id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
 group = 'com.wooteco'
@@ -10,15 +10,12 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+	asciidoctorExtensions
 }
 
 repositories {
 	mavenCentral()
 }
-
 ext {
 	set('snippetsDir', file("build/generated-snippets"))
 }
@@ -28,10 +25,14 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
+
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.3'
 	implementation 'com.google.guava:guava:31.0.1-jre'
+	implementation 'com.github.maricn:logback-slack-appender:1.4.0'
 
 
+	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 	compileOnly 'org.projectlombok:lombok'
 
 	runtimeOnly 'com.h2database:h2'
@@ -39,8 +40,9 @@ dependencies {
 
 	annotationProcessor 'org.projectlombok:lombok'
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.rest-assured:rest-assured:4.4.0'
 	testImplementation 'io.rest-assured:spring-mock-mvc:4.4.0'
 	testImplementation 'org.mockito:mockito-inline:3.8.0'
@@ -50,12 +52,33 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 }
 
-tasks.named('test') {
+test {
 	outputs.dir snippetsDir
 	useJUnitPlatform()
 }
 
-tasks.named('asciidoctor') {
+asciidoctor {
+	configurations 'asciidoctorExtensions'
+	sources{
+		include("**/index.adoc","**/common/*.adoc")
+	}
+	baseDirFollowsSourceFile()
 	inputs.dir snippetsDir
+
 	dependsOn test
+}
+
+asciidoctor.doFirst {
+	delete file('src/main/resources/static/docs')
+}
+
+task createDocument(type: Copy) {
+	dependsOn asciidoctor
+
+	from file("build/docs/asciidoc")
+	into file("src/main/resources/static")
+}
+
+build {
+	dependsOn createDocument
 }

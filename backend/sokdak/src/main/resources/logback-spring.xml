@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<configuration>
+<configuration scan="true" scanPeriod="10 seconds">
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <springProfile name="local">
         <include resource="logback/console-logger.xml"/>
         <logger name="com.wooteco.sokdak" level="DEBUG">
@@ -26,9 +27,26 @@
 
     <springProfile name="dev">
         <include resource="logback/file-logger.xml"/>
+        <include resource="logback/console-logger.xml"/>
+        <include resource="logback/slack-logger.xml"/>
 
         <logger name="com.wooteco.sokdak" level="DEBUG">
             <appender-ref ref="FILE"/>
+            <appender-ref ref="ASYNC-SLACK-DEV"/>
+        </logger>
+
+        <logger name="org.springframework" level="INFO">
+            <appender-ref ref="FILE"/>
+        </logger>
+    </springProfile>
+
+    <springProfile name="prod">
+        <include resource="logback/file-logger.xml"/>
+        <include resource="logback/slack-logger.xml"/>
+
+        <logger name="com.wooteco.sokdak" level="ERROR">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ASYNC-SLACK-PROD"/>
         </logger>
 
         <logger name="org.springframework" level="INFO">

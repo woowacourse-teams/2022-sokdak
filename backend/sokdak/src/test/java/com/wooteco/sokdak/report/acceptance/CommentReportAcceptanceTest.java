@@ -4,18 +4,14 @@ import static com.wooteco.sokdak.util.fixture.CommentFixture.*;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.*;
 import static com.wooteco.sokdak.util.fixture.PostFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
-import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
-import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.Collections;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -64,10 +60,8 @@ class CommentReportAcceptanceTest extends AcceptanceTest {
 
     private Long addCommentAndGetCommentId() {
         String token = getToken();
-        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT,
-                Collections.emptyList());
         String postId = parsePostId(
-                httpPostWithAuthorization(newPostRequest, CREATE_POST_URI, getToken()));
+                httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getToken()));
 
         NewCommentRequest newCommentRequest = new NewCommentRequest(VALID_COMMENT_MESSAGE, true);
         Long commentId = Long.parseLong(

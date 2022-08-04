@@ -20,15 +20,17 @@ public class MemberFixture {
     public static final LoginRequest INVALID_LOGIN_REQUEST = new LoginRequest(INVALID_USERNAME, INVALID_PASSWORD);
 
     public static final String SESSION_ID = "mySessionId";
-    public static final AuthInfo AUTH_INFO = new AuthInfo(1L, RoleType.ADMIN.getName(), "nickname");
 
     public static List<Member> getMembersForReport() {
         return List.of(
-                Member.builder().username("chris").password("Abcd123!@").nickname("chrisNickname").build(),
-                Member.builder().username("josh").password("Abcd123!@").nickname("joshNickname").build(),
-                Member.builder().username("hunch").password("Abcd123!@").nickname("hunchNickname").build(),
-                Member.builder().username("east").password("Abcd123!@").nickname("eastNickname").build(),
-                Member.builder().username("thor").password("Abcd123!@").nickname("thorNickname").build()
+                Member.builder().id(1L).username("chris").password("Abcd123!@").nickname("chrisNickname").build(),
+                Member.builder().id(2L).username("josh").password("Abcd123!@").nickname("joshNickname").build(),
+                Member.builder().id(3L).username("hunch").password("Abcd123!@").nickname("hunchNickname").build(),
+                Member.builder().id(4L).username("east").password("Abcd123!@").nickname("eastNickname").build(),
+                Member.builder().id(5L).username("thor").password("Abcd123!@").nickname("thorNickname").build()
         );
     }
+
+    public static final AuthInfo AUTH_INFO = new AuthInfo(1L, RoleType.ADMIN.getName(), "chrisNickname");
+    public static final AuthInfo AUTH_INFO2 = new AuthInfo(2L, RoleType.ADMIN.getName(), "adminNick");
 }

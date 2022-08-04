@@ -92,7 +92,7 @@ class HashtagServiceTest extends IntegrationTest {
     @DisplayName("해시태그가 포함된 게시글 작성 기능")
     @Test
     void addPostWithHashtag() {
-        NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", List.of("태그1", "태그2"));
+        NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", false, List.of("태그1", "태그2"));
 
         Long postId = postService.addPost(WRITABLE_BOARD_ID, newPostRequest, AUTH_INFO);
 
@@ -238,7 +238,7 @@ class HashtagServiceTest extends IntegrationTest {
 
     private Long savePostWithHashtags(Post post, List<Hashtag> tags) {
         NewPostRequest newPostRequest = new NewPostRequest(
-                post.getTitle(), post.getContent(), new Hashtags(tags).getNames());
+                post.getTitle(), post.getContent(), false, new Hashtags(tags).getNames());
         return postService.addPost(WRITABLE_BOARD_ID, newPostRequest, AUTH_INFO);
     }
 }

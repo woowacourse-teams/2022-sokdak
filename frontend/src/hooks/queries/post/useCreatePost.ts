@@ -1,4 +1,5 @@
 import { useQueryClient, useMutation, UseMutationOptions } from 'react-query';
+import { useLocation } from 'react-router-dom';
 
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
@@ -16,6 +17,7 @@ const useCreatePost = (
 ) => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
+  const { boardId } = useLocation().state as Pick<Post, 'boardId'>;
 
   return useMutation(
     ({
@@ -23,12 +25,9 @@ const useCreatePost = (
       content,
       hashtags,
       anonymous,
-      boardId,
-    }: Pick<Post, 'title' | 'content'> & {
-      hashtags: string[];
-      anonymous?: boolean;
-      boardId?: string | number;
-    }): Promise<AxiosResponse<string, string>> =>
+    }: Pick<Post, 'title' | 'content'> & { hashtags: string[]; anonymous?: boolean }): Promise<
+      AxiosResponse<string, string>
+    > =>
       axios.post(`/boards/${boardId}/posts`, {
         title,
         content,

@@ -51,7 +51,7 @@ public class LikeService {
 
     private void checkSpecialAndSave(int likeCount, Post post) {
         if (likeCount >= SPECIAL_BOARD_THRESHOLD) {
-            boardService.saveInSpecialBoard(post);
+            boardService.checkAndSaveInSpecialBoard(post);
         }
     }
 

@@ -143,6 +143,38 @@ class BoardAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("좋아요 개수가 5개 이상이어도 Hot 게시판에는 하나만 등록된다")
+    @Test
+    void saveInHotBoardWith6Likes() {
+        // given
+        String token1 = getToken();
+        String token2 = httpPost(new LoginRequest("josh", "Abcd123!@"), "/login").header(AUTHORIZATION);
+        String token3 = httpPost(new LoginRequest("thor", "Abcd123!@"), "/login").header(AUTHORIZATION);
+        String token4 = httpPost(new LoginRequest("hunch", "Abcd123!@"), "/login").header(AUTHORIZATION);
+        String token5 = httpPost(new LoginRequest("east", "Abcd123!@"), "/login").header(AUTHORIZATION);
+        String token6 = httpPost(new LoginRequest("testAdmin", "Abcd123!@"), "/login").header(AUTHORIZATION);
+        List<String> tokens = List.of(token1, token2, token3, token4, token5, token6);
+
+        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, token1);
+
+        // when
+        for (String token : tokens) {
+            httpPutWithAuthorization("/posts/1/like", token);
+        }
+        ExtractableResponse<Response> hotBoardResponse = httpGet("/boards/" + HOT_BOARD_ID + "/posts?size=2&page=0");
+        List<String> hotBoardPostNames = parsePostTitles(hotBoardResponse);
+        ExtractableResponse<Response> boardResponse = httpGet("/boards/" + FREE_BOARD_ID + "/posts?size=2&page=0");
+        List<String> boardPostNames = parsePostTitles(boardResponse);
+
+        // then
+        assertAll(
+                () -> assertThat(hotBoardResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(hotBoardPostNames).isEqualTo(List.of("제목")),
+                () -> assertThat(boardResponse.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(boardPostNames).isEqualTo(List.of("제목"))
+        );
+    }
+
     @DisplayName("Hot 게시판에도 글이 등록된 후 좋아요를 한 유저가 좋아요 취소를 해도 Hot 게시판에는 유지가 된다.")
     @Test
     void keepPostInHotBoardAfterCancelLIke() {

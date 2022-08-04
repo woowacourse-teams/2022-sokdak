@@ -11,7 +11,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.board.domain.Board;
-import com.wooteco.sokdak.board.domain.BoardType;
 import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.board.dto.BoardsResponse;
 import com.wooteco.sokdak.board.dto.NewBoardResponse;
@@ -135,7 +134,7 @@ class BoardServiceTest extends IntegrationTest {
         postRepository.save(post);
         Board board = boardRepository.findByTitle("Hot 게시판").get();
 
-        boardService.saveInSpecialBoard(post);
+        boardService.checkAndSaveInSpecialBoard(post);
         Optional<PostBoard> postBoard = postBoardRepository.findPostBoardByPostAndBoard(post, board);
 
         assertAll(

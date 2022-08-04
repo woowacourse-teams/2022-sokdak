@@ -17,6 +17,7 @@ import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -71,16 +72,21 @@ public class BoardService {
     }
 
     @Transactional
-    public void saveInSpecialBoard(Post originalPost) {
+    public void checkAndSaveInSpecialBoard(Post originalPost) {
         Board specialBoard = boardRepository.findByTitle("Hot 게시판")
                 .orElseThrow(BoardNotFoundException::new);
 
-        PostBoard postBoard = PostBoard.builder()
-                .build();
+        Optional<PostBoard> postBoardByPostAndBoard = postBoardRepository
+                .findPostBoardByPostAndBoard(originalPost, specialBoard);
 
-        postBoard.addPost(originalPost);
-        postBoard.addBoard(specialBoard);
-        postBoardRepository.save(postBoard);
+        if (postBoardByPostAndBoard.isEmpty()) {
+            PostBoard postBoard = PostBoard.builder()
+                    .build();
+
+            postBoard.addPost(originalPost);
+            postBoard.addBoard(specialBoard);
+            postBoardRepository.save(postBoard);
+        }
     }
 
     private void validateUserWritableBoard(Board board, String role) {

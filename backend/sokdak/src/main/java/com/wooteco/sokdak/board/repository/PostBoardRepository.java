@@ -3,6 +3,7 @@ package com.wooteco.sokdak.board.repository;
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.post.domain.Post;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -15,5 +16,7 @@ public interface PostBoardRepository extends JpaRepository<PostBoard, Long> {
     Slice<PostBoard> findPostBoardsByBoardId(Long boardId, Pageable pageable);
 
     Optional<PostBoard> findPostBoardByPostId(Long id);
+
+    List<PostBoard> findPostBoardsByPostId(Long id);
 }
 

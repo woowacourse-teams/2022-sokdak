@@ -9,8 +9,10 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.board.domain.Board;
-import com.wooteco.sokdak.board.domain.BoardType;
+import com.wooteco.sokdak.board.domain.PostBoard;
+import com.wooteco.sokdak.board.exception.BoardNotFoundException;
 import com.wooteco.sokdak.board.repository.BoardRepository;
+import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.service.CommentService;
 import com.wooteco.sokdak.member.domain.Member;
@@ -49,12 +51,17 @@ class PostServiceTest extends IntegrationTest {
     private PostRepository postRepository;
 
     @Autowired
+    private PostBoardRepository postBoardRepository;
+
+    @Autowired
     private BoardRepository boardRepository;
 
     @Autowired
     private CommentService commentService;
 
     private Post post;
+    private Board board;
+    private PostBoard postBoard;
 
     @BeforeEach
     public void setUp() {
@@ -68,6 +75,8 @@ class PostServiceTest extends IntegrationTest {
                 .likes(new ArrayList<>())
                 .comments(new ArrayList<>())
                 .build();
+        board = boardRepository.findById(2L)
+                .orElseThrow(BoardNotFoundException::new);
     }
 
     @DisplayName("특정 게시판에 익명으로 글 작성 기능")
@@ -96,8 +105,6 @@ class PostServiceTest extends IntegrationTest {
         Long postId = postService.addPost(WRITABLE_BOARD_ID, newPostRequest, AUTH_INFO);
         Post actual = postRepository.findById(postId).orElseThrow();
 
-        actual.getMember();
-
         assertAll(
                 () -> assertThat(actual.getTitle()).isEqualTo(newPostRequest.getTitle()),
                 () -> assertThat(actual.getContent()).isEqualTo(newPostRequest.getContent()),
@@ -112,6 +119,11 @@ class PostServiceTest extends IntegrationTest {
     @Test
     void findPost_Session_MyPost() {
         Long savedPostId = postRepository.save(post).getId();
+        postBoard = PostBoard.builder()
+                .post(post)
+                .board(board)
+                .build();
+        postBoardRepository.save(postBoard);
 
         PostDetailResponse response = postService.findPost(savedPostId, AUTH_INFO);
 
@@ -120,7 +132,8 @@ class PostServiceTest extends IntegrationTest {
                 () -> assertThat(response.getContent()).isEqualTo(post.getContent()),
                 () -> assertThat(response.isAuthorized()).isTrue(),
                 () -> assertThat(response.isModified()).isFalse(),
-                () -> assertThat(response.getCreatedAt()).isNotNull()
+                () -> assertThat(response.getCreatedAt()).isNotNull(),
+                () -> assertThat(response.getBoardId()).isEqualTo(postBoard.getBoard().getId())
         );
     }
 
@@ -128,15 +141,21 @@ class PostServiceTest extends IntegrationTest {
     @Test
     void findPost_Session_OtherPost() {
         Long savedPostId = postRepository.save(post).getId();
+        postBoard = PostBoard.builder()
+                .post(post)
+                .board(board)
+                .build();
+        postBoardRepository.save(postBoard);
 
-        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(2L, USER.getName(),  "nickname"));
+        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(2L, USER.getName(), "nickname"));
 
         assertAll(
                 () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
                 () -> assertThat(response.getContent()).isEqualTo(post.getContent()),
                 () -> assertThat(response.isAuthorized()).isFalse(),
                 () -> assertThat(response.isModified()).isFalse(),
-                () -> assertThat(response.getCreatedAt()).isNotNull()
+                () -> assertThat(response.getCreatedAt()).isNotNull(),
+                () -> assertThat(response.getBoardId()).isEqualTo(postBoard.getBoard().getId())
         );
     }
 
@@ -144,6 +163,11 @@ class PostServiceTest extends IntegrationTest {
     @Test
     void findPost_NoSession() {
         Long savedPostId = postRepository.save(post).getId();
+        postBoard = PostBoard.builder()
+                .post(post)
+                .board(board)
+                .build();
+        postBoardRepository.save(postBoard);
 
         PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(null, USER.getName(), "nickname"));
 
@@ -152,7 +176,8 @@ class PostServiceTest extends IntegrationTest {
                 () -> assertThat(response.getContent()).isEqualTo(post.getContent()),
                 () -> assertThat(response.isAuthorized()).isFalse(),
                 () -> assertThat(response.isModified()).isFalse(),
-                () -> assertThat(response.getCreatedAt()).isNotNull()
+                () -> assertThat(response.getCreatedAt()).isNotNull(),
+                () -> assertThat(response.getBoardId()).isEqualTo(postBoard.getBoard().getId())
         );
     }
 
@@ -168,7 +193,6 @@ class PostServiceTest extends IntegrationTest {
     @DisplayName("특정 게시판 게시글 목록 조회 기능")
     @Test
     void findPosts() {
-        Board board = boardRepository.save(new Board("테스트 게시판1", BoardType.WRITABLE));
         postService.addPost(board.getId(), new NewPostRequest("제목1", "본문1", false, new ArrayList<>()),
                 new AuthInfo(1L, USER.getName(), "nickname"));
         postService.addPost(board.getId(), new NewPostRequest("제목2", "본문2", false, new ArrayList<>()),

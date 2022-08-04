@@ -25,9 +25,6 @@ const CommentInput = ({ amount = 0, id }: CommentInputProps) => {
       formElement.current?.reset();
       document.body.scrollIntoView({ behavior: 'smooth', block: 'end' });
     },
-    onError: data => {
-      showSnackbar(data.response?.data.message!);
-    },
   });
 
   const handlePostComment = (e: React.FormEvent) => {

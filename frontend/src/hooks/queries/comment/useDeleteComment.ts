@@ -1,11 +1,12 @@
 import { useContext } from 'react';
 import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 
 import SnackbarContext from '@/context/Snackbar';
 
-import QUERY_KEYS from '@/constants/queries';
+import authFetcher from '@/apis';
+import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
 interface DeleteCommentProps {
@@ -20,16 +21,14 @@ const useDeleteComment = (
 
   return useMutation(
     ({ id }) => {
-      return axios.delete(`/comments/${id}`);
+      return authFetcher.delete(`/comments/${id}`);
     },
     {
       onSuccess: () => {
         queryClient.resetQueries(QUERY_KEYS.COMMENTS);
         showSnackbar(SNACKBAR_MESSAGE.SUCCESS_DELETE_COMMENT);
       },
-      onError: err => {
-        showSnackbar(err.response?.data.message!);
-      },
+      mutationKey: MUTATION_KEY.DELETE_COMMENT,
       ...options,
     },
   );

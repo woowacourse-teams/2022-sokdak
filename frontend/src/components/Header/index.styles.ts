@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 
 import SearchIcon from '@/assets/images/search.svg';
 
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 export const Container = styled.header`
@@ -45,7 +46,8 @@ export const Avartar = styled.button`
 
 export const Search = styled(SearchIcon)`
   cursor: pointer;
-  padding: 10px;
+  margin: 10px;
+  overflow: visible;
 `;
 
 export const LoginLink = styled(Link)`
@@ -60,4 +62,35 @@ export const LoginLink = styled(Link)`
   color: ${props => props.theme.colors.gray_900};
   border: 1px solid black;
   border-radius: 8px;
+`;
+
+export const AvatarContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const OptionsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  width: 5rem;
+  border-radius: 4px;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+`;
+
+export const optionStyle = css`
+  background-color: transparent;
+  padding: 1em;
+  text-align: left;
+  font-size: 0.7rem;
+`;
+
+export const ProfileButton = styled.button`
+  ${optionStyle}
+  color:${props => props.theme.colors.gray_150}
+`;
+
+export const LogoutButton = styled.button`
+  ${optionStyle}
+  color:${props => props.theme.colors.red_100}
 `;

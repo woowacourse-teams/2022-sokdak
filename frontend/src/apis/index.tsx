@@ -31,7 +31,6 @@ authFetcher.interceptors.request.use(
     return request;
   },
   function (error: AxiosError) {
-    console.log(error);
     return Promise.reject(error);
   },
 );

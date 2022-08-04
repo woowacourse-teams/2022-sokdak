@@ -43,12 +43,13 @@ const PostHeader = ({ post, like, onClickDeleteButton, onClickLikeButton }: Post
       showSnackbar(SNACKBAR_MESSAGE.SUCCESS_REPORT_POST);
       handleReportModal();
     },
+
     onError: (err, variables, context) => {
       if (typeof queryClient.getMutationDefaults(MUTATION_KEY.REPORT_POST)?.onError === 'function') {
         queryClient.getMutationDefaults(MUTATION_KEY.REPORT_POST)?.onError!(err, variables, context);
       }
 
-      showSnackbar(err.message);
+      showSnackbar(err?.response!.data.message);
       handleReportModal();
     },
   });

@@ -359,6 +359,7 @@ export const validMemberEmail: { email: string; isSignedUp: boolean; code: strin
 interface CommentListType extends CommentType {
   postId: number;
   blocked: boolean;
+  postWriter: boolean;
 }
 
 export const commentList: CommentListType[] = [
@@ -368,18 +369,20 @@ export const commentList: CommentListType[] = [
     content:
       'ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ첫댓글',
     createdAt: '2022-07-04T19:55:31.016376300',
-    nickname: '익명',
-    authorized: false,
+    nickname: '테스트 계정',
+    authorized: true,
     blocked: false,
+    postWriter: true,
   },
   {
     id: 2,
     postId: 1,
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
-    nickname: '익명',
-    authorized: false,
+    nickname: '테스트 계정',
+    authorized: true,
     blocked: false,
+    postWriter: true,
   },
   {
     id: 3,
@@ -387,8 +390,9 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
-    authorized: true,
+    authorized: false,
     blocked: true,
+    postWriter: false,
   },
   {
     id: 4,
@@ -396,8 +400,9 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
-    authorized: true,
+    authorized: false,
     blocked: false,
+    postWriter: false,
   },
   {
     id: 5,
@@ -407,6 +412,7 @@ export const commentList: CommentListType[] = [
     nickname: '익명',
     authorized: false,
     blocked: false,
+    postWriter: false,
   },
   {
     id: 6,
@@ -414,8 +420,9 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
-    authorized: true,
+    authorized: false,
     blocked: false,
+    postWriter: false,
   },
   {
     id: 7,
@@ -425,6 +432,7 @@ export const commentList: CommentListType[] = [
     nickname: '익명',
     authorized: false,
     blocked: false,
+    postWriter: false,
   },
   {
     id: 8,
@@ -434,6 +442,7 @@ export const commentList: CommentListType[] = [
     nickname: '익명',
     authorized: false,
     blocked: true,
+    postWriter: false,
   },
   {
     id: 9,
@@ -441,8 +450,9 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
-    authorized: true,
+    authorized: false,
     blocked: false,
+    postWriter: false,
   },
   {
     id: 10,
@@ -452,6 +462,7 @@ export const commentList: CommentListType[] = [
     nickname: '익명',
     authorized: false,
     blocked: false,
+    postWriter: false,
   },
   {
     id: 11,
@@ -459,8 +470,9 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
-    authorized: true,
+    authorized: false,
     blocked: false,
+    postWriter: false,
   },
   {
     id: 12,
@@ -470,6 +482,7 @@ export const commentList: CommentListType[] = [
     nickname: '익명',
     authorized: false,
     blocked: false,
+    postWriter: false,
   },
   {
     id: 13,
@@ -477,8 +490,9 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
-    authorized: true,
+    authorized: false,
     blocked: false,
+    postWriter: false,
   },
   {
     id: 14,
@@ -488,6 +502,7 @@ export const commentList: CommentListType[] = [
     nickname: '익명',
     authorized: false,
     blocked: false,
+    postWriter: false,
   },
   {
     id: 15,
@@ -497,6 +512,7 @@ export const commentList: CommentListType[] = [
     nickname: '익명',
     authorized: false,
     blocked: false,
+    postWriter: false,
   },
   {
     id: 16,
@@ -506,6 +522,7 @@ export const commentList: CommentListType[] = [
     nickname: '익명',
     authorized: false,
     blocked: false,
+    postWriter: false,
   },
 ];
 

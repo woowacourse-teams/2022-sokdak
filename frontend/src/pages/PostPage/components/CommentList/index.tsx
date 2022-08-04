@@ -12,6 +12,7 @@ interface CommentListProps {
 
 const CommentList = ({ id }: CommentListProps) => {
   const { data } = useComments({ storeCode: id });
+
   return (
     <Styled.Container>
       <CommentInput amount={data?.length!} id={id} />
@@ -25,6 +26,7 @@ const CommentList = ({ id }: CommentListProps) => {
             content={comment.content}
             createdAt={comment.createdAt}
             blocked={comment.blocked}
+            postWriter={comment.postWriter}
           />
         ))}
       </Styled.CommentsContainer>

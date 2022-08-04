@@ -45,6 +45,10 @@ export const DeleteButton = styled.button`
   color: ${props => props.theme.colors.red_200};
 `;
 
+export const ReportButton = styled.button`
+  background-color: inherit;
+`;
+
 export const PostInfo = styled.div`
   display: flex;
   justify-content: space-between;

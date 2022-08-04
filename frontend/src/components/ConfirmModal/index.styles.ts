@@ -7,23 +7,23 @@ export const Modal = styled.div`
   background: #ffffff;
   box-shadow: 0px 1px 7px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 20px;
+  z-index: 20;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  z-index: 20;
 `;
 
 export const Dimmer = styled.div`
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background-color: black;
   opacity: 0.2;
-  position: absolute;
+  position: fixed;
   top: 0px;
   left: 0px;
   z-index: 10;

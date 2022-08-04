@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.post.dto;
 
+import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.hashtag.domain.Hashtags;
 import com.wooteco.sokdak.hashtag.dto.HashtagResponse;
 import com.wooteco.sokdak.post.domain.Post;
@@ -13,6 +14,7 @@ import lombok.Getter;
 public class PostDetailResponse {
 
     private Long id;
+    private Long boardId;
     private String nickname;
     private String title;
     private String content;
@@ -27,10 +29,11 @@ public class PostDetailResponse {
     }
 
     @Builder
-    private PostDetailResponse(Long id, String nickname, String title, String content,
+    private PostDetailResponse(Long id, Long boardId, String nickname, String title, String content,
                                List<HashtagResponse> hashtagResponses, LocalDateTime createdAt, int likeCount,
                                boolean like, boolean authorized, boolean modified) {
         this.id = id;
+        this.boardId = boardId;
         this.nickname = nickname;
         this.title = title;
         this.content = content;
@@ -43,9 +46,11 @@ public class PostDetailResponse {
     }
 
 
-    public static PostDetailResponse of(Post post, boolean liked, boolean authorized, Hashtags hashtags) {
+    public static PostDetailResponse of(Post post, PostBoard postBoard, boolean liked,
+                                        boolean authorized, Hashtags hashtags) {
         return PostDetailResponse.builder()
                 .id(post.getId())
+                .boardId(postBoard.getBoard().getId())
                 .nickname(post.getNickname())
                 .title(post.getTitle())
                 .content(post.getContent())

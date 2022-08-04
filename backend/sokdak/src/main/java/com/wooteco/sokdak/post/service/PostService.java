@@ -18,9 +18,11 @@ import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsResponse;
+import com.wooteco.sokdak.post.exception.PostBoardNotFoundException;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.Collections;
+import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -79,10 +81,12 @@ public class PostService {
     public PostDetailResponse findPost(Long postId, AuthInfo authInfo) {
         Post foundPost = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
+        PostBoard postBoard = postBoardRepository.findPostBoardByPostId(foundPost.getId())
+                .orElseThrow(PostBoardNotFoundException::new);
         boolean liked = likeRepository.existsByMemberIdAndPostId(authInfo.getId(), postId);
         Hashtags hashtags = hashtagService.findHashtagsByPostId(postId);
 
-        return PostDetailResponse.of(foundPost, liked, foundPost.isAuthenticated(authInfo.getId()), hashtags);
+        return PostDetailResponse.of(foundPost, postBoard, liked, foundPost.isAuthenticated(authInfo.getId()), hashtags);
     }
 
     public PostsResponse findPostsByBoard(Long boardId, Pageable pageable) {

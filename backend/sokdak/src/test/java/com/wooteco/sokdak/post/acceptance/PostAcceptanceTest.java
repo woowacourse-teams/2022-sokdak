@@ -107,7 +107,7 @@ class PostAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("닉네임으로 작성된 게시글 조회할 수 있다.")
+    @DisplayName("기명으로 작성된 게시글 조회할 수 있다.")
     @Test
     void findPost_IdentifiedNickname() {
         String postId = parsePostId(
@@ -120,11 +120,12 @@ class PostAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(postDetailResponse.getTitle()).isEqualTo(NEW_POST_REQUEST.getTitle()),
                 () -> assertThat(postDetailResponse.getContent()).isEqualTo(NEW_POST_REQUEST.getContent()),
-                () -> assertThat(postDetailResponse.getNickname()).isEqualTo("chrisNickname")
+                () -> assertThat(postDetailResponse.getNickname()).isEqualTo("chrisNickname"),
+                () -> assertThat(postDetailResponse.getBoardId()).isEqualTo(2)
         );
     }
 
-    @DisplayName("닉네임으로 작성된 게시글 조회할 수 있다.")
+    @DisplayName("익명으로 작성된 게시글 조회할 수 있다.")
     @Test
     void findPost_Anonymous() {
         NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT, true,
@@ -139,7 +140,8 @@ class PostAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(postDetailResponse.getTitle()).isEqualTo(NEW_POST_REQUEST.getTitle()),
                 () -> assertThat(postDetailResponse.getContent()).isEqualTo(NEW_POST_REQUEST.getContent()),
-                () -> assertThat(postDetailResponse.getNickname()).isNotEqualTo("chrisNickname")
+                () -> assertThat(postDetailResponse.getNickname()).isNotEqualTo("chrisNickname"),
+                () -> assertThat(postDetailResponse.getBoardId()).isEqualTo(2)
         );
     }
 

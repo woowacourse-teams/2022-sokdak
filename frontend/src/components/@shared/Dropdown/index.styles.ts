@@ -17,7 +17,7 @@ export const DropdownTrigger = styled.button`
 
 export const DropdownList = styled.ul`
   position: absolute;
-  left: 50%;
+  left: 15%;
   transform: translateX(-50%);
   top: 120%;
   z-index: 10;

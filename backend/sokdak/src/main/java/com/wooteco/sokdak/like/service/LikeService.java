@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.like.service;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.board.service.BoardService;
 import com.wooteco.sokdak.like.domain.Like;
 import com.wooteco.sokdak.like.dto.LikeFlipResponse;
 import com.wooteco.sokdak.like.repository.LikeRepository;
@@ -18,12 +19,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class LikeService {
 
+    public static final int SPECIAL_BOARD_THRESHOLD = 5;
+
+    private final BoardService boardService;
     private final LikeRepository likeRepository;
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
 
-    public LikeService(LikeRepository likeRepository, PostRepository postRepository,
-                       MemberRepository memberRepository) {
+    public LikeService(BoardService boardService, LikeRepository likeRepository,
+                       PostRepository postRepository, MemberRepository memberRepository) {
+        this.boardService = boardService;
         this.likeRepository = likeRepository;
         this.postRepository = postRepository;
         this.memberRepository = memberRepository;
@@ -39,7 +44,15 @@ public class LikeService {
         flip(member, post);
         int likeCount = likeRepository.countByPostId(post.getId());
         boolean liked = likeRepository.existsByMemberIdAndPostId(member.getId(), post.getId());
+
+        checkSpecialAndSave(likeCount, post);
         return new LikeFlipResponse(likeCount, liked);
+    }
+
+    private void checkSpecialAndSave(int likeCount, Post post) {
+        if (likeCount >= SPECIAL_BOARD_THRESHOLD) {
+            boardService.checkAndSaveInSpecialBoard(post);
+        }
     }
 
     private void flip(Member member, Post post) {
@@ -53,6 +66,5 @@ public class LikeService {
                 .post(post)
                 .build();
         likeRepository.save(like);
-
     }
 }

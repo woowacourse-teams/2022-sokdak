@@ -11,7 +11,7 @@ export default {
   component: InputBox,
 } as ComponentMeta<typeof InputBox>;
 
-const Template: ComponentStory<typeof InputBox> = args => {
+const Template: ComponentStory<typeof InputBox> = () => {
   const { value, setValue, error, setError } = useInput();
   const [isAnimationActive, setIsAnimationActive] = useState(false);
   const handleInvalid = () => {
@@ -29,13 +29,7 @@ const Template: ComponentStory<typeof InputBox> = args => {
       >
         <form style={{ display: 'grid', gridTemplateColumns: '4fr 1fr', alignItems: 'center', gap: '8px' }}>
           <InputBox.Input type="email" placeholder="이메일" handleInvalid={handleInvalid} required />
-          <InputBox.SubmitButton
-            onClick={() => {
-              console.log('click');
-            }}
-          >
-            인증번호 받기
-          </InputBox.SubmitButton>
+          <InputBox.SubmitButton onClick={() => {}}>인증번호 받기</InputBox.SubmitButton>
         </form>
         <InputBox.ErrorMessage />
       </InputBox>

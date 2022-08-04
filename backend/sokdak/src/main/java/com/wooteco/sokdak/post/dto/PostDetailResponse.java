@@ -1,6 +1,8 @@
 package com.wooteco.sokdak.post.dto;
 
-import com.wooteco.sokdak.post.domain.Hashtag;
+import com.wooteco.sokdak.board.domain.PostBoard;
+import com.wooteco.sokdak.hashtag.domain.Hashtags;
+import com.wooteco.sokdak.hashtag.dto.HashtagResponse;
 import com.wooteco.sokdak.post.domain.Post;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,24 +13,32 @@ import lombok.Getter;
 @Getter
 public class PostDetailResponse {
 
-    private final Long id;
-    private final String title;
-    private final String content;
-    private final List<HashtagResponse> hashtags;
-    private final LocalDateTime createdAt;
-    private final int likeCount;
-    private final boolean like;
-    private final boolean authorized;
-    private final boolean modified;
+    private Long id;
+    private Long boardId;
+    private String nickname;
+    private String title;
+    private String content;
+    private boolean blocked;
+    private List<HashtagResponse> hashtags;
+    private LocalDateTime createdAt;
+    private int likeCount;
+    private boolean like;
+    private boolean authorized;
+    private boolean modified;
+
+    public PostDetailResponse() {
+    }
 
     @Builder
-    private PostDetailResponse(Long id, String title, String content, List<HashtagResponse> hashtagResponses,
-                               LocalDateTime createdAt, int likeCount,
-                               boolean like,
-                               boolean authorized, boolean modified) {
+    private PostDetailResponse(Long id, Long boardId, String nickname, String title, String content, boolean blocked,
+                               List<HashtagResponse> hashtagResponses, LocalDateTime createdAt, int likeCount,
+                               boolean like, boolean authorized, boolean modified) {
         this.id = id;
+        this.boardId = boardId;
+        this.nickname = nickname;
         this.title = title;
         this.content = content;
+        this.blocked = blocked;
         this.hashtags = hashtagResponses;
         this.createdAt = createdAt;
         this.likeCount = likeCount;
@@ -38,11 +48,15 @@ public class PostDetailResponse {
     }
 
 
-    public static PostDetailResponse of(Post post, boolean liked, boolean authorized, List<Hashtag> hashtags) {
+    public static PostDetailResponse of(Post post, PostBoard postBoard, boolean liked,
+                                        boolean authorized, Hashtags hashtags) {
         return PostDetailResponse.builder()
                 .id(post.getId())
+                .boardId(postBoard.getBoard().getId())
+                .nickname(post.getNickname())
                 .title(post.getTitle())
                 .content(post.getContent())
+                .blocked(post.isBlocked())
                 .createdAt(post.getCreatedAt())
                 .likeCount(post.getLikeCount())
                 .like(liked)
@@ -52,8 +66,8 @@ public class PostDetailResponse {
                 .build();
     }
 
-    private static List<HashtagResponse> toResponse(List<Hashtag> hashtags) {
-        return hashtags.stream()
+    private static List<HashtagResponse> toResponse(Hashtags hashtags) {
+        return hashtags.getValue().stream()
                 .map(HashtagResponse::new)
                 .collect(Collectors.toList());
     }

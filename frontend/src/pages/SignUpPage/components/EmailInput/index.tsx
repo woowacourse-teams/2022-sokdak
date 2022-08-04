@@ -1,10 +1,11 @@
-import React, { Dispatch, SetStateAction, useLayoutEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useLayoutEffect } from 'react';
 
 import InputBox from '@/components/@shared/InputBox';
 import { useInput } from '@/components/@shared/InputBox/useInput';
 
 import useEmailCheck from '@/hooks/queries/member/useEmailCheck';
 
+import { SIGN_UP_ERROR } from '@/constants/signUp';
 import { isValidEmail } from '@/utils/regExp';
 
 import * as Styled from '../../index.styles';
@@ -42,7 +43,7 @@ const EmailInput = ({
       return;
     }
     if (!isValidEmail(value)) {
-      setError('올바른 이메일 형식을 입력해주세요');
+      setError(SIGN_UP_ERROR.INVALID_EMAIL);
     }
     if (isValidEmail(value)) {
       setError('');
@@ -54,7 +55,7 @@ const EmailInput = ({
     mutate({ email: value });
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {};
+  const handleKeyDown = () => {};
   return (
     <InputBox
       value={value}
@@ -67,7 +68,7 @@ const EmailInput = ({
       <Styled.InputForm onSubmit={handleEmailFormSubmit}>
         <InputBox.Input
           handleInvalid={() => {
-            setError('올바른 이메일 형식을 입력해주세요');
+            setError(SIGN_UP_ERROR.INVALID_EMAIL);
           }}
           type="email"
           placeholder="이메일"
@@ -79,7 +80,15 @@ const EmailInput = ({
           <InputBox.SubmitButton disabled={true}>로딩중</InputBox.SubmitButton>
         ) : (
           <InputBox.SubmitButton disabled={error !== '' || value === '' || isSet}>
-            {isSet ? (isVerified ? '인증 완료' : '인증 중') : '인증번호 받기'}
+            {isSet ? (
+              isVerified ? (
+                '인증 완료'
+              ) : (
+                <Styled.Timer startMinute={5} callback={() => setIsSet(false)} />
+              )
+            ) : (
+              '인증번호 받기'
+            )}
           </InputBox.SubmitButton>
         )}
       </Styled.InputForm>

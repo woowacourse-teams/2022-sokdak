@@ -11,10 +11,12 @@ import com.wooteco.sokdak.member.dto.SignupRequest;
 import com.wooteco.sokdak.member.dto.UniqueResponse;
 import com.wooteco.sokdak.member.dto.VerificationRequest;
 import com.wooteco.sokdak.member.exception.InvalidAuthCodeException;
+import com.wooteco.sokdak.member.exception.InvalidSignupFlowException;
 import com.wooteco.sokdak.member.exception.NotWootecoMemberException;
 import com.wooteco.sokdak.member.exception.PasswordConfirmationException;
 import com.wooteco.sokdak.member.exception.TicketUsedException;
 import com.wooteco.sokdak.util.ControllerTest;
+import javax.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -31,6 +33,7 @@ class MemberControllerTest extends ControllerTest {
                 .body(emailRequest)
                 .when().post("/members/signup/email")
                 .then().log().all()
+                .assertThat()
                 .apply(document("member/email/success"))
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
@@ -50,7 +53,7 @@ class MemberControllerTest extends ControllerTest {
                 .then().log().all()
                 .assertThat()
                 .body("message", equalTo("우아한테크코스 크루가 아닙니다."))
-                .apply(document("member/email/success"))
+                .apply(document("member/email/fail/noWooteco"))
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
@@ -69,7 +72,7 @@ class MemberControllerTest extends ControllerTest {
                 .then().log().all()
                 .assertThat()
                 .body("message", equalTo("이미 가입된 크루입니다."))
-                .apply(document("member/email/success"))
+                .apply(document("member/email/fail/alreadySignUp"))
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
@@ -83,11 +86,12 @@ class MemberControllerTest extends ControllerTest {
                 .body(verificationRequest)
                 .when().post("/members/signup/email/verification")
                 .then().log().all()
-                .apply(document("member/email/success"))
+                .assertThat()
+                .apply(document("member/verification/success"))
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-    @DisplayName("인증코드가 일치하지 않으면 400 반환")
+    @DisplayName("인증코드가 일치하지 않거나 만료되었으면 400 반환")
     @Test
     void verifyAuthCode_Exception_different() {
         VerificationRequest verificationRequest = new VerificationRequest("test@gmail.com", "a1b2c3");
@@ -102,7 +106,7 @@ class MemberControllerTest extends ControllerTest {
                 .then().log().all()
                 .assertThat()
                 .body("message", equalTo("잘못된 인증번호입니다."))
-                .apply(document("member/email/success"))
+                .apply(document("member/verification/fail"))
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
@@ -117,7 +121,7 @@ class MemberControllerTest extends ControllerTest {
                 .then().log().all()
                 .assertThat()
                 .body("unique", equalTo(true))
-                .apply(document("member/email/success"))
+                .apply(document("member/uniqueId/success/true"))
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -132,10 +136,11 @@ class MemberControllerTest extends ControllerTest {
                 .then().log().all()
                 .assertThat()
                 .body("unique", equalTo(false))
-                .apply(document("member/email/success"))
+                .apply(document("member/uniqueId/success/false"))
                 .statusCode(HttpStatus.OK.value());
     }
 
+    @DisplayName("닉네임이 중복되지 않으면 true 반환")
     @Test
     void validateUniqueNickname_true() {
         given(memberService.checkUniqueNickname("testNickname"))
@@ -146,10 +151,11 @@ class MemberControllerTest extends ControllerTest {
                 .then().log().all()
                 .assertThat()
                 .body("unique", equalTo(true))
-                .apply(document("member/email/success"))
+                .apply(document("member/uniqueNickname/success/true"))
                 .statusCode(HttpStatus.OK.value());
     }
 
+    @DisplayName("닉네임이 중복되면 false 반환")
     @Test
     void validateUniqueNickname_false() {
         given(memberService.checkUniqueNickname("testNickname"))
@@ -160,10 +166,11 @@ class MemberControllerTest extends ControllerTest {
                 .then().log().all()
                 .assertThat()
                 .body("unique", equalTo(false))
-                .apply(document("member/email/success"))
+                .apply(document("member/uniqueNickname/success/false"))
                 .statusCode(HttpStatus.OK.value());
     }
 
+    @DisplayName("회원가입을 하면 201 반환")
     @Test
     void signUp() {
         SignupRequest signupRequest = new SignupRequest("test@gmail.com", "username", "nickname", "a1b1c1",
@@ -174,12 +181,14 @@ class MemberControllerTest extends ControllerTest {
                 .body(signupRequest)
                 .when().post("/members/signup")
                 .then().log().all()
-                .apply(document("member/email/success"))
+                .assertThat()
+                .apply(document("member/signup/success"))
                 .statusCode(HttpStatus.CREATED.value());
     }
 
+    @DisplayName("회원가입에서 비밀번호 확인을 잘못 입력할 시 400 반환")
     @Test
-    void signUp_Exception_Password_Different() {
+    void signUp_Exception_PasswordDifferent() {
         SignupRequest signupRequest = new SignupRequest("test@gmail.com", "username", "nickname", "a1b1c1",
                 "password1!", "password2!");
 
@@ -192,7 +201,108 @@ class MemberControllerTest extends ControllerTest {
                 .body(signupRequest)
                 .when().post("/members/signup")
                 .then().log().all()
-                .apply(document("member/email/success"))
+                .assertThat()
+                .apply(document("member/signup/fail/passwordDifferent"))
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("회원가입에서 우아한테크코스 회원이 아닐 경우 400 반환")
+    @Test
+    void signUp_Exception_NoWooteco() {
+        SignupRequest signupRequest = new SignupRequest("noWooteco@gmail.com", "username", "nickname", "a1b1c1",
+                "password1!", "password1!");
+
+        doThrow(new NotWootecoMemberException())
+                .when(memberService)
+                .signUp(any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(signupRequest)
+                .when().post("/members/signup")
+                .then().log().all()
+                .assertThat()
+                .apply(document("member/signup/fail/noWooteco"))
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("회원가입에서 이미 가입한 회원일 경우 400 반환")
+    @Test
+    void signUp_Exception_AlreadySignUp() {
+        SignupRequest signupRequest = new SignupRequest("alreadySignUp@gmail.com", "username", "nickname", "a1b1c1",
+                "password1!", "password1!");
+
+        doThrow(new TicketUsedException())
+                .when(memberService)
+                .signUp(any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(signupRequest)
+                .when().post("/members/signup")
+                .then().log().all()
+                .assertThat()
+                .apply(document("member/signup/fail/alreadySignUp"))
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("회원가입에서 인증번호가 틀렸을 경우 400 반환")
+    @Test
+    void signUp_Exception_InvalidAuthCode() {
+        SignupRequest signupRequest = new SignupRequest("test@gmail.com", "username", "nickname", "NoCode",
+                "password1!", "password1!");
+
+        doThrow(new InvalidAuthCodeException())
+                .when(memberService)
+                .signUp(any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(signupRequest)
+                .when().post("/members/signup")
+                .then().log().all()
+                .assertThat()
+                .apply(document("member/signup/fail/invalidAuthCode"))
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("회원가입에서 이미 존재하는 아이디일 경우 400 반환")
+    @Test
+    void signUp_Exception_DuplicateUsername() {
+        SignupRequest signupRequest = new SignupRequest("test@gmail.com", "AlreadyUsername", "nickname", "a1b1c1",
+                "password1!", "password1!");
+
+        doThrow(new InvalidSignupFlowException())
+                .when(memberService)
+                .signUp(any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(signupRequest)
+                .when().post("/members/signup")
+                .then().log().all()
+                .assertThat()
+                .apply(document("member/signup/fail/duplicateUsername"))
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("회원가입에서 이미 존재하는 닉네임일 경우 400 반환")
+    @Test
+    void signUp_Exception_DuplicateNickname() {
+        SignupRequest signupRequest = new SignupRequest("alreadySignUp@gmail.com", "username", "AlreadyNick", "a1b1c1",
+                "password1!", "password1!");
+
+        doThrow(new InvalidSignupFlowException())
+                .when(memberService)
+                .signUp(any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(signupRequest)
+                .when().post("/members/signup")
+                .then().log().all()
+
+                .apply(document("member/signup/fail/duplicateUsername"))
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 }

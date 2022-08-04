@@ -10,16 +10,13 @@ import com.wooteco.sokdak.auth.service.Encryptor;
 import com.wooteco.sokdak.member.dto.EmailRequest;
 import com.wooteco.sokdak.member.repository.AuthCodeRepository;
 import com.wooteco.sokdak.member.repository.TicketRepository;
+import com.wooteco.sokdak.util.IntegrationTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
-@SpringBootTest
-class EmailServiceTest {
+class EmailServiceTest extends IntegrationTest {
 
     @Autowired
     private EmailService emailService;

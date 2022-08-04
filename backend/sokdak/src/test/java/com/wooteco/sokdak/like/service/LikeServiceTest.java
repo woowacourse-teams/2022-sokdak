@@ -1,11 +1,7 @@
 package com.wooteco.sokdak.like.service;
 
-import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_CONTENT;
-import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_TITLE;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.*;
+import static com.wooteco.sokdak.util.fixture.PostFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -14,16 +10,13 @@ import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
+import com.wooteco.sokdak.util.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
-@Transactional
-class LikeServiceTest {
+class LikeServiceTest extends IntegrationTest {
 
     @Autowired
     private LikeService likeService;

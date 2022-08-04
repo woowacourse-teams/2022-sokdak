@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 
+import TimerComponent from '@/components/Timer';
+
 import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -58,12 +60,12 @@ export const SignUpText = styled.p`
 `;
 
 const sizeUp = keyframes`
-  from{
+  from {
     display: none;
     height: 0;
     opacity: 0;
   }
-  to{
+  to {
     display: block;
     height: 65px;
     opacity: 1;
@@ -71,12 +73,12 @@ const sizeUp = keyframes`
 `;
 
 const sizeDown = keyframes`
-  from{
+  from {
     display: block;
     height: 65px;
     opacity: 1;
   }
-  to{
+  to {
     display: none;
     height: 0;
     opacity: 0;
@@ -106,4 +108,8 @@ export const MessageContainer = styled.div`
 export const Message = styled.p`
   font-size: 12px;
   color: ${props => props.theme.colors.gray_200};
+`;
+
+export const Timer = styled(TimerComponent)`
+  width: 100%;
 `;

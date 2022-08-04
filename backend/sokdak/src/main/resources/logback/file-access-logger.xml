@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+    <property name="DIR" value="/home/ubuntu/sokdak/logfiles/access/"/>
+    <appender name="file-access-logger" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${DIR}access-%d{yyyyMMdd}-%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>utf8</charset>
+            <Pattern>
+                %t{yyyy-MM-dd HH:mm:ss}%n###### HTTP Request ###### %n%fullRequest###### HTTP Response ######%n%t{yyyy-MM-dd HH:mm:ss}%n%fullResponse
+            </Pattern>
+        </encoder>
+    </appender>
+</included>

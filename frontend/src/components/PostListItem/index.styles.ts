@@ -1,10 +1,11 @@
 import Comment from '@/assets/images/comment.svg';
 import Heart from '@/assets/images/heart.svg';
 
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
-export const Container = styled.div`
-  width: 340px;
+export const containerStyle = css`
+  width: 320px;
   height: 200px;
   display: flex;
   flex-direction: column;
@@ -13,6 +14,16 @@ export const Container = styled.div`
   border-radius: 5px;
   gap: 14px;
   cursor: pointer;
+`;
+
+export const Container = styled.div`
+  ${containerStyle}
+`;
+
+export const BlockedContainer = styled.div`
+  filter: blur(3px);
+  ${containerStyle}
+  cursor:not-allowed;
 `;
 
 export const HeadContainer = styled.div`
@@ -33,7 +44,7 @@ export const Title = styled.p<{ isModified: boolean }>`
 
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: ${({ isModified }) => (isModified ? '225px' : '260px')};
+  max-width: ${({ isModified }) => (isModified ? '200px' : '250px')};
   white-space: nowrap;
 `;
 

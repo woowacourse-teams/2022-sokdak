@@ -1,19 +1,28 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
-import SnackbarContext from '@/context/Snackbar';
+import HashTagInput from './components/HashTagInput';
+
+import useSnackbar from '@/hooks/useSnackbar';
 
 import * as Styled from './index.styles';
 
-import HashTag from '../HashTag';
-import useHashTag from '../HashTag/useHashTag';
+import { BOARDS } from '@/constants/board';
+
+const SubmitType = {
+  POST: '글 작성하기',
+  PUT: '글 수정하기',
+} as const;
 
 interface PostFormProps {
   heading: string;
-  submitType: string;
+  submitType: typeof SubmitType[keyof typeof SubmitType];
   prevTitle?: string;
   prevContent?: string;
-  prevHashTags?: Hashtag[];
-  handlePost: (post: Pick<Post, 'title' | 'content'> & { hashtags: string[] }) => void;
+  prevHashTags?: Omit<Hashtag, 'count'>[];
+  handlePost: (
+    post: Pick<Post, 'title' | 'content'> & { hashtags: string[]; anonymous?: boolean; boardId: string | number },
+  ) => void;
 }
 
 const PostForm = ({
@@ -24,20 +33,16 @@ const PostForm = ({
   prevHashTags = [],
   handlePost,
 }: PostFormProps) => {
-  const { isVisible, showSnackbar } = useContext(SnackbarContext);
+  const { isVisible, showSnackbar } = useSnackbar();
 
   const [title, setTitle] = useState(prevTitle);
   const [content, setContent] = useState(prevContent);
-  const {
-    hashtags,
-    setHashtags,
-    tagInputValue,
-    handleTagInputChange,
-    handleTagInputKeyDown,
-    isTagInputFocus,
-    handleTagInputFocus,
-  } = useHashTag(prevHashTags.map(hashtag => hashtag.name));
+  const [hashtags, setHashtags] = useState(prevHashTags.map(hashtag => hashtag.name));
+  const [anonymous, setAnonymous] = useState(true);
 
+  const { boardId } = useLocation().state as Pick<Post, 'boardId'>;
+
+  const { title: boardTitle } = BOARDS.find(board => board.id === Number(boardId))!;
   const [isValidTitle, setIsValidTitle] = useState(true);
   const [isValidContent, setIsValidContent] = useState(true);
   const [isAnimationActive, setIsAnimationActive] = useState(false);
@@ -45,7 +50,8 @@ const PostForm = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    handlePost({ title, content, hashtags });
+
+    handlePost({ title, content, hashtags, anonymous, boardId });
   };
 
   return (
@@ -57,6 +63,7 @@ const PostForm = ({
       }}
     >
       <Styled.Heading>{heading}</Styled.Heading>
+      <Styled.Board>{boardTitle}</Styled.Board>
       <Styled.TitleInput
         placeholder="제목을 입력해주세요."
         value={title}
@@ -87,31 +94,11 @@ const PostForm = ({
         isAnimationActive={isContentAnimationActive}
         required
       />
-      <Styled.TagContainer>
-        {isTagInputFocus && (
-          <Styled.TagTooltip>
-            쉼표 혹은 엔터를 통해, <br />
-            태그를 등록해보세요
-          </Styled.TagTooltip>
-        )}
-        {hashtags.map(hashtagName => (
-          <HashTag
-            key={hashtagName}
-            name={hashtagName}
-            handleTagClick={() => setHashtags(tags => tags.filter(tag => tag !== hashtagName))}
-          />
-        ))}
-        <Styled.TagInput
-          placeholder="태그를 입력해주세요."
-          value={tagInputValue}
-          maxLength={15}
-          onChange={handleTagInputChange}
-          onKeyDown={handleTagInputKeyDown}
-          onFocus={handleTagInputFocus}
-          onBlur={handleTagInputFocus}
-        />
-      </Styled.TagContainer>
+      <HashTagInput hashtags={hashtags} setHashtags={setHashtags} />
       <Styled.SubmitButton>{submitType}</Styled.SubmitButton>
+      {submitType === SubmitType.POST && (
+        <Styled.CheckBox isChecked={anonymous} setIsChecked={setAnonymous} labelText="익명" />
+      )}
     </Styled.Container>
   );
 };

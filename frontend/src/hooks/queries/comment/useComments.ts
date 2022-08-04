@@ -1,11 +1,14 @@
 import { useQuery, QueryKey, UseQueryOptions } from 'react-query';
 
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 
+import authFetcher from '@/apis';
 import QUERY_KEYS from '@/constants/queries';
 
 interface CommentResponse extends CommentType {
-  id: string;
+  id: number;
+  blocked: boolean;
+  postWriter: boolean;
 }
 
 const useComments = ({
@@ -20,7 +23,7 @@ const useComments = ({
     QueryKey[]
   >;
 }) =>
-  useQuery([QUERY_KEYS.COMMENTS, storeCode], ({ queryKey: [_, id] }) => axios.get(`/posts/${id}/comments`), {
+  useQuery([QUERY_KEYS.COMMENTS, storeCode], ({ queryKey: [, id] }) => authFetcher.get(`/posts/${id}/comments`), {
     select: data => data.data.comments,
     ...options,
   });

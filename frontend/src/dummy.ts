@@ -4,9 +4,9 @@ export const postList: Post[] = [
     title: '오늘 날씨 맑네요',
     createdAt: '2022-07-19T19:55:31.016376300',
     content: '날씨는 참 좋네요.',
-    likeCount: 1200,
+    likeCount: 19,
     commentCount: 16,
-    like: true,
+    like: false,
     modified: false,
     hashtags: [
       {
@@ -17,15 +17,26 @@ export const postList: Post[] = [
         id: 2,
         name: '조현근',
       },
+      {
+        id: 5,
+        name: '오늘 날씨',
+      },
+      {
+        id: 6,
+        name: '조시',
+      },
     ],
     authorized: true,
+    boardId: 1,
+    nickname: '테스트 계정',
+    blocked: false,
   },
   {
     id: 2,
     title: '오늘 날씨 좋네요',
     createdAt: '2022-07-18T19:55:31.016376300',
     content: '어항에 있는 것 같아요.',
-    likeCount: 4,
+    likeCount: 1200,
     commentCount: 0,
     like: false,
     modified: true,
@@ -40,7 +51,11 @@ export const postList: Post[] = [
       },
     ],
     authorized: false,
+    boardId: 1,
+    nickname: '짜증난 파이썬',
+    blocked: true,
   },
+
   {
     id: 3,
     title: '오늘 날씨 싫어요',
@@ -57,6 +72,9 @@ export const postList: Post[] = [
       },
     ],
     authorized: true,
+    boardId: 2,
+    nickname: '테스트 계정',
+    blocked: false,
   },
   {
     id: 4,
@@ -74,6 +92,9 @@ export const postList: Post[] = [
       },
     ],
     authorized: false,
+    boardId: 3,
+    nickname: '짜증난 파이썬',
+    blocked: false,
   },
   {
     id: 5,
@@ -84,8 +105,16 @@ export const postList: Post[] = [
     commentCount: 0,
     like: false,
     modified: false,
-    hashtags: [],
+    hashtags: [
+      {
+        id: 6,
+        name: '조시',
+      },
+    ],
     authorized: true,
+    boardId: 4,
+    nickname: '테스트 계정',
+    blocked: true,
   },
   {
     id: 6,
@@ -98,6 +127,9 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
+    boardId: 3,
+    nickname: '못된 젠킨스',
+    blocked: true,
   },
   {
     id: 7,
@@ -110,6 +142,9 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
+    boardId: 3,
+    nickname: '행복한 리액트',
+    blocked: false,
   },
   {
     id: 8,
@@ -122,6 +157,9 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
+    boardId: 2,
+    nickname: '슬픈 자바',
+    blocked: false,
   },
   {
     id: 9,
@@ -134,6 +172,9 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
+    boardId: 1,
+    nickname: '짜증난 파이썬',
+    blocked: false,
   },
   {
     id: 10,
@@ -146,6 +187,9 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
+    boardId: 3,
+    nickname: '짜증난 파이썬',
+    blocked: false,
   },
   {
     id: 11,
@@ -158,6 +202,9 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
+    boardId: 4,
+    nickname: '짜증난 파이썬',
+    blocked: false,
   },
   {
     id: 12,
@@ -170,6 +217,9 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
+    boardId: 4,
+    nickname: '짜증난 파이썬',
+    blocked: false,
   },
   {
     id: 13,
@@ -182,6 +232,9 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
+    boardId: 3,
+    nickname: '짜증난 파이썬',
+    blocked: false,
   },
   {
     id: 14,
@@ -194,6 +247,9 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
+    boardId: 2,
+    nickname: '짜증난 파이썬',
+    blocked: false,
   },
   {
     id: 15,
@@ -206,6 +262,9 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
+    boardId: 3,
+    nickname: '짜증난 파이썬',
+    blocked: false,
   },
   {
     id: 16,
@@ -218,6 +277,9 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
+    boardId: 2,
+    nickname: '짜증난 파이썬',
+    blocked: false,
   },
   {
     id: 17,
@@ -230,6 +292,9 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
+    boardId: 3,
+    nickname: '짜증난 파이썬',
+    blocked: false,
   },
   {
     id: 18,
@@ -242,6 +307,9 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
+    boardId: 1,
+    nickname: '짜증난 파이썬',
+    blocked: false,
   },
   {
     id: 19,
@@ -254,6 +322,9 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
+    boardId: 2,
+    nickname: '짜증난 파이썬',
+    blocked: false,
   },
   {
     id: 20,
@@ -266,6 +337,9 @@ export const postList: Post[] = [
     modified: false,
     hashtags: [],
     authorized: false,
+    boardId: 3,
+    nickname: '못된 젠킨스',
+    blocked: false,
   },
 ];
 
@@ -283,8 +357,9 @@ export const validMemberEmail: { email: string; isSignedUp: boolean; code: strin
   ];
 
 interface CommentListType extends CommentType {
-  id: number;
   postId: number;
+  blocked: boolean;
+  postWriter: boolean;
 }
 
 export const commentList: CommentListType[] = [
@@ -294,14 +369,20 @@ export const commentList: CommentListType[] = [
     content:
       'ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ첫댓글',
     createdAt: '2022-07-04T19:55:31.016376300',
-    nickname: '익명',
+    nickname: '테스트 계정',
+    authorized: true,
+    blocked: false,
+    postWriter: true,
   },
   {
     id: 2,
     postId: 1,
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
-    nickname: '익명',
+    nickname: '테스트 계정',
+    authorized: true,
+    blocked: false,
+    postWriter: true,
   },
   {
     id: 3,
@@ -309,6 +390,9 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
+    blocked: true,
+    postWriter: false,
   },
   {
     id: 4,
@@ -316,6 +400,9 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
+    blocked: false,
+    postWriter: false,
   },
   {
     id: 5,
@@ -323,6 +410,9 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
+    blocked: false,
+    postWriter: false,
   },
   {
     id: 6,
@@ -330,6 +420,9 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
+    blocked: false,
+    postWriter: false,
   },
   {
     id: 7,
@@ -337,13 +430,19 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
+    blocked: false,
+    postWriter: false,
   },
   {
     id: 8,
     postId: 1,
     content: '안녕하세요.',
-    createdAt: '2022-07-04T19:55:31.016376300',
+    createdAt: '  2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
+    blocked: true,
+    postWriter: false,
   },
   {
     id: 9,
@@ -351,6 +450,9 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
+    blocked: false,
+    postWriter: false,
   },
   {
     id: 10,
@@ -358,6 +460,9 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
+    blocked: false,
+    postWriter: false,
   },
   {
     id: 11,
@@ -365,6 +470,9 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
+    blocked: false,
+    postWriter: false,
   },
   {
     id: 12,
@@ -372,6 +480,9 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
+    blocked: false,
+    postWriter: false,
   },
   {
     id: 13,
@@ -379,6 +490,9 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
+    blocked: false,
+    postWriter: false,
   },
   {
     id: 14,
@@ -386,6 +500,9 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
+    blocked: false,
+    postWriter: false,
   },
   {
     id: 15,
@@ -393,6 +510,9 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
+    blocked: false,
+    postWriter: false,
   },
   {
     id: 16,
@@ -400,6 +520,9 @@ export const commentList: CommentListType[] = [
     content: '안녕하세요.',
     createdAt: '2022-07-04T19:55:31.016376300',
     nickname: '익명',
+    authorized: false,
+    blocked: false,
+    postWriter: false,
   },
 ];
 
@@ -407,17 +530,54 @@ export const hashtagList: Hashtag[] = [
   {
     id: 1,
     name: '생활',
+    count: 1,
   },
   {
     id: 2,
     name: '조현근',
+    count: 1,
   },
   {
     id: 3,
     name: '날씨',
+    count: 3,
   },
   {
     id: 4,
     name: '속닥속닥',
+    count: 1,
+  },
+  {
+    id: 5,
+    name: '오늘 날씨',
+    count: 1,
+  },
+  {
+    id: 6,
+    name: '조시',
+    count: 2,
   },
 ];
+
+export const boardList = [
+  {
+    id: 1,
+    title: '🔥 HOT 게시판 🔥',
+  },
+  {
+    id: 2,
+    title: '🗽 자유 게시판',
+  },
+  {
+    id: 3,
+    title: '📮 포수타',
+  },
+  {
+    id: 4,
+    title: '️💌 감동 크루',
+  },
+];
+
+export const reportList = [{ postId: 1, message: '그냥 마음에 들지 않는다' }];
+
+export const reportCommentList = [{ commentId: 1, message: '그냥 마음에 들지 않는다' }];

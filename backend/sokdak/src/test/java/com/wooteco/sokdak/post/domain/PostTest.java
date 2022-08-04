@@ -1,13 +1,14 @@
 package com.wooteco.sokdak.post.domain;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.wooteco.sokdak.auth.exception.AuthenticationException;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.report.domain.PostReport;
+import com.wooteco.sokdak.util.fixture.MemberFixture;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,10 +18,11 @@ import org.junit.jupiter.params.provider.CsvSource;
 class PostTest {
 
     private Post post;
+    private Member member;
 
     @BeforeEach
     void setUp() {
-        Member member = Member.builder()
+        member = Member.builder()
                 .id(1L)
                 .username(VALID_USERNAME)
                 .password(VALID_PASSWORD)
@@ -65,6 +67,22 @@ class PostTest {
 
         assertThatThrownBy(() -> post.updateContent("변경된 본문", forbiddenMemberId))
                 .isInstanceOf(AuthenticationException.class);
+    }
+
+    @DisplayName("신고가 5개 이상이면 isBlocked()가 true를 반환 그 이외는 False반환")
+    @ParameterizedTest
+    @CsvSource({"4, false", "5, true"})
+    void isBlocked(int reportCount, boolean expected) {
+        List<Member> members = getMembersForReport();
+        for (int i = 0; i < reportCount; ++i) {
+            PostReport.builder()
+                    .post(post)
+                    .reporter(members.get(i))
+                    .reportMessage("신고")
+                    .build();
+        }
+
+        assertThat(post.isBlocked()).isEqualTo(expected);
     }
 
     @DisplayName("게시글의 회원 정보가 일치하는지 반환")

@@ -13,6 +13,8 @@ import com.wooteco.sokdak.member.exception.TicketUsedException;
 import com.wooteco.sokdak.member.repository.AuthCodeRepository;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.repository.TicketRepository;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,14 +25,16 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final TicketRepository ticketRepository;
     private final Encryptor encryptor;
+    private final Clock clock;
 
     public AuthService(AuthCodeRepository authCodeRepository,
                        MemberRepository memberRepository,
-                       TicketRepository ticketRepository, Encryptor encryptor) {
+                       TicketRepository ticketRepository, Encryptor encryptor, Clock clock) {
         this.authCodeRepository = authCodeRepository;
         this.memberRepository = memberRepository;
         this.ticketRepository = ticketRepository;
         this.encryptor = encryptor;
+        this.clock = clock;
     }
 
     public AuthInfo login(LoginRequest loginRequest) {
@@ -38,7 +42,7 @@ public class AuthService {
         String password = encryptor.encrypt(loginRequest.getPassword());
         Member member = memberRepository.findByUsernameValueAndPassword(username, password)
                 .orElseThrow(LoginFailedException::new);
-        return new AuthInfo(member.getId());
+        return new AuthInfo(member.getId(), member.getRoleType().getName(), member.getNickname());
     }
 
     @Transactional
@@ -54,6 +58,8 @@ public class AuthService {
         AuthCode authCode = authCodeRepository.findBySerialNumber(serialNumber)
                 .orElseThrow(SerialNumberNotFoundException::new);
         authCode.verify(verificationRequest.getCode());
+        LocalDateTime now = LocalDateTime.now(clock);
+        authCode.verifyTime(now);
     }
 
     public void validateSignUpMember(String serialNumber) {

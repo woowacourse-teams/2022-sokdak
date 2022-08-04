@@ -1,4 +1,4 @@
-import CommentBox from '@/components/CommentBox';
+import CommentBox from '@/pages/PostPage/components/CommentBox';
 
 import useComments from '@/hooks/queries/comment/useComments';
 
@@ -12,6 +12,7 @@ interface CommentListProps {
 
 const CommentList = ({ id }: CommentListProps) => {
   const { data } = useComments({ storeCode: id });
+
   return (
     <Styled.Container>
       <CommentInput amount={data?.length!} id={id} />
@@ -19,9 +20,13 @@ const CommentList = ({ id }: CommentListProps) => {
         {data?.map(comment => (
           <CommentBox
             key={comment.id}
+            id={Number(comment.id)}
+            authorized={comment.authorized}
             nickname={comment.nickname}
             content={comment.content}
             createdAt={comment.createdAt}
+            blocked={comment.blocked}
+            postWriter={comment.postWriter}
           />
         ))}
       </Styled.CommentsContainer>

@@ -8,6 +8,10 @@ import axios from 'axios';
 import { AuthContextProvider } from './context/Auth';
 import { SnackBarContextProvider } from './context/Snackbar';
 
+import authFetcher from './apis';
+import { STORAGE_KEY } from './constants/localStorage';
+import { isExpired, parseJwt } from './utils/decodeJwt';
+
 import App from './App';
 import GlobalStyle from './style/GlobalStyle';
 import theme from './style/theme';
@@ -22,7 +26,22 @@ axios.defaults.baseURL = process.env.API_URL;
 axios.defaults.withCredentials = true;
 
 const queryClient = new QueryClient();
+
 const rootNode = document.getElementById('root') as Element;
+
+const refreshToken = localStorage.getItem(STORAGE_KEY.REFRESH_TOKEN);
+
+if (refreshToken && isExpired(parseJwt(refreshToken)!)) {
+  localStorage.removeItem(STORAGE_KEY.ACCESS_TOKEN);
+  localStorage.removeItem(STORAGE_KEY.REFRESH_TOKEN);
+}
+
+if (refreshToken && !isExpired(parseJwt(refreshToken)!)) {
+  authFetcher.defaults.headers.common['Refresh-Token'] = refreshToken;
+}
+
+const accessToken = localStorage.getItem(STORAGE_KEY.ACCESS_TOKEN);
+if (accessToken) authFetcher.defaults.headers.common['Authorization'] = accessToken;
 
 ReactDOM.createRoot(rootNode).render(
   <React.StrictMode>

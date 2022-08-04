@@ -1,5 +1,7 @@
 import { setupServer } from 'msw/node';
 
+import { STORAGE_KEY } from './constants/localStorage';
+
 import hashtagsHandlers from './mocks/handlers/hashtags';
 import memberHandler from './mocks/handlers/members';
 import postHandlers from './mocks/handlers/posts';
@@ -36,6 +38,8 @@ afterEach(() => {
 });
 
 beforeEach(() => {
+  localStorage.removeItem(STORAGE_KEY.ACCESS_TOKEN);
+  localStorage.removeItem(STORAGE_KEY.REFRESH_TOKEN);
   // @ts-ignore
   globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 });

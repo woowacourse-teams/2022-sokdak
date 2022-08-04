@@ -58,13 +58,13 @@ class CommentServiceTest extends IntegrationTest {
                 .member(member)
                 .title(VALID_POST_TITLE)
                 .content(VALID_POST_CONTENT)
-                .writerNickname(new Nickname(randomNickname))
+                .writerNickname(randomNickname)
                 .build();
         identifiedPost = Post.builder()
                 .member(member)
                 .title(VALID_POST_TITLE)
                 .content(VALID_POST_CONTENT)
-                .writerNickname(new Nickname(member.getNickname()))
+                .writerNickname(member.getNickname())
                 .build();
         postRepository.save(anonymousPost);
         postRepository.save(identifiedPost);
@@ -196,7 +196,7 @@ class CommentServiceTest extends IntegrationTest {
     void findComments() {
         Post otherPost = Post.builder()
                 .member(member)
-                .writerNickname(new Nickname(member.getNickname()))
+                .writerNickname(member.getNickname())
                 .title("다른 게시글")
                 .content("본문")
                 .build();

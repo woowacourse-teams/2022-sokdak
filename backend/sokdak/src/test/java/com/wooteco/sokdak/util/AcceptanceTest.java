@@ -22,9 +22,4 @@ public class AcceptanceTest {
         databaseCleaner.clear();
         databaseCleaner.insertInitialData();
     }
-//
-//    @AfterEach
-//    public void tearDown() {
-//
-//    }
 }

@@ -61,7 +61,7 @@ public class PostService {
         Post post = Post.builder()
                 .title(newPostRequest.getTitle())
                 .content(newPostRequest.getContent())
-                .writerNickname(new Nickname(writerNickname))
+                .writerNickname(writerNickname)
                 .member(member)
                 .build();
         Post savedPost = postRepository.save(post);

@@ -70,7 +70,7 @@ class PostServiceTest extends IntegrationTest {
         post = Post.builder()
                 .title("제목")
                 .content("본문")
-                .writerNickname(new Nickname(member.getNickname()))
+                .writerNickname(member.getNickname())
                 .member(member)
                 .likes(new ArrayList<>())
                 .comments(new ArrayList<>())

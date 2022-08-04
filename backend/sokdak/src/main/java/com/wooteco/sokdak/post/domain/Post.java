@@ -47,8 +47,7 @@ public class Post {
     @Embedded
     private Content content;
 
-    @Embedded
-    private Nickname writerNickname;
+    private String writerNickname;
 
     @OneToMany(mappedBy = "post")
     private List<Like> likes = new ArrayList<>();
@@ -72,7 +71,7 @@ public class Post {
     }
 
     @Builder
-    private Post(String title, String content, Member member, Nickname writerNickname, List<Like> likes,
+    private Post(String title, String content, Member member, String writerNickname, List<Like> likes,
                  List<Comment> comments, List<PostHashtag> postHashtags) {
         this.title = new Title(title);
         this.content = new Content(content);
@@ -157,6 +156,6 @@ public class Post {
     }
 
     public String getNickname() {
-        return writerNickname.getValue();
+        return writerNickname;
     }
 }

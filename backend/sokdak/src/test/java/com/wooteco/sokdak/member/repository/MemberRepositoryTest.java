@@ -44,7 +44,7 @@ class MemberRepositoryTest {
         Member member = Member.builder()
                 .username(VALID_USERNAME)
                 .password(VALID_PASSWORD)
-                .nickname(VALID_NICKNAME)
+                .nickname("josh")
                 .build();
 
         assertThatThrownBy(() -> memberRepository.save(member))

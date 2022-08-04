@@ -44,7 +44,7 @@ export const Title = styled.p<{ isModified: boolean }>`
 
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: ${({ isModified }) => (isModified ? '225px' : '260px')};
+  max-width: ${({ isModified }) => (isModified ? '200px' : '250px')};
   white-space: nowrap;
 `;
 

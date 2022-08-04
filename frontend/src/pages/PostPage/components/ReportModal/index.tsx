@@ -4,12 +4,12 @@ import Modal from '@/components/@shared/Modal';
 
 import * as Styled from './index.styles';
 
-interface ReportModal {
+interface ReportModalProps {
   isModalOpen: boolean;
   onClose: () => void;
   submitReport: (text: string) => void;
 }
-const ReportModal = ({ isModalOpen, onClose, submitReport }: ReportModal) => {
+const ReportModal = ({ isModalOpen, onClose, submitReport }: ReportModalProps) => {
   const messageRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSubmit = (e: React.FormEvent) => {

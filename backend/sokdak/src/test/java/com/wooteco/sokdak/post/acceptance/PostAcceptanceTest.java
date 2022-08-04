@@ -1,18 +1,8 @@
 package com.wooteco.sokdak.post.acceptance;
 
-import static com.wooteco.sokdak.post.util.PostFixture.NEW_POST_REQUEST;
-import static com.wooteco.sokdak.post.util.PostFixture.UPDATED_POST_CONTENT;
-import static com.wooteco.sokdak.post.util.PostFixture.UPDATED_POST_TITLE;
-import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_CONTENT;
-import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_TITLE;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getExceptionMessage;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.PostFixture.CANNOT_CREATE_POST_URI;
-import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
+import static com.wooteco.sokdak.util.fixture.ReportFixture.*;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.*;
+import static com.wooteco.sokdak.util.fixture.PostFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -23,6 +13,7 @@ import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
+import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -94,6 +85,31 @@ class PostAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(postNames).isEqualTo(List.of("제목3"))
+        );
+    }
+
+    @DisplayName("특정 게시판의 게시글을 조회할때 누적신고 5개 이상인 게시글은 block된다.")
+    @Test
+    void findPosts_Block() {
+        Long blockedPostId = addPostAndGetPostId();
+        addPostAndGetPostId();
+        List<String> tokens = getTokensForReport();
+        for (int i = 0; i < 5; ++i) {
+            ReportRequest reportRequest = new ReportRequest("신고");
+            httpPostWithAuthorization(reportRequest, "/posts/" + blockedPostId + "/report", tokens.get(i));
+        }
+
+        ExtractableResponse<Response> response = httpGet(
+                "/boards/" + BOARD_ID_POST_CREATED + "/posts?size=2&page=0");
+        List<PostsElementResponse> postsElementResponses = response
+                .jsonPath()
+                .getObject(".", PostsResponse.class)
+                .getPosts();
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(postsElementResponses.get(0).isBlocked()).isFalse(),
+                () -> assertThat(postsElementResponses.get(1).isBlocked()).isTrue()
         );
     }
 

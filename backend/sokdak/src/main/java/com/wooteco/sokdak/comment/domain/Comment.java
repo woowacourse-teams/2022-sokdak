@@ -5,6 +5,7 @@ import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.domain.Nickname;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.report.domain.CommentReport;
+import com.wooteco.sokdak.report.exception.AlreadyReportCommentException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class Comment {
 
     private static final int BLOCKED_CONDITION = 5;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
@@ -81,6 +83,16 @@ public class Comment {
             return false;
         }
         return member.getId().equals(accessMemberId);
+    }
+
+    public void addReport(CommentReport other) {
+        commentReports.stream()
+                .filter(it -> it.isSameReporter(other))
+                .findAny()
+                .ifPresent(it -> {
+                    throw new AlreadyReportCommentException();
+                });
+        commentReports.add(other);
     }
 
     public Long getId() {

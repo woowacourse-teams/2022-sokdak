@@ -32,9 +32,6 @@ public class CommentReportService {
 
     @Transactional
     public void reportComment(Long commentId, ReportRequest reportRequest, AuthInfo authInfo) {
-        if (commentReportRepository.findByReporterIdAndCommentId(authInfo.getId(), commentId).isPresent()) {
-            throw new AlreadyReportCommentException();
-        }
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
         Member reporter = memberRepository.findById(authInfo.getId())

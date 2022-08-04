@@ -1,12 +1,8 @@
 package com.wooteco.sokdak.comment.acceptance;
 
-import static com.wooteco.sokdak.post.util.CommentFixture.VALID_COMMENT_MESSAGE;
-import static com.wooteco.sokdak.post.util.PostFixture.NEW_POST_REQUEST;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
+import static com.wooteco.sokdak.util.fixture.CommentFixture.*;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.*;
+import static com.wooteco.sokdak.util.fixture.PostFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -16,6 +12,7 @@ import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.CommentsResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.report.dto.ReportRequest;
+import com.wooteco.sokdak.util.fixture.ReportFixture;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -100,12 +97,7 @@ class CommentAcceptanceTest extends AcceptanceTest {
         Long postId = addPostAndGetPostId();
         Long commentId = addCommentAndGetCommentId(postId);
         addCommentAndGetCommentId(postId);
-        String token1 = getToken();
-        String token2 = httpPost(new LoginRequest("josh", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        String token3 = httpPost(new LoginRequest("thor", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        String token4 = httpPost(new LoginRequest("hunch", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        String token5 = httpPost(new LoginRequest("east", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        List<String> tokens = List.of(token1, token2, token3, token4, token5);
+        List<String> tokens = ReportFixture.getTokensForReport();
 
         for (int i = 0; i < 5; ++i) {
             ReportRequest reportRequest = new ReportRequest("댓글신고");
@@ -136,11 +128,6 @@ class CommentAcceptanceTest extends AcceptanceTest {
     private String getToken() {
         LoginRequest loginRequest = new LoginRequest("chris", "Abcd123!@");
         return httpPost(loginRequest, "/login").header(AUTHORIZATION);
-    }
-
-    private Long addPostAndGetPostId() {
-        return Long.parseLong(httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getToken())
-                .header("Location").split("/posts/")[1]);
     }
 
     private Long addCommentAndGetCommentId(Long postId) {

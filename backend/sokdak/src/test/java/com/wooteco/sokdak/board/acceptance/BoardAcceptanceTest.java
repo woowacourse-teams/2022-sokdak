@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.board.acceptance;
 
-import static com.wooteco.sokdak.post.util.PostFixture.NEW_POST_REQUEST;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.HOT_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.POSUTA_BOARD_ID;
@@ -11,6 +10,7 @@ import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
+import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertAll;

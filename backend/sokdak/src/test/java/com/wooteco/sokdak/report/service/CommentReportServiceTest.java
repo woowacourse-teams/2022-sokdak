@@ -1,12 +1,9 @@
 package com.wooteco.sokdak.report.service;
 
 import static com.wooteco.sokdak.member.domain.RoleType.USER;
-import static com.wooteco.sokdak.post.util.CommentFixture.VALID_COMMENT_MESSAGE;
-import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_CONTENT;
-import static com.wooteco.sokdak.post.util.PostFixture.VALID_POST_TITLE;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
+import static com.wooteco.sokdak.util.fixture.CommentFixture.*;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.*;
+import static com.wooteco.sokdak.util.fixture.PostFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

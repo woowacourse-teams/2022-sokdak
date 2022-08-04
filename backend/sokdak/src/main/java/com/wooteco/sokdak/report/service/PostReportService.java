@@ -32,9 +32,6 @@ public class PostReportService {
 
     @Transactional
     public void reportPost(Long postId, ReportRequest reportRequest, AuthInfo authInfo) {
-        if (postReportRepository.existsByReporterIdAndPostId(authInfo.getId(), postId)) {
-            throw new AlreadyReportPostException();
-        }
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
         Member member = memberRepository.findById(authInfo.getId())

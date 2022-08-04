@@ -62,6 +62,16 @@ pipeline{
       }
     }
 
+    stage('FE-Test'){
+      steps{
+        sh "echo '########### FE Test START ###########'"
+        dir('frontend'){
+          sh 'npm run test'
+        }
+        sh "echo '########### FE Test SUCCESS ###########'"
+      }
+    }
+
     stage('FE-Build'){
       steps{
         sh "echo '########### FE BUILD START ###########'"

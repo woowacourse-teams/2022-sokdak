@@ -59,7 +59,7 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<PostHashtag> postHashtags;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<PostBoard> postBoards = new ArrayList<>();
 
     @CreatedDate

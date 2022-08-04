@@ -1,4 +1,5 @@
 import { useContext, useReducer } from 'react';
+import { useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import LikeButton from '@/components/LikeButton';
@@ -10,6 +11,7 @@ import useReportPost from '@/hooks/queries/post/useReportPost';
 import * as Styled from './index.styles';
 
 import PATH from '@/constants/path';
+import { MUTATION_KEY } from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 import timeConverter from '@/utils/timeConverter';
 
@@ -34,13 +36,18 @@ const PostHeader = ({ post, like, onClickDeleteButton, onClickLikeButton }: Post
   const navigate = useNavigate();
   const { showSnackbar } = useContext(SnackbarContext);
   const [isReportModalOpen, handleReportModal] = useReducer(state => !state, false);
+  const queryClient = useQueryClient();
 
   const { mutate: submitReport } = useReportPost({
     onSuccess: () => {
       showSnackbar(SNACKBAR_MESSAGE.SUCCESS_REPORT_POST);
       handleReportModal();
     },
-    onError: err => {
+    onError: (err, variables, context) => {
+      if (typeof queryClient.getMutationDefaults(MUTATION_KEY.REPORT_POST)?.onError === 'function') {
+        queryClient.getMutationDefaults(MUTATION_KEY.REPORT_POST)?.onError!(err, variables, context);
+      }
+
       showSnackbar(err.message);
       handleReportModal();
     },

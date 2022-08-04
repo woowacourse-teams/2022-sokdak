@@ -22,7 +22,6 @@ const useLogout = (options?: UseQueryOptions<AxiosResponse<never>, AxiosError<{ 
       setIsLogin(false);
       setUserName('');
       authFetcher.defaults.headers.common = {};
-
       localStorage.setItem(STORAGE_KEY.ACCESS_TOKEN, '');
       localStorage.setItem(STORAGE_KEY.REFRESH_TOKEN, '');
       if (options && options.onSuccess) {

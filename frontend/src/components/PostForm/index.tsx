@@ -41,7 +41,7 @@ const PostForm = ({
   const [anonymous, setAnonymous] = useState(true);
 
   const { boardId } = useLocation().state as Pick<Post, 'boardId'>;
-  console.log(useLocation().state);
+
   const { title: boardTitle } = BOARDS.find(board => board.id === Number(boardId))!;
   const [isValidTitle, setIsValidTitle] = useState(true);
   const [isValidContent, setIsValidContent] = useState(true);

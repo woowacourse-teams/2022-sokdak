@@ -3,7 +3,7 @@ import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 
 import authFetcher from '@/apis';
-import QUERY_KEYS from '@/constants/queries';
+import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 
 interface PostCommentsProps {
   content: string;
@@ -32,6 +32,7 @@ const usePostComments = (
           options.onSuccess(data, variables, context);
         }
       },
+      mutationKey: MUTATION_KEY.POST_COMMENT,
     },
   );
 };

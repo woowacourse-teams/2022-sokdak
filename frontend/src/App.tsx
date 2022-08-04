@@ -1,3 +1,5 @@
+import { useContext } from 'react';
+import { useQueryClient } from 'react-query';
 import { Route, Routes } from 'react-router-dom';
 
 import BoardPage from './pages/BoardPage';
@@ -13,12 +15,31 @@ import UpdatePostPage from './pages/UpdatePostPage';
 import Snackbar from './components/Snackbar';
 import Header from '@/components/Header';
 
+import AuthContext from './context/Auth';
+
 import useSnackbar from './hooks/useSnackbar';
 
 import PATH from './constants/path';
+import { MUTATION_KEY } from './constants/queries';
 
 const App = () => {
-  const { isVisible, message } = useSnackbar();
+  const { isVisible, message, showSnackbar } = useSnackbar();
+  const { setIsLogin, setUserName } = useContext(AuthContext);
+  const queryClient = useQueryClient();
+
+  Object.values(MUTATION_KEY).forEach(KEY => {
+    queryClient.setMutationDefaults(KEY, {
+      onError: err => {
+        if (err.response?.status === 401) {
+          showSnackbar('로그인을 해주세요');
+          setIsLogin(false);
+          setUserName('');
+          return;
+        }
+        showSnackbar(err.response?.data.message!);
+      },
+    });
+  });
 
   return (
     <>

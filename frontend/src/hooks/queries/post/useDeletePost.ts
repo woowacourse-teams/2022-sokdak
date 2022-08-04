@@ -5,7 +5,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import useSnackbar from '@/hooks/useSnackbar';
 
 import authFetcher from '@/apis';
-import QUERY_KEYS from '@/constants/queries';
+import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
 const useDeletePost = (options?: UseMutationOptions<AxiosResponse, AxiosError, string>) => {
@@ -26,6 +26,7 @@ const useDeletePost = (options?: UseMutationOptions<AxiosResponse, AxiosError, s
           options.onSuccess(data, variables, context);
         }
       },
+      mutationKey: MUTATION_KEY.DELETE_POST,
     },
   );
 };

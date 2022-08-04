@@ -22,6 +22,7 @@ axios.defaults.baseURL = process.env.API_URL;
 axios.defaults.withCredentials = true;
 
 const queryClient = new QueryClient();
+
 const rootNode = document.getElementById('root') as Element;
 
 ReactDOM.createRoot(rootNode).render(

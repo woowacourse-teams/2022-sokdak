@@ -3,6 +3,7 @@ import { useMutation, UseMutationOptions } from 'react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 
 import authFetcher from '@/apis';
+import { MUTATION_KEY } from '@/constants/queries';
 
 interface PostReportProps {
   id: number;
@@ -18,6 +19,7 @@ const useReportPost = (
     },
     {
       ...options,
+      mutationKey: MUTATION_KEY.REPORT_POST,
     },
   );
 };

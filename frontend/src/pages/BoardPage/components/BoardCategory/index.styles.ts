@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 
+import Dropdown from '@/components/@shared/Dropdown';
+
 import ChevronDown from '@/assets/images/chevron-down.svg';
 
 import styled from '@emotion/styled';
@@ -11,6 +13,7 @@ export const BoardCategoryContainer = styled.div`
   margin-bottom: 3rem;
   text-align: center;
 `;
+
 export const TitleContainer = styled.div`
   width: 12rem;
   display: flex;
@@ -55,4 +58,8 @@ export const DropdownIcon = styled(ChevronDown)`
   width: 30px;
   height: 30px;
   margin: 0 4px 0 10px;
+`;
+
+export const OptionList = styled(Dropdown.OptionList)`
+  left: 46%;
 `;

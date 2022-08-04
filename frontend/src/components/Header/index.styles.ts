@@ -31,7 +31,7 @@ export const Title = styled.p`
   font-family: 'BMYEONSUNG';
 `;
 
-export const Avartar = styled.button`
+export const Avartar = styled.div`
   width: 40px;
   height: 40px;
   display: flex;

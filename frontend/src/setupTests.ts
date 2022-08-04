@@ -1,12 +1,13 @@
 import { setupServer } from 'msw/node';
 
+import hashtagsHandlers from './mocks/handlers/hashtags';
 import memberHandler from './mocks/handlers/members';
 import postHandlers from './mocks/handlers/posts';
 import MockIntersectionObserver from '@/__test__/fixture';
 import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
 
-const server = setupServer(...memberHandler, ...postHandlers);
+const server = setupServer(...memberHandler, ...postHandlers, ...hashtagsHandlers);
 
 const originalError = console.error;
 
@@ -15,6 +16,7 @@ beforeAll(() => {
     if (/Warning.*not wrapped in act/.test(args[0])) {
       return;
     }
+
     originalError.call(console, ...args);
   };
   server.listen();

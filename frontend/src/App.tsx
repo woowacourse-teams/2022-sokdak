@@ -22,6 +22,9 @@ import useSnackbar from './hooks/useSnackbar';
 import PATH from './constants/path';
 import { MUTATION_KEY } from './constants/queries';
 
+import PrivateRoute from './routes/PrivateRoute';
+import PublicRoute from './routes/PublicRoute';
+
 const App = () => {
   const { isVisible, message, showSnackbar } = useSnackbar();
   const { setIsLogin, setUserName } = useContext(AuthContext);
@@ -46,14 +49,18 @@ const App = () => {
       <Header />
       <Routes>
         <Route path={PATH.HOME} element={<MainPage />} />
-        <Route path={PATH.CREATE_POST} element={<CreatePostPage />} />
         <Route path={`${PATH.POST}/:id`} element={<PostPage />} />
-        <Route path={PATH.LOGIN} element={<LoginPage />} />
-        <Route path={PATH.SIGN_UP} element={<SignUpPage />} />
         <Route path={PATH.UPDATE_POST} element={<UpdatePostPage />} />
         <Route path={`${PATH.BOARD}/:id`} element={<BoardPage />} />
         <Route path={`${PATH.HASHTAG}/:name`} element={<HashTagPage />} />
         <Route path="*" element={<NotFoundPage />} />
+        <Route element={<PrivateRoute />}>
+          <Route path={PATH.CREATE_POST} element={<CreatePostPage />} />
+        </Route>
+        <Route element={<PublicRoute />}>
+          <Route path={PATH.LOGIN} element={<LoginPage />} />
+          <Route path={PATH.SIGN_UP} element={<SignUpPage />} />
+        </Route>
       </Routes>
       {isVisible && <Snackbar message={message} />}
     </>

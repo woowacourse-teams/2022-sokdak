@@ -15,6 +15,7 @@ export const TitleContainer = styled.div`
   width: 12rem;
   display: flex;
   justify-content: center;
+  align-items: center;
 `;
 
 export const Title = styled.p`

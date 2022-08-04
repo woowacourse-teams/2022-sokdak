@@ -8,6 +8,7 @@ import com.wooteco.sokdak.auth.service.Encryptor;
 import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.member.repository.TicketRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,11 +31,14 @@ public class AdminService {
 
         for (String email : emails) {
             String serialNumber = encryptor.encrypt(email);
-            Ticket ticket = Ticket.builder()
-                    .serialNumber(serialNumber)
-                    .used(false)
-                    .build();
-            ticketRepository.save(ticket);
+            Optional<Ticket> foundSerialNumber = ticketRepository.findBySerialNumber(serialNumber);
+            if (foundSerialNumber.isEmpty()) {
+                Ticket ticket = Ticket.builder()
+                        .serialNumber(serialNumber)
+                        .used(false)
+                        .build();
+                ticketRepository.save(ticket);
+            }
         }
     }
 }

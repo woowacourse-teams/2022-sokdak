@@ -9,7 +9,6 @@ import com.wooteco.sokdak.hashtag.domain.Hashtags;
 import com.wooteco.sokdak.hashtag.service.HashtagService;
 import com.wooteco.sokdak.like.repository.LikeRepository;
 import com.wooteco.sokdak.member.domain.Member;
-import com.wooteco.sokdak.member.domain.Nickname;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
@@ -18,12 +17,10 @@ import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsResponse;
-import com.wooteco.sokdak.post.exception.PostBoardNotFoundException;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -82,8 +79,6 @@ public class PostService {
     public PostDetailResponse findPost(Long postId, AuthInfo authInfo) {
         Post foundPost = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
-//        PostBoard postBoard = postBoardRepository.findPostBoardByPostId(foundPost.getId())
-//                .orElseThrow(PostBoardNotFoundException::new);
         List<PostBoard> postBoards = postBoardRepository.findPostBoardsByPostId(foundPost.getId());
         boolean liked = likeRepository.existsByMemberIdAndPostId(authInfo.getId(), postId);
         Hashtags hashtags = hashtagService.findHashtagsByPostId(postId);

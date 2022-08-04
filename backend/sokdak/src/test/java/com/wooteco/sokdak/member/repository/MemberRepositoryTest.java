@@ -44,10 +44,16 @@ class MemberRepositoryTest {
         Member member = Member.builder()
                 .username(VALID_USERNAME)
                 .password(VALID_PASSWORD)
-                .nickname("josh")
+                .nickname("joshNickname")
                 .build();
+        Member duplicatedNicknameMember = Member.builder()
+                .username("josh")
+                .password("Abcd123!@")
+                .nickname("joshNickname")
+                .build();
+        memberRepository.save(member);
 
-        assertThatThrownBy(() -> memberRepository.save(member))
+        assertThatThrownBy(() -> memberRepository.save(duplicatedNicknameMember))
                 .isInstanceOf(DataIntegrityViolationException.class);
 
     }

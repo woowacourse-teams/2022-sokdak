@@ -8,25 +8,23 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 import com.wooteco.sokdak.config.JPAConfig;
 import com.wooteco.sokdak.hashtag.domain.Hashtag;
 import com.wooteco.sokdak.hashtag.domain.PostHashtag;
-import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
+import com.wooteco.sokdak.util.RepositoryTest;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Tuple;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
-@DataJpaTest
 @Import(JPAConfig.class)
-class PostHashtagRepositoryTest {
+class PostHashtagRepositoryTest extends RepositoryTest {
 
     @Autowired
     private PostHashtagRepository postHashtagRepository;
@@ -43,7 +41,7 @@ class PostHashtagRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        Member member = memberRepository
+        member = memberRepository
                 .findByUsernameValueAndPassword(VALID_USERNAME, VALID_ENCRYPTED_PASSWORD)
                 .orElseThrow();
 

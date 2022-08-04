@@ -18,6 +18,7 @@ public class PostDetailResponse {
     private String nickname;
     private String title;
     private String content;
+    private boolean blocked;
     private List<HashtagResponse> hashtags;
     private LocalDateTime createdAt;
     private int likeCount;
@@ -29,7 +30,7 @@ public class PostDetailResponse {
     }
 
     @Builder
-    private PostDetailResponse(Long id, Long boardId, String nickname, String title, String content,
+    private PostDetailResponse(Long id, Long boardId, String nickname, String title, String content, boolean blocked,
                                List<HashtagResponse> hashtagResponses, LocalDateTime createdAt, int likeCount,
                                boolean like, boolean authorized, boolean modified) {
         this.id = id;
@@ -37,6 +38,7 @@ public class PostDetailResponse {
         this.nickname = nickname;
         this.title = title;
         this.content = content;
+        this.blocked = blocked;
         this.hashtags = hashtagResponses;
         this.createdAt = createdAt;
         this.likeCount = likeCount;
@@ -54,6 +56,7 @@ public class PostDetailResponse {
                 .nickname(post.getNickname())
                 .title(post.getTitle())
                 .content(post.getContent())
+                .blocked(post.isBlocked())
                 .createdAt(post.getCreatedAt())
                 .likeCount(post.getLikeCount())
                 .like(liked)

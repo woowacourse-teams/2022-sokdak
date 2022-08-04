@@ -1,10 +1,10 @@
 insert into member (username, nickname, password, role_type) values ('chris', 'chris', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');
-insert into member (username, nickname, password, role_type) values ('east', 'east', '433abc1016172c0dac0955d03ee8820d3efa6dce8c80d56883bcafbaca941956', 'ADMIN');
-insert into member (username, nickname, password, role_type) values ('hunch', 'hunch', '433abc1016172c0dac0955d03ee8820d3efa6dce8c80d56883bcafbaca941956', 'ADMIN');
-insert into member (username, nickname, password, role_type) values ('josh', 'josh', '433abc1016172c0dac0955d03ee8820d3efa6dce8c80d56883bcafbaca941956', 'ADMIN');
-insert into member (username, nickname, password, role_type) values ('dongkey', 'dongkey', '433abc1016172c0dac0955d03ee8820d3efa6dce8c80d56883bcafbaca941956', 'ADMIN');
-insert into member (username, nickname, password, role_type) values ('movie', 'movie', '433abc1016172c0dac0955d03ee8820d3efa6dce8c80d56883bcafbaca941956', 'ADMIN');
-insert into member (username, nickname, password, role_type) values ('thor', 'thor', '433abc1016172c0dac0955d03ee8820d3efa6dce8c80d56883bcafbaca941956', 'ADMIN');
+insert into member (username, nickname, password, role_type) values ('east', 'east', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');
+insert into member (username, nickname, password, role_type) values ('hunch', 'hunch', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');
+insert into member (username, nickname, password, role_type) values ('josh', 'josh', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');
+insert into member (username, nickname, password, role_type) values ('dongkey', 'dongkey', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');
+insert into member (username, nickname, password, role_type) values ('movie', 'movie', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');
+insert into member (username, nickname, password, role_type) values ('thor', 'thor', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');
 
 insert into ticket (serial_number, used) values ('21f46568bf6002c23843d198af30bb2bc8123695bd3d12ce86e0fc35bc5d3279', false);
 insert into ticket (serial_number, used) values ('5810c81b6f78b1bcf62b53035d879e1309750ab60d1b4b601dfbc368005645cb', false);

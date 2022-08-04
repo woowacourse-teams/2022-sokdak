@@ -1,6 +1,8 @@
 import { useMutation, UseMutationOptions } from 'react-query';
 
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
+
+import authFetcher from '@/apis';
 
 interface PostReportProps {
   id: number;
@@ -12,7 +14,7 @@ const useReportPost = (
 ) => {
   return useMutation(
     ({ id, message }) => {
-      return axios.post(`/posts/${id}/report`, { message });
+      return authFetcher.post(`/posts/${id}/report`, { message });
     },
     {
       ...options,

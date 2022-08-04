@@ -1,10 +1,11 @@
 import { useContext } from 'react';
 import { useMutation, UseMutationOptions } from 'react-query';
 
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 
 import SnackbarContext from '@/context/Snackbar';
 
+import authFetcher from '@/apis';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
 interface PostReportProps {
@@ -19,7 +20,7 @@ const useReportComment = (
 
   return useMutation(
     ({ id, message }) => {
-      return axios.post(`/comments/${id}/report`, { message });
+      return authFetcher.post(`/comments/${id}/report`, { message });
     },
     {
       onSuccess: () => {

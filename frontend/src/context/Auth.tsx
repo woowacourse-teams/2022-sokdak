@@ -1,14 +1,12 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
-import axios from 'axios';
-
+import authFetcher from '@/apis';
 import { STORAGE_KEY } from '@/constants/localStorage';
 import { parseJwt, isExpired } from '@/utils/decodeJwt';
 
 interface AuthContextValue {
   isLogin: boolean;
   setIsLogin: Dispatch<SetStateAction<boolean>>;
-
   username: string;
   setUserName: Dispatch<SetStateAction<string>>;
 }
@@ -28,13 +26,13 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     }
 
     if (refreshToken) {
-      axios.defaults.headers.common['Refresh-Token'] = refreshToken;
+      authFetcher.defaults.headers.common['Refresh-Token'] = refreshToken;
     }
     const accessToken = localStorage.getItem(STORAGE_KEY.ACCESS_TOKEN);
     if (accessToken) {
       setIsLogin(true);
       setUserName(parseJwt(accessToken)?.nickname!);
-      axios.defaults.headers.common['Authorization'] = accessToken;
+      authFetcher.defaults.headers.common['Authorization'] = accessToken;
     }
   }, []);
 

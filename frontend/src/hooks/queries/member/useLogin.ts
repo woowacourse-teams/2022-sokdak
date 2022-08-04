@@ -7,6 +7,7 @@ import AuthContext from '@/context/Auth';
 
 import useSnackbar from '@/hooks/useSnackbar';
 
+import authFetcher from '@/apis';
 import { STORAGE_KEY } from '@/constants/localStorage';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 import { parseJwt } from '@/utils/decodeJwt';
@@ -33,12 +34,12 @@ const useLogin = (options?: UseMutationOptions<AxiosResponse<never>, AxiosError<
         const accessToken = data?.headers.authorization;
         const refreshToken = data?.headers['refresh-token'];
         if (accessToken) {
-          axios.defaults.headers.common['Authorization'] = accessToken;
-          localStorage.setItem('AccessToken', accessToken);
+          authFetcher.defaults.headers.common['Authorization'] = accessToken;
+          localStorage.setItem(STORAGE_KEY.ACCESS_TOKEN, accessToken);
           setUserName(parseJwt(accessToken)?.nickname!);
         }
         if (refreshToken) {
-          axios.defaults.headers.common['Refresh-Token'] = refreshToken;
+          authFetcher.defaults.headers.common['Refresh-Token'] = refreshToken;
           localStorage.setItem(STORAGE_KEY.REFRESH_TOKEN, refreshToken);
         }
         if (options && options.onSuccess) {

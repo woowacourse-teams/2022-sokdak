@@ -1,10 +1,15 @@
+import { useContext } from 'react';
 import { useQueryClient, useMutation, UseMutationOptions } from 'react-query';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
+
+import AuthContext from '@/context/Auth';
 
 import useSnackbar from '@/hooks/useSnackbar';
 
+import authFetcher from '@/apis';
+import PATH from '@/constants/path';
 import QUERY_KEYS from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
@@ -17,7 +22,8 @@ const useCreatePost = (
 ) => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
-  const { boardId } = useLocation().state as Pick<Post, 'boardId'>;
+  const { setIsLogin, setUserName } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   return useMutation(
     ({
@@ -25,10 +31,13 @@ const useCreatePost = (
       content,
       hashtags,
       anonymous,
-    }: Pick<Post, 'title' | 'content'> & { hashtags: string[]; anonymous?: boolean }): Promise<
-      AxiosResponse<string, string>
-    > =>
-      axios.post(`/boards/${boardId}/posts`, {
+      boardId,
+    }: Pick<Post, 'title' | 'content'> & {
+      hashtags: string[];
+      anonymous?: boolean;
+      boardId?: string | number;
+    }): Promise<AxiosResponse<string, string>> =>
+      authFetcher.post(`/boards/${boardId}/posts`, {
         title,
         content,
         hashtags,
@@ -42,6 +51,17 @@ const useCreatePost = (
 
         if (options && options.onSuccess) {
           options.onSuccess(data, variables, context);
+        }
+      },
+      onError: (error, variables, context) => {
+        if (error.response?.status === 401) {
+          showSnackbar('로그인을 해주세요');
+          setIsLogin(false);
+          setUserName('');
+          navigate(PATH.LOGIN);
+        }
+        if (options && options.onError) {
+          options.onError(error, variables, context);
         }
       },
     },

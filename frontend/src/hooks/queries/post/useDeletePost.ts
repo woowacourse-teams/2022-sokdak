@@ -1,9 +1,10 @@
 import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 
 import useSnackbar from '@/hooks/useSnackbar';
 
+import authFetcher from '@/apis';
 import QUERY_KEYS from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
@@ -13,7 +14,7 @@ const useDeletePost = (options?: UseMutationOptions<AxiosResponse, AxiosError, s
 
   return useMutation(
     id => {
-      return axios.delete(`/posts/${id}`);
+      return authFetcher.delete(`/posts/${id}`);
     },
     {
       ...options,

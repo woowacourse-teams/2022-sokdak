@@ -21,6 +21,7 @@ import useSnackbar from './hooks/useSnackbar';
 
 import PATH from './constants/path';
 import { MUTATION_KEY } from './constants/queries';
+import SNACKBAR_MESSAGE from './constants/snackbar';
 
 import PrivateRoute from './routes/PrivateRoute';
 import PublicRoute from './routes/PublicRoute';
@@ -34,7 +35,7 @@ const App = () => {
     queryClient.setMutationDefaults(KEY, {
       onError: err => {
         if (err.response?.status === 401) {
-          showSnackbar('로그인을 해주세요');
+          showSnackbar(SNACKBAR_MESSAGE.NOT_LOGIN);
           setIsLogin(false);
           setUserName('');
           return;

@@ -5,13 +5,14 @@ import AuthContext from '@/context/Auth';
 import SnackbarContext from '@/context/Snackbar';
 
 import PATH from '@/constants/path';
+import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
 const PrivateRoute = () => {
   const { isLogin } = useContext(AuthContext);
   const { showSnackbar } = useContext(SnackbarContext);
 
   if (!isLogin) {
-    showSnackbar('로그인이 필요한 서비스 입니다.');
+    showSnackbar(SNACKBAR_MESSAGE.NOT_LOGIN);
     return <Navigate to={PATH.LOGIN} />;
   }
   return <Outlet />;

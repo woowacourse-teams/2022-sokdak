@@ -4,13 +4,15 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import AuthContext from '@/context/Auth';
 import SnackbarContext from '@/context/Snackbar';
 
+import SNACKBAR_MESSAGE from '@/constants/snackbar';
+
 const PublicRoute = () => {
   const { isLogin } = useContext(AuthContext);
   const { showSnackbar } = useContext(SnackbarContext);
   const navigate = useNavigate();
 
   if (isLogin) {
-    showSnackbar('이미 로그인하였습니다');
+    showSnackbar(SNACKBAR_MESSAGE.ALREADY_LOGIN);
     navigate(-1);
   }
   return <Outlet />;

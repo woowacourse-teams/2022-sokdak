@@ -27,6 +27,7 @@
 
     <springProfile name="dev">
         <include resource="logback/file-logger.xml"/>
+        <include resource="logback/file-db-logger.xml"/>
         <include resource="logback/console-logger.xml"/>
         <include resource="logback/slack-logger.xml"/>
 
@@ -37,6 +38,18 @@
 
         <logger name="org.springframework" level="INFO">
             <appender-ref ref="FILE"/>
+        </logger>
+
+        <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
+            <appender-ref ref="FILE-DB"/>
+        </logger>
+
+        <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE">
+            <appender-ref ref="FILE-DB"/>
+        </logger>
+
+        <logger name="org.hibernate.type.descriptor.sql.BasicExtractor" level="TRACE">
+            <appender-ref ref="FILE-DB"/>
         </logger>
     </springProfile>
 

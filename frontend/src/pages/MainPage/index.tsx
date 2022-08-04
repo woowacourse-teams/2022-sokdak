@@ -14,7 +14,9 @@ const MainPage = () => {
   if (isLoading) {
     return (
       <Layout>
-        <Spinner />
+        <Styled.SpinnerContainer>
+          <Spinner />
+        </Styled.SpinnerContainer>
       </Layout>
     );
   }

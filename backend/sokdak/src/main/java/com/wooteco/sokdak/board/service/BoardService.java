@@ -39,6 +39,7 @@ public class BoardService {
         this.postBoardRepository = postBoardRepository;
     }
 
+    @Transactional
     public NewBoardResponse createBoard(NewBoardRequest newBoardRequest) {
         Board board = Board.builder()
                 .name(newBoardRequest.getName())

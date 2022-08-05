@@ -1,3 +1,5 @@
+import PandaIcon from '@/assets/images/panda_logo.svg';
+
 import { keyframes, css } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -57,7 +59,12 @@ const rotate = keyframes`
   }
 `;
 
-export const JoshImage = styled.img`
+export const fixed = css`
+  position: fixed;
+  top: 500px;
+`;
+
+export const Panda = styled(PandaIcon)`
   width: 80px;
   height: 80px;
 
@@ -70,9 +77,4 @@ export const JoshImage = styled.img`
     animation-name: ${rotate};
     animation-timing-function: linear;
   }
-`;
-
-export const fixed = css`
-  position: fixed;
-  top: 500px;
 `;

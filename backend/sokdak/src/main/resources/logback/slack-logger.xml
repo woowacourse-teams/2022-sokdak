@@ -22,7 +22,16 @@
         <colorCoding>true</colorCoding>
     </appender>
 
-    <appender name="ASYNC-SLACK-PROD" class="ch.qos.logback.classic.AsyncAppender">
+    <appender name="ASYNC-SLACK-PROD-WARN" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="SLACK-PROD"/>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name="ASYNC-SLACK-PROD-ERROR" class="ch.qos.logback.classic.AsyncAppender">
         <appender-ref ref="SLACK-PROD"/>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
@@ -31,10 +40,19 @@
         </filter>
     </appender>
 
-    <appender name="ASYNC-SLACK-DEV" class="ch.qos.logback.classic.AsyncAppender">
+    <appender name="ASYNC-SLACK-DEV-WARN" class="ch.qos.logback.classic.AsyncAppender">
         <appender-ref ref="SLACK-DEV"/>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name="ASYNC-SLACK-DEV-ERROR" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="SLACK-DEV"/>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>

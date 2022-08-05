@@ -10,6 +10,7 @@ import com.wooteco.sokdak.member.repository.TicketRepository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AdminService {
@@ -22,6 +23,7 @@ public class AdminService {
         this.encryptor = encryptor;
     }
 
+    @Transactional
     public void registerEmail(AuthInfo authInfo, EmailsAddRequest emailsAddRequest) {
         if (authInfo.getRole().equals(RoleType.USER.getName())) {
             throw new UnauthorizedException("이메일 등록은 관리자만 가능합니다.");

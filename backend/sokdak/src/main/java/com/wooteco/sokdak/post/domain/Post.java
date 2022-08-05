@@ -8,7 +8,6 @@ import com.wooteco.sokdak.like.domain.Like;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.report.domain.PostReport;
 import com.wooteco.sokdak.report.exception.AlreadyReportPostException;
-import com.wooteco.sokdak.member.domain.Nickname;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

@@ -7,7 +7,6 @@ import com.wooteco.sokdak.comment.service.CommentService;
 import com.wooteco.sokdak.support.token.Login;
 import java.net.URI;
 import javax.validation.Valid;
-import lombok.extern.java.Log;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

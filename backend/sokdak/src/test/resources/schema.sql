@@ -116,3 +116,4 @@ create table if not exists ticket
     used          boolean not null,
     primary key (ticket_id)
     );
+

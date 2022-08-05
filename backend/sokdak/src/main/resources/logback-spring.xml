@@ -69,7 +69,7 @@
 
         <logger name="com.wooteco.sokdak" level="ERROR">
             <appender-ref ref="FILE"/>
-            <appender-ref ref="ASYNC-SLACK-PROD"/>
+            <appender-ref ref="ASYNC-SLACK-PROD-ERROR"/>
         </logger>
 
         <logger name="org.springframework" level="INFO">
@@ -78,7 +78,7 @@
 
         <root level="ERROR">
             <appender-ref ref="FILE"/>
-            <appender-ref ref="ASYNC-PROD-ERROR"/>
+            <appender-ref ref="ASYNC-SLACK-PROD-ERROR"/>
         </root>
     </springProfile>
 </configuration>

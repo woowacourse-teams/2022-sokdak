@@ -2,7 +2,6 @@ package com.wooteco.sokdak.comment.domain;
 
 import com.wooteco.sokdak.auth.exception.AuthenticationException;
 import com.wooteco.sokdak.member.domain.Member;
-import com.wooteco.sokdak.member.domain.Nickname;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.report.domain.CommentReport;
 import com.wooteco.sokdak.report.exception.AlreadyReportCommentException;

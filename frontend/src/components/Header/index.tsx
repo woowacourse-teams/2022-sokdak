@@ -10,7 +10,6 @@ import * as Styled from './index.styles';
 
 import DropDownCaret from '@/assets/images/dropdown-caret.svg';
 import Logo from '@/assets/images/logo.svg';
-import Panda from '@/assets/images/panda_logo.svg';
 import PATH from '@/constants/path';
 
 import Dropdown from '../@shared/Dropdown';
@@ -37,7 +36,7 @@ const Header = () => {
             <Dropdown>
               <Dropdown.Trigger>
                 <Styled.AvatarContainer>
-                  <Panda />
+                  <Styled.Panda />
                   <DropDownCaret />
                 </Styled.AvatarContainer>
               </Dropdown.Trigger>

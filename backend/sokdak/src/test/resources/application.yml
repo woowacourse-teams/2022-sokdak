@@ -5,7 +5,7 @@ spring:
     username: sa
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true

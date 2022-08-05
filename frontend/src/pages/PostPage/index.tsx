@@ -65,10 +65,8 @@ const PostPage = () => {
   if (isError) {
     return (
       <Layout>
-        <Styled.SpinnerContainer>
-          <Spinner />
-        </Styled.SpinnerContainer>
         <Styled.ErrorContainer>
+          <Spinner />
           존재하지 않거나 삭제된 글입니다. <Styled.ListButton to={PATH.HOME}>메인 페이지로</Styled.ListButton>
         </Styled.ErrorContainer>
       </Layout>

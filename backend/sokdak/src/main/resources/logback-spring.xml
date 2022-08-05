@@ -23,6 +23,10 @@
         <logger name="org.hibernate.type.descriptor.sql.BasicExtractor" level="TRACE">
             <appender-ref ref="STDOUT"/>
         </logger>
+
+        <root level="INFO">
+            <appender-ref ref="STDOUT"/>
+        </root>
     </springProfile>
 
     <springProfile name="dev">
@@ -33,7 +37,7 @@
 
         <logger name="com.wooteco.sokdak" level="DEBUG">
             <appender-ref ref="FILE"/>
-            <appender-ref ref="ASYNC-SLACK-DEV"/>
+            <appender-ref ref="ASYNC-SLACK-DEV-WARN"/>
         </logger>
 
         <logger name="org.springframework" level="INFO">
@@ -51,6 +55,12 @@
         <logger name="org.hibernate.type.descriptor.sql.BasicExtractor" level="TRACE">
             <appender-ref ref="FILE-DB"/>
         </logger>
+
+        <root level="WARN">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ASYNC-SLACK-DEV-WARN"/>
+            <appender-ref ref="ASYNC-SLACK-DEV-ERROR"/>
+        </root>
     </springProfile>
 
     <springProfile name="prod">
@@ -65,5 +75,10 @@
         <logger name="org.springframework" level="INFO">
             <appender-ref ref="FILE"/>
         </logger>
+
+        <root level="ERROR">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ASYNC-PROD-ERROR"/>
+        </root>
     </springProfile>
 </configuration>

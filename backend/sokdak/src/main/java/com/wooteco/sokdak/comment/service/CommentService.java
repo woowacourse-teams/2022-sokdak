@@ -103,6 +103,7 @@ public class CommentService {
         return new CommentsResponse(commentResponses);
     }
 
+    @Transactional
     public void deleteComment(Long commentId, AuthInfo authInfo) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);

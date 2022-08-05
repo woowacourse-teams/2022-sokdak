@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 
+import PandaIcon from '@/assets/images/panda_logo.svg';
 import SearchIcon from '@/assets/images/search.svg';
 
 import { css } from '@emotion/react';
@@ -61,7 +62,7 @@ export const LoginLink = styled(Link)`
   color: ${props => props.theme.colors.gray_900};
   border: 1px solid black;
   border-radius: 8px;
-  margin-left: 5px;
+  margin-left: 4px;
 `;
 
 export const AvatarContainer = styled.div`
@@ -88,10 +89,15 @@ export const optionStyle = css`
 
 export const ProfileButton = styled.button`
   ${optionStyle}
-  color:${props => props.theme.colors.gray_150}
+  color: ${props => props.theme.colors.gray_150};
 `;
 
 export const LogoutButton = styled.button`
   ${optionStyle}
-  color:${props => props.theme.colors.red_100}
+  color: ${props => props.theme.colors.red_100};
+`;
+
+export const Panda = styled(PandaIcon)`
+  width: 30px;
+  height: 30px;
 `;

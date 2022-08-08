@@ -30,7 +30,8 @@ public class MemberService {
     }
 
     public UniqueResponse checkUniqueUsername(String username) {
-        boolean unique = !memberRepository.existsMemberByUsernameValue(username);
+        String hashedUsername = encryptor.encrypt(username);
+        boolean unique = !memberRepository.existsMemberByUsernameValue(hashedUsername);
         return new UniqueResponse(unique);
     }
 

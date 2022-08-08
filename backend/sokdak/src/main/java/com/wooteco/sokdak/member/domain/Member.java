@@ -19,8 +19,9 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-    @Embedded
-    private Username username;
+//    @Embedded
+//    private Username username;
+    private String username;
 
     @Embedded
     private Nickname nickname;
@@ -36,7 +37,7 @@ public class Member {
     @Builder
     public Member(Long id, String username, String password, String nickname) {
         this.id = id;
-        this.username = new Username(username);
+        this.username = username;
         this.password = password;
         this.nickname = new Nickname(nickname);
     }
@@ -46,7 +47,7 @@ public class Member {
     }
 
     public String getUsername() {
-        return username.getValue();
+        return username;
     }
 
     public String getNickname() {

@@ -35,7 +35,7 @@ class PostRepositoryTest extends RepositoryTest {
     @BeforeEach
     void setUp() {
         member = memberRepository
-                .findByUsernameValueAndPassword(VALID_USERNAME, VALID_ENCRYPTED_PASSWORD)
+                .findByUsernameAndPassword(VALID_USERNAME, VALID_ENCRYPTED_PASSWORD)
                 .get();
 
         post1 = Post.builder()

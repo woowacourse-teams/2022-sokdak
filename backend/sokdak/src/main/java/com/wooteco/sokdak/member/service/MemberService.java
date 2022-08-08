@@ -31,7 +31,7 @@ public class MemberService {
 
     public UniqueResponse checkUniqueUsername(String username) {
         String hashedUsername = encryptor.encrypt(username);
-        boolean unique = !memberRepository.existsMemberByUsernameValue(hashedUsername);
+        boolean unique = !memberRepository.existsMemberByUsername(hashedUsername);
         return new UniqueResponse(unique);
     }
 
@@ -45,7 +45,7 @@ public class MemberService {
         validate(signupRequest);
 
         Member member = Member.builder()
-                .username(signupRequest.getUsername())
+                .username(encryptor.encrypt(signupRequest.getUsername()))
                 .password(encryptor.encrypt(signupRequest.getPassword()))
                 .nickname(signupRequest.getNickname())
                 .build();
@@ -63,7 +63,7 @@ public class MemberService {
 
     private void validateUniqueUsername(SignupRequest signupRequest) {
         boolean isDuplicatedUsername = memberRepository
-                .existsMemberByUsernameValue(signupRequest.getUsername());
+                .existsMemberByUsername(encryptor.encrypt(signupRequest.getUsername()));
         if (isDuplicatedUsername) {
             throw new InvalidSignupFlowException();
         }

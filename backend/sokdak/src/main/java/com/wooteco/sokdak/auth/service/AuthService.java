@@ -40,7 +40,7 @@ public class AuthService {
     public AuthInfo login(LoginRequest loginRequest) {
         String username = loginRequest.getUsername();
         String password = encryptor.encrypt(loginRequest.getPassword());
-        Member member = memberRepository.findByUsernameValueAndPassword(username, password)
+        Member member = memberRepository.findByUsernameAndPassword(username, password)
                 .orElseThrow(LoginFailedException::new);
         return new AuthInfo(member.getId(), member.getRoleType().getName(), member.getNickname());
     }

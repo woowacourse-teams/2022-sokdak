@@ -19,18 +19,17 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final EmailService emailService;
     private final AuthService authService;
-    private final Encryptor encryptor;
 
     public MemberService(MemberRepository memberRepository, EmailService emailService,
-                         AuthService authService, Encryptor encryptor) {
+                         AuthService authService) {
         this.memberRepository = memberRepository;
         this.emailService = emailService;
         this.authService = authService;
-        this.encryptor = encryptor;
     }
 
     public UniqueResponse checkUniqueUsername(String username) {
-        boolean unique = !memberRepository.existsMemberByUsernameValue(username);
+        String hashedUsername = Encryptor.encrypt(username);
+        boolean unique = !memberRepository.existsMemberByUsernameValue(hashedUsername);
         return new UniqueResponse(unique);
     }
 
@@ -45,7 +44,7 @@ public class MemberService {
 
         Member member = Member.builder()
                 .username(signupRequest.getUsername())
-                .password(encryptor.encrypt(signupRequest.getPassword()))
+                .password(Encryptor.encrypt(signupRequest.getPassword()))
                 .nickname(signupRequest.getNickname())
                 .build();
         memberRepository.save(member);
@@ -62,7 +61,7 @@ public class MemberService {
 
     private void validateUniqueUsername(SignupRequest signupRequest) {
         boolean isDuplicatedUsername = memberRepository
-                .existsMemberByUsernameValue(signupRequest.getUsername());
+                .existsMemberByUsernameValue(Encryptor.encrypt(signupRequest.getUsername()));
         if (isDuplicatedUsername) {
             throw new InvalidSignupFlowException();
         }
@@ -83,7 +82,7 @@ public class MemberService {
     }
 
     private void validateSerialNumber(SignupRequest signupRequest) {
-        String serialNumber = encryptor.encrypt(signupRequest.getEmail());
+        String serialNumber = Encryptor.encrypt(signupRequest.getEmail());
         authService.validateSignUpMember(serialNumber);
     }
 

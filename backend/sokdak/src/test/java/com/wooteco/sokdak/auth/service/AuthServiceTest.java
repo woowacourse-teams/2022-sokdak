@@ -31,8 +31,6 @@ class AuthServiceTest extends IntegrationTest {
     @Autowired
     private AuthService authService;
     @Autowired
-    private Encryptor encryptor;
-    @Autowired
     private AuthCodeRepository authCodeRepository;
 
     @SpyBean
@@ -58,7 +56,7 @@ class AuthServiceTest extends IntegrationTest {
     void verifyAuthCode() {
         AuthCode authCode = AuthCode.builder()
                 .code(AUTH_CODE)
-                .serialNumber(encryptor.encrypt(EMAIL))
+                .serialNumber(Encryptor.encrypt(EMAIL))
                 .build();
         authCodeRepository.save(authCode);
 
@@ -71,7 +69,7 @@ class AuthServiceTest extends IntegrationTest {
     void verifyAuthCode_Exception_WrongAuthCode() {
         AuthCode authCode = AuthCode.builder()
                 .code(AUTH_CODE)
-                .serialNumber(encryptor.encrypt(EMAIL))
+                .serialNumber(Encryptor.encrypt(EMAIL))
                 .build();
         authCodeRepository.save(authCode);
 
@@ -85,7 +83,7 @@ class AuthServiceTest extends IntegrationTest {
     void verifyAuthCode_Exception_WrongEmail() {
         AuthCode authCode = AuthCode.builder()
                 .code(AUTH_CODE)
-                .serialNumber(encryptor.encrypt(EMAIL))
+                .serialNumber(Encryptor.encrypt(EMAIL))
                 .build();
         authCodeRepository.save(authCode);
 
@@ -99,7 +97,7 @@ class AuthServiceTest extends IntegrationTest {
     void verifyAuthCode_Exception_Expired() {
         AuthCode authCode = AuthCode.builder()
                 .code(AUTH_CODE)
-                .serialNumber(encryptor.encrypt(EMAIL))
+                .serialNumber(Encryptor.encrypt(EMAIL))
                 .build();
         authCodeRepository.save(authCode);
 

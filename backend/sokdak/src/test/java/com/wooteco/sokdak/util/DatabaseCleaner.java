@@ -48,22 +48,22 @@ public class DatabaseCleaner implements InitializingBean {
     public void insertInitialData() {
         // 멤버 추가
         entityManager.createNativeQuery(
-                "insert into member (username, nickname, password, role_type) values ('chris', 'chrisNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'USER');")
+                "insert into member (username, nickname, password, role_type) values ('5d7f15f2fce8ddb2dbef5c38be896c238ba7e0a432e396759030a853fa6b1151', 'chrisNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'USER');")
                 .executeUpdate();
         entityManager.createNativeQuery(
-                "insert into member (username, nickname, password, role_type) values ('testAdmin', 'adminNick', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');")
+                "insert into member (username, nickname, password, role_type) values ('5ef368722bf09031ced7372c90df64c99a750724ec6dff3e5cf00bb5fcf75c08', 'adminNick', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');")
                 .executeUpdate();
         entityManager.createNativeQuery(
-                "insert into member (username, nickname, password, role_type) values ('josh', 'joshNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');")
+                "insert into member (username, nickname, password, role_type) values ('386a85d8c88778b00b1355608363c7e3078857f3e9633cfd0802d3bf1c0b5b83', 'joshNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');")
                 .executeUpdate();
         entityManager.createNativeQuery(
-                "insert into member (username, nickname, password, role_type) values ('east', 'eastNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');")
+                "insert into member (username, nickname, password, role_type) values ('6bdb262b0201799aefb0ae4116c6fb88f549425e30cd85a7f75a06be246751cf', 'eastNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');")
                 .executeUpdate();
         entityManager.createNativeQuery(
-                "insert into member (username, nickname, password, role_type) values ('thor', 'thorNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');")
+                "insert into member (username, nickname, password, role_type) values ('7d445240c97cb8b39b22030981d77679608f91c7a4000e41a1794cde953a1846', 'thorNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');")
                 .executeUpdate();
         entityManager.createNativeQuery(
-                "insert into member (username, nickname, password, role_type) values ('hunch', 'hunchNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');")
+                "insert into member (username, nickname, password, role_type) values ('977ef51fa0b1154296309099ca189c7a4970ed2c0bd47dc9cf50606e4412c250', 'hunchNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'ADMIN');")
                 .executeUpdate();
 
         //티켓 추가

@@ -31,20 +31,15 @@ class EmailServiceTest extends IntegrationTest {
     private AuthCodeGenerator authCodeGenerator;
 
     @MockBean
-    private Encryptor encryptor;
-
-    @MockBean
     private EmailSender emailSender;
 
     @DisplayName("인증 코드 발송")
     @Test
     void sendCodeToValidUser() {
-        given(encryptor.encrypt("test@gmail.com"))
-                .willReturn("serialNumber");
         given(authCodeGenerator.generate())
                 .willReturn("a1b1c1");
         Ticket ticket = Ticket.builder()
-                .serialNumber("serialNumber")
+                .serialNumber(Encryptor.encrypt("test@gmail.com"))
                 .used(false)
                 .build();
         ticketRepository.save(ticket);

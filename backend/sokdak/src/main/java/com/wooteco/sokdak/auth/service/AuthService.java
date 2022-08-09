@@ -24,22 +24,20 @@ public class AuthService {
     private final AuthCodeRepository authCodeRepository;
     private final MemberRepository memberRepository;
     private final TicketRepository ticketRepository;
-    private final Encryptor encryptor;
     private final Clock clock;
 
     public AuthService(AuthCodeRepository authCodeRepository,
                        MemberRepository memberRepository,
-                       TicketRepository ticketRepository, Encryptor encryptor, Clock clock) {
+                       TicketRepository ticketRepository, Clock clock) {
         this.authCodeRepository = authCodeRepository;
         this.memberRepository = memberRepository;
         this.ticketRepository = ticketRepository;
-        this.encryptor = encryptor;
         this.clock = clock;
     }
 
     public AuthInfo login(LoginRequest loginRequest) {
-        String username = loginRequest.getUsername();
-        String password = encryptor.encrypt(loginRequest.getPassword());
+        String username = Encryptor.encrypt(loginRequest.getUsername());
+        String password = Encryptor.encrypt(loginRequest.getPassword());
         Member member = memberRepository.findByUsernameValueAndPassword(username, password)
                 .orElseThrow(LoginFailedException::new);
         return new AuthInfo(member.getId(), member.getRoleType().getName(), member.getNickname());
@@ -47,14 +45,14 @@ public class AuthService {
 
     @Transactional
     public void useTicket(String email) {
-        String serialNumber = encryptor.encrypt(email);
+        String serialNumber = Encryptor.encrypt(email);
         Ticket ticket = ticketRepository.findBySerialNumber(serialNumber)
                 .orElseThrow(SerialNumberNotFoundException::new);
         ticket.use();
     }
 
     public void verifyAuthCode(VerificationRequest verificationRequest) {
-        String serialNumber = encryptor.encrypt(verificationRequest.getEmail());
+        String serialNumber = Encryptor.encrypt(verificationRequest.getEmail());
         AuthCode authCode = authCodeRepository.findBySerialNumber(serialNumber)
                 .orElseThrow(SerialNumberNotFoundException::new);
         authCode.verify(verificationRequest.getCode());

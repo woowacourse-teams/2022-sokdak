@@ -33,8 +33,6 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
     @Autowired
     private AuthCodeRepository authCodeRepository;
-    @Autowired
-    private Encryptor encryptor;
 
     @SpyBean
     private Clock clock;
@@ -66,7 +64,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         String code = "ABCDEF";
         AuthCode authCode = AuthCode.builder()
                 .code(code)
-                .serialNumber(encryptor.encrypt(email))
+                .serialNumber(Encryptor.encrypt(email))
                 .build();
         authCodeRepository.save(authCode);
 
@@ -83,7 +81,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         String code = "ABCDEF";
         AuthCode authCode = AuthCode.builder()
                 .code(code)
-                .serialNumber(encryptor.encrypt(email))
+                .serialNumber(Encryptor.encrypt(email))
                 .build();
         authCodeRepository.save(authCode);
 
@@ -100,7 +98,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         String code = "ABCDEF";
         AuthCode authCode = AuthCode.builder()
                 .code(code)
-                .serialNumber(encryptor.encrypt(email))
+                .serialNumber(Encryptor.encrypt(email))
                 .build();
         authCodeRepository.save(authCode);
 
@@ -117,7 +115,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         String code = "ABCDEF";
         AuthCode authCode = AuthCode.builder()
                 .code(code)
-                .serialNumber(encryptor.encrypt(email))
+                .serialNumber(Encryptor.encrypt(email))
                 .build();
         authCodeRepository.save(authCode);
 

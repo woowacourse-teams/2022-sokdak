@@ -1,8 +1,21 @@
 package com.wooteco.sokdak.post.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.ReportFixture.*;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.*;
-import static com.wooteco.sokdak.util.fixture.PostFixture.*;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getExceptionMessage;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.PostFixture.BOARD_ID_POST_CREATED;
+import static com.wooteco.sokdak.util.fixture.PostFixture.CANNOT_CREATE_POST_URI;
+import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
+import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST;
+import static com.wooteco.sokdak.util.fixture.PostFixture.UPDATED_POST_CONTENT;
+import static com.wooteco.sokdak.util.fixture.PostFixture.UPDATED_POST_TITLE;
+import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
+import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
+import static com.wooteco.sokdak.util.fixture.PostFixture.addPostAndGetPostId;
+import static com.wooteco.sokdak.util.fixture.ReportFixture.getTokensForReport;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -88,7 +101,7 @@ class PostAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("특정 게시판의 게시글을 조회할때 누적신고 5개 이상인 게시글은 block된다.")
+    @DisplayName("특정 게시판의 게시글 목록을 조회할때 누적신고 5개 이상인 게시글은 block된다.")
     @Test
     void findPosts_Block() {
         Long blockedPostId = addPostAndGetPostId();
@@ -109,7 +122,32 @@ class PostAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(postsElementResponses.get(0).isBlocked()).isFalse(),
-                () -> assertThat(postsElementResponses.get(1).isBlocked()).isTrue()
+                () -> assertThat(postsElementResponses.get(1).isBlocked()).isTrue(),
+                () -> assertThat(postsElementResponses.get(1).getTitle()).isEqualTo("블라인드 처리된 글입니다"),
+                () -> assertThat(postsElementResponses.get(1).getContent()).isEqualTo("블라인드 처리된 글입니다")
+        );
+    }
+
+    @DisplayName("특정 게시글을 조회할때 누적신고 5개 이상인 게시글은 block된다.")
+    @Test
+    void findPost_Block() {
+        Long blockedPostId = addPostAndGetPostId();
+        List<String> tokens = getTokensForReport();
+        for (int i = 0; i < 5; ++i) {
+            ReportRequest reportRequest = new ReportRequest("신고");
+            httpPostWithAuthorization(reportRequest, "/posts/" + blockedPostId + "/report", tokens.get(i));
+        }
+
+        ExtractableResponse<Response> response = httpGet(
+                "/posts/" + blockedPostId);
+        PostDetailResponse postDetailResponse = response
+                .jsonPath()
+                .getObject(".", PostDetailResponse.class);
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(postDetailResponse.isBlocked()).isTrue(),
+                () -> assertThat(postDetailResponse.getTitle()).isEqualTo("블라인드 처리된 글입니다"),
+                () -> assertThat(postDetailResponse.getContent()).isEqualTo("블라인드 처리된 글입니다")
         );
     }
 

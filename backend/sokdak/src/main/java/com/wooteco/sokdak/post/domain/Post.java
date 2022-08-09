@@ -138,10 +138,16 @@ public class Post {
     }
 
     public String getTitle() {
+        if (isBlocked()) {
+            return "블라인드 처리된 글입니다";
+        }
         return title.getValue();
     }
 
     public String getContent() {
+        if (isBlocked()) {
+            return "블라인드 처리된 글입니다";
+        }
         return content.getValue();
     }
 

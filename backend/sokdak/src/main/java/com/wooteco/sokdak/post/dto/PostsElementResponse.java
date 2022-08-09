@@ -31,7 +31,7 @@ public class PostsElementResponse {
     }
 
     public static PostsElementResponse from(Post post) {
-        PostsElementResponse postsElementResponse = PostsElementResponse.builder()
+        return PostsElementResponse.builder()
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
@@ -41,15 +41,5 @@ public class PostsElementResponse {
                 .modified(post.isModified())
                 .blocked(post.isBlocked())
                 .build();
-
-        if (postsElementResponse.isBlocked()) {
-            postsElementResponse.blind();
-        }
-        return postsElementResponse;
-    }
-
-    private void blind() {
-        this.title = "블라인드 처리된 글입니다";
-        this.content = "블라인드 처리된 글입니다";
     }
 }

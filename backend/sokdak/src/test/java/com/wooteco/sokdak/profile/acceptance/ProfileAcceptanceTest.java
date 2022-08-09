@@ -14,14 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.auth.dto.LoginRequest;
-import com.wooteco.sokdak.profile.dto.NicknameResponse;
-import com.wooteco.sokdak.profile.dto.NicknameUpdateRequest;
-import com.wooteco.sokdak.util.AcceptanceTest;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
-import com.wooteco.sokdak.profile.dto.EditedNicknameRequest;
 import com.wooteco.sokdak.profile.dto.MyPostsResponse;
 import com.wooteco.sokdak.profile.dto.NicknameResponse;
+import com.wooteco.sokdak.profile.dto.NicknameUpdateRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -31,6 +26,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 public class ProfileAcceptanceTest extends AcceptanceTest {
+
+    private static final String WRONG_PAGE = "5";
 
     @DisplayName("닉네임을 수정할 수 있다.")
     @Test
@@ -91,7 +88,7 @@ public class ProfileAcceptanceTest extends AcceptanceTest {
         httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, token);
         httpPostWithAuthorization(NEW_POST_REQUEST2, CREATE_POST_URI, token);
 
-        ExtractableResponse<Response> response = httpGetWithAuthorization("/posts/me?size=3&page=5", token);
+        ExtractableResponse<Response> response = httpGetWithAuthorization("/posts/me?size=3&page=" + WRONG_PAGE, token);
         MyPostsResponse postsResponse = toMyPostsResponse(response);
 
         assertAll(

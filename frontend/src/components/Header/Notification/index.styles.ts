@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import NotificationImg from '@/assets/images/notification-icon.svg';
 
 import styled from '@emotion/styled';
@@ -8,9 +10,10 @@ export const NotificationIcon = styled(NotificationImg)`
   position: relative;
 `;
 
-export const NotificationContainer = styled.div`
+export const NotificationContainer = styled(Link)`
   width: fit-content;
   position: relative;
+  transform: translateY(5%);
 `;
 
 export const AlarmPointer = styled.div`

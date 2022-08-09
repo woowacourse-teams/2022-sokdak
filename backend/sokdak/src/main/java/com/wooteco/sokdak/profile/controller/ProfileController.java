@@ -29,7 +29,7 @@ public class ProfileController {
         return ResponseEntity.ok(nicknameResponse);
     }
 
-    @PatchMapping ("/members/nickname")
+    @PatchMapping("/members/nickname")
     public ResponseEntity<Void> editNickname(@RequestBody NicknameUpdateRequest nicknameUpdateRequest,
                                              @Login AuthInfo authInfo) {
         profileService.editNickname(nicknameUpdateRequest, authInfo);

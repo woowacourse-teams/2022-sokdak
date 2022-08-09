@@ -8,8 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.auth.dto.LoginRequest;
-import com.wooteco.sokdak.profile.dto.NicknameUpdateRequest;
 import com.wooteco.sokdak.profile.dto.NicknameResponse;
+import com.wooteco.sokdak.profile.dto.NicknameUpdateRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -24,16 +24,14 @@ public class ProfileAcceptanceTest extends AcceptanceTest {
     void editNickname() {
         String nickname = "chrisNick2";
         NicknameUpdateRequest nicknameRequest = new NicknameUpdateRequest(nickname);
+        String token = getToken();
 
-        ExtractableResponse<Response> patchWithAuthorization = httpPatchWithAuthorization(nicknameRequest,
-                "/members/nickname", getToken());
-        ExtractableResponse<Response> getWithAuthorization = httpGetWithAuthorization("/members/nickname", getToken());
+        ExtractableResponse<Response> response = httpPatchWithAuthorization(nicknameRequest,
+                "/members/nickname", token);
+        NicknameResponse nicknameResponse = toNicknameResponse(httpGetWithAuthorization("/members/nickname", token));
 
-        NicknameResponse nicknameResponse = getWithAuthorization.body()
-                .jsonPath()
-                .getObject(".", NicknameResponse.class);
         assertAll(
-                () -> assertThat(patchWithAuthorization.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
                 () -> assertThat(nicknameResponse.getNickname()).isEqualTo(nickname)
         );
     }
@@ -42,16 +40,14 @@ public class ProfileAcceptanceTest extends AcceptanceTest {
     @Test
     void editNickname_Exception_Duplicate() {
         NicknameUpdateRequest wrongNicknameRequest = new NicknameUpdateRequest("eastNickname");
+        String token = getToken();
 
-        ExtractableResponse<Response> patchWithAuthorization = httpPatchWithAuthorization(wrongNicknameRequest,
-                "/members/nickname", getToken());
-        ExtractableResponse<Response> getWithAuthorization = httpGetWithAuthorization("/members/nickname", getToken());
+        ExtractableResponse<Response> response = httpPatchWithAuthorization(wrongNicknameRequest,
+                "/members/nickname", token);
+        NicknameResponse nicknameResponse = toNicknameResponse(httpGetWithAuthorization("/members/nickname", token));
 
-        NicknameResponse nicknameResponse = getWithAuthorization.body()
-                .jsonPath()
-                .getObject(".", NicknameResponse.class);
         assertAll(
-                () -> assertThat(patchWithAuthorization.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
                 () -> assertThat(nicknameResponse.getNickname()).isEqualTo("chrisNickname")
         );
     }
@@ -59,5 +55,11 @@ public class ProfileAcceptanceTest extends AcceptanceTest {
     private String getToken() {
         LoginRequest loginRequest = new LoginRequest("chris", "Abcd123!@");
         return httpPost(loginRequest, "/login").header(AUTHORIZATION);
+    }
+
+    private NicknameResponse toNicknameResponse(ExtractableResponse<Response> getWithAuthorization) {
+        return getWithAuthorization.body()
+                .jsonPath()
+                .getObject(".", NicknameResponse.class);
     }
 }

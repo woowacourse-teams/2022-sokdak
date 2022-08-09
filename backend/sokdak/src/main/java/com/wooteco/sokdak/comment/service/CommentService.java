@@ -11,6 +11,7 @@ import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
+import com.wooteco.sokdak.notification.service.NotificationService;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
@@ -28,13 +29,14 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
+    private final NotificationService notificationService;
 
-    public CommentService(CommentRepository commentRepository,
-                          MemberRepository memberRepository,
-                          PostRepository postRepository) {
+    public CommentService(CommentRepository commentRepository, MemberRepository memberRepository,
+                          PostRepository postRepository, NotificationService notificationService) {
         this.commentRepository = commentRepository;
         this.memberRepository = memberRepository;
         this.postRepository = postRepository;
+        this.notificationService = notificationService;
     }
 
     @Transactional
@@ -53,6 +55,7 @@ public class CommentService {
                 .build();
 
         Comment savedComment = commentRepository.save(comment);
+        notificationService.notifyNewComment(post.getMember(), post, comment.getMessage());
         return savedComment.getId();
     }
 

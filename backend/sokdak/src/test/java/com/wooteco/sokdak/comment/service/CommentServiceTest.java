@@ -1,8 +1,10 @@
 package com.wooteco.sokdak.comment.service;
 
 import static com.wooteco.sokdak.member.domain.RoleType.USER;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.*;
-import static com.wooteco.sokdak.util.fixture.PostFixture.*;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO2;
+import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
+import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -14,9 +16,9 @@ import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.member.domain.Member;
-import com.wooteco.sokdak.member.domain.Nickname;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
+import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.util.IntegrationTest;
@@ -40,6 +42,9 @@ class CommentServiceTest extends IntegrationTest {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     private Post anonymousPost;
     private Post identifiedPost;
@@ -79,7 +84,8 @@ class CommentServiceTest extends IntegrationTest {
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
                 () -> assertThat(foundComment.getMember()).isEqualTo(member),
-                () -> assertThat(foundComment.getNickname()).isEqualTo(member.getNickname())
+                () -> assertThat(foundComment.getNickname()).isEqualTo(member.getNickname()),
+                () -> assertNewNotification(foundComment)
         );
     }
 
@@ -94,7 +100,8 @@ class CommentServiceTest extends IntegrationTest {
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
                 () -> assertThat(foundComment.getMember()).isEqualTo(member),
-                () -> assertThat(foundComment.getNickname()).isEqualTo(member.getNickname())
+                () -> assertThat(foundComment.getNickname()).isEqualTo(member.getNickname()),
+                () -> assertNewNotification(foundComment)
         );
     }
 
@@ -109,7 +116,8 @@ class CommentServiceTest extends IntegrationTest {
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
                 () -> assertThat(foundComment.getMember()).isEqualTo(member2),
-                () -> assertThat(foundComment.getNickname()).isEqualTo(member2.getNickname())
+                () -> assertThat(foundComment.getNickname()).isEqualTo(member2.getNickname()),
+                () -> assertNewNotification(foundComment)
         );
     }
 
@@ -124,7 +132,8 @@ class CommentServiceTest extends IntegrationTest {
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
                 () -> assertThat(foundComment.getMember()).isEqualTo(member),
-                () -> assertThat(foundComment.getNickname()).isEqualTo(randomNickname)
+                () -> assertThat(foundComment.getNickname()).isEqualTo(randomNickname),
+                () -> assertNewNotification(foundComment)
         );
     }
 
@@ -139,7 +148,8 @@ class CommentServiceTest extends IntegrationTest {
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
                 () -> assertThat(foundComment.getMember()).isEqualTo(member),
-                () -> assertThat(foundComment.getNickname()).isNotEqualTo(member.getNickname())
+                () -> assertThat(foundComment.getNickname()).isNotEqualTo(member.getNickname()),
+                () -> assertNewNotification(foundComment)
         );
     }
 
@@ -154,7 +164,8 @@ class CommentServiceTest extends IntegrationTest {
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
                 () -> assertThat(foundComment.getMember()).isEqualTo(member2),
-                () -> assertThat(foundComment.getNickname()).isNotEqualTo(anonymousPost.getNickname())
+                () -> assertThat(foundComment.getNickname()).isNotEqualTo(anonymousPost.getNickname()),
+                () -> assertNewNotification(foundComment)
         );
     }
 
@@ -169,7 +180,8 @@ class CommentServiceTest extends IntegrationTest {
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
                 () -> assertThat(foundComment.getMember()).isEqualTo(member),
-                () -> assertThat(foundComment.getNickname()).isIn(RandomNicknameGenerator.RANDOM_NICKNAMES)
+                () -> assertThat(foundComment.getNickname()).isIn(RandomNicknameGenerator.RANDOM_NICKNAMES),
+                () -> assertNewNotification(foundComment)
         );
     }
 
@@ -187,6 +199,12 @@ class CommentServiceTest extends IntegrationTest {
                 () -> assertThat(firstComment.getNickname()).isEqualTo(secondComment.getNickname()),
                 () -> assertThat(anonymousPost.getNickname()).isEqualTo(firstComment.getNickname())
         );
+    }
+
+    private void assertNewNotification(Comment comment) {
+        Post post = comment.getPost();
+        boolean newNotification = notificationRepository.existsByMemberIdAndInquiredIsFalse(post.getMember().getId());
+        assertThat(newNotification).isTrue();
     }
 
     @DisplayName("특정 게시물의 달린 댓글을 가져옴")

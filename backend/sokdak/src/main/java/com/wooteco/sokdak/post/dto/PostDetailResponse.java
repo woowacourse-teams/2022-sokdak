@@ -35,10 +35,10 @@ public class PostDetailResponse {
                                boolean like, boolean authorized, boolean modified) {
         this.id = id;
         this.boardId = boardId;
+        this.blocked = blocked;
         this.nickname = nickname;
         this.title = title;
         this.content = content;
-        this.blocked = blocked;
         this.hashtags = hashtagResponses;
         this.createdAt = createdAt;
         this.likeCount = likeCount;
@@ -50,7 +50,7 @@ public class PostDetailResponse {
 
     public static PostDetailResponse of(Post post, PostBoard postBoard, boolean liked,
                                         boolean authorized, Hashtags hashtags) {
-        return PostDetailResponse.builder()
+        PostDetailResponse postDetailResponse = PostDetailResponse.builder()
                 .id(post.getId())
                 .boardId(postBoard.getBoard().getId())
                 .nickname(post.getNickname())
@@ -64,6 +64,16 @@ public class PostDetailResponse {
                 .hashtagResponses(toResponse(hashtags))
                 .modified(post.isModified())
                 .build();
+
+        if (post.isBlocked()) {
+            postDetailResponse.blind();
+        }
+        return postDetailResponse;
+    }
+
+    private void blind() {
+        this.title = "블라인드 처리된 글입니다";
+        this.content = "블라인드 처리된 글입니다";
     }
 
     private static List<HashtagResponse> toResponse(Hashtags hashtags) {

@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.member.repository;
 
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.Nickname;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +12,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsMemberByUsernameValue(String username);
 
     boolean existsMemberByNicknameValue(String nickname);
+
+    boolean existsMemberByNickname(Nickname nickname);
 
     Optional<Member> findByUsernameValueAndPassword(String username, String password);
 

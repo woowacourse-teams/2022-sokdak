@@ -78,7 +78,7 @@ operation::login/fail[snippets='http-request,http-response']
 operation::logout/success[snippets='http-request,http-response']
 
 === 리프레시
-리프레시 관련 컨트롤러 테스트 구현 필요
+operation::refresh/success[snippets='http-request,http-response']
 
 == 게시판 관리
 

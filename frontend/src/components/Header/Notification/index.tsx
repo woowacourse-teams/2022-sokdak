@@ -1,22 +1,17 @@
-import { useEffect, useRef, useState } from 'react';
+import useNotificationExists from '@/hooks/queries/notification/useNotificationExists';
 
 import * as Styled from './index.styles';
 
 const Notification = () => {
-  const timer = useRef<NodeJS.Timer>();
-  const [state, setState] = useState(false);
-  useEffect(() => {
-    timer.current = setInterval(() => {
-      setState(prev => !prev);
-    }, 30000);
+  const { data: isExists } = useNotificationExists({
+    options: {
+      refetchInterval: 30000,
+    },
+  });
 
-    return () => {
-      clearInterval(timer.current);
-    };
-  }, []);
   return (
-    <Styled.NotificationContainer>
-      {state && <Styled.AlarmPointer />}
+    <Styled.NotificationContainer to={'/notification'}>
+      {isExists && <Styled.AlarmPointer />}
       <Styled.NotificationIcon />
     </Styled.NotificationContainer>
   );

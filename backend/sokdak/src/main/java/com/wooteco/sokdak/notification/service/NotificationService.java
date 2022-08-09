@@ -7,9 +7,11 @@ import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_REPLY;
 import static com.wooteco.sokdak.notification.domain.NotificationType.POST_REPORT;
 import static com.wooteco.sokdak.notification.domain.NotificationType.REPLY_REPORT;
 
+import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.notification.domain.Notification;
 import com.wooteco.sokdak.notification.domain.NotificationType;
+import com.wooteco.sokdak.notification.dto.NewNotificationCheckResponse;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import org.springframework.stereotype.Service;
@@ -57,5 +59,10 @@ public class NotificationService {
                 .content(content)
                 .build();
         notificationRepository.save(notification);
+    }
+
+    public NewNotificationCheckResponse checkNewNotification(AuthInfo authInfo) {
+        return new NewNotificationCheckResponse(
+                notificationRepository.existsByMemberIdAndInquiredIsFalse(authInfo.getId()));
     }
 }

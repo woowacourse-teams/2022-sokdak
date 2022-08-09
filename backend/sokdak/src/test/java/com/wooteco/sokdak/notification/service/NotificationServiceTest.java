@@ -6,15 +6,18 @@ import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_COMMEN
 import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_REPLY;
 import static com.wooteco.sokdak.notification.domain.NotificationType.POST_REPORT;
 import static com.wooteco.sokdak.notification.domain.NotificationType.REPLY_REPORT;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.notification.domain.Notification;
+import com.wooteco.sokdak.notification.dto.NewNotificationCheckResponse;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
@@ -23,6 +26,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 class NotificationServiceTest extends IntegrationTest {
@@ -161,5 +166,17 @@ class NotificationServiceTest extends IntegrationTest {
                 () -> assertThat(notification.getContent()).isNull(),
                 () -> assertThat(notification.isInquired()).isFalse()
         );
+    }
+
+    @DisplayName("새로 등록된 알림이 있는지 반환한다.")
+    @ParameterizedTest
+    @CsvSource({"1, true", "2, false"})
+    void existsNewNotification(Long memberId, boolean expected) {
+        notificationService.notifyPostReport(member, post);
+        AuthInfo authInfo = new AuthInfo(memberId, "USER", VALID_NICKNAME);
+
+        NewNotificationCheckResponse newNotificationCheckResponse = notificationService.checkNewNotification(authInfo);
+
+        assertThat(newNotificationCheckResponse.isExistence()).isEqualTo(expected);
     }
 }

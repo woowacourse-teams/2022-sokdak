@@ -18,6 +18,8 @@ import com.wooteco.sokdak.member.controller.MemberController;
 import com.wooteco.sokdak.member.service.EmailSender;
 import com.wooteco.sokdak.member.service.EmailService;
 import com.wooteco.sokdak.member.service.MemberService;
+import com.wooteco.sokdak.notification.controller.NotificationController;
+import com.wooteco.sokdak.notification.service.NotificationService;
 import com.wooteco.sokdak.post.controller.PostController;
 import com.wooteco.sokdak.post.service.PostService;
 import com.wooteco.sokdak.report.controller.CommentReportController;
@@ -47,7 +49,8 @@ import org.springframework.web.context.WebApplicationContext;
         PostReportController.class,
         CommentReportController.class,
         BoardController.class,
-        HashtagController.class
+        HashtagController.class,
+        NotificationController.class
 })
 @ExtendWith(RestDocumentationExtension.class)
 public class ControllerTest {
@@ -86,6 +89,9 @@ public class ControllerTest {
 
     @MockBean
     protected HashtagService hashtagService;
+
+    @MockBean
+    protected NotificationService notificationService;
 
     @MockBean
     protected TokenManager tokenManager;

@@ -9,7 +9,7 @@ const useNotificationExists = ({
 }: {
   options?: Omit<
     UseQueryOptions<
-      AxiosResponse<{ exists: boolean }>,
+      AxiosResponse<{ existence: boolean }>,
       AxiosError<{ message: string }>,
       boolean,
       'notification-exists'
@@ -17,8 +17,8 @@ const useNotificationExists = ({
     'queryKey' | 'queryFn'
   >;
 }) =>
-  useQuery('notification-exists', () => authFetcher.get('/notifications/exists'), {
-    select: data => data.data.exists,
+  useQuery('notification-exists', () => authFetcher.get('/notifications/check'), {
+    select: data => data.data.existence,
     ...options,
   });
 

@@ -9,6 +9,7 @@ const QUERY_KEYS = {
   HASHTAGS: 'hashtags',
   BOARDS: 'boards',
   LOGOUT: 'logout',
+  NOTIFICATION_EXISTS: 'notification-exists',
 };
 
 export const MUTATION_KEY = {

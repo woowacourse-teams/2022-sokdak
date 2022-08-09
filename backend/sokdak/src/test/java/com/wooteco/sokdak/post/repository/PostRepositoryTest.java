@@ -5,6 +5,7 @@ import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.wooteco.sokdak.auth.service.Encryptor;
 import com.wooteco.sokdak.config.JPAConfig;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
@@ -35,7 +36,7 @@ class PostRepositoryTest extends RepositoryTest {
     @BeforeEach
     void setUp() {
         member = memberRepository
-                .findByUsernameAndPassword(VALID_USERNAME, VALID_ENCRYPTED_PASSWORD)
+                .findByUsernameValueAndPassword(Encryptor.encrypt(VALID_USERNAME), VALID_ENCRYPTED_PASSWORD)
                 .get();
 
         post1 = Post.builder()

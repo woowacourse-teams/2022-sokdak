@@ -8,11 +8,11 @@ import org.springframework.data.repository.query.Param;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    boolean existsMemberByUsername(String username);
+    boolean existsMemberByUsernameValue(String username);
 
     boolean existsMemberByNicknameValue(String nickname);
 
-    Optional<Member> findByUsernameAndPassword(String username, String password);
+    Optional<Member> findByUsernameValueAndPassword(String username, String password);
 
     Optional<Member> findById(Long id);
 

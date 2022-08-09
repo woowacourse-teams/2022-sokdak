@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.member.domain;
 
 import com.wooteco.sokdak.auth.service.Encryptor;
+import com.wooteco.sokdak.member.exception.InvalidPasswordFormatException;
 import com.wooteco.sokdak.member.exception.InvalidUsernameException;
 import java.util.regex.Pattern;
 import javax.persistence.Column;
@@ -27,7 +28,7 @@ public class Password {
 
     private void validate(String value) {
         if (!PATTERN.matcher(value).matches()) {
-            throw new InvalidUsernameException();
+            throw new InvalidPasswordFormatException();
         }
     }
 }

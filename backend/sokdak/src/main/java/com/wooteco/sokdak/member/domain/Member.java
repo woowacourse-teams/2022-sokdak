@@ -25,7 +25,8 @@ public class Member {
     @Embedded
     private Nickname nickname;
 
-    private String password;
+    @Embedded
+    private Password password;
 
     @Enumerated(EnumType.STRING)
     private RoleType roleType = RoleType.USER;
@@ -37,7 +38,7 @@ public class Member {
     public Member(Long id, String username, String password, String nickname) {
         this.id = id;
         this.username = new Username(username);
-        this.password = password;
+        this.password = new Password(password);
         this.nickname = new Nickname(nickname);
     }
 
@@ -54,7 +55,7 @@ public class Member {
     }
 
     public String getPassword() {
-        return password;
+        return password.getValue();
     }
 
     public RoleType getRoleType() {

@@ -28,9 +28,10 @@ public class HttpMethodFixture {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> httpGetWithAuthorization(String path) {
+    public static ExtractableResponse<Response> httpGetWithAuthorization(String path, String token) {
         return RestAssured
                 .given().log().all()
+                .header(AUTHORIZATION, token)
                 .when().get(path)
                 .then().log().all()
                 .extract();
@@ -65,6 +66,18 @@ public class HttpMethodFixture {
                 .given().log().all()
                 .header(AUTHORIZATION, token)
                 .when().put(path)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> httpPatchWithAuthorization(
+            Object requestBody, String path, String token) {
+        return RestAssured
+                .given().log().all()
+                .header(AUTHORIZATION, token)
+                .body(requestBody)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().patch(path)
                 .then().log().all()
                 .extract();
     }

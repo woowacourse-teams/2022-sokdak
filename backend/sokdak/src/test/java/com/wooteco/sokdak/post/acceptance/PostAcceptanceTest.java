@@ -88,7 +88,7 @@ class PostAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("특정 게시판의 게시글을 조회할때 누적신고 5개 이상인 게시글은 block된다.")
+    @DisplayName("특정 게시판의 게시글 목록을 조회할때 누적신고 5개 이상인 게시글은 block된다.")
     @Test
     void findPosts_Block() {
         Long blockedPostId = addPostAndGetPostId();
@@ -109,7 +109,32 @@ class PostAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(postsElementResponses.get(0).isBlocked()).isFalse(),
-                () -> assertThat(postsElementResponses.get(1).isBlocked()).isTrue()
+                () -> assertThat(postsElementResponses.get(1).isBlocked()).isTrue(),
+                () -> assertThat(postsElementResponses.get(1).getTitle()).isEqualTo("블라인드 처리된 글입니다"),
+                () -> assertThat(postsElementResponses.get(1).getContent()).isEqualTo("블라인드 처리된 글입니다")
+        );
+    }
+
+    @DisplayName("특정 게시글을 조회할때 누적신고 5개 이상인 게시글은 block된다.")
+    @Test
+    void findPost_Block() {
+        Long blockedPostId = addPostAndGetPostId();
+        List<String> tokens = getTokensForReport();
+        for (int i = 0; i < 5; ++i) {
+            ReportRequest reportRequest = new ReportRequest("신고");
+            httpPostWithAuthorization(reportRequest, "/posts/" + blockedPostId + "/report", tokens.get(i));
+        }
+
+        ExtractableResponse<Response> response = httpGet(
+                "/posts/" + blockedPostId);
+        PostDetailResponse postDetailResponse = response
+                .jsonPath()
+                .getObject(".", PostDetailResponse.class);
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(postDetailResponse.isBlocked()).isTrue(),
+                () -> assertThat(postDetailResponse.getTitle()).isEqualTo("블라인드 처리된 글입니다"),
+                () -> assertThat(postDetailResponse.getContent()).isEqualTo("블라인드 처리된 글입니다")
         );
     }
 

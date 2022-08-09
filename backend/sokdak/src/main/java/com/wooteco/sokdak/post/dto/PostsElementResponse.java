@@ -8,14 +8,14 @@ import lombok.Getter;
 @Getter
 public class PostsElementResponse {
 
-    private final Long id;
-    private final String title;
-    private final String content;
-    private final LocalDateTime createdAt;
-    private final int likeCount;
-    private final int commentCount;
-    private final boolean modified;
-    private final boolean blocked;
+    private Long id;
+    private String title;
+    private String content;
+    private LocalDateTime createdAt;
+    private int likeCount;
+    private int commentCount;
+    private boolean modified;
+    private boolean blocked;
 
     @Builder
     private PostsElementResponse(Long id, String title, String content, LocalDateTime createdAt,

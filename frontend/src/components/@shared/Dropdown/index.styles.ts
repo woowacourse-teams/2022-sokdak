@@ -13,6 +13,7 @@ export const DropdownTrigger = styled.button`
   background-color: transparent;
   margin: auto;
   overflow: hidden;
+  padding: 0;
 `;
 
 export const DropdownList = styled.ul`

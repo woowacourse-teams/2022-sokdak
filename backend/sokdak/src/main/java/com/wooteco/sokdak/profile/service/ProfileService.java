@@ -28,10 +28,14 @@ public class ProfileService {
                 .orElseThrow(MemberNotFoundException::new);
 
         Nickname validNickname = new Nickname(nicknameUpdateRequest.getNickname());
+        validateUniqueNickname(validNickname);
+        member.updateNickname(validNickname);
+    }
+
+    private void validateUniqueNickname(Nickname validNickname) {
         if (memberRepository.existsMemberByNickname(validNickname)) {
             throw new DuplicateNicknameException();
         }
-        member.updateNickname(validNickname);
     }
 
     public NicknameResponse findNickname(AuthInfo authInfo) {

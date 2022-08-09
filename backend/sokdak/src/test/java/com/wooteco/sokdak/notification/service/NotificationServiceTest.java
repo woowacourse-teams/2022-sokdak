@@ -135,7 +135,7 @@ class NotificationServiceTest extends IntegrationTest {
     @DisplayName("게시글이 핫 게시판으로 이동했다는 알림을 등록한다.")
     @Test
     void notifyHotBoard() {
-        notificationService.notifyHotBoard(member, post);
+        notificationService.notifyHotBoard(post);
 
         List<Notification> notifications = notificationRepository.findByMemberId(member.getId());
         Notification notification = notifications.get(0);
@@ -153,7 +153,7 @@ class NotificationServiceTest extends IntegrationTest {
     @DisplayName("게시글 신고 알림을 등록한다.")
     @Test
     void notifyPostReport() {
-        notificationService.notifyPostReport(member, post);
+        notificationService.notifyPostReport(post);
 
         List<Notification> notifications = notificationRepository.findByMemberId(member.getId());
         Notification notification = notifications.get(0);
@@ -172,7 +172,7 @@ class NotificationServiceTest extends IntegrationTest {
     @ParameterizedTest
     @CsvSource({"1, true", "2, false"})
     void existsNewNotification(Long memberId, boolean expected) {
-        notificationService.notifyPostReport(member, post);
+        notificationService.notifyPostReport(post);
         AuthInfo authInfo = new AuthInfo(memberId, "USER", VALID_NICKNAME);
 
         NewNotificationCheckResponse newNotificationCheckResponse = notificationService.checkNewNotification(authInfo);

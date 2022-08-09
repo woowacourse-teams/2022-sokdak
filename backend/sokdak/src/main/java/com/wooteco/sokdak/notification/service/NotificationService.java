@@ -43,12 +43,12 @@ public class NotificationService {
         notify(member, post, content, REPLY_REPORT);
     }
 
-    public void notifyHotBoard(Member member, Post post) {
-        notify(member, post, null, HOT_BOARD);
+    public void notifyHotBoard(Post post) {
+        notify(post.getMember(), post, null, HOT_BOARD);
     }
 
-    public void notifyPostReport(Member member, Post post) {
-        notify(member, post, null, POST_REPORT);
+    public void notifyPostReport(Post post) {
+        notify(post.getMember(), post, null, POST_REPORT);
     }
 
     private void notify(Member member, Post post, String content, NotificationType notificationType) {

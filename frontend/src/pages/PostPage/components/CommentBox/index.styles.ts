@@ -4,6 +4,9 @@ export const Container = styled.div`
   width: calc(100%-1em);
   padding: 1em 0.5em;
   border-top: 0.5px solid ${props => props.theme.colors.gray_150};
+  border-bottom: 0.5px solid ${props => props.theme.colors.gray_150};
+  margin-bottom: -0.5px;
+  background-color: white;
 `;
 
 export const BlockContainer = styled.div`
@@ -25,6 +28,14 @@ export const CommentHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1em;
+`;
+
+export const ButtonContainer = styled.div``;
+
+export const ReplyButton = styled.button`
+  background-color: transparent;
+  color: ${props => props.theme.colors.gray_200};
+  font-size: 0.6rem;
 `;
 
 export const DeleteButton = styled.button`

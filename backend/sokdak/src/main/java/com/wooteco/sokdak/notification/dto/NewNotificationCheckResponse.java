@@ -5,7 +5,10 @@ import lombok.Getter;
 @Getter
 public class NewNotificationCheckResponse {
 
-    private final boolean existence;
+    private boolean existence;
+
+    public NewNotificationCheckResponse() {
+    }
 
     public NewNotificationCheckResponse(boolean existence) {
         this.existence = existence;

@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.auth.dto.LoginRequest;
-import com.wooteco.sokdak.profile.dto.EditedNicknameRequest;
+import com.wooteco.sokdak.profile.dto.NicknameUpdateRequest;
 import com.wooteco.sokdak.profile.dto.NicknameResponse;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
@@ -23,7 +23,7 @@ public class ProfileAcceptanceTest extends AcceptanceTest {
     @Test
     void editNickname() {
         String nickname = "chrisNick2";
-        EditedNicknameRequest nicknameRequest = new EditedNicknameRequest(nickname);
+        NicknameUpdateRequest nicknameRequest = new NicknameUpdateRequest(nickname);
 
         ExtractableResponse<Response> patchWithAuthorization = httpPatchWithAuthorization(nicknameRequest,
                 "/members/nickname", getToken());
@@ -41,7 +41,7 @@ public class ProfileAcceptanceTest extends AcceptanceTest {
     @DisplayName("중복된 닉네임으로 수정할 수 없다.")
     @Test
     void editNickname_Exception_Duplicate() {
-        EditedNicknameRequest wrongNicknameRequest = new EditedNicknameRequest("eastNickname");
+        NicknameUpdateRequest wrongNicknameRequest = new NicknameUpdateRequest("eastNickname");
 
         ExtractableResponse<Response> patchWithAuthorization = httpPatchWithAuthorization(wrongNicknameRequest,
                 "/members/nickname", getToken());

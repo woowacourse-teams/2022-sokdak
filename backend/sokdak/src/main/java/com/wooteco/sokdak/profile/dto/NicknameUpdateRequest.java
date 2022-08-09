@@ -4,14 +4,15 @@ import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-public class EditedNicknameRequest {
+public class NicknameUpdateRequest {
+
     @NotBlank(message = "닉네임은 1자 이상이어야 합니다.")
     private String nickname;
 
-    public EditedNicknameRequest() {
+    public NicknameUpdateRequest() {
     }
 
-    public EditedNicknameRequest(String nickname) {
+    public NicknameUpdateRequest(String nickname) {
         this.nickname = nickname;
     }
 }

@@ -10,7 +10,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
 import com.wooteco.sokdak.member.exception.InvalidNicknameException;
-import com.wooteco.sokdak.profile.dto.EditedNicknameRequest;
+import com.wooteco.sokdak.profile.dto.NicknameUpdateRequest;
 import com.wooteco.sokdak.profile.dto.NicknameResponse;
 import com.wooteco.sokdak.profile.exception.DuplicateNicknameException;
 import com.wooteco.sokdak.util.ControllerTest;
@@ -52,7 +52,7 @@ public class ProfileControllerTest extends ControllerTest {
     @DisplayName("닉네임 변경 시 204 반환")
     @Test
     void editNickname() {
-        EditedNicknameRequest editedNicknameRequest = new EditedNicknameRequest("chrisNick2");
+        NicknameUpdateRequest nicknameUpdateRequest = new NicknameUpdateRequest("chrisNick2");
         doNothing()
                 .when(profileService)
                 .editNickname(any(), any());
@@ -60,7 +60,7 @@ public class ProfileControllerTest extends ControllerTest {
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header(AUTHORIZATION, "Bearer chris")
-                .body(editedNicknameRequest)
+                .body(nicknameUpdateRequest)
                 .when().patch("/members/nickname")
                 .then().log().all()
                 .assertThat()
@@ -71,15 +71,15 @@ public class ProfileControllerTest extends ControllerTest {
     @DisplayName("닉네임 변경 시 이미 있는 닉네임이면 400 반환")
     @Test
     void editNickname_Exception_Duplicate() {
-        EditedNicknameRequest editedNicknameRequest = new EditedNicknameRequest("hunchNickname");
+        NicknameUpdateRequest nicknameUpdateRequest = new NicknameUpdateRequest("hunchNickname");
         doThrow(new DuplicateNicknameException())
                 .when(profileService)
-                .editNickname(refEq(editedNicknameRequest), any());
+                .editNickname(refEq(nicknameUpdateRequest), any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header(AUTHORIZATION, "Bearer chris")
-                .body(editedNicknameRequest)
+                .body(nicknameUpdateRequest)
                 .when().patch("/members/nickname")
                 .then().log().all()
                 .assertThat()
@@ -90,15 +90,15 @@ public class ProfileControllerTest extends ControllerTest {
     @DisplayName("닉네임 변경 시 잘못된 형식이면 400 반환")
     @Test
     void editNickname_Exception_InvalidFormat() {
-        EditedNicknameRequest editedNicknameRequest = new EditedNicknameRequest("");
+        NicknameUpdateRequest nicknameUpdateRequest = new NicknameUpdateRequest("");
         doThrow(new InvalidNicknameException())
                 .when(profileService)
-                .editNickname(refEq(editedNicknameRequest), any());
+                .editNickname(refEq(nicknameUpdateRequest), any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header(AUTHORIZATION, "Bearer chris")
-                .body(editedNicknameRequest)
+                .body(nicknameUpdateRequest)
                 .when().patch("/members/nickname")
                 .then().log().all()
                 .assertThat()

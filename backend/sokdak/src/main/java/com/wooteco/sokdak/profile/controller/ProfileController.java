@@ -1,7 +1,7 @@
 package com.wooteco.sokdak.profile.controller;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
-import com.wooteco.sokdak.profile.dto.EditedNicknameRequest;
+import com.wooteco.sokdak.profile.dto.NicknameUpdateRequest;
 import com.wooteco.sokdak.profile.dto.NicknameResponse;
 import com.wooteco.sokdak.profile.service.ProfileService;
 import com.wooteco.sokdak.support.token.Login;
@@ -27,9 +27,9 @@ public class ProfileController {
     }
 
     @PatchMapping("/members/nickname")
-    public ResponseEntity<Void> editNickname(@RequestBody EditedNicknameRequest editedNicknameRequest,
+    public ResponseEntity<Void> editNickname(@RequestBody NicknameUpdateRequest nicknameUpdateRequest,
                                              @Login AuthInfo authInfo) {
-        profileService.editNickname(editedNicknameRequest, authInfo);
+        profileService.editNickname(nicknameUpdateRequest, authInfo);
         return ResponseEntity.noContent().build();
     }
 }

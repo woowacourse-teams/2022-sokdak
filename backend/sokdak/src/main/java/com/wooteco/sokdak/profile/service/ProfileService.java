@@ -5,7 +5,7 @@ import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.domain.Nickname;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
-import com.wooteco.sokdak.profile.dto.EditedNicknameRequest;
+import com.wooteco.sokdak.profile.dto.NicknameUpdateRequest;
 import com.wooteco.sokdak.profile.dto.NicknameResponse;
 import com.wooteco.sokdak.profile.exception.DuplicateNicknameException;
 
@@ -23,11 +23,11 @@ public class ProfileService {
     }
 
     @Transactional
-    public void editNickname(EditedNicknameRequest editedNicknameRequest, AuthInfo authInfo) {
+    public void editNickname(NicknameUpdateRequest nicknameUpdateRequest, AuthInfo authInfo) {
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
 
-        Nickname validNickname = new Nickname(editedNicknameRequest.getNickname());
+        Nickname validNickname = new Nickname(nicknameUpdateRequest.getNickname());
         if (memberRepository.existsMemberByNickname(validNickname)) {
             throw new DuplicateNicknameException();
         }

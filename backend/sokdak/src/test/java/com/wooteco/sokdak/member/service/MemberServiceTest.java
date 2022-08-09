@@ -26,9 +26,6 @@ class MemberServiceTest extends IntegrationTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @Autowired
-    private Encryptor encryptor;
-
     @DisplayName("이미 존재하는 username이면 uniqueResponse의 unique를 false, 이외는 true를 반환한다.")
     @ParameterizedTest
     @CsvSource({"josh, false", "hahahoho, true"})
@@ -51,7 +48,7 @@ class MemberServiceTest extends IntegrationTest {
                 "testJoshNickname", "ABCDEF", "Abcd123!@", "Abcd123!@");
         memberService.signUp(signupRequest);
 
-        assertThat(memberRepository.findByUsernameAndPassword(encryptor.encrypt("josh"),
-                encryptor.encrypt("Abcd123!@"))).isPresent();
+        assertThat(memberRepository.findByUsernameValueAndPassword(Encryptor.encrypt("josh"),
+                Encryptor.encrypt("Abcd123!@"))).isPresent();
     }
 }

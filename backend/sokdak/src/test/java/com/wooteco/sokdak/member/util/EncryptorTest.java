@@ -8,19 +8,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 class EncryptorTest {
-
-    @Autowired
-    private Encryptor encryptor;
 
     @DisplayName("SHA-256 해싱을 이용하면 똑같은 문자열엔 똑같은 결과가 나온다.")
     @Test
     void encrypt_same_input() {
         String text = "bjuuuu98@gmail.com";
 
-        String encrypt1 = encryptor.encrypt(text);
-        String encrypt2 = encryptor.encrypt(text);
+        String encrypt1 = Encryptor.encrypt(text);
+        String encrypt2 = Encryptor.encrypt(text);
 
         System.out.println(encrypt1);
         assertThat(encrypt1).isEqualTo(encrypt2);
@@ -32,8 +28,8 @@ class EncryptorTest {
         String text = "안녕하세요";
         String other = "반갑습니다";
 
-        String encrypt1 = encryptor.encrypt(text);
-        String encrypt2 = encryptor.encrypt(other);
+        String encrypt1 = Encryptor.encrypt(text);
+        String encrypt2 = Encryptor.encrypt(other);
 
         System.out.println(encrypt2);
         assertThat(encrypt1).isNotEqualTo(encrypt2);

@@ -43,7 +43,7 @@ class PostHashtagRepositoryTest extends RepositoryTest {
     @BeforeEach
     void setUp() {
         member = memberRepository
-                .findByUsernameValueAndPassword(Encryptor.encrypt(VALID_USERNAME), VALID_ENCRYPTED_PASSWORD)
+                .findByUsernameValueAndPasswordValue(Encryptor.encrypt(VALID_USERNAME), VALID_ENCRYPTED_PASSWORD)
                 .orElseThrow();
 
         Post post1 = Post.builder()

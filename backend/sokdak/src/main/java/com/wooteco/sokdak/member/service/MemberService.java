@@ -44,7 +44,7 @@ public class MemberService {
 
         Member member = Member.builder()
                 .username(signupRequest.getUsername())
-                .password(Encryptor.encrypt(signupRequest.getPassword()))
+                .password(signupRequest.getPassword())
                 .nickname(signupRequest.getNickname())
                 .build();
         memberRepository.save(member);

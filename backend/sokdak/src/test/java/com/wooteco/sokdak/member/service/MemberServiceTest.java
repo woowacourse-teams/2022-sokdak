@@ -48,7 +48,7 @@ class MemberServiceTest extends IntegrationTest {
                 "testJoshNickname", "ABCDEF", "Abcd123!@", "Abcd123!@");
         memberService.signUp(signupRequest);
 
-        assertThat(memberRepository.findByUsernameValueAndPassword(Encryptor.encrypt("josh"),
+        assertThat(memberRepository.findByUsernameValueAndPasswordValue(Encryptor.encrypt("josh"),
                 Encryptor.encrypt("Abcd123!@"))).isPresent();
     }
 }

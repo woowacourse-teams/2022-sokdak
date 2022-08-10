@@ -5,6 +5,7 @@ import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.CommentsResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
+import com.wooteco.sokdak.comment.dto.NewReplyRequest;
 import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.member.domain.Member;
@@ -15,14 +16,18 @@ import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
+@Slf4j
 public class CommentService {
 
     private final CommentRepository commentRepository;
@@ -44,22 +49,34 @@ public class CommentService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
-        String nickname = getCommentNickname(newCommentRequest, authInfo, post);
-        Comment comment = Comment.builder()
-                .member(member)
-                .post(post)
-                .nickname(nickname)
-                .message(newCommentRequest.getContent())
-                .build();
+        String nickname = getCommentNickname(newCommentRequest.isAnonymous(), authInfo, post);
 
-        Comment savedComment = commentRepository.save(comment);
-        return savedComment.getId();
+        Comment comment = Comment.parent(member, post, nickname, newCommentRequest.getContent());
+
+        commentRepository.save(comment);
+        return comment.getId();
     }
 
-    private String getCommentNickname(NewCommentRequest newCommentRequest, AuthInfo authInfo, Post post) {
+    @Transactional
+    public Long addReply(Long commentId, NewReplyRequest newReplyRequest, AuthInfo authInfo) {
+        Member member = memberRepository.findById(authInfo.getId())
+                .orElseThrow(MemberNotFoundException::new);
+        Comment parent = commentRepository.findById(commentId)
+                .orElseThrow(CommentNotFoundException::new);
+        Post post = parent.getPost();
+
+        String nickname = getCommentNickname(newReplyRequest.isAnonymous(), authInfo, post);
+
+        Comment reply = Comment.child(member, post, nickname, newReplyRequest.getContent(), parent);
+
+        commentRepository.save(reply);
+        return reply.getId();
+    }
+
+    private String getCommentNickname(boolean anonymous, AuthInfo authInfo, Post post) {
         String memberNickname = memberRepository.findNicknameValueById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
-        if (!newCommentRequest.isAnonymous()) { // 기명이면 member table에서 memberId로 닉네임 가져옴.
+        if (!anonymous) { // 기명이면 member table에서 memberId로 닉네임 가져옴.
             return memberNickname;
         }
         if (post.isAuthenticated(authInfo.getId())) { // 댓글 작성하는 사람과 게시글 작성자 일치
@@ -96,12 +113,23 @@ public class CommentService {
     }
 
     public CommentsResponse findComments(Long postId, AuthInfo authInfo) {
-        List<CommentResponse> commentResponses = commentRepository.findAllByPostId(postId)
-                .stream()
-                .map(it -> CommentResponse.of(it, authInfo.getId()))
+        List<Comment> comments = commentRepository.findAllByPostIdAndParentId(postId, null);
+        List<CommentResponse> commentResponses = comments.stream()
+                .map(it -> CommentResponse.of(it, authInfo.getId(), findReplies(it, postId, authInfo.getId())))
                 .collect(Collectors.toList());
+
         return new CommentsResponse(commentResponses);
     }
+
+    private Map<Comment, Long> findReplies(Comment parent, Long postId, Long accessMemberId) {
+        List<Comment> replies = commentRepository.findAllByPostIdAndParentId(postId, parent.getId());
+        Map<Comment, Long> accessMemberIdByReply = new LinkedHashMap<>();
+        for (Comment reply : replies) {
+            accessMemberIdByReply.put(reply, accessMemberId);
+        }
+        return accessMemberIdByReply;
+    }
+
 
     @Transactional
     public void deleteComment(Long commentId, AuthInfo authInfo) {

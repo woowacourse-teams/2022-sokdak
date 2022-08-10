@@ -12,6 +12,7 @@ import com.wooteco.sokdak.comment.dto.CommentsResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.util.ControllerTest;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -69,9 +70,9 @@ class CommentControllerTest extends ControllerTest {
     @Test
     void findComments() {
         CommentResponse commentResponse1 = new CommentResponse(1L, "조시1", "댓글1", LocalDateTime.now(), false, false,
-                false);
+                false, Collections.emptyList());
         CommentResponse commentResponse2 = new CommentResponse(2L, "조시2", "댓글2", LocalDateTime.now(), false, true,
-                false);
+                false, Collections.emptyList());
         doReturn(new CommentsResponse(List.of(commentResponse1, commentResponse2)))
                 .when(commentService)
                 .findComments(any(), any());

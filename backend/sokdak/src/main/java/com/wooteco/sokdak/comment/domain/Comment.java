@@ -9,9 +9,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
+import javax.persistence.ConstraintMode;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -32,6 +34,13 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Comment parent;
+
+    @OneToMany(mappedBy = "parent")
+    private List<Comment> children = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "member_id")
@@ -56,15 +65,26 @@ public class Comment {
     }
 
     @Builder
-    public Comment(Member member, Post post, String nickname, String message) {
+    public Comment(Member member, Post post, String nickname, String message, Comment parent) {
         this.member = member;
         this.post = post;
         this.nickname = nickname;
         this.message = new Message(message);
+        this.parent = parent;
+    }
+
+    public static Comment parent(Member member, Post post, String nickname, String message) {
+        return new Comment(member, post, nickname, message, null);
+    }
+
+    public static Comment child(Member member, Post post, String nickname, String message, Comment parent) {
+        Comment child = new Comment(member, post, nickname, message, parent);
+        parent.getChildren().add(child);
+        return child;
     }
 
     public void validateOwner(Long accessMemberId) {
-        if (accessMemberId != member.getId()) {
+        if (!accessMemberId.equals(member.getId())) {
             throw new AuthenticationException();
         }
     }
@@ -98,8 +118,20 @@ public class Comment {
         return id;
     }
 
+    public Comment getParent() {
+        return parent;
+    }
+
+    public List<Comment> getChildren() {
+        return children;
+    }
+
     public Member getMember() {
         return member;
+    }
+
+    public Post getPost() {
+        return post;
     }
 
     public String getNickname() {

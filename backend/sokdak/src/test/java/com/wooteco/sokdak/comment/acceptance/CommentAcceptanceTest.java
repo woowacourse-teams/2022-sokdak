@@ -11,6 +11,7 @@ import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.CommentsResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
+import com.wooteco.sokdak.comment.dto.ReplyResponse;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.fixture.ReportFixture;
 import com.wooteco.sokdak.util.AcceptanceTest;
@@ -114,6 +115,31 @@ class CommentAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("특정 게시글의 댓글과 대댓글을 조회할 수 있다.")
+    @Test
+    void findComments_With_Replies() {
+        Long postId = addPostAndGetPostId();
+        Long commentId = addCommentAndGetCommentId(postId);
+        httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST,
+                "/comments/" + commentId + "/reply",
+                getToken());
+        httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST,
+                "/comments/" + commentId + "/reply",
+                getToken());
+
+        ExtractableResponse<Response> response = httpGet("/posts/" + postId + "/comments");
+        List<CommentResponse> commentResponses = response
+                .jsonPath()
+                .getObject(".", CommentsResponse.class)
+                .getComments();
+        List<ReplyResponse> replyResponses = commentResponses.get(0).getReplies();
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(commentResponses).hasSize(1),
+                () -> assertThat(replyResponses).hasSize(2)
+        );
+    }
+
     @DisplayName("댓글을 삭제할 수 있다.")
     @Test
     void deleteComment() {
@@ -123,6 +149,27 @@ class CommentAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = httpDeleteWithAuthorization("/comments/1", getToken());
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @DisplayName("대댓글을 가진 댓글을 삭제하고 해당 게시글의 댓글을 조회하면 대댓글만 조회할 수 있다.")
+    @Test
+    void deleteComment_Having_Reply() {
+        Long postId = addPostAndGetPostId();
+        Long commentId = addCommentAndGetCommentId(postId);
+        httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST,
+                "/comments" + commentId + "/reply",
+                getToken());
+
+        ExtractableResponse<Response> response = httpDeleteWithAuthorization("/comments/1", getToken());
+        List<CommentResponse> commentResponses = response.jsonPath()
+                .getObject(".", CommentsResponse.class)
+                .getComments();
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(commentResponses.size()).isEqualTo(2),
+                () -> assertThat(commentResponses.get(0).getContent()).isNull()
+        );
     }
 
     private String getToken() {

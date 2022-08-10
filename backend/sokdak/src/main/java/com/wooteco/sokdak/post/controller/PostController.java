@@ -3,12 +3,12 @@ package com.wooteco.sokdak.post.controller;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.service.PostService;
-import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import com.wooteco.sokdak.support.token.Login;
 import java.net.URI;
 import javax.validation.Valid;
@@ -55,8 +55,7 @@ public class PostController {
     }
 
     @GetMapping(path = "/posts/me", params = {"size", "page"})
-    public ResponseEntity<MyPostsResponse> findMyPosts(@PageableDefault Pageable pageable,
-                                                       @Login AuthInfo authInfo) {
+    public ResponseEntity<MyPostsResponse> findMyPosts(@PageableDefault Pageable pageable, @Login AuthInfo authInfo) {
         MyPostsResponse myPosts = postService.findMyPosts(pageable, authInfo);
         return ResponseEntity.ok(myPosts);
     }

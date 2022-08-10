@@ -14,13 +14,13 @@ import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
+import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
-import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -88,8 +88,8 @@ public class PostService {
         boolean liked = likeRepository.existsByMemberIdAndPostId(authInfo.getId(), postId);
         Hashtags hashtags = hashtagService.findHashtagsByPostId(postId);
 
-        return PostDetailResponse.of(foundPost, postBoards.get(0), liked, foundPost.isAuthenticated(authInfo.getId()),
-                hashtags);
+        return PostDetailResponse.of(foundPost, postBoards.get(0), liked,
+                foundPost.isAuthenticated(authInfo.getId()), hashtags);
     }
 
     public PostsResponse findPostsByBoard(Long boardId, Pageable pageable) {

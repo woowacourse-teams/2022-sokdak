@@ -8,6 +8,7 @@ import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.service.PostService;
+import com.wooteco.sokdak.profile.dto.MyPostsResponse;
 import com.wooteco.sokdak.support.token.Login;
 import java.net.URI;
 import javax.validation.Valid;
@@ -51,6 +52,13 @@ public class PostController {
             @PageableDefault(sort = "createdAt", direction = DESC) Pageable pageable) {
         PostsResponse postsResponse = postService.findPostsByBoard(boardId, pageable);
         return ResponseEntity.ok(postsResponse);
+    }
+
+    @GetMapping(path = "/posts/me", params = {"size", "page"})
+    public ResponseEntity<MyPostsResponse> findMyPosts(@PageableDefault Pageable pageable,
+                                                       @Login AuthInfo authInfo) {
+        MyPostsResponse myPosts = postService.findMyPosts(pageable, authInfo);
+        return ResponseEntity.ok(myPosts);
     }
 
     @PutMapping("/posts/{id}")

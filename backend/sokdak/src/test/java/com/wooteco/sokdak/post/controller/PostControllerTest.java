@@ -1,11 +1,15 @@
 package com.wooteco.sokdak.post.controller;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.*;
-import static com.wooteco.sokdak.util.fixture.PostFixture.*;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
+import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST;
+import static com.wooteco.sokdak.util.fixture.PostFixture.UPDATED_POST_CONTENT;
+import static com.wooteco.sokdak.util.fixture.PostFixture.UPDATED_POST_TITLE;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
 import com.wooteco.sokdak.auth.exception.AuthenticationException;
@@ -16,6 +20,7 @@ import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
+import com.wooteco.sokdak.profile.dto.MyPostsResponse;
 import com.wooteco.sokdak.util.ControllerTest;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -24,6 +29,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -31,6 +37,7 @@ import org.springframework.restdocs.RestDocumentationExtension;
 @ExtendWith(RestDocumentationExtension.class)
 class PostControllerTest extends ControllerTest {
 
+    private static final int WRONG_PAGE = 99;
     private static final PostsElementResponse POSTS_ELEMENT_RESPONSE_1 = PostsElementResponse.builder()
             .id(1L)
             .title("제목1")
@@ -250,5 +257,44 @@ class PostControllerTest extends ControllerTest {
                 .then().log().all()
                 .apply(document("post/delete/fail/noAuth"))
                 .statusCode(HttpStatus.FORBIDDEN.value());
+    }
+
+    @DisplayName("내가 쓴 글 조회 시 200 반환")
+    @Test
+    void findMyPosts() {
+        PageRequest pageRequest = PageRequest.of(0, 2);
+        MyPostsResponse myPostsResponse = new MyPostsResponse(
+                List.of(POSTS_ELEMENT_RESPONSE_2, POSTS_ELEMENT_RESPONSE_1),
+                5);
+        doReturn(myPostsResponse)
+                .when(postService)
+                .findMyPosts(refEq(pageRequest), any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(AUTHORIZATION, "Bearer any")
+                .when().get("/posts/me?size=2&page=0")
+                .then().log().all()
+                .assertThat()
+                .apply(document("member/find/posts/success/postIn"))
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("내가 쓴 글의 없는 페이지 조회 시 200 반환")
+    @Test
+    void findMyPosts_Exception_NoPage() {
+        PageRequest pageRequest = PageRequest.of(WRONG_PAGE, 2);
+        doReturn(new MyPostsResponse(Collections.emptyList(), 5))
+                .when(postService)
+                .findMyPosts(refEq(pageRequest), any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(AUTHORIZATION, "Bearer any")
+                .when().get("/posts/me?size=2&page=" + WRONG_PAGE)
+                .then().log().all()
+                .assertThat()
+                .apply(document("member/find/posts/success/noPost"))
+                .statusCode(HttpStatus.OK.value());
     }
 }

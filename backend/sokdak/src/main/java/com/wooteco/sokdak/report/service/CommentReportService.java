@@ -47,10 +47,10 @@ public class CommentReportService {
                 .reportMessage(reportRequest.getMessage())
                 .build();
         commentReportRepository.save(commentReport);
-        notifyReportIfOverThanBlockCondition(comment);
+        notifyReportIfOverBlockCondition(comment);
     }
 
-    private void notifyReportIfOverThanBlockCondition(Comment comment) {
+    private void notifyReportIfOverBlockCondition(Comment comment) {
         int reportCount = commentReportRepository.countByCommentId(comment.getId());
         if (reportCount == BLOCKED_CONDITION) {
             Post post = comment.getPost();

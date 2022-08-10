@@ -29,28 +29,6 @@ public class ProfileService {
         this.postRepository = postRepository;
     }
 
-    @Transactional
-    public void editNickname(NicknameUpdateRequest nicknameUpdateRequest, AuthInfo authInfo) {
-        Member member = memberRepository.findById(authInfo.getId())
-                .orElseThrow(MemberNotFoundException::new);
-
-        Nickname validNickname = new Nickname(nicknameUpdateRequest.getNickname());
-        validateUniqueNickname(validNickname);
-        member.updateNickname(validNickname);
-    }
-
-    private void validateUniqueNickname(Nickname validNickname) {
-        if (memberRepository.existsMemberByNickname(validNickname)) {
-            throw new DuplicateNicknameException();
-        }
-    }
-
-    public NicknameResponse findNickname(AuthInfo authInfo) {
-        Member member = memberRepository.findById(authInfo.getId())
-                .orElseThrow(MemberNotFoundException::new);
-        return NicknameResponse.of(member);
-    }
-
     public MyPostsResponse findMyPosts(Pageable pageable, AuthInfo authInfo) {
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);

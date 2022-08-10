@@ -5,17 +5,11 @@ import static com.wooteco.sokdak.util.fixture.PostFixture.POSTS_ELEMENT_RESPONSE
 import static com.wooteco.sokdak.util.fixture.PostFixture.POSTS_ELEMENT_RESPONSE_2;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.refEq;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
-import com.wooteco.sokdak.member.exception.InvalidNicknameException;
 import com.wooteco.sokdak.profile.dto.MyPostsResponse;
-import com.wooteco.sokdak.profile.dto.NicknameResponse;
-import com.wooteco.sokdak.profile.dto.NicknameUpdateRequest;
-import com.wooteco.sokdak.profile.exception.DuplicateNicknameException;
 import com.wooteco.sokdak.util.ControllerTest;
 import java.util.Collections;
 import java.util.List;
@@ -38,80 +32,6 @@ public class ProfileControllerTest extends ControllerTest {
         doReturn(AUTH_INFO)
                 .when(authenticationPrincipalArgumentResolver)
                 .resolveArgument(any(), any(), any(), any());
-    }
-
-    @DisplayName("닉네임 조회 시 200 반환")
-    @Test
-    void findNickname() {
-        doReturn(new NicknameResponse("chrisNickname"))
-                .when(profileService)
-                .findNickname(any());
-
-        restDocs
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(AUTHORIZATION, "Bearer chris")
-                .when().get("/members/nickname")
-                .then().log().all()
-                .assertThat()
-                .apply(document("member/find/nickname/success"))
-                .statusCode(HttpStatus.OK.value());
-    }
-
-    @DisplayName("닉네임 변경 시 204 반환")
-    @Test
-    void editNickname() {
-        NicknameUpdateRequest nicknameUpdateRequest = new NicknameUpdateRequest("chrisNick2");
-        doNothing()
-                .when(profileService)
-                .editNickname(any(), any());
-
-        restDocs
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(AUTHORIZATION, "Bearer chris")
-                .body(nicknameUpdateRequest)
-                .when().patch("/members/nickname")
-                .then().log().all()
-                .assertThat()
-                .apply(document("member/patch/nickname/success"))
-                .statusCode(HttpStatus.NO_CONTENT.value());
-    }
-
-    @DisplayName("닉네임 변경 시 이미 있는 닉네임이면 400 반환")
-    @Test
-    void editNickname_Exception_Duplicate() {
-        NicknameUpdateRequest nicknameUpdateRequest = new NicknameUpdateRequest("hunchNickname");
-        doThrow(new DuplicateNicknameException())
-                .when(profileService)
-                .editNickname(refEq(nicknameUpdateRequest), any());
-
-        restDocs
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(AUTHORIZATION, "Bearer chris")
-                .body(nicknameUpdateRequest)
-                .when().patch("/members/nickname")
-                .then().log().all()
-                .assertThat()
-                .apply(document("member/patch/nickname/fail/duplicate"))
-                .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    @DisplayName("닉네임 변경 시 잘못된 형식이면 400 반환")
-    @Test
-    void editNickname_Exception_InvalidFormat() {
-        NicknameUpdateRequest nicknameUpdateRequest = new NicknameUpdateRequest("");
-        doThrow(new InvalidNicknameException())
-                .when(profileService)
-                .editNickname(refEq(nicknameUpdateRequest), any());
-
-        restDocs
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(AUTHORIZATION, "Bearer chris")
-                .body(nicknameUpdateRequest)
-                .when().patch("/members/nickname")
-                .then().log().all()
-                .assertThat()
-                .apply(document("member/patch/nickname/fail/invalidFormat"))
-                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("내가 쓴 글 조회 시 200 반환")

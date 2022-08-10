@@ -1,7 +1,6 @@
 package com.wooteco.sokdak.profile.acceptance;
 
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPatchWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
@@ -15,8 +14,6 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.profile.dto.MyPostsResponse;
-import com.wooteco.sokdak.profile.dto.NicknameResponse;
-import com.wooteco.sokdak.profile.dto.NicknameUpdateRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -28,39 +25,6 @@ import org.springframework.http.HttpStatus;
 public class ProfileAcceptanceTest extends AcceptanceTest {
 
     private static final String WRONG_PAGE = "5";
-
-    @DisplayName("닉네임을 수정할 수 있다.")
-    @Test
-    void editNickname() {
-        String nickname = "chrisNick2";
-        NicknameUpdateRequest nicknameRequest = new NicknameUpdateRequest(nickname);
-        String token = getToken();
-
-        ExtractableResponse<Response> response = httpPatchWithAuthorization(nicknameRequest,
-                "/members/nickname", token);
-        NicknameResponse nicknameResponse = toNicknameResponse(httpGetWithAuthorization("/members/nickname", token));
-
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
-                () -> assertThat(nicknameResponse.getNickname()).isEqualTo(nickname)
-        );
-    }
-
-    @DisplayName("중복된 닉네임으로 수정할 수 없다.")
-    @Test
-    void editNickname_Exception_Duplicate() {
-        NicknameUpdateRequest wrongNicknameRequest = new NicknameUpdateRequest("eastNickname");
-        String token = getToken();
-
-        ExtractableResponse<Response> response = httpPatchWithAuthorization(wrongNicknameRequest,
-                "/members/nickname", token);
-        NicknameResponse nicknameResponse = toNicknameResponse(httpGetWithAuthorization("/members/nickname", token));
-
-        assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-                () -> assertThat(nicknameResponse.getNickname()).isEqualTo("chrisNickname")
-        );
-    }
 
     @DisplayName("내가 쓴 글을 볼 수 있다.")
     @Test
@@ -101,12 +65,6 @@ public class ProfileAcceptanceTest extends AcceptanceTest {
     private String getToken() {
         LoginRequest loginRequest = new LoginRequest("chris", "Abcd123!@");
         return httpPost(loginRequest, "/login").header(AUTHORIZATION);
-    }
-
-    private NicknameResponse toNicknameResponse(ExtractableResponse<Response> getWithAuthorization) {
-        return getWithAuthorization.body()
-                .jsonPath()
-                .getObject(".", NicknameResponse.class);
     }
 
     private MyPostsResponse toMyPostsResponse(ExtractableResponse<Response> response) {

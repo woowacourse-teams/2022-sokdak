@@ -36,35 +36,6 @@ class ProfileServiceTest extends IntegrationTest {
 
     private static final int WRONG_PAGE = 99;
 
-
-    @DisplayName("닉네임 수정 기능")
-    @Test
-    void editNickname() {
-        NicknameUpdateRequest nicknameUpdateRequest = new NicknameUpdateRequest("chrisNick2");
-        profileService.editNickname(nicknameUpdateRequest, AUTH_INFO);
-        Member member = memberRepository.findById(AUTH_INFO.getId()).orElseThrow();
-
-        assertThat(member.getNickname()).isEqualTo("chrisNick2");
-    }
-
-    @DisplayName("존재하는 닉네임으로 수정할 시 예외 발생")
-    @Test
-    void editNickname_Exception_Duplicate() {
-        NicknameUpdateRequest nicknameUpdateRequest = new NicknameUpdateRequest("hunchNickname");
-
-        assertThatThrownBy(() -> profileService.editNickname(nicknameUpdateRequest, AUTH_INFO))
-                .isInstanceOf(DuplicateNicknameException.class);
-    }
-
-    @DisplayName("잘못된 형식의 닉네임으로 수정할 시 예외 발생")
-    @Test
-    void editNickname_Exception_InvalidFormat() {
-        NicknameUpdateRequest nicknameUpdateRequest = new NicknameUpdateRequest("");
-
-        assertThatThrownBy(() -> profileService.editNickname(nicknameUpdateRequest, AUTH_INFO))
-                .isInstanceOf(InvalidNicknameException.class);
-    }
-
     @DisplayName("내가 쓴 글 조회 기능")
     @Test
     void findMyPosts() {

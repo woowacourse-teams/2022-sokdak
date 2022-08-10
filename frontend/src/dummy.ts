@@ -358,10 +358,14 @@ export const validMemberEmail: { email: string; isSignedUp: boolean; code: strin
 
 interface CommentListType extends CommentType {
   postId: number;
-  blocked: boolean;
-  postWriter: boolean;
+  blocked: boolean | null;
+  postWriter: boolean | null;
   replies: Omit<CommentListType, 'replies' | 'postId'>[];
 }
+
+export const commentListTable = {
+  id: 18,
+};
 
 export const commentList: CommentListType[] = [
   {

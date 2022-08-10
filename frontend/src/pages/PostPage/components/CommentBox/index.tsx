@@ -58,12 +58,12 @@ const CommentBox = ({
     reportComment({ id, message });
   };
 
+  if (!content) {
+    return <Styled.EmptyComment>작성자에 의해 삭제된 댓글 입니다.</Styled.EmptyComment>;
+  }
+
   if (blocked) {
-    return (
-      <Styled.BlockContainer>
-        <Styled.BlockedContent>신고에 의해 블라인드 처리되었습니다</Styled.BlockedContent>
-      </Styled.BlockContainer>
-    );
+    return <Styled.EmptyComment>신고에 의해 블라인드 처리되었습니다.</Styled.EmptyComment>;
   }
 
   return (
@@ -83,7 +83,7 @@ const CommentBox = ({
           </Styled.ButtonContainer>
         </Styled.CommentHeader>
         <Styled.Content>{content}</Styled.Content>
-        <Styled.Date>{timeConverter(createdAt)}</Styled.Date>
+        <Styled.Date>{timeConverter(createdAt!)}</Styled.Date>
       </Styled.Container>
 
       {isReplyFormOpen && <ReplyForm commentId={id} />}

@@ -9,17 +9,15 @@ export const Container = styled.div`
   background-color: white;
 `;
 
-export const BlockContainer = styled.div`
+export const EmptyComment = styled.div`
   width: 100%;
   border-top: 0.5px solid ${props => props.theme.colors.gray_150};
+  border-bottom: 0.5px solid ${props => props.theme.colors.gray_150};
+  margin-bottom: -0.5px;
   cursor: default;
-  padding: 3em 0;
-`;
-
-export const BlockedContent = styled.p`
+  padding: 3.5em 0.5em;
   color: ${props => props.theme.colors.gray_200};
   font-size: 12px;
-  margin-left: 10px;
 `;
 
 export const CommentHeader = styled.div`

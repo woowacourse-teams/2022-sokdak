@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 
-import { commentList, postList, reportCommentList } from '@/dummy';
+import { commentList, commentListTable, postList, reportCommentList } from '@/dummy';
 
 const commentHandlers = [
   rest.get('/posts/:id/comments', (req, res, ctx) => {
@@ -23,8 +23,11 @@ const commentHandlers = [
       return res(ctx.status(400), ctx.json({ message: '해당 글이 존재하지 않습니다.' }));
     }
 
+    targetPost.commentCount += 1;
+    commentListTable.id += 1;
+
     commentList.push({
-      id: commentList.length + 1,
+      id: commentListTable.id,
       content,
       createdAt: new Date().toISOString(),
       nickname: anonymous ? '짜증난 파이썬' : '테스트 계정',
@@ -34,7 +37,6 @@ const commentHandlers = [
       postWriter: targetPost.authorized,
       replies: [],
     });
-    targetPost.commentCount += 1;
 
     return res(ctx.status(204));
   }),
@@ -50,13 +52,54 @@ const commentHandlers = [
   }),
 
   rest.delete('/comments/:id', (req, res, ctx) => {
-    const { id } = req.params;
-    const targetCommentIdx = commentList.findIndex(comment => comment.id === Number(id));
+    let isCommentExist = false;
+    const id = Number(req.params.id);
 
-    if (targetCommentIdx === -1) {
+    for (const comment of commentList) {
+      const { postId } = comment;
+
+      const post = postList.find(post => post.id === postId)!;
+      post.commentCount -= 1;
+
+      if (comment.id === id && comment.replies.length > 0) {
+        comment.nickname = null;
+        comment.content = null;
+        comment.createdAt = null;
+        comment.authorized = null;
+        comment.postWriter = null;
+        comment.blocked = null;
+        isCommentExist = true;
+
+        break;
+      }
+
+      if (comment.id === id) {
+        commentList.splice(commentList.indexOf(comment), 1);
+        isCommentExist = true;
+
+        break;
+      }
+
+      for (const reply of comment.replies) {
+        if (reply.id === id) {
+          comment.replies.splice(comment.replies.indexOf(reply), 1);
+          isCommentExist = true;
+
+          break;
+        }
+      }
+
+      if (comment.replies.length <= 0 && !comment.content) {
+        commentList.splice(commentList.indexOf(comment), 1);
+
+        break;
+      }
+    }
+
+    if (!isCommentExist) {
       return res(ctx.status(400), ctx.json({ message: '해당 댓글이 존재하지 않습니다.' }));
     }
-    commentList.splice(targetCommentIdx, 1);
+
     return res(ctx.status(204));
   }),
 
@@ -68,18 +111,20 @@ const commentHandlers = [
       return res(ctx.status(400), ctx.json({ message: '대댓글은 1자 이상 255자 이하입니다.' }));
     }
 
-    const targetPost = postList.find(post => post.id === id);
+    const parentComment = commentList.find(comment => comment.id === id)!;
+    const targetPost = postList.find(post => post.id === parentComment.postId);
 
     if (!targetPost) {
       return res(ctx.status(400), ctx.json({ message: '해당 글이 존재하지 않습니다.' }));
     }
 
     targetPost.commentCount += 1;
+    commentListTable.id += 1;
 
     const targetCommentReplies = commentList.find(comment => comment.id === id)?.replies!;
 
     targetCommentReplies.push({
-      id: targetPost.commentCount,
+      id: commentListTable.id,
       nickname: anonymous ? '짜증난 파이썬' : '테스트 계정',
       content,
       createdAt: new Date().toISOString(),

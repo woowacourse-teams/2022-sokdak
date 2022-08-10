@@ -12,9 +12,9 @@ import com.wooteco.sokdak.member.exception.InvalidSignupFlowException;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.exception.PasswordConfirmationException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
-import com.wooteco.sokdak.profile.dto.NicknameResponse;
-import com.wooteco.sokdak.profile.dto.NicknameUpdateRequest;
-import com.wooteco.sokdak.profile.exception.DuplicateNicknameException;
+import com.wooteco.sokdak.member.dto.NicknameResponse;
+import com.wooteco.sokdak.member.dto.NicknameUpdateRequest;
+import com.wooteco.sokdak.member.exception.DuplicateNicknameException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

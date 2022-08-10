@@ -1,7 +1,6 @@
-package com.wooteco.sokdak.profile.dto;
+package com.wooteco.sokdak.post.dto;
 
 import com.wooteco.sokdak.post.domain.Post;
-import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;

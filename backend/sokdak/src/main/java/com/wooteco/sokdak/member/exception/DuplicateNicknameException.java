@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.profile.exception;
+package com.wooteco.sokdak.member.exception;
 
 import com.wooteco.sokdak.advice.BadRequestException;
 

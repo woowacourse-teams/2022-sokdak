@@ -5,11 +5,16 @@ import { AxiosError, AxiosResponse } from 'axios';
 import authFetcher from '@/apis';
 import QUERY_KEYS from '@/constants/queries';
 
-interface CommentResponse extends CommentType {
+interface CommentList extends CommentType {
   id: number;
   blocked: boolean;
   postWriter: boolean;
-  replies: Omit<CommentResponse, 'replies'>[];
+  replies: Omit<CommentList, 'replies'>[];
+}
+
+interface CommentResponse {
+  comments: CommentList[];
+  totalCount: number;
 }
 
 const useComments = ({
@@ -17,15 +22,10 @@ const useComments = ({
   options,
 }: {
   storeCode: QueryKey;
-  options?: UseQueryOptions<
-    AxiosResponse<Record<'comments', CommentResponse[]>>,
-    AxiosError,
-    CommentResponse[],
-    QueryKey[]
-  >;
+  options?: UseQueryOptions<AxiosResponse<CommentResponse>, AxiosError, CommentResponse, QueryKey[]>;
 }) =>
   useQuery([QUERY_KEYS.COMMENTS, storeCode], ({ queryKey: [, id] }) => authFetcher.get(`/posts/${id}/comments`), {
-    select: data => data.data.comments,
+    select: data => data.data,
     ...options,
   });
 

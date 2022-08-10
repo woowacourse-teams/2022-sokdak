@@ -5,7 +5,7 @@ export const postList: Post[] = [
     createdAt: '2022-07-19T19:55:31.016376300',
     content: '날씨는 참 좋네요.',
     likeCount: 19,
-    commentCount: 18,
+    commentCount: 19,
     like: false,
     modified: false,
     hashtags: [
@@ -410,7 +410,7 @@ export const commentList: CommentListType[] = [
     postWriter: true,
     replies: [
       {
-        id: 18,
+        id: 19,
         nickname: '신난 200',
         content: '재택 계속 해줘 ~ ',
         createdAt: '2022-08-09T08:55:31.016376300',

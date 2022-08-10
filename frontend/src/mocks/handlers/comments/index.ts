@@ -8,8 +8,11 @@ const commentHandlers = [
     const id = Number(params.id);
 
     const targetCommentList = commentList.filter(comment => comment.postId === id);
+    const totalCount =
+      targetCommentList.filter(comment => comment.content).length +
+      targetCommentList.flatMap(comment => comment.replies).length;
 
-    return res(ctx.status(200), ctx.json({ comments: targetCommentList }));
+    return res(ctx.status(200), ctx.json({ comments: targetCommentList, totalCount }));
   }),
 
   rest.post<{ content: string; anonymous: boolean }>('/posts/:id/comments', (req, res, ctx) => {
@@ -58,11 +61,6 @@ const commentHandlers = [
     const id = Number(req.params.id);
 
     for (const comment of commentList) {
-      const { postId } = comment;
-
-      const post = postList.find(post => post.id === postId)!;
-      post.commentCount -= 1;
-
       if (comment.id === id && comment.replies.length > 0) {
         comment.nickname = null;
         comment.content = null;
@@ -71,6 +69,7 @@ const commentHandlers = [
         comment.postWriter = null;
         comment.blocked = null;
         isCommentExist = true;
+        postList.find(post => post.id === comment.postId)!.commentCount -= 1;
 
         break;
       }
@@ -78,6 +77,7 @@ const commentHandlers = [
       if (comment.id === id) {
         commentList.splice(commentList.indexOf(comment), 1);
         isCommentExist = true;
+        postList.find(post => post.id === comment.postId)!.commentCount -= 1;
 
         break;
       }
@@ -86,6 +86,7 @@ const commentHandlers = [
         if (reply.id === id) {
           comment.replies.splice(comment.replies.indexOf(reply), 1);
           isCommentExist = true;
+          postList.find(post => post.id === comment.postId)!.commentCount -= 1;
 
           break;
         }
@@ -93,10 +94,10 @@ const commentHandlers = [
 
       if (comment.replies.length <= 0 && !comment.content) {
         commentList.splice(commentList.indexOf(comment), 1);
-
-        break;
       }
     }
+
+    console.log(commentList);
 
     if (!isCommentExist) {
       return res(ctx.status(400), ctx.json({ message: '해당 댓글이 존재하지 않습니다.' }));

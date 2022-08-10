@@ -16,19 +16,23 @@ const CommentList = ({ id }: CommentListProps) => {
   const { data } = useComments({ storeCode: id });
 
   return (
-    <Styled.Container>
-      <CommentInput amount={data?.length!} id={id} />
-      <Styled.CommentsContainer>
-        {data?.map(comment => (
-          <Fragment key={comment.id}>
-            <CommentBox {...comment} />
-            {comment.replies.map(reply => (
-              <Styled.ReplyBox key={reply.id} mode="replies" {...reply} />
+    <>
+      {data && (
+        <Styled.Container>
+          <CommentInput amount={data.totalCount} id={id} />
+          <Styled.CommentsContainer>
+            {data.comments.map(comment => (
+              <Fragment key={comment.id}>
+                <CommentBox {...comment} />
+                {comment.replies.map(reply => (
+                  <Styled.ReplyBox key={reply.id} mode="replies" {...reply} />
+                ))}
+              </Fragment>
             ))}
-          </Fragment>
-        ))}
-      </Styled.CommentsContainer>
-    </Styled.Container>
+          </Styled.CommentsContainer>
+        </Styled.Container>
+      )}
+    </>
   );
 };
 

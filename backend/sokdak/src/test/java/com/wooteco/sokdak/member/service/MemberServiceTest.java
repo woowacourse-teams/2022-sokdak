@@ -7,18 +7,19 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.wooteco.sokdak.auth.domain.AuthCode;
 import com.wooteco.sokdak.auth.service.Encryptor;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.dto.NicknameUpdateRequest;
 import com.wooteco.sokdak.member.dto.SignupRequest;
 import com.wooteco.sokdak.member.dto.UniqueResponse;
+import com.wooteco.sokdak.member.exception.DuplicateNicknameException;
 import com.wooteco.sokdak.member.exception.InvalidNicknameException;
 import com.wooteco.sokdak.member.repository.AuthCodeRepository;
 import com.wooteco.sokdak.member.repository.MemberRepository;
-import com.wooteco.sokdak.member.dto.NicknameUpdateRequest;
-import com.wooteco.sokdak.member.exception.DuplicateNicknameException;
 import com.wooteco.sokdak.util.IntegrationTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 class MemberServiceTest extends IntegrationTest {
@@ -78,10 +79,11 @@ class MemberServiceTest extends IntegrationTest {
                 .isInstanceOf(DuplicateNicknameException.class);
     }
 
-    @DisplayName("잘못된 형식의 닉네임으로 수정할 시 예외 발생")
-    @Test
-    void editNickname_Exception_InvalidFormat() {
-        NicknameUpdateRequest nicknameUpdateRequest = new NicknameUpdateRequest("");
+    @DisplayName("숫자와 영문, 한글음절을 포함한 1자 이상 16자가 아닌 잘못된 형식의 닉네임으로 수정할 시 예외 발생")
+    @ParameterizedTest
+    @ValueSource(strings = {"", " ", "ㄱㄴㄷ", "abdf123ㅏㅇ", "11112222333344445"})
+    void editNickname_Exception_InvalidFormat(String invalidNickname) {
+        NicknameUpdateRequest nicknameUpdateRequest = new NicknameUpdateRequest(invalidNickname);
 
         assertThatThrownBy(() -> memberService.editNickname(nicknameUpdateRequest, AUTH_INFO))
                 .isInstanceOf(InvalidNicknameException.class);

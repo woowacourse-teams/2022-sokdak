@@ -4,22 +4,15 @@ import * as Styled from './index.styles';
 
 import PATH from '@/constants/path';
 
-type NotificationType = 'NEW_COMMENT' | 'NEW_REPLY' | 'COMMENT_REPORT' | 'REPLY_COMMENT' | 'HOT_BOARD' | 'POST_REPORT';
-
 interface NotificationItemProps {
-  notification: {
-    id: number;
-    content: string | null;
-    createdAt: string;
-    type: NotificationType;
-    postId: number;
-  };
+  notification: Notice;
 }
 
 const NotificationItem = ({ notification }: NotificationItemProps) => {
   if (!Object.keys(NotificationByTypes).includes(notification.type)) {
     return <>error</>;
   }
+
   return (
     <Styled.ItemContainer to={`${PATH.POST}/${notification.postId}`}>
       {NotificationByTypes[notification.type](notification)}
@@ -30,10 +23,7 @@ const NotificationItem = ({ notification }: NotificationItemProps) => {
 
 export default NotificationItem;
 
-const NotificationByTypes: Record<
-  NotificationType,
-  (notification: NotificationItemProps['notification']) => ReactNode
-> = {
+const NotificationByTypes: Record<NotificationType, (notification: Notice) => ReactNode> = {
   NEW_COMMENT: notification => (
     <Styled.NotificationMessage>
       <Styled.Highlight>{notification.content}</Styled.Highlight> 에 댓글이 달렸습니다.

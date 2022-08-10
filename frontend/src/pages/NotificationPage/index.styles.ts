@@ -24,6 +24,7 @@ export const NotificationTime = styled.h2`
   font-size: 1.2rem;
   font-family: 'BMHANNAPro';
   margin: 0.7em;
+  margin-top: 1.2em;
 `;
 
 export const NotificationItemContainer = styled.div`

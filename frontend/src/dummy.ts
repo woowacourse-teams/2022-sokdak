@@ -631,3 +631,66 @@ export const boardList = [
 export const reportList = [{ postId: 1, message: '그냥 마음에 들지 않는다' }];
 
 export const reportCommentList = [{ commentId: 1, message: '그냥 마음에 들지 않는다' }];
+
+interface NoticeTable extends Notice {
+  isChecked: boolean;
+}
+
+export const notificationList: NoticeTable[] = [
+  {
+    id: 0,
+    content: '알림 메시지입니다.',
+    createdAt: '2022-08-10 16:04',
+    type: 'NEW_COMMENT',
+    isChecked: false,
+    postId: 1,
+  },
+  {
+    id: 1,
+    content: '알림 메시지입니다.',
+    createdAt: '2022-08-08 16:04',
+    type: 'NEW_COMMENT',
+    isChecked: false,
+    postId: 2,
+  },
+  {
+    id: 2,
+    content: '새로운 대댓글',
+    createdAt: '2022-08-07 16:02',
+    type: 'NEW_REPLY',
+    isChecked: false,
+    postId: 3,
+  },
+  {
+    id: 3,
+    content: '새로운 댓글 신고',
+    createdAt: '2021-08-08 16:02',
+    type: 'COMMENT_REPORT',
+    isChecked: false,
+    postId: 4,
+  },
+  {
+    id: 4,
+    content: '댓글',
+    createdAt: '2022-08-11 00:02',
+    type: 'REPLY_COMMENT',
+    isChecked: false,
+    postId: 5,
+  },
+  {
+    id: 5,
+    content: '게시글',
+    createdAt: '2022-08-06 16:02',
+    type: 'HOT_BOARD',
+    isChecked: false,
+    postId: 6,
+  },
+  {
+    id: 6,
+    content: '알림 메시지입니다.',
+    createdAt: '2022-08-09 16:04',
+    type: 'NEW_COMMENT',
+    isChecked: false,
+    postId: 7,
+  },
+];

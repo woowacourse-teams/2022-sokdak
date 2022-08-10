@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { forwardRef, ReactNode } from 'react';
 
 import * as Styled from './index.styles';
 
@@ -8,18 +8,20 @@ interface NotificationItemProps {
   notification: Notice;
 }
 
-const NotificationItem = ({ notification }: NotificationItemProps) => {
-  if (!Object.keys(NotificationByTypes).includes(notification.type)) {
-    return <>error</>;
-  }
+const NotificationItem = forwardRef<HTMLAnchorElement, NotificationItemProps>(
+  ({ notification }: NotificationItemProps, ref) => {
+    if (!Object.keys(NotificationByTypes).includes(notification.type)) {
+      return <>error</>;
+    }
 
-  return (
-    <Styled.ItemContainer to={`${PATH.POST}/${notification.postId}`}>
-      {NotificationByTypes[notification.type](notification)}
-      <Styled.DeleteButton>x</Styled.DeleteButton>
-    </Styled.ItemContainer>
-  );
-};
+    return (
+      <Styled.ItemContainer to={`${PATH.POST}/${notification.postId}`} ref={ref}>
+        {NotificationByTypes[notification.type](notification)}
+        <Styled.DeleteButton>x</Styled.DeleteButton>
+      </Styled.ItemContainer>
+    );
+  },
+);
 
 export default NotificationItem;
 

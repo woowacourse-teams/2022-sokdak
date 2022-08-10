@@ -8,6 +8,7 @@ import HashTagPage from './pages/HashTagPage';
 import LoginPage from './pages/LoginPage';
 import MainPage from './pages/MainPage';
 import NotFoundPage from './pages/NotFoundPage';
+import NotificationPage from './pages/NotificationPage';
 import PostPage from './pages/PostPage';
 import SignUpPage from './pages/SignUpPage';
 import UpdatePostPage from './pages/UpdatePostPage';
@@ -57,6 +58,7 @@ const App = () => {
         <Route path="*" element={<NotFoundPage />} />
         <Route element={<PrivateRoute />}>
           <Route path={PATH.CREATE_POST} element={<CreatePostPage />} />
+          <Route path={PATH.NOTIFICATION} element={<NotificationPage />} />
         </Route>
         <Route element={<PublicRoute />}>
           <Route path={PATH.LOGIN} element={<LoginPage />} />

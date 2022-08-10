@@ -39,7 +39,7 @@ const isYesterday = (dateParams: Date) => {
 const isInWeek = (dateParams: Date) => {
   const diffDate =
     Math.floor(Number(new Date()) / 1000 / 60 / 60 / 24) - Math.floor(Number(dateParams) / 1000 / 60 / 60 / 24);
-  if (diffDate >= 7) return false;
+  if (diffDate >= 7 || diffDate < 0) return false;
   return new Date().getDay() >= dateParams.getDay();
 };
 

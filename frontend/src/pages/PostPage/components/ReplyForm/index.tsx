@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import CheckBox from '@/components/CheckBox';
 
@@ -6,6 +6,8 @@ import useCreateReply from '@/hooks/queries/comment/useCreateReply';
 import useSnackbar from '@/hooks/useSnackbar';
 
 import * as Styled from './index.styles';
+
+import scrollToCurrent from '@/utils/scrollToCurrent';
 
 interface ReplyFormProps {
   commentId: string | number;
@@ -20,6 +22,7 @@ const ReplyForm = ({ commentId }: ReplyFormProps) => {
   const { mutate: postReply } = useCreateReply({
     onSuccess: () => {
       setContent('');
+      scrollToCurrent(100);
     },
   });
 
@@ -28,6 +31,12 @@ const ReplyForm = ({ commentId }: ReplyFormProps) => {
 
     postReply({ commentId, content, anonymous });
   };
+
+  useEffect(() => {
+    scrollToCurrent(150);
+
+    return () => scrollToCurrent(-150);
+  }, []);
 
   return (
     <Styled.Form onSubmit={handleSubmit}>

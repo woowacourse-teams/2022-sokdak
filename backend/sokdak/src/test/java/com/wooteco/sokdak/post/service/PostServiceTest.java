@@ -19,6 +19,7 @@ import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
+import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
@@ -26,7 +27,6 @@ import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
-import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import com.wooteco.sokdak.util.IntegrationTest;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,10 +65,11 @@ class PostServiceTest extends IntegrationTest {
     private Post post;
     private Board board;
     private PostBoard postBoard;
+    private Member member;
 
     @BeforeEach
     public void setUp() {
-        Member member = memberRepository.findById(1L)
+        member = memberRepository.findById(AUTH_INFO.getId())
                 .orElseThrow(MemberNotFoundException::new);
         post = Post.builder()
                 .title("제목")
@@ -259,8 +260,6 @@ class PostServiceTest extends IntegrationTest {
     @DisplayName("내가 쓴 글 조회 기능")
     @Test
     void findMyPosts() {
-        Member member = memberRepository.findById(AUTH_INFO.getId())
-                .orElseThrow(MemberNotFoundException::new);
         Post post1 = Post.builder()
                 .title("제목")
                 .content("본문")
@@ -287,8 +286,6 @@ class PostServiceTest extends IntegrationTest {
     @DisplayName("없는 페이지로 요청이 올 시 빈 배열 반환")
     @Test
     void findMyPosts_Exception_WrongPage() {
-        Member member = memberRepository.findById(AUTH_INFO.getId())
-                .orElseThrow(MemberNotFoundException::new);
         Post post = Post.builder()
                 .title("제목")
                 .content("본문")

@@ -62,9 +62,10 @@ class MemberServiceTest extends IntegrationTest {
     @Test
     void editNickname() {
         NicknameUpdateRequest nicknameUpdateRequest = new NicknameUpdateRequest("chrisNick2");
-        memberService.editNickname(nicknameUpdateRequest, AUTH_INFO);
-        Member member = memberRepository.findById(AUTH_INFO.getId()).orElseThrow();
 
+        memberService.editNickname(nicknameUpdateRequest, AUTH_INFO);
+
+        Member member = memberRepository.findById(AUTH_INFO.getId()).orElseThrow();
         assertThat(member.getNickname()).isEqualTo("chrisNick2");
     }
 

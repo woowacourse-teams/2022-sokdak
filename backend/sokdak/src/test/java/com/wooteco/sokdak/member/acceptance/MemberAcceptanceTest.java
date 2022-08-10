@@ -1,13 +1,11 @@
 package com.wooteco.sokdak.member.acceptance;
 
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPatchWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.member.dto.NicknameResponse;
 import com.wooteco.sokdak.member.dto.NicknameUpdateRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
@@ -31,8 +29,8 @@ class MemberAcceptanceTest extends AcceptanceTest {
         NicknameUpdateRequest nicknameRequest = new NicknameUpdateRequest(nickname);
         String token = getToken();
 
-        ExtractableResponse<Response> response = httpPatchWithAuthorization(nicknameRequest,
-                "/members/nickname", token);
+        ExtractableResponse<Response> response =
+                httpPatchWithAuthorization(nicknameRequest, "/members/nickname", token);
         NicknameResponse nicknameResponse = toNicknameResponse(httpGetWithAuthorization("/members/nickname", token));
 
         assertAll(

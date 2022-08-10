@@ -158,7 +158,9 @@ public class CommentService {
             return;
         }
         // 대댓글 삭제
+        parent.deleteChild(comment);
         commentRepository.delete(comment);
+
         if (parent.getChildren().isEmpty() && parent.isSoftRemoved()) {
             commentRepository.delete(parent);
         }

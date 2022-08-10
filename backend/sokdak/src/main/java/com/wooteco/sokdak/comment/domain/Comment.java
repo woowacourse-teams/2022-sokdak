@@ -159,4 +159,8 @@ public class Comment {
     public void changePretendingToBeRemoved() {
         this.softRemoved = true;
     }
+
+    public void deleteChild(Comment reply) {
+        children.remove(reply);
+    }
 }

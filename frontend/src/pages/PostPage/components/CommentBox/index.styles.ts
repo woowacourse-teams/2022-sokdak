@@ -1,4 +1,14 @@
+import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
+
+const leaveComment = keyframes`
+  from {
+    background-color: #fafafa;
+  }
+  to {
+    background-color: white;
+  }
+`;
 
 export const Container = styled.div`
   width: calc(100%-1em);
@@ -7,6 +17,7 @@ export const Container = styled.div`
   border-bottom: 0.5px solid ${props => props.theme.colors.gray_150};
   margin-bottom: -0.5px;
   background-color: white;
+  animation: ${leaveComment} 0.7s;
 `;
 
 export const EmptyComment = styled.div`

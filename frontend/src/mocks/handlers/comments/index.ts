@@ -97,8 +97,6 @@ const commentHandlers = [
       }
     }
 
-    console.log(commentList);
-
     if (!isCommentExist) {
       return res(ctx.status(400), ctx.json({ message: '해당 댓글이 존재하지 않습니다.' }));
     }

@@ -15,6 +15,8 @@ export const ItemContainer = styled(Link)`
 `;
 
 export const NotificationMessage = styled.p`
+  display: flex;
+  align-items: center;
   line-height: 1.3em;
 `;
 

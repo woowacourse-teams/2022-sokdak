@@ -42,12 +42,14 @@ const commentHandlers = [
   }),
 
   rest.post<{ message: string }>('/comments/:id/report', (req, res, ctx) => {
-    const { id } = req.params;
+    const id = Number(req.params.id);
     const { message } = req.body;
-    if (reportCommentList.some(({ commentId }) => commentId === Number(id))) {
+
+    if (reportCommentList.some(({ commentId }) => commentId === id)) {
       return res(ctx.status(400), ctx.json({ message: '이미 신고한 댓글입니다.' }));
     }
-    reportCommentList.push({ commentId: Number(id), message });
+    reportCommentList.push({ commentId: id, message });
+
     return res(ctx.status(201));
   }),
 

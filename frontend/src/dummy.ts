@@ -364,7 +364,7 @@ interface CommentListType extends CommentType {
 }
 
 export const commentListTable = {
-  id: 18,
+  id: 19,
 };
 
 export const commentList: CommentListType[] = [
@@ -408,7 +408,17 @@ export const commentList: CommentListType[] = [
     authorized: true,
     blocked: false,
     postWriter: true,
-    replies: [],
+    replies: [
+      {
+        id: 18,
+        nickname: '신난 200',
+        content: '재택 계속 해줘 ~ ',
+        createdAt: '2022-08-09T08:55:31.016376300',
+        authorized: false,
+        postWriter: false,
+        blocked: false,
+      },
+    ],
   },
   {
     id: 3,

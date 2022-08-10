@@ -1,8 +1,14 @@
 package com.wooteco.sokdak.comment.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.CommentFixture.*;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.*;
-import static com.wooteco.sokdak.util.fixture.PostFixture.*;
+import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_ANONYMOUS_COMMENT_REQUEST;
+import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_COMMENT_REQUEST;
+import static com.wooteco.sokdak.util.fixture.CommentFixture.addCommentAndGetCommentId;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getTokensForReport;
+import static com.wooteco.sokdak.util.fixture.PostFixture.addPostAndGetPostId;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -10,9 +16,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.CommentsResponse;
-import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.report.dto.ReportRequest;
-import com.wooteco.sokdak.util.fixture.ReportFixture;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -22,11 +26,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 class CommentAcceptanceTest extends AcceptanceTest {
-
-    private static final NewCommentRequest NEW_ANONYMOUS_COMMENT_REQUEST
-            = new NewCommentRequest(VALID_COMMENT_MESSAGE, true);
-    private static final NewCommentRequest NEW_COMMENT_REQUEST
-            = new NewCommentRequest(VALID_COMMENT_MESSAGE, false);
 
     @DisplayName("새로운 익명 댓글을 작성할 수 있다.")
     @Test
@@ -97,7 +96,7 @@ class CommentAcceptanceTest extends AcceptanceTest {
         Long postId = addPostAndGetPostId();
         Long commentId = addCommentAndGetCommentId(postId);
         addCommentAndGetCommentId(postId);
-        List<String> tokens = ReportFixture.getTokensForReport();
+        List<String> tokens = getTokensForReport();
 
         for (int i = 0; i < 5; ++i) {
             ReportRequest reportRequest = new ReportRequest("댓글신고");
@@ -128,12 +127,5 @@ class CommentAcceptanceTest extends AcceptanceTest {
     private String getToken() {
         LoginRequest loginRequest = new LoginRequest("chris", "Abcd123!@");
         return httpPost(loginRequest, "/login").header(AUTHORIZATION);
-    }
-
-    private Long addCommentAndGetCommentId(Long postId) {
-        NewCommentRequest newCommentRequest = new NewCommentRequest(VALID_COMMENT_MESSAGE, true);
-        return Long.parseLong(httpPostWithAuthorization(NEW_COMMENT_REQUEST,
-                "/posts/" + postId + "/comments", getToken())
-                .header("Location").split("/comments/")[1]);
     }
 }

@@ -102,6 +102,10 @@ public class Comment {
         return member;
     }
 
+    public Post getPost() {
+        return post;
+    }
+
     public String getNickname() {
         return nickname;
     }

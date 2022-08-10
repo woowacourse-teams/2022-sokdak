@@ -122,7 +122,7 @@ public class Post {
 
     public void addReport(PostReport other) {
         postReports.stream()
-                .filter(it -> other.isSameReporter(it))
+                .filter(other::isSameReporter)
                 .findAny()
                  .ifPresent(it -> {
                     throw new AlreadyReportPostException();

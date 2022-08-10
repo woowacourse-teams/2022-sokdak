@@ -2,7 +2,6 @@ package com.wooteco.sokdak.member.domain;
 
 import com.wooteco.sokdak.auth.service.Encryptor;
 import com.wooteco.sokdak.member.exception.InvalidPasswordFormatException;
-import com.wooteco.sokdak.member.exception.InvalidUsernameException;
 import java.util.regex.Pattern;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

@@ -12,6 +12,7 @@ import com.wooteco.sokdak.board.exception.BoardNotFoundException;
 import com.wooteco.sokdak.board.exception.BoardNotWritableException;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
+import com.wooteco.sokdak.notification.service.NotificationService;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
@@ -33,10 +34,13 @@ public class BoardService {
     private static final int PAGE_SIZE = 3;
     private final BoardRepository boardRepository;
     private final PostBoardRepository postBoardRepository;
+    private final NotificationService notificationService;
 
-    public BoardService(BoardRepository boardRepository, PostBoardRepository postBoardRepository) {
+    public BoardService(BoardRepository boardRepository, PostBoardRepository postBoardRepository,
+                        NotificationService notificationService) {
         this.boardRepository = boardRepository;
         this.postBoardRepository = postBoardRepository;
+        this.notificationService = notificationService;
     }
 
     @Transactional
@@ -87,6 +91,7 @@ public class BoardService {
             postBoard.addPost(originalPost);
             postBoard.addBoard(specialBoard);
             postBoardRepository.save(postBoard);
+            notificationService.notifyHotBoard(originalPost);
         }
     }
 

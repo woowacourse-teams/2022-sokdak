@@ -42,6 +42,10 @@ public class Member {
         this.nickname = new Nickname(nickname);
     }
 
+    public void updateNickname(Nickname nickname) {
+        this.nickname = nickname;
+    }
+
     public Long getId() {
         return id;
     }

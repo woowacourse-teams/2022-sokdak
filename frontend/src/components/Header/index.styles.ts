@@ -101,3 +101,7 @@ export const Panda = styled(PandaIcon)`
   width: 30px;
   height: 30px;
 `;
+
+export const DropdownContainer = styled.div`
+  width: fit-content;
+`;

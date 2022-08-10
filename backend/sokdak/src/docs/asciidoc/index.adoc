@@ -160,3 +160,18 @@ operation::hashtags/search/success[snippets='http-request,http-response']
 
 == 신고
 게시글/댓글 신고 관련 컨트롤러 테스트 구현 필요
+
+== 프로필
+
+=== 닉네임 조회
+==== 성공
+operation::member/find/nickname/success[snippets='http-request,http-response']
+
+=== 닉네임 변경
+==== 성공
+operation::member/patch/nickname/success[snippets='http-request,http-response']
+==== 실패
+===== 이미 있는 닉네임인 경우
+operation::member/patch/nickname/fail/duplicate[snippets='http-request,http-response']
+===== 잘못된 형식인 경우
+operation::member/patch/nickname/fail/invalidFormat[snippets='http-request,http-response']

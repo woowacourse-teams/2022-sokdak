@@ -500,6 +500,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </li>
 <li><a href="#_신고">9. 신고</a></li>
+<li><a href="#_프로필">10. 프로필</a>
+<ul class="sectlevel2">
+<li><a href="#_닉네임_검색">10.1. 닉네임 검색</a></li>
+<li><a href="#_닉네임_변경">10.2. 닉네임 변경</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -515,7 +521,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h5 id="_성공_http_request"><a class="link" href="#_성공_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /boards/content HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /boards/contents HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1299,13 +1305,14 @@ Vary: Access-Control-Request-Headers</code></pre>
 Content-Type: application/json
 Content-Type: application/json
 Authorization: any
-Content-Length: 78
+Content-Length: 112
 Host: localhost:8080
 
 {
   "title" : "제목",
   "content" : "본문",
-  "hashtags" : [ "태그1" ]
+  "anonymous" : false,
+  "hashtags" : [ "태그1", "태그2" ]
 }</code></pre>
 </div>
 </div>
@@ -1335,12 +1342,13 @@ Location: /posts/0</code></pre>
 Content-Type: application/json
 Content-Type: application/json
 Authorization: any
-Content-Length: 64
+Content-Length: 87
 Host: localhost:8080
 
 {
   "title" : null,
   "content" : "본문",
+  "anonymous" : false,
   "hashtags" : [ ]
 }</code></pre>
 </div>
@@ -1374,12 +1382,13 @@ Content-Length: 71
 Content-Type: application/json
 Content-Type: application/json
 Authorization: any
-Content-Length: 64
+Content-Length: 87
 Host: localhost:8080
 
 {
   "title" : "제목",
   "content" : null,
+  "anonymous" : false,
   "hashtags" : [ ]
 }</code></pre>
 </div>
@@ -1430,25 +1439,27 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
-Content-Length: 417
+Content-Length: 462
 
 {
   "posts" : [ {
     "id" : 1,
     "title" : "제목1",
     "content" : "본문1",
-    "createdAt" : "2022-08-03T19:48:01.775034",
+    "createdAt" : "2022-08-09T17:29:13.615401",
     "likeCount" : 0,
     "commentCount" : 0,
-    "modified" : false
+    "modified" : false,
+    "blocked" : false
   }, {
     "id" : 2,
     "title" : "제목2",
     "content" : "본문2",
-    "createdAt" : "2022-08-03T19:48:01.775068",
+    "createdAt" : "2022-08-09T17:29:13.61543",
     "likeCount" : 0,
     "commentCount" : 0,
-    "modified" : false
+    "modified" : false,
+    "blocked" : false
   } ],
   "lastPage" : true
 }</code></pre>
@@ -1481,17 +1492,20 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
-Content-Length: 250
+Content-Length: 311
 
 {
   "id" : 1,
+  "boardId" : null,
+  "nickname" : null,
   "title" : "제목1",
   "content" : "본문1",
+  "blocked" : false,
   "hashtags" : [ {
     "id" : 1,
     "name" : "gogo"
   } ],
-  "createdAt" : "2022-08-03T19:48:01.943402",
+  "createdAt" : "2022-08-09T17:29:13.83979",
   "likeCount" : 0,
   "like" : false,
   "authorized" : true,
@@ -1822,19 +1836,25 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
-Content-Length: 266
+Content-Length: 415
 
 {
   "comments" : [ {
     "id" : 1,
     "nickname" : "조시1",
     "content" : "댓글1",
-    "createdAt" : "2022-08-03T19:47:47.415419"
+    "createdAt" : "2022-08-09T17:28:58.52939",
+    "blocked" : false,
+    "postWriter" : false,
+    "authorized" : false
   }, {
     "id" : 2,
     "nickname" : "조시2",
     "content" : "댓글2",
-    "createdAt" : "2022-08-03T19:47:47.41548"
+    "createdAt" : "2022-08-09T17:28:58.529419",
+    "blocked" : false,
+    "postWriter" : true,
+    "authorized" : false
   } ]
 }</code></pre>
 </div>
@@ -1908,7 +1928,7 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
-Content-Length: 424
+Content-Length: 470
 
 {
   "posts" : [ {
@@ -1918,7 +1938,8 @@ Content-Length: 424
     "createdAt" : "-999999999-01-01T00:00:00",
     "likeCount" : 5,
     "commentCount" : 2,
-    "modified" : false
+    "modified" : false,
+    "blocked" : false
   }, {
     "id" : 2,
     "title" : "제목2",
@@ -1926,7 +1947,8 @@ Content-Length: 424
     "createdAt" : "+999999999-12-31T23:59:59.999999999",
     "likeCount" : 10,
     "commentCount" : 4,
-    "modified" : false
+    "modified" : false,
+    "blocked" : false
   } ],
   "lastPage" : true
 }</code></pre>
@@ -2021,11 +2043,155 @@ Content-Length: 143
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_프로필"><a class="link" href="#_프로필">10. 프로필</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_닉네임_검색"><a class="link" href="#_닉네임_검색">10.1. 닉네임 검색</a></h3>
+<div class="sect3">
+<h4 id="_성공_20"><a class="link" href="#_성공_20">10.1.1. 성공</a></h4>
+<div class="sect4">
+<h5 id="_성공_20_http_request"><a class="link" href="#_성공_20_http_request">HTTP request</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /members/nickname HTTP/1.1
+Content-Type: application/json
+Content-Type: application/json
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_성공_20_http_response"><a class="link" href="#_성공_20_http_response">HTTP response</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_닉네임_변경"><a class="link" href="#_닉네임_변경">10.2. 닉네임 변경</a></h3>
+<div class="sect3">
+<h4 id="_성공_21"><a class="link" href="#_성공_21">10.2.1. 성공</a></h4>
+<div class="sect4">
+<h5 id="_성공_21_http_request"><a class="link" href="#_성공_21_http_request">HTTP request</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /members/nickname HTTP/1.1
+Content-Type: application/json
+Content-Type: application/json
+Authorization: Bearer chris
+Content-Length: 31
+Host: localhost:8080
+
+{
+  "nickname" : "chrisNick2"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_성공_21_http_response"><a class="link" href="#_성공_21_http_response">HTTP response</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_실패_11"><a class="link" href="#_실패_11">10.2.2. 실패</a></h4>
+<div class="sect4">
+<h5 id="_이미_있는_닉네임인_경우"><a class="link" href="#_이미_있는_닉네임인_경우">이미 있는 닉네임인 경우</a></h5>
+<div class="sect5">
+<h6 id="_이미_있는_닉네임인_경우_http_request"><a class="link" href="#_이미_있는_닉네임인_경우_http_request">HTTP request</a></h6>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /members/nickname HTTP/1.1
+Content-Type: application/json
+Content-Type: application/json
+Authorization: Bearer chris
+Content-Length: 34
+Host: localhost:8080
+
+{
+  "nickname" : "hunchNickname"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_이미_있는_닉네임인_경우_http_response"><a class="link" href="#_이미_있는_닉네임인_경우_http_response">HTTP response</a></h6>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Content-Length: 59
+
+{
+  "message" : "이미 존재하는 닉네임입니다."
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_잘못된_형식인_경우"><a class="link" href="#_잘못된_형식인_경우">잘못된 형식인 경우</a></h5>
+<div class="sect5">
+<h6 id="_잘못된_형식인_경우_http_request"><a class="link" href="#_잘못된_형식인_경우_http_request">HTTP request</a></h6>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /members/nickname HTTP/1.1
+Content-Type: application/json
+Content-Type: application/json
+Authorization: Bearer chris
+Content-Length: 21
+Host: localhost:8080
+
+{
+  "nickname" : ""
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect5">
+<h6 id="_잘못된_형식인_경우_http_response"><a class="link" href="#_잘못된_형식인_경우_http_response">HTTP response</a></h6>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Content-Length: 56
+
+{
+  "message" : "잘못된 닉네임 형식입니다."
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-08-03 19:58:10 +0900
+Last updated 2022-08-09 17:23:47 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

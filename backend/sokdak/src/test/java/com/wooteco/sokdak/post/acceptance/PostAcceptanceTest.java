@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.post.acceptance;
 
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getExceptionMessage;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithAuthorization;
@@ -300,11 +301,6 @@ class PostAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(postsResponse.getPosts()).isEmpty(),
                 () -> assertThat(postsResponse.getTotalPageCount()).isEqualTo(1)
         );
-    }
-
-    private String getToken() {
-        LoginRequest loginRequest = new LoginRequest("chris", "Abcd123!@");
-        return httpPost(loginRequest, "/login").header(AUTHORIZATION);
     }
 
     private String parsePostId(ExtractableResponse<Response> response) {

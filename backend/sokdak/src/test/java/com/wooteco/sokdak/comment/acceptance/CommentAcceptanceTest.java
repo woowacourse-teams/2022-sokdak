@@ -3,6 +3,7 @@ package com.wooteco.sokdak.comment.acceptance;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_ANONYMOUS_COMMENT_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_COMMENT_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.addCommentAndGetCommentId;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
@@ -122,10 +123,5 @@ class CommentAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = httpDeleteWithAuthorization("/comments/1", getToken());
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-    }
-
-    private String getToken() {
-        LoginRequest loginRequest = new LoginRequest("chris", "Abcd123!@");
-        return httpPost(loginRequest, "/login").header(AUTHORIZATION);
     }
 }

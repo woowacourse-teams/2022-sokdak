@@ -55,11 +55,6 @@ class MemberAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    private String getToken() {
-        LoginRequest loginRequest = new LoginRequest("chris", "Abcd123!@");
-        return httpPost(loginRequest, "/login").header(AUTHORIZATION);
-    }
-
     private NicknameResponse toNicknameResponse(ExtractableResponse<Response> getWithAuthorization) {
         return getWithAuthorization.body()
                 .jsonPath()

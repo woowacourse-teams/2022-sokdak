@@ -7,6 +7,7 @@ import com.wooteco.sokdak.comment.dto.CommentsResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.dto.NewReplyRequest;
 import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
+import com.wooteco.sokdak.comment.exception.ReplyDepthException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
@@ -64,6 +65,9 @@ public class CommentService {
                 .orElseThrow(MemberNotFoundException::new);
         Comment parent = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
+        if (!Objects.isNull(parent.getParent())) {
+            throw new ReplyDepthException();
+        }
         Post post = parent.getPost();
 
         String nickname = getCommentNickname(newReplyRequest.isAnonymous(), authInfo, post);

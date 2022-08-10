@@ -1,8 +1,10 @@
 package com.wooteco.sokdak.comment.service;
 
 import static com.wooteco.sokdak.member.domain.RoleType.USER;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.*;
-import static com.wooteco.sokdak.util.fixture.PostFixture.*;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO2;
+import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
+import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -12,9 +14,10 @@ import com.wooteco.sokdak.auth.exception.AuthenticationException;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
+import com.wooteco.sokdak.comment.dto.NewReplyRequest;
+import com.wooteco.sokdak.comment.exception.ReplyDepthException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.member.domain.Member;
-import com.wooteco.sokdak.member.domain.Nickname;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
 import com.wooteco.sokdak.post.domain.Post;
@@ -81,6 +84,36 @@ class CommentServiceTest extends IntegrationTest {
                 () -> assertThat(foundComment.getMember()).isEqualTo(member),
                 () -> assertThat(foundComment.getNickname()).isEqualTo(member.getNickname())
         );
+    }
+
+    @DisplayName("대댓글 등록")
+    @Test
+    void addReply() {
+        NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", false);
+        NewReplyRequest newReplyRequest = new NewReplyRequest("대댓글", false);
+        Long commentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, AUTH_INFO);
+
+        Long replyId = commentService.addReply(commentId, newReplyRequest, AUTH_INFO);
+
+        Comment comment = commentRepository.findById(commentId).get();
+        Comment reply = commentRepository.findById(replyId).get();
+        assertAll(
+                () -> assertThat(reply.getMessage()).isEqualTo("대댓글"),
+                () -> assertThat(reply.getParent()).isEqualTo(comment)
+        );
+    }
+
+    @DisplayName("대댓글에 답글을 달면 예외 발생")
+    @Test
+    void addReply_Exception_Having_Parent() {
+        NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", false);
+        NewReplyRequest newReplyRequest = new NewReplyRequest("대댓글", false);
+        NewReplyRequest newReplyRequest2 = new NewReplyRequest("대대댓글", false);
+        Long commentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, AUTH_INFO);
+        Long replyId = commentService.addReply(commentId, newReplyRequest, AUTH_INFO);
+
+        assertThatThrownBy(() -> commentService.addReply(replyId, newReplyRequest2, AUTH_INFO))
+                .isInstanceOf(ReplyDepthException.class);
     }
 
     @DisplayName("익명 게시글에서 게시글 작성자가 기명으로 댓글 등록")

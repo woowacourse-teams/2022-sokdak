@@ -54,7 +54,7 @@ public class CommentReportService {
         int reportCount = commentReportRepository.countByCommentId(comment.getId());
         if (reportCount == BLOCKED_CONDITION) {
             Post post = comment.getPost();
-            notificationService.notifyCommentReport(post.getMember(), post, comment.getMessage());
+            notificationService.notifyCommentReport(post.getMember(), post, comment);
         }
     }
 }

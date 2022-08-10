@@ -55,7 +55,7 @@ public class CommentService {
                 .build();
 
         Comment savedComment = commentRepository.save(comment);
-        notificationService.notifyNewComment(post.getMember(), post, comment.getMessage());
+        notificationService.notifyNewComment(post.getMember(), post, comment);
         return savedComment.getId();
     }
 
@@ -111,7 +111,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
         comment.validateOwner(authInfo.getId());
-
+        notificationService.deleteCommentNotification(commentId);
         commentRepository.delete(comment);
     }
 }

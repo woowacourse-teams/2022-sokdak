@@ -3,9 +3,7 @@ package com.wooteco.sokdak.notification.service;
 import static com.wooteco.sokdak.notification.domain.NotificationType.COMMENT_REPORT;
 import static com.wooteco.sokdak.notification.domain.NotificationType.HOT_BOARD;
 import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_COMMENT;
-import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_REPLY;
 import static com.wooteco.sokdak.notification.domain.NotificationType.POST_REPORT;
-import static com.wooteco.sokdak.notification.domain.NotificationType.REPLY_REPORT;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
@@ -13,6 +11,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.comment.domain.Comment;
+import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
@@ -42,14 +42,20 @@ class NotificationServiceTest extends IntegrationTest {
     private PostRepository postRepository;
 
     @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
     private NotificationRepository notificationRepository;
 
     private Member member;
     private Post post;
+    private Comment comment;
 
     @BeforeEach
     void setUp() {
         member = memberRepository.findById(1L)
+                .orElseThrow(MemberNotFoundException::new);
+        Member member2 = memberRepository.findById(2L)
                 .orElseThrow(MemberNotFoundException::new);
         post = Post.builder()
                 .member(member)
@@ -58,12 +64,19 @@ class NotificationServiceTest extends IntegrationTest {
                 .writerNickname(member.getNickname())
                 .build();
         postRepository.save(post);
+        comment = Comment.builder()
+                .post(post)
+                .member(member2)
+                .nickname("닉네임")
+                .message("내용")
+                .build();
+        commentRepository.save(comment);
     }
 
     @DisplayName("새 댓글 알림을 등록한다.")
     @Test
     void notifyNewComment() {
-        notificationService.notifyNewComment(member, post, "댓글 내용");
+        notificationService.notifyNewComment(member, post, comment);
 
         List<Notification> notifications = notificationRepository.findByMemberId(member.getId());
         Notification notification = notifications.get(0);
@@ -73,7 +86,7 @@ class NotificationServiceTest extends IntegrationTest {
                 () -> assertThat(notification.getMember()).isEqualTo(member),
                 () -> assertThat(notification.getPost()).isEqualTo(post),
                 () -> assertThat(notification.getNotificationType()).isEqualTo(NEW_COMMENT),
-                () -> assertThat(notification.getContent()).isEqualTo("댓글 내용"),
+                () -> assertThat(notification.getContent()).isEqualTo("내용"),
                 () -> assertThat(notification.isInquired()).isFalse()
         );
     }
@@ -81,7 +94,7 @@ class NotificationServiceTest extends IntegrationTest {
     @DisplayName("댓글 신고 알림을 등록한다.")
     @Test
     void notifyCommentReport() {
-        notificationService.notifyCommentReport(member, post, "댓글 내용");
+        notificationService.notifyCommentReport(member, post, comment);
 
         List<Notification> notifications = notificationRepository.findByMemberId(member.getId());
         Notification notification = notifications.get(0);
@@ -91,43 +104,7 @@ class NotificationServiceTest extends IntegrationTest {
                 () -> assertThat(notification.getMember()).isEqualTo(member),
                 () -> assertThat(notification.getPost()).isEqualTo(post),
                 () -> assertThat(notification.getNotificationType()).isEqualTo(COMMENT_REPORT),
-                () -> assertThat(notification.getContent()).isEqualTo("댓글 내용"),
-                () -> assertThat(notification.isInquired()).isFalse()
-        );
-    }
-
-    @DisplayName("새 대댓글 알림을 등록한다.")
-    @Test
-    void notifyNewReply() {
-        notificationService.notifyNewReply(member, post, "대댓글 내용");
-
-        List<Notification> notifications = notificationRepository.findByMemberId(member.getId());
-        Notification notification = notifications.get(0);
-
-        assertAll(
-                () -> assertThat(notifications).hasSize(1),
-                () -> assertThat(notification.getMember()).isEqualTo(member),
-                () -> assertThat(notification.getPost()).isEqualTo(post),
-                () -> assertThat(notification.getNotificationType()).isEqualTo(NEW_REPLY),
-                () -> assertThat(notification.getContent()).isEqualTo("대댓글 내용"),
-                () -> assertThat(notification.isInquired()).isFalse()
-        );
-    }
-
-    @DisplayName("댓글 신고 알림을 등록한다.")
-    @Test
-    void notifyReplyReport() {
-        notificationService.notifyReplyReport(member, post, "대댓글 내용");
-
-        List<Notification> notifications = notificationRepository.findByMemberId(member.getId());
-        Notification notification = notifications.get(0);
-
-        assertAll(
-                () -> assertThat(notifications).hasSize(1),
-                () -> assertThat(notification.getMember()).isEqualTo(member),
-                () -> assertThat(notification.getPost()).isEqualTo(post),
-                () -> assertThat(notification.getNotificationType()).isEqualTo(REPLY_REPORT),
-                () -> assertThat(notification.getContent()).isEqualTo("대댓글 내용"),
+                () -> assertThat(notification.getContent()).isEqualTo("내용"),
                 () -> assertThat(notification.isInquired()).isFalse()
         );
     }
@@ -145,7 +122,7 @@ class NotificationServiceTest extends IntegrationTest {
                 () -> assertThat(notification.getMember()).isEqualTo(member),
                 () -> assertThat(notification.getPost()).isEqualTo(post),
                 () -> assertThat(notification.getNotificationType()).isEqualTo(HOT_BOARD),
-                () -> assertThat(notification.getContent()).isNull(),
+                () -> assertThat(notification.getContent()).isEqualTo(VALID_POST_TITLE),
                 () -> assertThat(notification.isInquired()).isFalse()
         );
     }
@@ -163,7 +140,7 @@ class NotificationServiceTest extends IntegrationTest {
                 () -> assertThat(notification.getMember()).isEqualTo(member),
                 () -> assertThat(notification.getPost()).isEqualTo(post),
                 () -> assertThat(notification.getNotificationType()).isEqualTo(POST_REPORT),
-                () -> assertThat(notification.getContent()).isNull(),
+                () -> assertThat(notification.getContent()).isEqualTo(VALID_POST_TITLE),
                 () -> assertThat(notification.isInquired()).isFalse()
         );
     }

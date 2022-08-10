@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.notification.domain;
 
+import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.post.domain.Post;
 import java.time.LocalDateTime;
@@ -36,7 +37,9 @@ public class Notification {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    private String content;
+    @ManyToOne
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
 
     private boolean inquired;
 
@@ -47,11 +50,18 @@ public class Notification {
     }
 
     @Builder
-    private Notification(NotificationType notificationType, Member member, Post post, String content) {
+    private Notification(NotificationType notificationType, Member member, Post post, Comment comment) {
         this.notificationType = notificationType;
         this.member = member;
         this.post = post;
-        this.content = content;
+        this.comment = comment;
         this.inquired = false;
+    }
+
+    public String getContent() {
+        if (getComment() == null) {
+            return post.getTitle();
+        }
+        return getComment().getMessage();
     }
 }

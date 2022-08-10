@@ -9,6 +9,7 @@ interface CommentResponse extends CommentType {
   id: number;
   blocked: boolean;
   postWriter: boolean;
+  replies: Omit<CommentResponse, 'replies'>[];
 }
 
 const useComments = ({

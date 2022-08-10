@@ -1,8 +1,8 @@
 package com.wooteco.sokdak.notification.repository;
 
 import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_COMMENT;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_ENCRYPTED_PASSWORD;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
@@ -47,12 +47,12 @@ class NotificationRepositoryTest {
     void setUp() {
         member = Member.builder()
                 .username(VALID_USERNAME)
-                .password(VALID_ENCRYPTED_PASSWORD)
+                .password(VALID_PASSWORD)
                 .nickname(VALID_NICKNAME)
                 .build();
         Member member2 = Member.builder()
                 .username("josh")
-                .password(VALID_ENCRYPTED_PASSWORD)
+                .password(VALID_PASSWORD)
                 .nickname("joshNickname")
                 .build();
         memberRepository.save(member);

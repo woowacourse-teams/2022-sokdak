@@ -13,6 +13,7 @@ import Logo from '@/assets/images/logo.svg';
 import PATH from '@/constants/path';
 
 import Dropdown from '../@shared/Dropdown';
+import Notification from './Notification';
 
 const Header = () => {
   const { isLogin, username } = useContext(AuthContext);
@@ -33,20 +34,23 @@ const Header = () => {
         <Styled.Search onClick={handleSearchModal} />
         {isLogin && username ? (
           <>
-            <Dropdown>
-              <Dropdown.Trigger>
-                <Styled.AvatarContainer>
-                  <Styled.Panda />
-                  <DropDownCaret />
-                </Styled.AvatarContainer>
-              </Dropdown.Trigger>
-              <Dropdown.OptionList>
-                <Styled.OptionsContainer>
-                  <Styled.ProfileButton>프로필</Styled.ProfileButton>
-                  <Styled.LogoutButton onClick={handleClickLogout}>로그아웃</Styled.LogoutButton>
-                </Styled.OptionsContainer>
-              </Dropdown.OptionList>
-            </Dropdown>
+            <Notification />
+            <Styled.DropdownContainer>
+              <Dropdown>
+                <Dropdown.Trigger>
+                  <Styled.AvatarContainer>
+                    <Styled.Panda />
+                    <DropDownCaret />
+                  </Styled.AvatarContainer>
+                </Dropdown.Trigger>
+                <Dropdown.OptionList>
+                  <Styled.OptionsContainer>
+                    <Styled.ProfileButton>프로필</Styled.ProfileButton>
+                    <Styled.LogoutButton onClick={handleClickLogout}>로그아웃</Styled.LogoutButton>
+                  </Styled.OptionsContainer>
+                </Dropdown.OptionList>
+              </Dropdown>
+            </Styled.DropdownContainer>
           </>
         ) : (
           <Styled.LoginLink to={PATH.LOGIN}>로그인</Styled.LoginLink>

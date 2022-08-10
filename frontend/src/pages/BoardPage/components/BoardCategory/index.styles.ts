@@ -28,9 +28,10 @@ export const Title = styled.p`
 `;
 
 export const BoardItem = styled(Link)`
+  font-family: 'BMHANNAAir';
   width: 100%;
-  font-size: 1rem;
-  border-bottom: 0.5px solid ${props => props.theme.colors.gray_150};
+  font-size: 14px;
+  color: ${props => props.theme.colors.gray_200};
   text-align: left;
   display: flex;
   justify-content: center;
@@ -40,9 +41,9 @@ export const BoardItem = styled(Link)`
 `;
 
 export const BoardList = styled.div`
-  padding: 0 1em;
+  padding: 0.5em 1em;
   display: flex;
-  width: 10rem;
+  width: 7rem;
   flex-direction: column;
   justify-content: center;
   align-items: center;

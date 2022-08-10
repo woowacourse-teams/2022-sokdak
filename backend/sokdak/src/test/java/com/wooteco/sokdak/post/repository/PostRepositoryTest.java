@@ -15,6 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 
@@ -36,8 +37,8 @@ class PostRepositoryTest extends RepositoryTest {
     @BeforeEach
     void setUp() {
         member = memberRepository
-                .findByUsernameValueAndPassword(Encryptor.encrypt(VALID_USERNAME), VALID_ENCRYPTED_PASSWORD)
-                .get();
+                .findByUsernameValueAndPasswordValue(Encryptor.encrypt(VALID_USERNAME), VALID_ENCRYPTED_PASSWORD)
+                .orElseThrow();
 
         post1 = Post.builder()
                 .title("제목1")
@@ -97,8 +98,19 @@ class PostRepositoryTest extends RepositoryTest {
     @Test
     void findPostWithMember() {
         Post foundPost = postRepository.findById(post1.getId())
-                .get();
+                .orElseThrow();
 
         assertThat(foundPost.getMember()).isNotNull();
+    }
+
+    @DisplayName("특점 멤버의 글을 시간순으로 가져오는지 확인")
+    @Test
+    void findPostsByMember() {
+        Page<Post> result = postRepository.findPostsByMemberOrderByCreatedAtDesc(PageRequest.of(0, 2), member);
+
+        assertAll(
+                () -> assertThat(result.getContent()).containsExactly(post5, post4),
+                () -> assertThat(result.getTotalPages()).isEqualTo(3)
+        );
     }
 }

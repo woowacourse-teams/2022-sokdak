@@ -22,6 +22,8 @@ import com.wooteco.sokdak.notification.controller.NotificationController;
 import com.wooteco.sokdak.notification.service.NotificationService;
 import com.wooteco.sokdak.post.controller.PostController;
 import com.wooteco.sokdak.post.service.PostService;
+import com.wooteco.sokdak.profile.controller.ProfileController;
+import com.wooteco.sokdak.profile.service.ProfileService;
 import com.wooteco.sokdak.report.controller.CommentReportController;
 import com.wooteco.sokdak.report.controller.PostReportController;
 import com.wooteco.sokdak.report.service.CommentReportService;
@@ -50,7 +52,9 @@ import org.springframework.web.context.WebApplicationContext;
         CommentReportController.class,
         BoardController.class,
         HashtagController.class,
-        NotificationController.class
+        NotificationController.class,
+        HashtagController.class,
+        ProfileController.class
 })
 @ExtendWith(RestDocumentationExtension.class)
 public class ControllerTest {
@@ -104,6 +108,9 @@ public class ControllerTest {
 
     @MockBean
     protected RefreshTokenService refreshTokenService;
+
+    @MockBean
+    protected ProfileService profileService;
 
     @BeforeEach
     void setRestDocs(WebApplicationContext webApplicationContext,

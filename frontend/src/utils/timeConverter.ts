@@ -18,4 +18,50 @@ const timeConverter = (createdAt: string): string => {
   return '방금 전';
 };
 
+const isToday = (dateParams: Date) => {
+  const day = new Date();
+  return (
+    dateParams.getFullYear() === day.getFullYear() &&
+    dateParams.getMonth() === day.getMonth() &&
+    dateParams.getDate() === day.getDate()
+  );
+};
+
+const isYesterday = (dateParams: Date) => {
+  const day = new Date();
+  return (
+    dateParams.getFullYear() === day.getFullYear() &&
+    dateParams.getMonth() === day.getMonth() &&
+    dateParams.getDate() === day.getDate() - 1
+  );
+};
+
+const isInWeek = (dateParams: Date) => {
+  const diffDate =
+    Math.floor(Number(new Date()) / 1000 / 60 / 60 / 24) - Math.floor(Number(dateParams) / 1000 / 60 / 60 / 24);
+  if (diffDate >= 7) return false;
+  return new Date().getDay() >= dateParams.getDay();
+};
+
+const isInMonth = (dateParams: Date) => {
+  const day = new Date();
+  return dateParams.getFullYear() === day.getFullYear() && dateParams.getMonth() === day.getMonth();
+};
+
+export const convertToTimeType = (createdAt: Date): TimeType => {
+  if (isToday(createdAt)) {
+    return '오늘';
+  }
+  if (isYesterday(createdAt)) {
+    return '어제';
+  }
+  if (isInWeek(createdAt)) {
+    return '이번주';
+  }
+  if (isInMonth(createdAt)) {
+    return '이번달';
+  }
+  return '오래전';
+};
+
 export default timeConverter;

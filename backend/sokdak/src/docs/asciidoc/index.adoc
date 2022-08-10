@@ -173,12 +173,26 @@ operation::member/patch/nickname/success[snippets='http-request,http-response']
 ==== 실패
 ===== 이미 있는 닉네임인 경우
 operation::member/patch/nickname/fail/duplicate[snippets='http-request,http-response']
+
 ===== 잘못된 형식인 경우
+
 operation::member/patch/nickname/fail/invalidFormat[snippets='http-request,http-response']
 
 === 내가 쓴 글 조회
+
 ==== 성공
+
 ===== 해당 페이지의 글이 존재할 경우
+
 operation::member/find/posts/success/postIn[snippets='http-request,http-response']
+
 ===== 해당 페이지의 글이 없을 경우
+
 operation::member/find/posts/success/noPost[snippets='http-request,http-response']
+
+=== 새로 등록된 알림이 있는지 조회
+
+==== 성공
+
+operation::notification/checkNew/success[snippets='http-request,http-response']
+

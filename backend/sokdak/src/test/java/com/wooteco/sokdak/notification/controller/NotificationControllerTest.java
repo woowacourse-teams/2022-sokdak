@@ -3,6 +3,7 @@ package com.wooteco.sokdak.notification.controller;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
 import com.wooteco.sokdak.notification.dto.NewNotificationCheckResponse;
 import com.wooteco.sokdak.util.ControllerTest;
@@ -36,6 +37,8 @@ class NotificationControllerTest extends ControllerTest {
                 .header("Authorization", "any")
                 .when().get("/notifications/check")
                 .then().log().all()
+                .apply(document("notification/checkNew/success"))
+                .assertThat()
                 .statusCode(HttpStatus.OK.value());
     }
 }

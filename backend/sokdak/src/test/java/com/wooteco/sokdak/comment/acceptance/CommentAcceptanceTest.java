@@ -157,18 +157,23 @@ class CommentAcceptanceTest extends AcceptanceTest {
         Long postId = addPostAndGetPostId();
         Long commentId = addCommentAndGetCommentId(postId);
         httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST,
-                "/comments" + commentId + "/reply",
+                "/comments/" + commentId + "/reply",
                 getToken());
 
-        ExtractableResponse<Response> response = httpDeleteWithAuthorization("/comments/1", getToken());
-        List<CommentResponse> commentResponses = response.jsonPath()
+        httpDeleteWithAuthorization("/comments/" + commentId, getToken());
+        ExtractableResponse<Response> response = httpGet("/posts/" + postId + "/comments");
+        CommentResponse commentResponse = response.jsonPath()
                 .getObject(".", CommentsResponse.class)
-                .getComments();
+                .getComments().get(0);
+
+        List<ReplyResponse> replyResponses = commentResponse.getReplies();
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(commentResponses.size()).isEqualTo(2),
-                () -> assertThat(commentResponses.get(0).getContent()).isNull()
+                () -> assertThat(commentResponse.getId()).isEqualTo(commentId),
+                () -> assertThat(commentResponse.getContent()).isNull(),
+                () -> assertThat(commentResponse.getNickname()).isNull(),
+                () -> assertThat(replyResponses).hasSize(1)
         );
     }
 

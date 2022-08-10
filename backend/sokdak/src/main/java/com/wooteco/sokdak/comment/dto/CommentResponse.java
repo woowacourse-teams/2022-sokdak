@@ -8,6 +8,7 @@ import java.util.Map;
 import lombok.Getter;
 
 @Getter
+//@JsonInclude(Include.NON_NULL)
 public class CommentResponse {
 
     private final Long id;
@@ -36,8 +37,19 @@ public class CommentResponse {
         for (Comment reply : accessMemberIdByReply.keySet()) {
             replyResponses.add(ReplyResponse.of(reply, accessMemberIdByReply.get(reply)));
         }
+
         return new CommentResponse(comment.getId(), comment.getNickname(), comment.getMessage(),
                 comment.getCreatedAt(), comment.isBlocked(), comment.isPostWriter(),
                 comment.isAuthenticated(accessMemberId), replyResponses);
+    }
+
+    public static CommentResponse softRemovedOf(Comment comment, Map<Comment, Long> accessMemberIdByReply) {
+        List<ReplyResponse> replyResponses = new ArrayList<>();
+        for (Comment reply : accessMemberIdByReply.keySet()) {
+            replyResponses.add(ReplyResponse.of(reply, accessMemberIdByReply.get(reply)));
+        }
+
+        return new CommentResponse(comment.getId(), null, null, null, false,
+                false, false, replyResponses);
     }
 }

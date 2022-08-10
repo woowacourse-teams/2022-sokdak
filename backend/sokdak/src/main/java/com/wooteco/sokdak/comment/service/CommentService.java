@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -115,10 +116,17 @@ public class CommentService {
     public CommentsResponse findComments(Long postId, AuthInfo authInfo) {
         List<Comment> comments = commentRepository.findAllByPostIdAndParentId(postId, null);
         List<CommentResponse> commentResponses = comments.stream()
-                .map(it -> CommentResponse.of(it, authInfo.getId(), findReplies(it, postId, authInfo.getId())))
+                .map(it -> convertToCommentResponse(postId, authInfo, it))
                 .collect(Collectors.toList());
 
         return new CommentsResponse(commentResponses);
+    }
+
+    private CommentResponse convertToCommentResponse(Long postId, AuthInfo authInfo, Comment comment) {
+        if (comment.isSoftRemoved()) {
+            return CommentResponse.softRemovedOf(comment, findReplies(comment, postId, authInfo.getId()));
+        }
+        return CommentResponse.of(comment, authInfo.getId(), findReplies(comment, postId, authInfo.getId()));
     }
 
     private Map<Comment, Long> findReplies(Comment parent, Long postId, Long accessMemberId) {
@@ -130,13 +138,25 @@ public class CommentService {
         return accessMemberIdByReply;
     }
 
-
     @Transactional
     public void deleteComment(Long commentId, AuthInfo authInfo) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
         comment.validateOwner(authInfo.getId());
 
+        Comment parent = comment.getParent();
+        if (Objects.isNull(parent)) {       // 댓글 삭제
+            if (comment.getChildren().isEmpty()) {
+                commentRepository.delete(comment);
+                return;
+            }
+            comment.changePretendingToBeRemoved();
+            return;
+        }
+        // 대댓글 삭제
         commentRepository.delete(comment);
+        if (parent.getChildren().isEmpty() && parent.isSoftRemoved()) {
+            commentRepository.delete(parent);
+        }
     }
 }

@@ -58,6 +58,8 @@ public class Comment {
     @Embedded
     private Message message;
 
+    private boolean softRemoved;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
@@ -148,5 +150,13 @@ public class Comment {
 
     public List<CommentReport> getCommentReports() {
         return commentReports;
+    }
+
+    public boolean isSoftRemoved() {
+        return softRemoved;
+    }
+
+    public void changePretendingToBeRemoved() {
+        this.softRemoved = true;
     }
 }

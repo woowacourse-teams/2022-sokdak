@@ -17,6 +17,9 @@ interface NotificationItemProps {
 }
 
 const NotificationItem = ({ notification }: NotificationItemProps) => {
+  if (!Object.keys(NotificationByTypes).includes(notification.type)) {
+    return <>error</>;
+  }
   return (
     <Styled.ItemContainer to={`${PATH.POST}/${notification.postId}`}>
       {NotificationByTypes[notification.type](notification)}

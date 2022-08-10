@@ -6,7 +6,7 @@ const scrollToCurrent = (current: number) => {
     behavior: 'smooth',
   });
 
-  document.body.style.height = document.body.scrollHeight - current + 'px';
+  document.body.style.height = 'fit-content';
 };
 
 export default scrollToCurrent;

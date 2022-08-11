@@ -67,7 +67,7 @@ public class CommentService {
                 .orElseThrow(MemberNotFoundException::new);
         Comment parent = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
-        if (!Objects.isNull(parent.getParent())) {
+        if (!isComment(parent.getParent())) {
             throw new ReplyDepthException();
         }
         Post post = parent.getPost();
@@ -156,20 +156,41 @@ public class CommentService {
         notificationService.deleteCommentNotification(commentId);
 
         Comment parent = comment.getParent();
-        if (Objects.isNull(parent)) {       // 댓글 삭제
-            if (comment.getChildren().isEmpty()) {
-                commentRepository.delete(comment);
-                return;
-            }
-            comment.changePretendingToBeRemoved();
+        deleteCommentOrReply(comment, parent);
+    }
+
+    private void deleteCommentOrReply(Comment comment, Comment parent) {
+        if (isComment(parent)) {
+            deleteParent(comment);
             return;
         }
-        // 대댓글 삭제
+
+        deleteChild(comment, parent);
+    }
+
+    private void deleteChild(Comment comment, Comment parent) {
         parent.deleteChild(comment);
         commentRepository.delete(comment);
 
-        if (parent.getChildren().isEmpty() && parent.isSoftRemoved()) {
+        if (hasNoReply(parent) && parent.isSoftRemoved()) {
             commentRepository.delete(parent);
         }
+    }
+
+    private void deleteParent(Comment comment) {
+        if (hasNoReply(comment)) {
+            commentRepository.delete(comment);
+            return;
+        }
+        comment.changePretendingToBeRemoved();
+        return;
+    }
+
+    private boolean isComment(Comment parent) {
+        return Objects.isNull(parent);
+    }
+
+    private boolean hasNoReply(Comment comment) {
+        return comment.getChildren().isEmpty();
     }
 }

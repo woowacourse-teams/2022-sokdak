@@ -2,8 +2,6 @@ package com.wooteco.sokdak.comment.acceptance;
 
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_ANONYMOUS_COMMENT_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_COMMENT_REQUEST;
-import static com.wooteco.sokdak.util.fixture.CommentFixture.addCommentAndGetCommentId;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
@@ -17,7 +15,6 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.CommentsResponse;
-import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.dto.ReplyResponse;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
@@ -204,7 +201,6 @@ class CommentAcceptanceTest extends AcceptanceTest {
     }
 
     private Long addCommentAndGetCommentId(Long postId) {
-        NewCommentRequest newCommentRequest = new NewCommentRequest(VALID_COMMENT_MESSAGE, true);
         return Long.parseLong(httpPostWithAuthorization(NEW_COMMENT_REQUEST,
                 "/posts/" + postId + "/comments", getToken())
                 .header("Location").split("/comments/")[1]);

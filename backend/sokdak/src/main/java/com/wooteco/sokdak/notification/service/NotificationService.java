@@ -39,8 +39,8 @@ public class NotificationService {
         }
     }
 
-    public void notifyCommentReport(Member member, Post post, Comment comment) {
-        notify(member, post, comment, COMMENT_REPORT);
+    public void notifyCommentReport(Post post, Comment comment) {
+        notify(comment.getMember(), post, comment, COMMENT_REPORT);
     }
 
     public void notifyHotBoard(Post post) {

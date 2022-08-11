@@ -118,14 +118,14 @@ class NotificationServiceTest extends IntegrationTest {
     @DisplayName("댓글 신고 알림을 등록한다.")
     @Test
     void notifyCommentReport() {
-        notificationService.notifyCommentReport(member1, post, comment);
+        notificationService.notifyCommentReport(post, comment);
 
-        List<Notification> notifications = notificationRepository.findByMemberId(member1.getId());
+        List<Notification> notifications = notificationRepository.findByMemberId(comment.getMember().getId());
         Notification notification = notifications.get(0);
 
         assertAll(
                 () -> assertThat(notifications).hasSize(1),
-                () -> assertThat(notification.getMember()).isEqualTo(member1),
+                () -> assertThat(notification.getMember()).isEqualTo(comment.getMember()),
                 () -> assertThat(notification.getPost()).isEqualTo(post),
                 () -> assertThat(notification.getNotificationType()).isEqualTo(COMMENT_REPORT),
                 () -> assertThat(notification.getContent()).isEqualTo("내용"),

@@ -54,7 +54,7 @@ public class PostController {
         return ResponseEntity.ok(postsResponse);
     }
 
-    @GetMapping(path = "/posts/me", params = {"size", "page"})
+    @GetMapping(path = "/posts/me")
     public ResponseEntity<MyPostsResponse> findMyPosts(@PageableDefault Pageable pageable, @Login AuthInfo authInfo) {
         MyPostsResponse myPosts = postService.findMyPosts(pageable, authInfo);
         return ResponseEntity.ok(myPosts);

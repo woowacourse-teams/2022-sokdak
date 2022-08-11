@@ -7,6 +7,7 @@ const PATH = {
   UPDATE_POST: '/post/update',
   BOARD: '/board',
   HASHTAG: '/hashtag',
+  NOTIFICATION: '/notification',
 };
 
 export default PATH;

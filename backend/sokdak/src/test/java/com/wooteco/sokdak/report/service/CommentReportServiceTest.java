@@ -1,9 +1,13 @@
 package com.wooteco.sokdak.report.service;
 
 import static com.wooteco.sokdak.member.domain.RoleType.USER;
-import static com.wooteco.sokdak.util.fixture.CommentFixture.*;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.*;
-import static com.wooteco.sokdak.util.fixture.PostFixture.*;
+import static com.wooteco.sokdak.util.fixture.CommentFixture.VALID_COMMENT_MESSAGE;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
+import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
+import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -12,6 +16,7 @@ import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.repository.MemberRepository;
+import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.report.dto.ReportRequest;
@@ -23,9 +28,13 @@ import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 class CommentReportServiceTest extends IntegrationTest {
+
+    private static final ReportRequest REPORT_REQUEST = new ReportRequest("나쁜댓글");
 
     @Autowired
     private MemberRepository memberRepository;
@@ -41,6 +50,9 @@ class CommentReportServiceTest extends IntegrationTest {
 
     @Autowired
     private CommentReportService commentReportService;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     private Member member;
     private Post post;
@@ -77,10 +89,9 @@ class CommentReportServiceTest extends IntegrationTest {
     @DisplayName("댓글 신고 기능")
     @Test
     void reportComment() {
-        ReportRequest reportRequest = new ReportRequest("나쁜댓글");
         int commentCountBeforeReport = commentReportRepository.countByCommentId(comment.getId());
 
-        commentReportService.reportComment(comment.getId(), reportRequest, new AuthInfo(member.getId(), USER.getName(), "nickname"));
+        commentReportService.reportComment(comment.getId(), REPORT_REQUEST, AUTH_INFO);
         int commentCountAfterReport = commentReportRepository.countByCommentId(comment.getId());
 
         assertThat(commentCountBeforeReport + 1).isEqualTo(commentCountAfterReport);
@@ -89,11 +100,10 @@ class CommentReportServiceTest extends IntegrationTest {
     @DisplayName("이미 신고한 댓글을 신고 시 예외 발생")
     @Test
     void reportComment_Exception_Already_Report() {
-        ReportRequest reportRequest = new ReportRequest("나쁜댓글");
-        commentReportService.reportComment(comment.getId(), reportRequest, new AuthInfo(member.getId(), USER.getName(), "nickname"));
+        commentReportService.reportComment(comment.getId(), REPORT_REQUEST, AUTH_INFO);
 
         assertThatThrownBy(
-                () -> commentReportService.reportComment(comment.getId(), reportRequest, new AuthInfo(member.getId(), USER.getName(), "nickname")))
+                () -> commentReportService.reportComment(comment.getId(), REPORT_REQUEST, AUTH_INFO))
                 .isInstanceOf(AlreadyReportCommentException.class);
     }
 
@@ -103,7 +113,23 @@ class CommentReportServiceTest extends IntegrationTest {
         ReportRequest reportRequest = new ReportRequest("  ");
 
         assertThatThrownBy(
-                () -> commentReportService.reportComment(comment.getId(), reportRequest, new AuthInfo(member.getId(), USER.getName(), "nickname")))
+                () -> commentReportService.reportComment(comment.getId(), reportRequest,
+                        new AuthInfo(member.getId(), USER.getName(), "nickname")))
                 .isInstanceOf(InvalidReportMessageException.class);
+    }
+
+    @DisplayName("댓글 5회 신고시 알림 등록")
+    @ParameterizedTest
+    @CsvSource({"4, false", "5, true"})
+    void reportPost_blockNotification(int reportCount, boolean expected) {
+        AuthInfo authInfo;
+        for (long i = 1; i <= reportCount; i++) {
+            authInfo = new AuthInfo(i, "USER", VALID_NICKNAME);
+            commentReportService.reportComment(comment.getId(), REPORT_REQUEST, authInfo);
+        }
+
+        boolean actual = notificationRepository.existsByMemberIdAndInquiredIsFalse(member.getId());
+
+        assertThat(actual).isEqualTo(expected);
     }
 }

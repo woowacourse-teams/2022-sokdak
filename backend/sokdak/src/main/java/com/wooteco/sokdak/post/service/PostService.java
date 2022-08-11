@@ -12,6 +12,7 @@ import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
+import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
@@ -37,11 +38,12 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
+    private final NotificationRepository notificationRepository;
 
     public PostService(HashtagService hashtagService, BoardService boardService,
                        PostRepository postRepository, PostBoardRepository postBoardRepository,
                        MemberRepository memberRepository, CommentRepository commentRepository,
-                       LikeRepository likeRepository) {
+                       LikeRepository likeRepository, NotificationRepository notificationRepository) {
         this.hashtagService = hashtagService;
         this.boardService = boardService;
         this.postRepository = postRepository;
@@ -49,6 +51,7 @@ public class PostService {
         this.memberRepository = memberRepository;
         this.commentRepository = commentRepository;
         this.likeRepository = likeRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     @Transactional
@@ -114,6 +117,7 @@ public class PostService {
         commentRepository.deleteAllByPostId(post.getId());
         likeRepository.deleteAllByPostId(post.getId());
         hashtagService.deleteAllByPostId(hashtags, id);
+        notificationRepository.deleteByPostId(id);
 
         postRepository.delete(post);
     }

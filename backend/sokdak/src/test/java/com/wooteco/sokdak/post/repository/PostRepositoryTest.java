@@ -109,7 +109,7 @@ class PostRepositoryTest extends RepositoryTest {
         Page<Post> result = postRepository.findPostsByMemberOrderByCreatedAtDesc(PageRequest.of(0, 2), member);
 
         assertAll(
-                () -> assertThat(result.getContent()).containsExactly(post5,post4),
+                () -> assertThat(result.getContent()).containsExactly(post5, post4),
                 () -> assertThat(result.getTotalPages()).isEqualTo(3)
         );
     }

@@ -501,11 +501,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_신고">9. 신고</a></li>
 <li><a href="#_프로필">10. 프로필</a>
-<ul class="sectlevel2">
-<li><a href="#_닉네임_조회">10.1. 닉네임 조회</a></li>
-<li><a href="#_닉네임_변경">10.2. 닉네임 변경</a></li>
-<li><a href="#_내가_쓴_글_조회">10.3. 내가 쓴 글 조회</a></li>
-</ul>
+  <ul class="sectlevel2">
+    <li><a href="#_닉네임_조회">10.1. 닉네임 조회</a></li>
+    <li><a href="#_닉네임_변경">10.2. 닉네임 변경</a></li>
+    <li><a href="#_내가_쓴_글_조회">10.3. 내가 쓴 글 조회</a></li>
+  </ul>
 </li>
 </ul>
 </div>
@@ -2036,37 +2036,38 @@ Content-Length: 143
 </div>
 </div>
 </div>
-<div class="sect1">
-<h2 id="_신고"><a class="link" href="#_신고">9. 신고</a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>게시글/댓글 신고 관련 컨트롤러 테스트 구현 필요</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_프로필"><a class="link" href="#_프로필">10. 프로필</a></h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_닉네임_조회"><a class="link" href="#_닉네임_조회">10.1. 닉네임 조회</a></h3>
-<div class="sect3">
-<h4 id="_성공_20"><a class="link" href="#_성공_20">10.1.1. 성공</a></h4>
-<div class="sect4">
-<h5 id="_성공_20_http_request"><a class="link" href="#_성공_20_http_request">HTTP request</a></h5>
-<div class="listingblock">
-<div class="content">
+  <div class="sect1">
+    <h2 id="_신고"><a class="link" href="#_신고">9. 신고</a></h2>
+    <div class="sectionbody">
+      <div class="paragraph">
+        <p>게시글/댓글 신고 관련 컨트롤러 테스트 구현 필요</p>
+      </div>
+    </div>
+  </div>
+  <div class="sect1">
+    <h2 id="_프로필"><a class="link" href="#_프로필">10. 프로필</a></h2>
+    <div class="sectionbody">
+      <div class="sect2">
+        <h3 id="_닉네임_조회"><a class="link" href="#_닉네임_조회">10.1. 닉네임 조회</a></h3>
+        <div class="sect3">
+          <h4 id="_성공_20"><a class="link" href="#_성공_20">10.1.1. 성공</a></h4>
+          <div class="sect4">
+            <h5 id="_성공_20_http_request"><a class="link" href="#_성공_20_http_request">HTTP request</a></h5>
+            <div class="listingblock">
+              <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /members/nickname HTTP/1.1
 Content-Type: application/json
 Content-Type: application/json
 Authorization: Bearer chris
 Host: localhost:8080</code></pre>
-</div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_성공_20_http_response"><a class="link" href="#_성공_20_http_response">HTTP response</a></h5>
-<div class="listingblock">
-<div class="content">
+              </div>
+            </div>
+          </div>
+          <div class="sect4">
+            <h5 id="_성공_20_http_response"><a class="link" href="#_성공_20_http_response">HTTP response</a>
+            </h5>
+            <div class="listingblock">
+              <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
@@ -2077,19 +2078,19 @@ Content-Length: 34
 {
   "nickname" : "chrisNickname"
 }</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_닉네임_변경"><a class="link" href="#_닉네임_변경">10.2. 닉네임 변경</a></h3>
-<div class="sect3">
-<h4 id="_성공_21"><a class="link" href="#_성공_21">10.2.1. 성공</a></h4>
-<div class="sect4">
-<h5 id="_성공_21_http_request"><a class="link" href="#_성공_21_http_request">HTTP request</a></h5>
-<div class="listingblock">
-<div class="content">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sect2">
+        <h3 id="_닉네임_변경"><a class="link" href="#_닉네임_변경">10.2. 닉네임 변경</a></h3>
+        <div class="sect3">
+          <h4 id="_성공_21"><a class="link" href="#_성공_21">10.2.1. 성공</a></h4>
+          <div class="sect4">
+            <h5 id="_성공_21_http_request"><a class="link" href="#_성공_21_http_request">HTTP request</a></h5>
+            <div class="listingblock">
+              <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /members/nickname HTTP/1.1
 Content-Type: application/json
 Content-Type: application/json
@@ -2100,29 +2101,31 @@ Host: localhost:8080
 {
   "nickname" : "chrisNick2"
 }</code></pre>
-</div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_성공_21_http_response"><a class="link" href="#_성공_21_http_response">HTTP response</a></h5>
-<div class="listingblock">
-<div class="content">
+              </div>
+            </div>
+          </div>
+          <div class="sect4">
+            <h5 id="_성공_21_http_response"><a class="link" href="#_성공_21_http_response">HTTP response</a>
+            </h5>
+            <div class="listingblock">
+              <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_실패_11"><a class="link" href="#_실패_11">10.2.2. 실패</a></h4>
-<div class="sect4">
-<h5 id="_이미_있는_닉네임인_경우"><a class="link" href="#_이미_있는_닉네임인_경우">이미 있는 닉네임인 경우</a></h5>
-<div class="sect5">
-<h6 id="_이미_있는_닉네임인_경우_http_request"><a class="link" href="#_이미_있는_닉네임인_경우_http_request">HTTP request</a></h6>
-<div class="listingblock">
-<div class="content">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sect3">
+          <h4 id="_실패_11"><a class="link" href="#_실패_11">10.2.2. 실패</a></h4>
+          <div class="sect4">
+            <h5 id="_이미_있는_닉네임인_경우"><a class="link" href="#_이미_있는_닉네임인_경우">이미 있는 닉네임인 경우</a></h5>
+            <div class="sect5">
+              <h6 id="_이미_있는_닉네임인_경우_http_request"><a class="link" href="#_이미_있는_닉네임인_경우_http_request">HTTP
+                request</a></h6>
+              <div class="listingblock">
+                <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /members/nickname HTTP/1.1
 Content-Type: application/json
 Content-Type: application/json
@@ -2133,13 +2136,14 @@ Host: localhost:8080
 {
   "nickname" : "hunchNickname"
 }</code></pre>
-</div>
-</div>
-</div>
-<div class="sect5">
-<h6 id="_이미_있는_닉네임인_경우_http_response"><a class="link" href="#_이미_있는_닉네임인_경우_http_response">HTTP response</a></h6>
-<div class="listingblock">
-<div class="content">
+                </div>
+              </div>
+            </div>
+            <div class="sect5">
+              <h6 id="_이미_있는_닉네임인_경우_http_response"><a class="link" href="#_이미_있는_닉네임인_경우_http_response">HTTP
+                response</a></h6>
+              <div class="listingblock">
+                <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
 Vary: Origin
 Vary: Access-Control-Request-Method
@@ -2150,16 +2154,17 @@ Content-Length: 59
 {
   "message" : "이미 존재하는 닉네임입니다."
 }</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_잘못된_형식인_경우"><a class="link" href="#_잘못된_형식인_경우">잘못된 형식인 경우</a></h5>
-<div class="sect5">
-<h6 id="_잘못된_형식인_경우_http_request"><a class="link" href="#_잘못된_형식인_경우_http_request">HTTP request</a></h6>
-<div class="listingblock">
-<div class="content">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sect4">
+            <h5 id="_잘못된_형식인_경우"><a class="link" href="#_잘못된_형식인_경우">잘못된 형식인 경우</a></h5>
+            <div class="sect5">
+              <h6 id="_잘못된_형식인_경우_http_request"><a class="link" href="#_잘못된_형식인_경우_http_request">HTTP
+                request</a></h6>
+              <div class="listingblock">
+                <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /members/nickname HTTP/1.1
 Content-Type: application/json
 Content-Type: application/json
@@ -2170,13 +2175,14 @@ Host: localhost:8080
 {
   "nickname" : ""
 }</code></pre>
-</div>
-</div>
-</div>
-<div class="sect5">
-<h6 id="_잘못된_형식인_경우_http_response"><a class="link" href="#_잘못된_형식인_경우_http_response">HTTP response</a></h6>
-<div class="listingblock">
-<div class="content">
+                </div>
+              </div>
+            </div>
+            <div class="sect5">
+              <h6 id="_잘못된_형식인_경우_http_response"><a class="link" href="#_잘못된_형식인_경우_http_response">HTTP
+                response</a></h6>
+              <div class="listingblock">
+                <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
 Vary: Origin
 Vary: Access-Control-Request-Method
@@ -2187,34 +2193,39 @@ Content-Length: 56
 {
   "message" : "잘못된 닉네임 형식입니다."
 }</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_내가_쓴_글_조회"><a class="link" href="#_내가_쓴_글_조회">10.3. 내가 쓴 글 조회</a></h3>
-<div class="sect3">
-<h4 id="_성공_22"><a class="link" href="#_성공_22">10.3.1. 성공</a></h4>
-<div class="sect4">
-<h5 id="_해당_페이지의_글이_존재할_경우"><a class="link" href="#_해당_페이지의_글이_존재할_경우">해당 페이지의 글이 존재할 경우</a></h5>
-<div class="sect5">
-<h6 id="_해당_페이지의_글이_존재할_경우_http_request"><a class="link" href="#_해당_페이지의_글이_존재할_경우_http_request">HTTP request</a></h6>
-<div class="listingblock">
-<div class="content">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sect2">
+        <h3 id="_내가_쓴_글_조회"><a class="link" href="#_내가_쓴_글_조회">10.3. 내가 쓴 글 조회</a></h3>
+        <div class="sect3">
+          <h4 id="_성공_22"><a class="link" href="#_성공_22">10.3.1. 성공</a></h4>
+          <div class="sect4">
+            <h5 id="_해당_페이지의_글이_존재할_경우"><a class="link" href="#_해당_페이지의_글이_존재할_경우">해당 페이지의 글이 존재할 경우</a>
+            </h5>
+            <div class="sect5">
+              <h6 id="_해당_페이지의_글이_존재할_경우_http_request"><a class="link"
+                                                          href="#_해당_페이지의_글이_존재할_경우_http_request">HTTP
+                request</a></h6>
+              <div class="listingblock">
+                <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /posts/me?size=2&amp;page=0 HTTP/1.1
 Content-Type: application/json
 Content-Type: application/json
 Authorization: Bearer any
 Host: localhost:8080</code></pre>
-</div>
-</div>
-</div>
-<div class="sect5">
-<h6 id="_해당_페이지의_글이_존재할_경우_http_response"><a class="link" href="#_해당_페이지의_글이_존재할_경우_http_response">HTTP response</a></h6>
-<div class="listingblock">
-<div class="content">
+                </div>
+              </div>
+            </div>
+            <div class="sect5">
+              <h6 id="_해당_페이지의_글이_존재할_경우_http_response"><a class="link"
+                                                           href="#_해당_페이지의_글이_존재할_경우_http_response">HTTP
+                response</a></h6>
+              <div class="listingblock">
+                <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
@@ -2244,28 +2255,32 @@ Content-Length: 463
   } ],
   "totalPageCount" : 5
 }</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_해당_페이지의_글이_없을_경우"><a class="link" href="#_해당_페이지의_글이_없을_경우">해당 페이지의 글이 없을 경우</a></h5>
-<div class="sect5">
-<h6 id="_해당_페이지의_글이_없을_경우_http_request"><a class="link" href="#_해당_페이지의_글이_없을_경우_http_request">HTTP request</a></h6>
-<div class="listingblock">
-<div class="content">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sect4">
+            <h5 id="_해당_페이지의_글이_없을_경우"><a class="link" href="#_해당_페이지의_글이_없을_경우">해당 페이지의 글이 없을 경우</a></h5>
+            <div class="sect5">
+              <h6 id="_해당_페이지의_글이_없을_경우_http_request"><a class="link"
+                                                         href="#_해당_페이지의_글이_없을_경우_http_request">HTTP
+                request</a></h6>
+              <div class="listingblock">
+                <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /posts/me?size=2&amp;page=99 HTTP/1.1
 Content-Type: application/json
 Content-Type: application/json
 Authorization: Bearer any
 Host: localhost:8080</code></pre>
-</div>
-</div>
-</div>
-<div class="sect5">
-<h6 id="_해당_페이지의_글이_없을_경우_http_response"><a class="link" href="#_해당_페이지의_글이_없을_경우_http_response">HTTP response</a></h6>
-<div class="listingblock">
-<div class="content">
+                </div>
+              </div>
+            </div>
+            <div class="sect5">
+              <h6 id="_해당_페이지의_글이_없을_경우_http_response"><a class="link"
+                                                          href="#_해당_페이지의_글이_없을_경우_http_response">HTTP
+                response</a></h6>
+              <div class="listingblock">
+                <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
@@ -2277,19 +2292,19 @@ Content-Length: 43
   "posts" : [ ],
   "totalPageCount" : 5
 }</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-08-09 21:52:32 +0900
+  Last updated 2022-08-09 21:52:32 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

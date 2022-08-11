@@ -1,13 +1,12 @@
 package com.wooteco.sokdak.support;
 
 import com.wooteco.sokdak.support.token.AuthorizationExtractor;
-import com.wooteco.sokdak.support.token.InvalidTokenException;
 import com.wooteco.sokdak.support.token.TokenManager;
-import com.wooteco.sokdak.support.token.TokenNotFoundException;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -30,9 +29,15 @@ public class AuthInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        validateExistHeader(request);
+        if (notExistHeader(request)) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            return false;
+        }
         String token = AuthorizationExtractor.extractAccessToken(request);
-        validateToken(token);
+        if (isInvalidToken(token)) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            return false;
+        }
         return true;
     }
 
@@ -44,16 +49,12 @@ public class AuthInterceptor implements HandlerInterceptor {
         return request.getRequestURI().contains("/boards") && request.getMethod().equalsIgnoreCase("GET");
     }
 
-    private void validateExistHeader(HttpServletRequest request) {
+    private boolean notExistHeader(HttpServletRequest request) {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (Objects.isNull(authorizationHeader)) {
-            throw new TokenNotFoundException();
-        }
+        return Objects.isNull(authorizationHeader);
     }
 
-    private void validateToken(String token) {
-        if (!tokenManager.isValid(token)) {
-            throw new InvalidTokenException();
-        }
+    private boolean isInvalidToken(String token) {
+        return !tokenManager.isValid(token);
     }
 }

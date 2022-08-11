@@ -134,5 +134,4 @@ class NotificationTest {
 
         assertThat(actual).isEqualTo(REPLY.getMessage());
     }
-
 }

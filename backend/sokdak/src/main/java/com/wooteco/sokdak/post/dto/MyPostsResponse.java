@@ -19,7 +19,7 @@ public class MyPostsResponse {
         this.totalPageCount = totalPageCount;
     }
 
-    public static MyPostsResponse ofPosts(List<Post> posts, int totalPageCount) {
+    public static MyPostsResponse of(List<Post> posts, int totalPageCount) {
         List<PostsElementResponse> postsElementResponses = posts.stream()
                 .map(PostsElementResponse::from)
                 .collect(Collectors.toList());

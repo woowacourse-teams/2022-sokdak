@@ -1,0 +1,31 @@
+name: frontend
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+    paths: "frontend/**"
+  pull_request:
+    branches:
+      - main
+      - dev
+    paths: "frontend/**"
+
+jobs:
+  e2e-test:
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./frontend
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 의존성을 설치한다
+        run: npm install
+        working-directory: ${{ env.working-directory }}
+
+      - name: e2e 테스트를 수행한다
+        run: npm run test
+        working-directory: ${{ env.working-directory }}

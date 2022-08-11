@@ -2,6 +2,7 @@ import { setupServer } from 'msw/node';
 
 import { STORAGE_KEY } from './constants/localStorage';
 
+import commentHandlers from './mocks/handlers/comments';
 import hashtagsHandlers from './mocks/handlers/hashtags';
 import memberHandler from './mocks/handlers/members';
 import postHandlers from './mocks/handlers/posts';
@@ -9,7 +10,7 @@ import MockIntersectionObserver from '@/__test__/fixture';
 import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
 
-const server = setupServer(...memberHandler, ...postHandlers, ...hashtagsHandlers);
+const server = setupServer(...memberHandler, ...postHandlers, ...hashtagsHandlers, ...commentHandlers);
 
 const originalError = console.error;
 

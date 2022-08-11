@@ -8,6 +8,7 @@ import useSnackbar from '@/hooks/useSnackbar';
 import * as Styled from './index.styles';
 
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
+import scrollToCurrent from '@/utils/scrollToCurrent';
 
 interface CommentInputProps {
   amount: number;
@@ -23,7 +24,7 @@ const CommentInput = ({ amount = 0, id }: CommentInputProps) => {
   const { mutate } = usePostComments({
     onSuccess: () => {
       formElement.current?.reset();
-      document.body.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      scrollToCurrent(document.body.scrollHeight - document.documentElement.scrollTop);
     },
   });
 

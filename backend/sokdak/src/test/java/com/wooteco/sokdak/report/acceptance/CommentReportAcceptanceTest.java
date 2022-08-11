@@ -50,7 +50,7 @@ class CommentReportAcceptanceTest extends AcceptanceTest {
     @Test
     void reportComment_Exception_NotFoundComment() {
         addPostAndGetPostId();
-        Long invalidCommentId = 9999L;
+        long invalidCommentId = 9999L;
 
         ExtractableResponse<Response> response = httpPostWithAuthorization(REPORT_REQUEST,
                 "/comments/" + invalidCommentId + "/report", getToken());
@@ -69,11 +69,6 @@ class CommentReportAcceptanceTest extends AcceptanceTest {
                         .header("Location").split("/comments/")[1]);
 
         return commentId;
-    }
-
-    private String getToken() {
-        LoginRequest loginRequest = new LoginRequest("chris", "Abcd123!@");
-        return httpPost(loginRequest, "/login").header(AUTHORIZATION);
     }
 
     private String parsePostId(ExtractableResponse<Response> response) {

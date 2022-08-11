@@ -1,3 +1,4 @@
+import CommentBox from '../CommentBox';
 import styled from '@emotion/styled';
 
 export const Container = styled.div`
@@ -10,4 +11,11 @@ export const Container = styled.div`
 export const CommentsContainer = styled.div`
   width: 100%;
   margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const ReplyBox = styled(CommentBox)`
+  width: 85%;
+  align-self: flex-end;
 `;

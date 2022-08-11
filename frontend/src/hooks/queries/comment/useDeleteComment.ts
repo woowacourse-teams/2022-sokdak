@@ -25,7 +25,7 @@ const useDeleteComment = (
     },
     {
       onSuccess: () => {
-        queryClient.resetQueries(QUERY_KEYS.COMMENTS);
+        queryClient.refetchQueries(QUERY_KEYS.COMMENTS);
         showSnackbar(SNACKBAR_MESSAGE.SUCCESS_DELETE_COMMENT);
       },
       mutationKey: MUTATION_KEY.DELETE_COMMENT,

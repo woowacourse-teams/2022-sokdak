@@ -1,8 +1,26 @@
 package com.wooteco.sokdak.post.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.ReportFixture.*;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.*;
-import static com.wooteco.sokdak.util.fixture.PostFixture.*;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getExceptionMessage;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getToken;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getTokensForReport;
+import static com.wooteco.sokdak.util.fixture.PostFixture.BOARD_ID_POST_CREATED;
+import static com.wooteco.sokdak.util.fixture.PostFixture.CANNOT_CREATE_POST_URI;
+import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
+import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST;
+import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST2;
+import static com.wooteco.sokdak.util.fixture.PostFixture.POSTS_ELEMENT_RESPONSE_1;
+import static com.wooteco.sokdak.util.fixture.PostFixture.POSTS_ELEMENT_RESPONSE_2;
+import static com.wooteco.sokdak.util.fixture.PostFixture.UPDATED_POST_CONTENT;
+import static com.wooteco.sokdak.util.fixture.PostFixture.UPDATED_POST_TITLE;
+import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
+import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
+import static com.wooteco.sokdak.util.fixture.PostFixture.addPostAndGetPostId;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -13,6 +31,7 @@ import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
+import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
@@ -27,7 +46,8 @@ import org.springframework.http.HttpStatus;
 @DisplayName("게시글 관련 인수테스트")
 class PostAcceptanceTest extends AcceptanceTest {
 
-    public static final long WRITABLE_BOARD_ID = 2L;
+    private static final long WRITABLE_BOARD_ID = 2L;
+    private static final String WRONG_PAGE = "5";
 
     @DisplayName("새로운 게시글을 작성할 수 있다.")
     @Test
@@ -88,7 +108,7 @@ class PostAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("특정 게시판의 게시글을 조회할때 누적신고 5개 이상인 게시글은 block된다.")
+    @DisplayName("특정 게시판의 게시글 목록을 조회할때 누적신고 5개 이상인 게시글은 block된다.")
     @Test
     void findPosts_Block() {
         Long blockedPostId = addPostAndGetPostId();
@@ -109,7 +129,32 @@ class PostAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(postsElementResponses.get(0).isBlocked()).isFalse(),
-                () -> assertThat(postsElementResponses.get(1).isBlocked()).isTrue()
+                () -> assertThat(postsElementResponses.get(1).isBlocked()).isTrue(),
+                () -> assertThat(postsElementResponses.get(1).getTitle()).isEqualTo("블라인드 처리된 글입니다"),
+                () -> assertThat(postsElementResponses.get(1).getContent()).isEqualTo("블라인드 처리된 글입니다")
+        );
+    }
+
+    @DisplayName("특정 게시글을 조회할때 누적신고 5개 이상인 게시글은 block된다.")
+    @Test
+    void findPost_Block() {
+        Long blockedPostId = addPostAndGetPostId();
+        List<String> tokens = getTokensForReport();
+        for (int i = 0; i < 5; ++i) {
+            ReportRequest reportRequest = new ReportRequest("신고");
+            httpPostWithAuthorization(reportRequest, "/posts/" + blockedPostId + "/report", tokens.get(i));
+        }
+
+        ExtractableResponse<Response> response = httpGet(
+                "/posts/" + blockedPostId);
+        PostDetailResponse postDetailResponse = response
+                .jsonPath()
+                .getObject(".", PostDetailResponse.class);
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(postDetailResponse.isBlocked()).isTrue(),
+                () -> assertThat(postDetailResponse.getTitle()).isEqualTo("블라인드 처리된 글입니다"),
+                () -> assertThat(postDetailResponse.getContent()).isEqualTo("블라인드 처리된 글입니다")
         );
     }
 
@@ -178,7 +223,7 @@ class PostAcceptanceTest extends AcceptanceTest {
     @DisplayName("존재하지 않는 게시글을 조회할 수 없다.")
     @Test
     void findPost_Exception_NoPost() {
-        Long invalidPostId = 9999L;
+        long invalidPostId = 9999L;
 
         ExtractableResponse<Response> response = httpGet("/posts/" + invalidPostId);
         assertAll(
@@ -222,9 +267,40 @@ class PostAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    private String getToken() {
-        LoginRequest loginRequest = new LoginRequest("chris", "Abcd123!@");
-        return httpPost(loginRequest, "/login").header(AUTHORIZATION);
+    @DisplayName("내가 쓴 글을 볼 수 있다.")
+    @Test
+    void searchMyPosts() {
+        String token = getToken();
+        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, token);
+        httpPostWithAuthorization(NEW_POST_REQUEST2, CREATE_POST_URI, token);
+
+        ExtractableResponse<Response> response = httpGetWithAuthorization("/posts/me?size=3&page=0", token);
+        MyPostsResponse myPostsResponse = toMyPostsResponse(response);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(myPostsResponse.getPosts().size()).isEqualTo(2),
+                () -> assertThat(myPostsResponse.getPosts()).usingRecursiveComparison()
+                        .comparingOnlyFields("title", "content")
+                        .isEqualTo(List.of(POSTS_ELEMENT_RESPONSE_2, POSTS_ELEMENT_RESPONSE_1))
+        );
+    }
+
+    @DisplayName("내가 쓴 글을 조회 시 잘못된 페이지로 접근하면 0개의 글이 조회되고 1개의 페이지가 카운트된다")
+    @Test
+    void searchMyPosts_Exception_NoPage() {
+        String token = getToken();
+        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, token);
+        httpPostWithAuthorization(NEW_POST_REQUEST2, CREATE_POST_URI, token);
+
+        ExtractableResponse<Response> response = httpGetWithAuthorization("/posts/me?size=3&page=" + WRONG_PAGE, token);
+        MyPostsResponse postsResponse = toMyPostsResponse(response);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(postsResponse.getPosts()).isEmpty(),
+                () -> assertThat(postsResponse.getTotalPageCount()).isEqualTo(1)
+        );
     }
 
     private String parsePostId(ExtractableResponse<Response> response) {
@@ -239,5 +315,11 @@ class PostAcceptanceTest extends AcceptanceTest {
                 .stream()
                 .map(PostsElementResponse::getTitle)
                 .collect(Collectors.toList());
+    }
+
+    private MyPostsResponse toMyPostsResponse(ExtractableResponse<Response> response) {
+        return response.body()
+                .jsonPath()
+                .getObject(".", MyPostsResponse.class);
     }
 }

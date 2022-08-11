@@ -3,6 +3,7 @@ package com.wooteco.sokdak.post.controller;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
@@ -51,6 +52,12 @@ public class PostController {
             @PageableDefault(sort = "createdAt", direction = DESC) Pageable pageable) {
         PostsResponse postsResponse = postService.findPostsByBoard(boardId, pageable);
         return ResponseEntity.ok(postsResponse);
+    }
+
+    @GetMapping(path = "/posts/me")
+    public ResponseEntity<MyPostsResponse> findMyPosts(@PageableDefault Pageable pageable, @Login AuthInfo authInfo) {
+        MyPostsResponse myPosts = postService.findMyPosts(pageable, authInfo);
+        return ResponseEntity.ok(myPosts);
     }
 
     @PutMapping("/posts/{id}")

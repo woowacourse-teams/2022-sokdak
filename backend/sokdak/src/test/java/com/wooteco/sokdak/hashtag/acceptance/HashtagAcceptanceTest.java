@@ -182,11 +182,6 @@ public class HashtagAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    private String getToken() {
-        LoginRequest loginRequest = new LoginRequest("chris", "Abcd123!@");
-        return httpPost(loginRequest, "/login").header(AUTHORIZATION);
-    }
-
     private String parsePostId(ExtractableResponse<Response> response) {
         return response.header("Location")
                 .split("/posts/")[1];

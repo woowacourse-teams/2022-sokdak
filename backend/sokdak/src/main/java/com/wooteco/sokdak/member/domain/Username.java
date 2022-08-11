@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.member.domain;
 
+import com.wooteco.sokdak.auth.service.Encryptor;
 import com.wooteco.sokdak.member.exception.InvalidUsernameException;
 import java.util.regex.Pattern;
 import javax.persistence.Column;
@@ -20,7 +21,7 @@ public class Username {
 
     public Username(String value) {
         validate(value);
-        this.value = value;
+        this.value = Encryptor.encrypt(value);
     }
 
     private void validate(String value) {

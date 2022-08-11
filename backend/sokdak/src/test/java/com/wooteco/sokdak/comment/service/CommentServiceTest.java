@@ -77,7 +77,7 @@ class CommentServiceTest extends IntegrationTest {
         postRepository.save(identifiedPost);
     }
 
-    @DisplayName("기명으로 댓글을 등록")
+    @DisplayName("자신이 작성한 글에 기명으로 댓글을 등록")
     @Test
     void addComment_Identified() {
         NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", false);
@@ -88,8 +88,7 @@ class CommentServiceTest extends IntegrationTest {
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
                 () -> assertThat(foundComment.getMember()).isEqualTo(member),
-                () -> assertThat(foundComment.getNickname()).isEqualTo(member.getNickname()),
-                () -> assertNewNotification(foundComment)
+                () -> assertThat(foundComment.getNickname()).isEqualTo(member.getNickname())
         );
     }
 
@@ -134,8 +133,7 @@ class CommentServiceTest extends IntegrationTest {
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
                 () -> assertThat(foundComment.getMember()).isEqualTo(member),
-                () -> assertThat(foundComment.getNickname()).isEqualTo(member.getNickname()),
-                () -> assertNewNotification(foundComment)
+                () -> assertThat(foundComment.getNickname()).isEqualTo(member.getNickname())
         );
     }
 
@@ -150,8 +148,7 @@ class CommentServiceTest extends IntegrationTest {
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
                 () -> assertThat(foundComment.getMember()).isEqualTo(member2),
-                () -> assertThat(foundComment.getNickname()).isEqualTo(member2.getNickname()),
-                () -> assertNewNotification(foundComment)
+                () -> assertThat(foundComment.getNickname()).isEqualTo(member2.getNickname())
         );
     }
 
@@ -166,8 +163,7 @@ class CommentServiceTest extends IntegrationTest {
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
                 () -> assertThat(foundComment.getMember()).isEqualTo(member),
-                () -> assertThat(foundComment.getNickname()).isEqualTo(randomNickname),
-                () -> assertNewNotification(foundComment)
+                () -> assertThat(foundComment.getNickname()).isEqualTo(randomNickname)
         );
     }
 
@@ -182,8 +178,7 @@ class CommentServiceTest extends IntegrationTest {
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
                 () -> assertThat(foundComment.getMember()).isEqualTo(member),
-                () -> assertThat(foundComment.getNickname()).isNotEqualTo(member.getNickname()),
-                () -> assertNewNotification(foundComment)
+                () -> assertThat(foundComment.getNickname()).isNotEqualTo(member.getNickname())
         );
     }
 
@@ -198,8 +193,7 @@ class CommentServiceTest extends IntegrationTest {
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
                 () -> assertThat(foundComment.getMember()).isEqualTo(member2),
-                () -> assertThat(foundComment.getNickname()).isNotEqualTo(anonymousPost.getNickname()),
-                () -> assertNewNotification(foundComment)
+                () -> assertThat(foundComment.getNickname()).isNotEqualTo(anonymousPost.getNickname())
         );
     }
 
@@ -214,8 +208,7 @@ class CommentServiceTest extends IntegrationTest {
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
                 () -> assertThat(foundComment.getMember()).isEqualTo(member),
-                () -> assertThat(foundComment.getNickname()).isIn(RandomNicknameGenerator.RANDOM_NICKNAMES),
-                () -> assertNewNotification(foundComment)
+                () -> assertThat(foundComment.getNickname()).isIn(RandomNicknameGenerator.RANDOM_NICKNAMES)
         );
     }
 
@@ -233,12 +226,6 @@ class CommentServiceTest extends IntegrationTest {
                 () -> assertThat(firstComment.getNickname()).isEqualTo(secondComment.getNickname()),
                 () -> assertThat(anonymousPost.getNickname()).isEqualTo(firstComment.getNickname())
         );
-    }
-
-    private void assertNewNotification(Comment comment) {
-        Post post = comment.getPost();
-        boolean newNotification = notificationRepository.existsByMemberIdAndInquiredIsFalse(post.getMember().getId());
-        assertThat(newNotification).isTrue();
     }
 
     @DisplayName("특정 게시물의 달린 댓글을 가져옴")

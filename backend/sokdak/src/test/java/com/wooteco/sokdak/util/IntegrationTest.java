@@ -13,7 +13,7 @@ public class IntegrationTest {
     private DatabaseCleaner databaseCleaner;
 
     @BeforeEach
-    void setUp(){
+    void cleanAndSetData(){
         databaseCleaner.clear();
         databaseCleaner.insertInitialData();
     }

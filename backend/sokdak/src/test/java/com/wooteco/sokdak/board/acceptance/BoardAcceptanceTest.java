@@ -245,7 +245,6 @@ class BoardAcceptanceTest extends AcceptanceTest {
         );
     }
 
-
     private List<BoardContentElement> getBoardContentElements(ExtractableResponse<Response> response) {
         return response.body().jsonPath().getList("boards", BoardContentElement.class);
     }

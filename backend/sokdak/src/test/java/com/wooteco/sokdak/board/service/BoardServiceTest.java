@@ -21,6 +21,7 @@ import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.member.repository.MemberRepository;
+import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.util.IntegrationTest;
@@ -46,6 +47,9 @@ class BoardServiceTest extends IntegrationTest {
 
     @Autowired
     private PostBoardRepository postBoardRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     private Post post;
 
@@ -136,11 +140,13 @@ class BoardServiceTest extends IntegrationTest {
 
         boardService.checkAndSaveInSpecialBoard(post);
         Optional<PostBoard> postBoard = postBoardRepository.findPostBoardByPostAndBoard(post, board);
+        boolean newNotification = notificationRepository.existsByMemberIdAndInquiredIsFalse(member.getId());
 
         assertAll(
                 () -> assertThat(postBoard).isNotEmpty(),
                 () -> assertThat(postBoard.get().getBoard().getTitle()).isEqualTo("Hot 게시판"),
-                () -> assertThat(postBoard.get().getPost().getTitle()).isEqualTo("제목")
+                () -> assertThat(postBoard.get().getPost().getTitle()).isEqualTo("제목"),
+                () -> assertThat(newNotification).isTrue()
         );
     }
 

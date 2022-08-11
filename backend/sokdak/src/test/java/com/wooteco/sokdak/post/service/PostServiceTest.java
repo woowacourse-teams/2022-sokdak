@@ -16,19 +16,21 @@ import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.service.CommentService;
 import com.wooteco.sokdak.member.domain.Member;
-import com.wooteco.sokdak.member.domain.Nickname;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
+import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
+import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.util.IntegrationTest;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +41,8 @@ import org.springframework.data.domain.Pageable;
 
 class PostServiceTest extends IntegrationTest {
 
-    public static final long WRITABLE_BOARD_ID = 2L;
+    private static final long WRITABLE_BOARD_ID = 2L;
+    private static final int WRONG_PAGE = 99;
 
     @Autowired
     private PostService postService;
@@ -62,10 +65,11 @@ class PostServiceTest extends IntegrationTest {
     private Post post;
     private Board board;
     private PostBoard postBoard;
+    private Member member;
 
     @BeforeEach
     public void setUp() {
-        Member member = memberRepository.findById(1L)
+        member = memberRepository.findById(AUTH_INFO.getId())
                 .orElseThrow(MemberNotFoundException::new);
         post = Post.builder()
                 .title("제목")
@@ -243,7 +247,7 @@ class PostServiceTest extends IntegrationTest {
     @DisplayName("댓글이 있는 게시글 삭제")
     @Test
     void deletePostWithComment() {
-        postRepository.save(post).getId();
+        postRepository.save(post);
         NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
         commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
 
@@ -251,5 +255,52 @@ class PostServiceTest extends IntegrationTest {
 
         Optional<Post> deletePost = postRepository.findById(post.getId());
         assertThat(deletePost).isEmpty();
+    }
+
+    @DisplayName("내가 쓴 글 조회 기능")
+    @Test
+    void findMyPosts() {
+        Post post1 = Post.builder()
+                .title("제목")
+                .content("본문")
+                .member(member)
+                .build();
+        postRepository.save(post1);
+        Post post2 = Post.builder()
+                .title("제목2")
+                .content("본문2")
+                .member(member)
+                .build();
+        postRepository.save(post2);
+
+        MyPostsResponse myPosts = postService.findMyPosts(PageRequest.of(0, 1), AUTH_INFO);
+
+        assertAll(
+                () -> assertThat(myPosts.getPosts()).usingRecursiveComparison()
+                        .comparingOnlyFields("title", "content")
+                        .isEqualTo(List.of(PostsElementResponse.from(post2))),
+                () -> assertThat(myPosts.getTotalPageCount()).isEqualTo(2)
+        );
+    }
+
+    @DisplayName("없는 페이지로 요청이 올 시 빈 배열 반환")
+    @Test
+    void findMyPosts_Exception_WrongPage() {
+        Post post = Post.builder()
+                .title("제목")
+                .content("본문")
+                .writerNickname(member.getNickname())
+                .member(member)
+                .likes(new ArrayList<>())
+                .comments(new ArrayList<>())
+                .build();
+        postRepository.save(post);
+
+        MyPostsResponse myPosts = postService.findMyPosts(PageRequest.of(WRONG_PAGE, 3), AUTH_INFO);
+
+        assertAll(
+                () -> assertThat(myPosts.getPosts()).hasSize(0),
+                () -> assertThat(myPosts.getTotalPageCount()).isEqualTo(1)
+        );
     }
 }

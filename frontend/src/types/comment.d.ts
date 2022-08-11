@@ -1,7 +1,7 @@
 interface CommentType {
   id: number;
-  nickname: string;
-  content: string;
-  createdAt: string;
-  authorized: boolean;
+  nickname: string | null;
+  content: string | null;
+  createdAt: string | null;
+  authorized: boolean | null;
 }

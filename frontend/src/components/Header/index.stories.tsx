@@ -1,5 +1,9 @@
 import { withRouter } from 'storybook-addon-react-router-v6';
 
+import { useContext } from 'react';
+
+import AuthContext from '@/context/Auth';
+
 import Header from '.';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
@@ -9,6 +13,11 @@ export default {
   decorators: [withRouter],
 } as ComponentMeta<typeof Header>;
 
-const Template: ComponentStory<typeof Header> = () => <Header />;
+const Template: ComponentStory<typeof Header> = () => {
+  const { setIsLogin, setUserName } = useContext(AuthContext);
+  setIsLogin(true);
+  setUserName('hi');
+  return <Header />;
+};
 
 export const HeaderTemplate = Template.bind({});

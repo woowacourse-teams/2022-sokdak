@@ -20,6 +20,7 @@ export const MUTATION_KEY = {
   REPORT_COMMENT: 'report-comment',
   DELETE_COMMENT: 'delete-comment',
   POST_COMMENT: 'post-comment',
+  CREATE_REPLY: 'create-reply',
 };
 
 export default QUERY_KEYS;

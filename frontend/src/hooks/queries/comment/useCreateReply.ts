@@ -30,7 +30,7 @@ const useCreateReply = (options?: UseMutationOptions<AxiosResponse, AxiosError<E
           options.onSuccess(data, variables, context);
         }
       },
-      mutationKey: MUTATION_KEY.POST_COMMENT,
+      mutationKey: MUTATION_KEY.CREATE_REPLY,
     },
   );
 };

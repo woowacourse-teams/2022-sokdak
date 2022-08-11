@@ -3,11 +3,13 @@ name: backend
 on:
   push:
     branches:
+      - tmp/github-actions-test
       - main
       - dev
     paths: 'backend/**'
   pull_request:
     branches:
+      - tmp/github-actions-test
       - main
       - dev
     paths: 'backend/**'

@@ -23,6 +23,12 @@ export const Highlight = styled.span`
   color: ${props => props.theme.colors.sub};
   text-decoration: underline;
   margin: 0 0.3em;
+  display: inline-block;
+  max-width: 100px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: middle;
 `;
 
 export const RedLight = styled.span`

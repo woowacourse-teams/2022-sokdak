@@ -11,7 +11,9 @@ import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.wooteco.sokdak.auth.exception.AuthenticationException;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.post.domain.Post;
@@ -133,5 +135,19 @@ class NotificationTest {
         String actual = notification.getContent();
 
         assertThat(actual).isEqualTo(REPLY.getMessage());
+    }
+
+    @DisplayName("알림의 주인이 아니면 예외를 반환한다.")
+    @Test
+    void validateOwner() {
+        Notification notification = Notification.builder()
+                .member(MEMBER1)
+                .post(POST)
+                .comment(REPLY)
+                .notificationType(NEW_REPLY)
+                .build();
+
+        assertThatThrownBy(() -> notification.validateOwner(9999L))
+                .isInstanceOf(AuthenticationException.class);
     }
 }

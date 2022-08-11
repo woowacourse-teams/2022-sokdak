@@ -206,3 +206,9 @@ operation::notification/checkNew/success[snippets='http-request,http-response']
 
 operation::notification/findNotifications/success[snippets='http-request,http-response']
 
+=== 알림 삭제
+
+==== 삭제
+
+operation::notification/deleteNotifications/success[snippets='http-request,http-response']
+

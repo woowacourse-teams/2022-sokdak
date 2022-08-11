@@ -13,6 +13,7 @@ import com.wooteco.sokdak.notification.domain.NotificationType;
 import com.wooteco.sokdak.notification.dto.NewNotificationCheckResponse;
 import com.wooteco.sokdak.notification.dto.NotificationResponse;
 import com.wooteco.sokdak.notification.dto.NotificationsResponse;
+import com.wooteco.sokdak.notification.excpetion.NotificationNotFoundException;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import java.util.List;
@@ -77,5 +78,12 @@ public class NotificationService {
                 .map(NotificationResponse::of)
                 .collect(Collectors.toUnmodifiableList());
         return new NotificationsResponse(notificationResponses, notifications.isLast());
+    }
+
+    public void deleteNotification(AuthInfo authInfo, Long notificationId) {
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(NotificationNotFoundException::new);
+        notification.validateOwner(authInfo.getId());
+        notificationRepository.deleteById(notificationId);
     }
 }

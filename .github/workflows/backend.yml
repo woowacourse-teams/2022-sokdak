@@ -3,18 +3,20 @@ name: backend
 on:
   push:
     branches:
+      - tmp/github-actions-test
       - main
       - dev
     paths: 'backend/**'
   pull_request:
     branches:
+      - tmp/github-actions-test
       - main
       - dev
     paths: 'backend/**'
 
 defaults:
   run:
-    working-directory: backend/sokdak
+    working-directory: ./backend/sokdak
 
 jobs:
   build:
@@ -23,7 +25,7 @@ jobs:
       - name: 리포지토리를 가져옵니다
         uses: actions/checkout@v3
 
-      - name: JDK 11을 설치합니다
+      - name: jdk 11을 설치합니다
         uses: actions/setup-java@v3
         with:
           java-version: '11'

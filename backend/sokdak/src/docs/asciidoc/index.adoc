@@ -196,3 +196,9 @@ operation::member/find/posts/success/noPost[snippets='http-request,http-response
 
 operation::notification/checkNew/success[snippets='http-request,http-response']
 
+=== 알림 조회
+
+==== 성공
+
+operation::notification/findNotifications/success[snippets='http-request,http-response']
+

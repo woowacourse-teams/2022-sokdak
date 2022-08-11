@@ -52,26 +52,34 @@ class NotificationServiceTest extends IntegrationTest {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    private Member member;
+    private Member member1;
+    private Member member2;
     private Post post;
     private Comment comment;
+    private Comment comment2;
 
     @BeforeEach
     void setUp() {
-        member = memberRepository.findById(1L)
+        member1 = memberRepository.findById(1L)
                 .orElseThrow(MemberNotFoundException::new);
-        Member member2 = memberRepository.findById(2L)
+        member2 = memberRepository.findById(2L)
                 .orElseThrow(MemberNotFoundException::new);
         post = Post.builder()
-                .member(member)
+                .member(member1)
                 .title(VALID_POST_TITLE)
                 .content(VALID_POST_CONTENT)
-                .writerNickname(member.getNickname())
+                .writerNickname(member1.getNickname())
                 .build();
         postRepository.save(post);
         comment = Comment.builder()
                 .post(post)
                 .member(member2)
+                .nickname("닉네임")
+                .message("내용")
+                .build();
+        comment2 = Comment.builder()
+                .post(post)
+                .member(member1)
                 .nickname("닉네임")
                 .message("내용")
                 .build();
@@ -81,14 +89,14 @@ class NotificationServiceTest extends IntegrationTest {
     @DisplayName("새 댓글 알림을 등록한다.")
     @Test
     void notifyNewComment() {
-        notificationService.notifyNewComment(member, post, comment);
+        notificationService.notifyNewCommentIfNotAuthenticated(member1, post, comment);
 
-        List<Notification> notifications = notificationRepository.findByMemberId(member.getId());
+        List<Notification> notifications = notificationRepository.findByMemberId(member1.getId());
         Notification notification = notifications.get(0);
 
         assertAll(
                 () -> assertThat(notifications).hasSize(1),
-                () -> assertThat(notification.getMember()).isEqualTo(member),
+                () -> assertThat(notification.getMember()).isEqualTo(member1),
                 () -> assertThat(notification.getPost()).isEqualTo(post),
                 () -> assertThat(notification.getNotificationType()).isEqualTo(NEW_COMMENT),
                 () -> assertThat(notification.getContent()).isEqualTo(post.getTitle()),
@@ -96,17 +104,27 @@ class NotificationServiceTest extends IntegrationTest {
         );
     }
 
+    @DisplayName("자신의 게시글에 댓글을 동록하면 댓글 알림이 생성되지 않는다.")
+    @Test
+    void notifyNewComment_MyPostMyComment() {
+        notificationService.notifyNewCommentIfNotAuthenticated(member1, post, comment2);
+
+        List<Notification> notifications = notificationRepository.findByMemberId(member1.getId());
+
+        assertThat(notifications).isEmpty();
+    }
+
     @DisplayName("댓글 신고 알림을 등록한다.")
     @Test
     void notifyCommentReport() {
-        notificationService.notifyCommentReport(member, post, comment);
+        notificationService.notifyCommentReport(member1, post, comment);
 
-        List<Notification> notifications = notificationRepository.findByMemberId(member.getId());
+        List<Notification> notifications = notificationRepository.findByMemberId(member1.getId());
         Notification notification = notifications.get(0);
 
         assertAll(
                 () -> assertThat(notifications).hasSize(1),
-                () -> assertThat(notification.getMember()).isEqualTo(member),
+                () -> assertThat(notification.getMember()).isEqualTo(member1),
                 () -> assertThat(notification.getPost()).isEqualTo(post),
                 () -> assertThat(notification.getNotificationType()).isEqualTo(COMMENT_REPORT),
                 () -> assertThat(notification.getContent()).isEqualTo("내용"),
@@ -119,12 +137,12 @@ class NotificationServiceTest extends IntegrationTest {
     void notifyHotBoard() {
         notificationService.notifyHotBoard(post);
 
-        List<Notification> notifications = notificationRepository.findByMemberId(member.getId());
+        List<Notification> notifications = notificationRepository.findByMemberId(member1.getId());
         Notification notification = notifications.get(0);
 
         assertAll(
                 () -> assertThat(notifications).hasSize(1),
-                () -> assertThat(notification.getMember()).isEqualTo(member),
+                () -> assertThat(notification.getMember()).isEqualTo(member1),
                 () -> assertThat(notification.getPost()).isEqualTo(post),
                 () -> assertThat(notification.getNotificationType()).isEqualTo(HOT_BOARD),
                 () -> assertThat(notification.getContent()).isEqualTo(VALID_POST_TITLE),
@@ -137,12 +155,12 @@ class NotificationServiceTest extends IntegrationTest {
     void notifyPostReport() {
         notificationService.notifyPostReport(post);
 
-        List<Notification> notifications = notificationRepository.findByMemberId(member.getId());
+        List<Notification> notifications = notificationRepository.findByMemberId(member1.getId());
         Notification notification = notifications.get(0);
 
         assertAll(
                 () -> assertThat(notifications).hasSize(1),
-                () -> assertThat(notification.getMember()).isEqualTo(member),
+                () -> assertThat(notification.getMember()).isEqualTo(member1),
                 () -> assertThat(notification.getPost()).isEqualTo(post),
                 () -> assertThat(notification.getNotificationType()).isEqualTo(POST_REPORT),
                 () -> assertThat(notification.getContent()).isEqualTo(VALID_POST_TITLE),
@@ -166,17 +184,17 @@ class NotificationServiceTest extends IntegrationTest {
     @Test
     void findNotifications() {
         Notification notification = Notification.builder()
-                .member(member)
+                .member(member1)
                 .notificationType(HOT_BOARD)
                 .post(post)
                 .build();
         Notification notification2 = Notification.builder()
-                .member(member)
+                .member(member1)
                 .notificationType(POST_REPORT)
                 .post(post)
                 .build();
         Notification notification3 = Notification.builder()
-                .member(member)
+                .member(member1)
                 .notificationType(NEW_COMMENT)
                 .post(post)
                 .comment(comment)

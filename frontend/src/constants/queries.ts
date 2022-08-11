@@ -10,7 +10,7 @@ const QUERY_KEYS = {
   BOARDS: 'boards',
   LOGOUT: 'logout',
   NOTIFICATION_EXISTS: 'notification-exists',
-  NOTIFICATIONS: 'notifications-by-page',
+  NOTIFICATIONS: 'notifications',
 };
 
 export const MUTATION_KEY = {

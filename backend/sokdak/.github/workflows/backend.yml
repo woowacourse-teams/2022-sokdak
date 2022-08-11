@@ -14,7 +14,7 @@ on:
 
 defaults:
   run:
-    working-directory: backend
+    working-directory: backend/sokdak
 
 jobs:
   build:

@@ -48,7 +48,7 @@ public class HashtagService {
     }
 
     public Hashtags findHashtagsByPostId(Long postId) {
-        return Hashtags.ofPostHashtags(postHashtagRepository.findAllByPostId(postId));
+        return Hashtags.of(postHashtagRepository.findAllByPostId(postId));
     }
 
     @Transactional

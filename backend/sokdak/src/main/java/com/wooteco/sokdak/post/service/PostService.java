@@ -101,7 +101,7 @@ public class PostService {
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
         Page<Post> posts = postRepository.findPostsByMemberOrderByCreatedAtDesc(pageable, member);
-        return MyPostsResponse.ofPosts(posts.getContent(), posts.getTotalPages());
+        return MyPostsResponse.of(posts.getContent(), posts.getTotalPages());
     }
 
     @Transactional

@@ -1,10 +1,16 @@
 package com.wooteco.sokdak.util.fixture;
 
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getToken;
 
+import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
+import com.wooteco.sokdak.report.dto.ReportRequest;
+import com.wooteco.sokdak.report.repository.PostReportRepository;
+import com.wooteco.sokdak.report.service.PostReportService;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;

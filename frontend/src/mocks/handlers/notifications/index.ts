@@ -9,7 +9,7 @@ const notificationHandlers = [
     notificationList.sort((prev, next) => Number(new Date(next.createdAt)) - Number(new Date(prev.createdAt)));
     const notificationListByPage = notificationList.slice(page * size, size * (page + 1));
     notificationList.forEach((notification, index) => {
-      if (index < page * size || index > size * (page + 1)) return;
+      if (index < page * size || index >= size * (page + 1)) return;
       notification.isChecked = true;
     });
 

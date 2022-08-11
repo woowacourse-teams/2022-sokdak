@@ -1,4 +1,4 @@
-import { useInfiniteQuery, QueryKey, UseInfiniteQueryOptions } from 'react-query';
+import { useInfiniteQuery, QueryKey, UseInfiniteQueryOptions, useQueryClient } from 'react-query';
 
 import { AxiosResponse, AxiosError } from 'axios';
 
@@ -19,8 +19,10 @@ const useNotifications = ({
     AxiosResponse<{ notifications: Notice[]; lastPage: boolean }>,
     [QueryKey, Size]
   >;
-}) =>
-  useInfiniteQuery(
+}) => {
+  const queryClient = useQueryClient();
+
+  return useInfiniteQuery(
     [QUERY_KEYS.NOTIFICATIONS, ...storeCode],
     ({ pageParam = 0, queryKey: [, size] }) => authFetcher.get(`/notifications?size=${size}&page=${pageParam}`),
     {
@@ -31,8 +33,12 @@ const useNotifications = ({
         pageParams: [...data.pageParams, data.pageParams.length],
       }),
       getNextPageParam: (lastPage, allPages) => (lastPage.data.lastPage ? undefined : allPages.length),
+      onSuccess: () => {
+        queryClient.refetchQueries(QUERY_KEYS.NOTIFICATION_EXISTS);
+      },
       ...options,
     },
   );
+};
 
 export default useNotifications;

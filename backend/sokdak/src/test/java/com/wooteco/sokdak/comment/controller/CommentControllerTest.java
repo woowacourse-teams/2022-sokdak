@@ -10,6 +10,8 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.CommentsResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
+import com.wooteco.sokdak.comment.dto.NewReplyRequest;
+import com.wooteco.sokdak.comment.dto.ReplyResponse;
 import com.wooteco.sokdak.util.ControllerTest;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -49,6 +51,22 @@ class CommentControllerTest extends ControllerTest {
                 .statusCode(HttpStatus.CREATED.value());
     }
 
+    @DisplayName("대댓글 작성 요청이 오면 댓글애 새로운 대댓글을 작성한다.")
+    @Test
+    void addReply() {
+        NewReplyRequest newReplyRequest = new NewReplyRequest("대댓글", true);
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "any")
+                .body(newReplyRequest)
+                .when().post("/comments/1/reply")
+                .then().log().all()
+                .apply(document("reply/create/success"))
+                .assertThat()
+                .statusCode(HttpStatus.CREATED.value());
+    }
+
     @DisplayName("댓글 작성 요청에 댓글 내용이 없는 경우 400을 반환한다")
     @Test
     void addComment_Exception_NoMessage() {
@@ -69,11 +87,13 @@ class CommentControllerTest extends ControllerTest {
     @DisplayName("특정 글의 댓글 조회 요청이 오면 모든 댓글들을 반환한다.")
     @Test
     void findComments() {
+        ReplyResponse replyResponse1 = new ReplyResponse(3L, "이스트1", "대댓글1", LocalDateTime.now(), false, false, false);
+        ReplyResponse replyResponse2 = new ReplyResponse(4L, "이스트2", "대댓글2", LocalDateTime.now(), false, false, false);
         CommentResponse commentResponse1 = new CommentResponse(1L, "조시1", "댓글1", LocalDateTime.now(), false, false,
-                false, Collections.emptyList());
+                false, List.of(replyResponse1, replyResponse2));
         CommentResponse commentResponse2 = new CommentResponse(2L, "조시2", "댓글2", LocalDateTime.now(), false, true,
                 false, Collections.emptyList());
-        doReturn(new CommentsResponse(List.of(commentResponse1, commentResponse2)))
+        doReturn(new CommentsResponse(List.of(commentResponse1, commentResponse2), 4))
                 .when(commentService)
                 .findComments(any(), any());
 

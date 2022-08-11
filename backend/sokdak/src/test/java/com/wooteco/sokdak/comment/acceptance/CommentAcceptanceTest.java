@@ -92,6 +92,26 @@ class CommentAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("댓글 목록을 조회하면 총 댓글 개수도 조회할 수 있다.")
+    @Test
+    void findComments_With_TotalCount() {
+        Long postId = addPostAndGetPostId();
+        Long commentId = addCommentAndGetCommentId(postId);
+        httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST,
+                "/comments/" + commentId + "/reply",
+                getToken());
+        httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST,
+                "/comments/" + commentId + "/reply",
+                getToken());
+
+        ExtractableResponse<Response> response = httpGet("/posts/" + postId + "/comments");
+        CommentsResponse commentsResponse = response
+                .jsonPath()
+                .getObject(".", CommentsResponse.class);
+
+        assertThat(commentsResponse.getTotalCount()).isEqualTo(3);
+    }
+
     @DisplayName("누적 신고가 5개 이상인 댓글은 block된다.")
     @Test
     void findComments_Block() {

@@ -8,7 +8,6 @@ import java.util.Map;
 import lombok.Getter;
 
 @Getter
-//@JsonInclude(Include.NON_NULL)
 public class CommentResponse {
 
     private final Long id;

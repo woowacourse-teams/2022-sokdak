@@ -122,8 +122,12 @@ public class CommentService {
         List<CommentResponse> commentResponses = comments.stream()
                 .map(it -> convertToCommentResponse(postId, authInfo, it))
                 .collect(Collectors.toList());
-
-        return new CommentsResponse(commentResponses);
+        int numOfComment = (int) commentResponses.stream()
+                .count();
+        int numOfReply = commentResponses.stream()
+                .map(it -> it.getReplies().size())
+                .reduce(Integer::sum).orElse(0);
+        return new CommentsResponse(commentResponses, numOfComment + numOfReply);
     }
 
     private CommentResponse convertToCommentResponse(Long postId, AuthInfo authInfo, Comment comment) {

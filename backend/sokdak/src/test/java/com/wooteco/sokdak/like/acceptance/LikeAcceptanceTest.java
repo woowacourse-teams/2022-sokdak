@@ -60,9 +60,4 @@ class LikeAcceptanceTest extends AcceptanceTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
-
-    private String getToken() {
-        LoginRequest loginRequest = new LoginRequest("chris", "Abcd123!@");
-        return httpPost(loginRequest, "/login").header(AUTHORIZATION);
-    }
 }

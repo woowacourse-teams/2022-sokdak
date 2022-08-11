@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.profile.dto;
+package com.wooteco.sokdak.member.dto;
 
 import com.wooteco.sokdak.member.domain.Member;
 import lombok.Getter;

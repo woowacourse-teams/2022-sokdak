@@ -4,7 +4,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 
 import authFetcher from '@/apis';
 import { SIZE } from '@/constants/api';
-import QUERY_KEYS from '@/constants/queries';
+import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 
 interface DeleteNotificationProps {
   id: number;
@@ -34,6 +34,7 @@ const useDeleteNotification = (
           } as InfiniteData<AxiosResponse<{ notifications: Notice[]; lastPage: boolean }>>),
       );
     },
+    mutationKey: MUTATION_KEY.DELETE_NOTIFICATION,
   });
 };
 

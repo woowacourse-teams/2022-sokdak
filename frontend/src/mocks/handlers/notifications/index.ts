@@ -18,8 +18,21 @@ const notificationHandlers = [
       }),
     );
   }),
+
   rest.get('/notifications/check', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json({ existence: true }));
+  }),
+
+  rest.delete('/notifications/:id', (req, res, ctx) => {
+    const { id } = req.params;
+
+    const targetIndex = notificationList.findIndex(notification => notification.id === Number(id));
+
+    if (targetIndex === -1) {
+      return res(ctx.status(400), ctx.json({ message: '해당 알림이 존재하지 않습니다.' }));
+    }
+    notificationList.splice(targetIndex, 1);
+    return res(ctx.status(204));
   }),
 ];
 

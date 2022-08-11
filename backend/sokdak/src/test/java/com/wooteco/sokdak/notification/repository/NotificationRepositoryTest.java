@@ -142,7 +142,7 @@ class NotificationRepositoryTest {
                 () -> assertThat(notifications.getContent().get(0).getNotificationType()).isEqualTo(POST_REPORT),
                 () -> assertThat(notifications.getContent().get(0).getContent()).isEqualTo(post.getTitle()),
                 () -> assertThat(notifications.getContent().get(1).getNotificationType()).isEqualTo(NEW_COMMENT),
-                () -> assertThat(notifications.getContent().get(1).getContent()).isEqualTo(comment2.getMessage())
+                () -> assertThat(notifications.getContent().get(1).getContent()).isEqualTo(post.getTitle())
         );
     }
 }

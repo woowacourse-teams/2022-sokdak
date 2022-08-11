@@ -91,7 +91,7 @@ class NotificationServiceTest extends IntegrationTest {
                 () -> assertThat(notification.getMember()).isEqualTo(member),
                 () -> assertThat(notification.getPost()).isEqualTo(post),
                 () -> assertThat(notification.getNotificationType()).isEqualTo(NEW_COMMENT),
-                () -> assertThat(notification.getContent()).isEqualTo("내용"),
+                () -> assertThat(notification.getContent()).isEqualTo(post.getTitle()),
                 () -> assertThat(notification.isInquired()).isFalse()
         );
     }
@@ -193,10 +193,10 @@ class NotificationServiceTest extends IntegrationTest {
                 () -> assertThat(notificationsResponse.isLastPage()).isFalse(),
                 () -> assertThat(notificationResponses).hasSize(2),
                 () -> assertThat(notificationResponses.get(0).getPostId()).isEqualTo(post.getId()),
-                () -> assertThat(notificationResponses.get(0).getType()).isEqualTo(NEW_COMMENT),
-                () -> assertThat(notificationResponses.get(0).getContent()).isEqualTo(comment.getMessage()),
+                () -> assertThat(notificationResponses.get(0).getType()).isEqualTo("NEW_COMMENT"),
+                () -> assertThat(notificationResponses.get(0).getContent()).isEqualTo(post.getTitle()),
                 () -> assertThat(notificationResponses.get(1).getPostId()).isEqualTo(post.getId()),
-                () -> assertThat(notificationResponses.get(1).getType()).isEqualTo(POST_REPORT),
+                () -> assertThat(notificationResponses.get(1).getType()).isEqualTo("POST_REPORT"),
                 () -> assertThat(notificationResponses.get(1).getContent()).isEqualTo(post.getTitle())
         );
     }

@@ -95,8 +95,13 @@ public class HttpMethodFixture {
         return response.jsonPath().getString("message");
     }
 
-    public static String getToken() {
+    public static String getChrisToken() {
         LoginRequest loginRequest = new LoginRequest("chris", "Abcd123!@");
+        return httpPost(loginRequest, "/login").header(AUTHORIZATION);
+    }
+
+    public static String getJoshToken() {
+        LoginRequest loginRequest = new LoginRequest("josh", "Abcd123!@");
         return httpPost(loginRequest, "/login").header(AUTHORIZATION);
     }
 }

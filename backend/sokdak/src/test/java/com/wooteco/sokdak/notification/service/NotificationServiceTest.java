@@ -3,6 +3,7 @@ package com.wooteco.sokdak.notification.service;
 import static com.wooteco.sokdak.notification.domain.NotificationType.COMMENT_REPORT;
 import static com.wooteco.sokdak.notification.domain.NotificationType.HOT_BOARD;
 import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_COMMENT;
+import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_REPLY;
 import static com.wooteco.sokdak.notification.domain.NotificationType.POST_REPORT;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
@@ -164,6 +165,33 @@ class NotificationServiceTest extends IntegrationTest {
                 () -> assertThat(notification.getPost()).isEqualTo(post),
                 () -> assertThat(notification.getNotificationType()).isEqualTo(POST_REPORT),
                 () -> assertThat(notification.getContent()).isEqualTo(VALID_POST_TITLE),
+                () -> assertThat(notification.isInquired()).isFalse()
+        );
+    }
+
+    @DisplayName("대댓글 작성 알림을 등록한다.")
+    @Test
+    void notifyReplyIfNotAuthenticated() {
+        Comment reply = Comment.builder()
+                .post(post)
+                .parent(comment)
+                .member(member1)
+                .message("대댓글")
+                .nickname("닉네임")
+                .build();
+        commentRepository.save(reply);
+
+        notificationService.notifyReplyIfNotAuthenticated(comment.getMember(), post, comment, reply);
+
+        List<Notification> notifications = notificationRepository.findByMemberId(comment.getMember().getId());
+        Notification notification = notifications.get(0);
+
+        assertAll(
+                () -> assertThat(notifications).hasSize(1),
+                () -> assertThat(notification.getMember()).isEqualTo(member2),
+                () -> assertThat(notification.getPost()).isEqualTo(post),
+                () -> assertThat(notification.getNotificationType()).isEqualTo(NEW_REPLY),
+                () -> assertThat(notification.getContent()).isEqualTo(comment.getMessage()),
                 () -> assertThat(notification.isInquired()).isFalse()
         );
     }

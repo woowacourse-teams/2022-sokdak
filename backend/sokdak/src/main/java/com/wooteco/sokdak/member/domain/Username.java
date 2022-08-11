@@ -2,6 +2,7 @@ package com.wooteco.sokdak.member.domain;
 
 import com.wooteco.sokdak.auth.service.Encryptor;
 import com.wooteco.sokdak.member.exception.InvalidUsernameException;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -28,5 +29,22 @@ public class Username {
         if (!PATTERN.matcher(value).matches()) {
             throw new InvalidUsernameException();
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Username username = (Username) o;
+        return getValue().equals(username.getValue());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getValue());
     }
 }

@@ -1,3 +1,5 @@
+import { Fragment } from 'react';
+
 import CommentBox from '@/pages/PostPage/components/CommentBox';
 
 import useComments from '@/hooks/queries/comment/useComments';
@@ -14,23 +16,23 @@ const CommentList = ({ id }: CommentListProps) => {
   const { data } = useComments({ storeCode: id });
 
   return (
-    <Styled.Container>
-      <CommentInput amount={data?.length!} id={id} />
-      <Styled.CommentsContainer>
-        {data?.map(comment => (
-          <CommentBox
-            key={comment.id}
-            id={Number(comment.id)}
-            authorized={comment.authorized}
-            nickname={comment.nickname}
-            content={comment.content}
-            createdAt={comment.createdAt}
-            blocked={comment.blocked}
-            postWriter={comment.postWriter}
-          />
-        ))}
-      </Styled.CommentsContainer>
-    </Styled.Container>
+    <>
+      {data && (
+        <Styled.Container>
+          <CommentInput amount={data.totalCount} id={id} />
+          <Styled.CommentsContainer>
+            {data.comments.map(comment => (
+              <Fragment key={comment.id}>
+                <CommentBox {...comment} />
+                {comment.replies.map(reply => (
+                  <Styled.ReplyBox key={reply.id} mode="replies" {...reply} />
+                ))}
+              </Fragment>
+            ))}
+          </Styled.CommentsContainer>
+        </Styled.Container>
+      )}
+    </>
   );
 };
 

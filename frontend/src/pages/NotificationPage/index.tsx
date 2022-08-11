@@ -29,7 +29,7 @@ const NotificationPage = () => {
   return (
     <Layout>
       <Styled.NotificationPageContainer>
-        <Styled.Title>알람</Styled.Title>
+        <Styled.Title>알림</Styled.Title>
         {data.pages.length > 0 ? (
           <Styled.NotificationContainer>
             {data?.pages.map((notice, index) => {

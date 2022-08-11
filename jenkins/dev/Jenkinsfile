@@ -50,7 +50,7 @@ pipeline{
       steps{
         sh "echo '########### FE BUILD START ###########'"
         dir('frontend'){
-          sh 'npm run build-prod'
+          sh 'npm run build-dev'
         }
         sh "echo '########### FE BUILD SUCCESS ###########'"
       }

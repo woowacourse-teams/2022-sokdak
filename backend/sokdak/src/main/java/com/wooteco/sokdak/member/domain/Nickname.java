@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.member.domain;
 
 import com.wooteco.sokdak.member.exception.InvalidNicknameException;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -30,5 +31,22 @@ public class Nickname {
                 || !PATTERN.matcher(value).matches()) {
             throw new InvalidNicknameException();
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Nickname nickname = (Nickname) o;
+        return getValue().equals(nickname.getValue());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getValue());
     }
 }

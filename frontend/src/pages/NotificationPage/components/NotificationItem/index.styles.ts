@@ -11,6 +11,8 @@ export const ItemContainer = styled.div`
   width: calc(100% - 3em);
   justify-content: space-between;
   margin-bottom: 0.5em;
+  user-select: none;
+  cursor: pointer;
 `;
 
 export const NotificationMessage = styled.p`

@@ -16,5 +16,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findAllByPostId(Long postId);
 
+    List<Comment> findAllByPostIdAndParentId(Long postId, Long parentId);
+
     void deleteAllByPostId(Long id);
 }

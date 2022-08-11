@@ -133,6 +133,10 @@ operation::comment/create/success[snippets='http-request,http-response']
 ===== 댓글 내용이 없는 경우
 operation::comment/create/fail/noMessage[snippets='http-request,http-response']
 
+=== 대댓글 작성
+==== 성공
+operation::reply/create/success[snippets='http-request,http-response']
+
 === 댓글 목록 조회
 ==== 성공
 operation::comment/find/all/success[snippets='http-request,http-response']
@@ -195,4 +199,10 @@ operation::member/find/posts/success/noPost[snippets='http-request,http-response
 ==== 성공
 
 operation::notification/checkNew/success[snippets='http-request,http-response']
+
+=== 알림 조회
+
+==== 성공
+
+operation::notification/findNotifications/success[snippets='http-request,http-response']
 

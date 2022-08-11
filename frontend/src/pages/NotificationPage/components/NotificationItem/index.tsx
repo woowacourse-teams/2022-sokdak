@@ -21,8 +21,9 @@ const NotificationItem = forwardRef<HTMLDivElement, NotificationItemProps>(
 
     const { mutate: deleteNotification } = useDeleteNotification();
 
-    const handleClickDeleteButton = (id: number) => {
-      deleteNotification({ id });
+    const handleClickDeleteButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+      deleteNotification({ id: notification.id });
     };
 
     return (
@@ -33,14 +34,7 @@ const NotificationItem = forwardRef<HTMLDivElement, NotificationItemProps>(
         ref={ref}
       >
         {NotificationByTypes[notification.type](notification)}
-        <Styled.DeleteButton
-          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-            e.stopPropagation();
-            handleClickDeleteButton(notification.id);
-          }}
-        >
-          x
-        </Styled.DeleteButton>
+        <Styled.DeleteButton onClick={handleClickDeleteButton}>x</Styled.DeleteButton>
       </Styled.ItemContainer>
     );
   },

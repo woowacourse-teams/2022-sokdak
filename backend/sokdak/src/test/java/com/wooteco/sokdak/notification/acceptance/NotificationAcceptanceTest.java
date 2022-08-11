@@ -49,6 +49,23 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("자신의 게시글에 댓글을 달면 알림이 등록되지 않는다.")
+    @Test
+    void checkNewNotification_NewComment_MyPost() {
+        Long postId = addPostAndGetPostId();
+        String token = getToken();
+        httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", token);
+
+        ExtractableResponse<Response> response = httpGetWithAuthorization("/notifications/check", token);
+        NewNotificationCheckResponse newNotificationCheckResponse =
+                response.jsonPath().getObject(".", NewNotificationCheckResponse.class);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(newNotificationCheckResponse.isExistence()).isFalse()
+        );
+    }
+
     @DisplayName("게시글이 HOT 게시판에 등록되면 게시글 사용자에게 알림이 등록된다.")
     @Test
     void checkNewNotification_PostInHotBoard() {

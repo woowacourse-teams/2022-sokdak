@@ -32,8 +32,10 @@ public class NotificationService {
         this.notificationRepository = notificationRepository;
     }
 
-    public void notifyNewComment(Member member, Post post, Comment comment) {
-        notify(member, post, comment, NEW_COMMENT);
+    public void notifyNewCommentIfNotAuthenticated(Member member, Post post, Comment comment) {
+        if (!comment.isAuthenticated(member.getId())) {
+            notify(member, post, comment, NEW_COMMENT);
+        }
     }
 
     public void notifyCommentReport(Member member, Post post, Comment comment) {

@@ -56,7 +56,7 @@ public class CommentService {
         Comment comment = Comment.parent(member, post, nickname, newCommentRequest.getContent());
 
         commentRepository.save(comment);
-        notificationService.notifyNewComment(post.getMember(), post, comment);
+        notificationService.notifyNewCommentIfNotAuthenticated(post.getMember(), post, comment);
 
         return comment.getId();
     }

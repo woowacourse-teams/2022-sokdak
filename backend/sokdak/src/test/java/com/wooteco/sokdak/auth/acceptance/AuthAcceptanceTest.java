@@ -37,7 +37,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
     @SpyBean
     private Clock clock;
 
-    @DisplayName("존재하는 회원 정보로 로그인 할 수 있다.")
+    @DisplayName("존재하는 회원 정보로 로그인 할 수 있다s.")
     @Test
     void login() {
         ExtractableResponse<Response> response = httpPost(VALID_LOGIN_REQUEST, "/login");

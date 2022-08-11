@@ -162,7 +162,7 @@ class NotificationServiceTest extends IntegrationTest {
         assertThat(newNotificationCheckResponse.isExistence()).isEqualTo(expected);
     }
 
-    @DisplayName("알림을 반환한다.")
+    @DisplayName("알림 목록을 반환한다.")
     @Test
     void findNotifications() {
         Notification notification = Notification.builder()

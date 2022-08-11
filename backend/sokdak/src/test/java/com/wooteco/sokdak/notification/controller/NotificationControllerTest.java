@@ -5,8 +5,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
+import com.wooteco.sokdak.notification.domain.NotificationType;
 import com.wooteco.sokdak.notification.dto.NewNotificationCheckResponse;
+import com.wooteco.sokdak.notification.dto.NotificationResponse;
+import com.wooteco.sokdak.notification.dto.NotificationsResponse;
 import com.wooteco.sokdak.util.ControllerTest;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,6 +43,29 @@ class NotificationControllerTest extends ControllerTest {
                 .when().get("/notifications/check")
                 .then().log().all()
                 .apply(document("notification/checkNew/success"))
+                .assertThat()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("알림을 반환한다.")
+    @Test
+    void findNotifications() {
+        NotificationResponse notificationResponse1 =
+                new NotificationResponse(1L, "게시글 제목", LocalDateTime.now(), NotificationType.POST_REPORT, 1L);
+        NotificationResponse notificationResponse2 =
+                new NotificationResponse(1L, "게시글 제목", LocalDateTime.now(), NotificationType.NEW_COMMENT, 1L);
+        NotificationsResponse notificationsResponse =
+                new NotificationsResponse(List.of(notificationResponse1, notificationResponse2), true);
+        doReturn(notificationsResponse)
+                .when(notificationService)
+                .findNotifications(any(), any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "any")
+                .when().get("/notifications?size=2&page=1")
+                .then().log().all()
+                .apply(document("notification/findNotifications/success"))
                 .assertThat()
                 .statusCode(HttpStatus.OK.value());
     }

@@ -1,12 +1,14 @@
 package com.wooteco.sokdak.notification.repository;
 
 import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_COMMENT;
+import static com.wooteco.sokdak.notification.domain.NotificationType.POST_REPORT;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
@@ -22,6 +24,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 
 @DataJpaTest
 @Import(JPAConfig.class)
@@ -96,5 +101,48 @@ class NotificationRepositoryTest {
         boolean actual = notificationRepository.existsByMemberIdAndInquiredIsFalse(member.getId());
 
         assertThat(actual).isFalse();
+    }
+
+    @DisplayName("회원에 따른 알림을 반환한다.")
+    @Test
+    void findNotificationsByMemberId() {
+        Member member3 = Member.builder()
+                .username("east")
+                .password(VALID_PASSWORD)
+                .nickname("eastNickname")
+                .build();
+        memberRepository.save(member3);
+        Comment comment2 = Comment.builder()
+                .post(post)
+                .member(member3)
+                .message("댓글2")
+                .nickname("깔깔")
+                .build();
+        commentRepository.save(comment2);
+        Notification notification2 = Notification.builder()
+                .member(member)
+                .post(post)
+                .comment(comment2)
+                .notificationType(NEW_COMMENT)
+                .build();
+        notificationRepository.save(notification2);
+        Notification notification3 = Notification.builder()
+                .member(member)
+                .post(post)
+                .notificationType(POST_REPORT)
+                .build();
+        notificationRepository.save(notification3);
+        PageRequest pageRequest = PageRequest.of(0, 2, Sort.by("createdAt").descending());
+
+        Slice<Notification> notifications = notificationRepository
+                .findNotificationsByMemberId(member.getId(), pageRequest);
+
+        assertAll(
+                () -> assertThat(notifications.isLast()).isFalse(),
+                () -> assertThat(notifications.getContent().get(0).getNotificationType()).isEqualTo(POST_REPORT),
+                () -> assertThat(notifications.getContent().get(0).getContent()).isEqualTo(post.getTitle()),
+                () -> assertThat(notifications.getContent().get(1).getNotificationType()).isEqualTo(NEW_COMMENT),
+                () -> assertThat(notifications.getContent().get(1).getContent()).isEqualTo(post.getTitle())
+        );
     }
 }

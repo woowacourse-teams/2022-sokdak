@@ -127,7 +127,7 @@ public class PostService {
         commentRepository.deleteAllByPostId(post.getId());
         likeRepository.deleteAllByPostId(post.getId());
         hashtagService.deleteAllByPostId(hashtags, id);
-        notificationRepository.deleteByPostId(id);
+        notificationRepository.deleteAllByPostId(id);
 
         postRepository.delete(post);
     }

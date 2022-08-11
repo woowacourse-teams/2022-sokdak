@@ -59,7 +59,7 @@ public class Notification {
     }
 
     public String getContent() {
-        if (getComment() == null) {
+        if (getComment() == null || notificationType == NotificationType.NEW_COMMENT) {
             return post.getTitle();
         }
         return getComment().getMessage();

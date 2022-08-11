@@ -50,20 +50,10 @@ class NotificationControllerTest extends ControllerTest {
     @DisplayName("알림을 반환한다.")
     @Test
     void findNotifications() {
-        NotificationResponse notificationResponse1 = NotificationResponse.builder()
-                .id(1L)
-                .content("게시글 제목")
-                .type(NotificationType.POST_REPORT)
-                .postId(1L)
-                .createdAt(LocalDateTime.now())
-                .build();
-        NotificationResponse notificationResponse2 = NotificationResponse.builder()
-                .id(1L)
-                .content("게시글 제목")
-                .type(NotificationType.NEW_COMMENT)
-                .postId(1L)
-                .createdAt(LocalDateTime.now())
-                .build();
+        NotificationResponse notificationResponse1 =
+                new NotificationResponse(1L, "게시글 제목", LocalDateTime.now(), NotificationType.POST_REPORT, 1L);
+        NotificationResponse notificationResponse2 =
+                new NotificationResponse(1L, "게시글 제목", LocalDateTime.now(), NotificationType.NEW_COMMENT, 1L);
         NotificationsResponse notificationsResponse =
                 new NotificationsResponse(List.of(notificationResponse1, notificationResponse2), true);
         doReturn(notificationsResponse)

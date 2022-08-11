@@ -72,18 +72,8 @@ public class NotificationService {
                 .findNotificationsByMemberId(authInfo.getId(), pageable);
         List<NotificationResponse> notificationResponses = notifications.getContent()
                 .stream()
-                .map(this::toDto)
+                .map(NotificationResponse::of)
                 .collect(Collectors.toUnmodifiableList());
         return new NotificationsResponse(notificationResponses, notifications.isLast());
-    }
-
-    private NotificationResponse toDto(Notification notification) {
-        return NotificationResponse.builder()
-                .id(notification.getId())
-                .content(notification.getContent())
-                .createdAt(notification.getCreatedAt())
-                .type(notification.getNotificationType())
-                .postId(notification.getPost().getId())
-                .build();
     }
 }

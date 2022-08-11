@@ -64,7 +64,11 @@ const OptionList = ({ className, children }: DropdownProps) => {
     throw new Error('');
   }
 
-  return <Styled.DropdownList className={className}>{dropdown.open ? children : null}</Styled.DropdownList>;
+  return (
+    <Styled.DropdownList className={className} onClick={() => dropdown.setOpen(false)}>
+      {dropdown.open ? children : null}
+    </Styled.DropdownList>
+  );
 };
 
 Dropdown.Trigger = Trigger;

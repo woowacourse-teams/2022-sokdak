@@ -9,6 +9,7 @@ import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuth
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getTokensForLike;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getTokensForReport;
+import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.PostFixture.addPostAndGetPostId;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -16,6 +17,8 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.notification.dto.NewNotificationCheckResponse;
+import com.wooteco.sokdak.notification.dto.NotificationResponse;
+import com.wooteco.sokdak.notification.dto.NotificationsResponse;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
@@ -105,6 +108,39 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(newNotificationCheckResponse.isExistence()).isTrue()
+        );
+    }
+
+    @DisplayName("알림을 조회할 수 있다.")
+    @Test
+    void findNotifications() {
+        Long postId = addPostAndGetPostId();
+
+        LoginRequest loginRequest = new LoginRequest("josh", "Abcd123!@");
+        String token = httpPost(loginRequest, "/login").header(AUTHORIZATION);
+        httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", token);
+
+        List<String> otherTokens = getTokensForLike();
+        for (String other : otherTokens) {
+            httpPutWithAuthorization("/posts/1/like", other);
+        }
+
+        ExtractableResponse<Response> response =
+                httpGetWithAuthorization("/notifications?size=2&page=0", getToken());
+        NotificationsResponse notificationsResponse =
+                response.jsonPath().getObject(".", NotificationsResponse.class);
+
+        NotificationResponse notificationResponse1 = notificationsResponse.getNotifications().get(0);
+        NotificationResponse notificationResponse2 = notificationsResponse.getNotifications().get(1);
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(notificationsResponse.isLastPage()).isTrue(),
+                () -> assertThat(notificationResponse1.getPostId()).isEqualTo(postId),
+                () -> assertThat(notificationResponse1.getType()).isEqualTo("HOT_BOARD"),
+                () -> assertThat(notificationResponse1.getContent()).isEqualTo(VALID_POST_TITLE),
+                () -> assertThat(notificationResponse2.getPostId()).isEqualTo(postId),
+                () -> assertThat(notificationResponse2.getType()).isEqualTo("NEW_COMMENT"),
+                () -> assertThat(notificationResponse2.getContent()).isEqualTo(VALID_POST_TITLE)
         );
     }
 }

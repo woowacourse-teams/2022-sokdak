@@ -4,6 +4,7 @@ import static com.wooteco.sokdak.notification.domain.NotificationType.COMMENT_RE
 import static com.wooteco.sokdak.notification.domain.NotificationType.HOT_BOARD;
 import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_COMMENT;
 import static com.wooteco.sokdak.notification.domain.NotificationType.POST_REPORT;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
@@ -18,6 +19,8 @@ import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.notification.domain.Notification;
 import com.wooteco.sokdak.notification.dto.NewNotificationCheckResponse;
+import com.wooteco.sokdak.notification.dto.NotificationResponse;
+import com.wooteco.sokdak.notification.dto.NotificationsResponse;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
@@ -29,6 +32,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 class NotificationServiceTest extends IntegrationTest {
 
@@ -155,5 +160,44 @@ class NotificationServiceTest extends IntegrationTest {
         NewNotificationCheckResponse newNotificationCheckResponse = notificationService.checkNewNotification(authInfo);
 
         assertThat(newNotificationCheckResponse.isExistence()).isEqualTo(expected);
+    }
+
+    @DisplayName("알림을 반환한다.")
+    @Test
+    void findNotifications() {
+        Notification notification = Notification.builder()
+                .member(member)
+                .notificationType(HOT_BOARD)
+                .post(post)
+                .build();
+        Notification notification2 = Notification.builder()
+                .member(member)
+                .notificationType(POST_REPORT)
+                .post(post)
+                .build();
+        Notification notification3 = Notification.builder()
+                .member(member)
+                .notificationType(NEW_COMMENT)
+                .post(post)
+                .comment(comment)
+                .build();
+        notificationRepository.save(notification);
+        notificationRepository.save(notification2);
+        notificationRepository.save(notification3);
+
+        NotificationsResponse notificationsResponse = notificationService
+                .findNotifications(AUTH_INFO, PageRequest.of(0, 2, Sort.by("createdAt").descending()));
+        List<NotificationResponse> notificationResponses = notificationsResponse.getNotifications();
+
+        assertAll(
+                () -> assertThat(notificationsResponse.isLastPage()).isFalse(),
+                () -> assertThat(notificationResponses).hasSize(2),
+                () -> assertThat(notificationResponses.get(0).getPostId()).isEqualTo(post.getId()),
+                () -> assertThat(notificationResponses.get(0).getType()).isEqualTo(NEW_COMMENT),
+                () -> assertThat(notificationResponses.get(0).getContent()).isEqualTo(comment.getMessage()),
+                () -> assertThat(notificationResponses.get(1).getPostId()).isEqualTo(post.getId()),
+                () -> assertThat(notificationResponses.get(1).getType()).isEqualTo(POST_REPORT),
+                () -> assertThat(notificationResponses.get(1).getContent()).isEqualTo(post.getTitle())
+        );
     }
 }

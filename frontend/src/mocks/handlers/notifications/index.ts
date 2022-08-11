@@ -8,6 +8,10 @@ const notificationHandlers = [
     const page = Number(req.url.searchParams.get('page'));
     notificationList.sort((prev, next) => Number(new Date(next.createdAt)) - Number(new Date(prev.createdAt)));
     const notificationListByPage = notificationList.slice(page * size, size * (page + 1));
+    notificationList.forEach((notification, index) => {
+      if (index < page * size || index > size * (page + 1)) return;
+      notification.isChecked = true;
+    });
 
     return res(
       ctx.status(200),
@@ -20,7 +24,7 @@ const notificationHandlers = [
   }),
 
   rest.get('/notifications/check', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json({ existence: true }));
+    return res(ctx.status(200), ctx.json({ existence: notificationList.some(({ isChecked }) => !isChecked) }));
   }),
 
   rest.delete('/notifications/:id', (req, res, ctx) => {

@@ -3,6 +3,7 @@ package com.wooteco.sokdak.comment.controller;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.comment.dto.CommentsResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
+import com.wooteco.sokdak.comment.dto.NewReplyRequest;
 import com.wooteco.sokdak.comment.service.CommentService;
 import com.wooteco.sokdak.support.token.Login;
 import java.net.URI;
@@ -30,6 +31,14 @@ public class CommentController {
                                            @Login AuthInfo authInfo) {
         Long commentId = commentService.addComment(postId, newCommentRequest, authInfo);
         return ResponseEntity.created(URI.create("/comments/" + commentId)).build();
+    }
+
+    @PostMapping("/comments/{id}/reply")
+    public ResponseEntity<Void> addReply(@PathVariable(name = "id") Long commentId,
+                                         @Valid @RequestBody NewReplyRequest newReplyRequest,
+                                         @Login AuthInfo authInfo) {
+        Long replyId = commentService.addReply(commentId, newReplyRequest, authInfo);
+        return ResponseEntity.created(URI.create("/comments/" + replyId)).build();
     }
 
     @GetMapping("/posts/{id}/comments")

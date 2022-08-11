@@ -7,6 +7,7 @@ import useSnackbar from '@/hooks/useSnackbar';
 
 import * as Styled from './index.styles';
 
+import SCROLL from '@/constants/scroll';
 import scrollToCurrent from '@/utils/scrollToCurrent';
 
 interface ReplyFormProps {
@@ -22,7 +23,7 @@ const ReplyForm = ({ commentId }: ReplyFormProps) => {
   const { mutate: postReply } = useCreateReply({
     onSuccess: () => {
       setContent('');
-      scrollToCurrent(100);
+      scrollToCurrent(SCROLL.COMMENT_HEIGHT);
     },
   });
 
@@ -33,9 +34,9 @@ const ReplyForm = ({ commentId }: ReplyFormProps) => {
   };
 
   useEffect(() => {
-    scrollToCurrent(150);
+    scrollToCurrent(SCROLL.REPLY_FORM_HEIGHT);
 
-    return () => scrollToCurrent(-150);
+    return () => scrollToCurrent(-SCROLL.REPLY_FORM_HEIGHT);
   }, []);
 
   return (

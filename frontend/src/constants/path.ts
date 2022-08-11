@@ -8,6 +8,7 @@ const PATH = {
   BOARD: '/board',
   HASHTAG: '/hashtag',
   NOTIFICATION: '/notification',
+  PROFILE: '/profile',
 };
 
 export default PATH;

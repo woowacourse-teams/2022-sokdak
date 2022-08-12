@@ -1,6 +1,6 @@
 package com.wooteco.sokdak.member.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getToken;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPatchWithAuthorization;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,7 +27,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
     void editNickname() {
         String nickname = "chrisNick2";
         NicknameUpdateRequest nicknameRequest = new NicknameUpdateRequest(nickname);
-        String token = getToken();
+        String token = getChrisToken();
 
         ExtractableResponse<Response> response =
                 httpPatchWithAuthorization(nicknameRequest, "/members/nickname", token);
@@ -43,7 +43,7 @@ class MemberAcceptanceTest extends AcceptanceTest {
     @Test
     void editNickname_Exception_Duplicate() {
         NicknameUpdateRequest wrongNicknameRequest = new NicknameUpdateRequest("eastNickname");
-        String token = getToken();
+        String token = getChrisToken();
 
         ExtractableResponse<Response> response = httpPatchWithAuthorization(wrongNicknameRequest,
                 "/members/nickname", token);

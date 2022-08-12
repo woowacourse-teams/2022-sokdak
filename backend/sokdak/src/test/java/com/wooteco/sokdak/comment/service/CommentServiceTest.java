@@ -59,7 +59,7 @@ class CommentServiceTest extends IntegrationTest {
     @BeforeEach
     void setUp() {
         member = memberRepository.findById(1L).get();
-        member2 = memberRepository.findById(2L).get();
+        member2 = memberRepository.findById(3L).get();
         randomNickname = RandomNicknameGenerator.generate(new HashSet<>());
         anonymousPost = Post.builder()
                 .member(member)

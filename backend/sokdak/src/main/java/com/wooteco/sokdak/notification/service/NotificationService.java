@@ -3,6 +3,7 @@ package com.wooteco.sokdak.notification.service;
 import static com.wooteco.sokdak.notification.domain.NotificationType.COMMENT_REPORT;
 import static com.wooteco.sokdak.notification.domain.NotificationType.HOT_BOARD;
 import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_COMMENT;
+import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_REPLY;
 import static com.wooteco.sokdak.notification.domain.NotificationType.POST_REPORT;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
@@ -38,8 +39,8 @@ public class NotificationService {
         }
     }
 
-    public void notifyCommentReport(Member member, Post post, Comment comment) {
-        notify(member, post, comment, COMMENT_REPORT);
+    public void notifyCommentReport(Post post, Comment comment) {
+        notify(comment.getMember(), post, comment, COMMENT_REPORT);
     }
 
     public void notifyHotBoard(Post post) {
@@ -48,6 +49,12 @@ public class NotificationService {
 
     public void notifyPostReport(Post post) {
         notify(post.getMember(), post, null, POST_REPORT);
+    }
+
+    public void notifyReplyIfNotAuthenticated(Member member, Post post, Comment comment, Comment reply) {
+        if (!reply.isAuthenticated(member.getId())) {
+            notify(member, post, comment, NEW_REPLY);
+        }
     }
 
     private void notify(Member member, Post post, Comment comment, NotificationType notificationType) {

@@ -5,6 +5,7 @@ import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_REPLY_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.addCommentAndGetCommentId;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getJoshToken;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
@@ -149,7 +150,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("알림을 조회할 수 있다.")
+    @DisplayName("알림 목록을 조회할 수 있다.")
     @Test
     void findNotifications() {
         Long postId = addPostAndGetPostId();
@@ -179,6 +180,27 @@ class NotificationAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(notificationResponse2.getPostId()).isEqualTo(postId),
                 () -> assertThat(notificationResponse2.getType()).isEqualTo("NEW_COMMENT"),
                 () -> assertThat(notificationResponse2.getContent()).isEqualTo(VALID_POST_TITLE)
+        );
+    }
+
+    @DisplayName("알림을 삭제할 수 있다.")
+    @Test
+    void deleteNotification() {
+        Long postId = addPostAndGetPostId();
+        LoginRequest loginRequest = new LoginRequest("josh", "Abcd123!@");
+        String token = httpPost(loginRequest, "/login").header(AUTHORIZATION);
+        httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", token);
+
+        ExtractableResponse<Response> response =
+                httpDeleteWithAuthorization("/notifications/1", getChrisToken());
+
+        NewNotificationCheckResponse newNotificationCheckResponseAfterDeletion =
+                httpGetWithAuthorization("/notifications/check", token)
+                        .jsonPath()
+                        .getObject(".", NewNotificationCheckResponse.class);
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                () -> assertThat(newNotificationCheckResponseAfterDeletion.isExistence()).isFalse()
         );
     }
 }

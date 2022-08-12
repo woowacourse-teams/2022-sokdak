@@ -10,7 +10,9 @@ import com.wooteco.sokdak.support.token.Login;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,5 +35,11 @@ public class NotificationController {
     public ResponseEntity<NotificationsResponse> findNotifications(
             @Login AuthInfo authInfo, @PageableDefault(sort = "createdAt", direction = DESC) Pageable pageable) {
         return ResponseEntity.ok(notificationService.findNotifications(authInfo, pageable));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteNotification(@Login AuthInfo authInfo, @PathVariable Long id) {
+        notificationService.deleteNotification(authInfo, id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -2,6 +2,7 @@ package com.wooteco.sokdak.notification.controller;
 
 import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
@@ -47,7 +48,7 @@ class NotificationControllerTest extends ControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("알림을 반환한다.")
+    @DisplayName("알림 목록을 반환한다.")
     @Test
     void findNotifications() {
         NotificationResponse notificationResponse1 =
@@ -68,5 +69,21 @@ class NotificationControllerTest extends ControllerTest {
                 .apply(document("notification/findNotifications/success"))
                 .assertThat()
                 .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("알림을 삭제한다.")
+    @Test
+    void deleteNotification() {
+        doNothing()
+                .when(notificationService)
+                .deleteNotification(any(), any());
+
+        restDocs
+                .header("Authorization", "any")
+                .when().delete("/notifications/1")
+                .then().log().all()
+                .apply(document("notification/deleteNotifications/success"))
+                .assertThat()
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }

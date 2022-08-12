@@ -246,4 +246,22 @@ class NotificationServiceTest extends IntegrationTest {
                 () -> assertThat(notificationResponses.get(1).getContent()).isEqualTo(post.getTitle())
         );
     }
+
+    @DisplayName("댓글을 삭제한다.")
+    @Test
+    void deleteNotification() {
+        Notification notification = Notification.builder()
+                .member(member1)
+                .notificationType(HOT_BOARD)
+                .post(post)
+                .build();
+        notificationRepository.save(notification);
+
+        notificationService.deleteNotification(AUTH_INFO, notification.getId());
+
+        List<Notification> notifications = notificationRepository
+                .findNotificationsByMemberId(member1.getId(), PageRequest.of(0, 10))
+                .getContent();
+        assertThat(notifications).isEmpty();
+    }
 }

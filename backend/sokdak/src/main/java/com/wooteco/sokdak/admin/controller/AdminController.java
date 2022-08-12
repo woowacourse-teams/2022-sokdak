@@ -31,7 +31,6 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-
     @PostMapping("/email")
     public ResponseEntity<Void> registerEmail(@Login AuthInfo authInfo,
                                               @RequestBody EmailsAddRequest emailsAddRequest) {
@@ -76,5 +75,10 @@ public class AdminController {
         adminService.saveTicket(authInfo, ticketRequest);
         return ResponseEntity.ok().build();
     }
-}
 
+    @PostMapping("/tickets/used")
+    public ResponseEntity<Void> updateTicket(@Login AuthInfo authInfo, @RequestBody TicketRequest ticketRequest) {
+        adminService.changeTicketUsedState(authInfo, ticketRequest);
+        return ResponseEntity.ok().build();
+    }
+}

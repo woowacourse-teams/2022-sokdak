@@ -7,12 +7,12 @@ import com.wooteco.sokdak.admin.dto.TicketElement;
 import com.wooteco.sokdak.admin.dto.TicketRequest;
 import com.wooteco.sokdak.admin.dto.TicketsResponse;
 import com.wooteco.sokdak.admin.exception.NoAdminException;
-import com.wooteco.sokdak.advice.UnauthorizedException;
 import com.wooteco.sokdak.auth.domain.Ticket;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.service.Encryptor;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.domain.RoleType;
+import com.wooteco.sokdak.member.exception.SerialNumberNotFoundException;
 import com.wooteco.sokdak.member.repository.TicketRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
@@ -121,6 +121,14 @@ public class AdminService {
     public void saveTicket(AuthInfo authInfo, TicketRequest ticketRequest) {
         validateRole(authInfo);
         ticketRepository.save(ticketRequest.toTicket());
+    }
+
+    @Transactional
+    public void changeTicketUsedState(AuthInfo authInfo, TicketRequest ticketRequest) {
+        validateRole(authInfo);
+        Ticket ticket = ticketRepository.findBySerialNumber(ticketRequest.getSerialNumber())
+                .orElseThrow(SerialNumberNotFoundException::new);
+        ticket.updateUsed(ticketRequest.isUsed());
     }
 
     private AuthInfo getAuthInfo(Member member) {

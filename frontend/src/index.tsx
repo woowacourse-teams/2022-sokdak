@@ -13,9 +13,12 @@ import { STORAGE_KEY } from './constants/localStorage';
 import { isExpired, parseJwt } from './utils/decodeJwt';
 
 import App from './App';
+import runJenniferFront from './jenniferFront';
 import GlobalStyle from './style/GlobalStyle';
 import theme from './style/theme';
 import { ThemeProvider } from '@emotion/react';
+
+runJenniferFront();
 
 if (process.env.MODE === 'LOCAL:MSW') {
   const { worker } = require('./mocks/worker');

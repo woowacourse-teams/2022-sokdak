@@ -10,6 +10,6 @@ export default function runJenniferFront() {
       j['dmnatime'] = new Date();
       j['dmnanocookie'] = false;
       j['dmnajennifer'] = 'JENNIFER_FRONT@INTG';
-    })(window, '4ed68da');
+    })(window, 'f431368a');
   }
 }

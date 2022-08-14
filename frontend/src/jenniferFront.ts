@@ -1,6 +1,6 @@
 //@ts-nocheck
 export default function runJenniferFront() {
-  if (process.env.MODE == 'LOCAL:MSW') {
+  if (process.env.MODE == 'production') {
     (function (j, ennifer) {
       j['dmndata'] = [];
       j['jenniferFront'] = function (args) {

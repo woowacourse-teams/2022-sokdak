@@ -268,4 +268,50 @@ class AdminControllerTest extends ControllerTest {
                 .apply(document("admin/tickets/save/fail/noAdmin"))
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
+
+    @DisplayName("관리자는 티켓을 수정한다.")
+    @Test
+    void updateTicket() {
+        TicketElement ticketElement = TicketElement.builder()
+                .id(2L)
+                .serialNumber("234567")
+                .used(false)
+                .build();
+        doNothing()
+                .when(adminService)
+                .changeTicketUsedState(any(), any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "bearer admin")
+                .body(ticketElement)
+                .when().post("admin/tickets/used")
+                .then().log().all()
+                .assertThat()
+                .apply(document("admin/tickets/update/success"))
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("관리자가 아닐 경우 티켓을 수정할 수 없다.")
+    @Test
+    void updateTicket_Exception_NoAdmin() {
+        TicketElement ticketElement = TicketElement.builder()
+                .id(2L)
+                .serialNumber("234567")
+                .used(false)
+                .build();
+        doThrow(new NoAdminException())
+                .when(adminService)
+                .changeTicketUsedState(any(), any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "bearer noAdmin")
+                .body(ticketElement)
+                .when().post("admin/tickets/used")
+                .then().log().all()
+                .assertThat()
+                .apply(document("admin/tickets/update/fail/noAdmin"))
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
 }

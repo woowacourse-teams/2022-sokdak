@@ -256,3 +256,10 @@ operation::admin/tickets/save/success[snippets='http-request,http-response']
 ==== 실패
 ===== 관리자가 아닐 경우
 operation::admin/tickets/save/fail/noAdmin[snippets='http-request,http-response']
+
+=== 관리자 페이지에서 티켓 사용여부 수정하기
+==== 성공
+operation::admin/tickets/update/success[snippets='http-request,http-response']
+==== 실패
+===== 관리자가 아닐 경우
+operation::admin/tickets/update/fail/noAdmin[snippets='http-request,http-response']

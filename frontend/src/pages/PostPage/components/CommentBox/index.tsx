@@ -45,6 +45,8 @@ const CommentBox = ({
   const [isDeleteModalOpen, handleDeleteModal] = useReducer(state => !state, false);
   const [isReplyFormOpen, handleReplyForm] = useReducer(state => !state, false);
   const theme = useTheme();
+  const strokeColor = like ? theme.colors.pink_300 : theme.colors.gray_300;
+  const fillColor = like ? theme.colors.pink_300 : 'white';
 
   const { mutate: deleteComment } = useDeleteComment();
   const { mutate: reportComment } = useReportComment({
@@ -98,7 +100,7 @@ const CommentBox = ({
         <Styled.Footer>
           <Styled.Date>{timeConverter(createdAt!)}</Styled.Date>
           <Styled.LikeContainer isLiked={like} onClick={handleLikeButton}>
-            <HeartImg fill={theme.colors.pink_300} stroke={theme.colors.pink_300} width="12px" height="11px" />
+            <HeartImg fill={fillColor} stroke={strokeColor} width="12px" height="11px" />
             {countFormatter(likeCount)}
           </Styled.LikeContainer>
         </Styled.Footer>

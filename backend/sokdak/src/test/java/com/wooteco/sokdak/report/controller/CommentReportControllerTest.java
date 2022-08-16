@@ -1,16 +1,13 @@
 package com.wooteco.sokdak.report.controller;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.report.exception.AlreadyReportCommentException;
 import com.wooteco.sokdak.report.exception.InvalidReportMessageException;
 import com.wooteco.sokdak.util.ControllerTest;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,13 +17,6 @@ import org.springframework.restdocs.RestDocumentationExtension;
 
 @ExtendWith(RestDocumentationExtension.class)
 class CommentReportControllerTest extends ControllerTest {
-
-    @BeforeEach
-    void setUpArgumentResolver() {
-        doReturn(true)
-                .when(authInterceptor)
-                .preHandle(any(), any(), any());
-    }
 
     @DisplayName("댓글을 신고한다")
     @Test

@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.member.controller;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.refEq;
@@ -12,18 +11,18 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
 import com.wooteco.sokdak.member.dto.EmailRequest;
+import com.wooteco.sokdak.member.dto.NicknameResponse;
+import com.wooteco.sokdak.member.dto.NicknameUpdateRequest;
 import com.wooteco.sokdak.member.dto.SignupRequest;
 import com.wooteco.sokdak.member.dto.UniqueResponse;
 import com.wooteco.sokdak.member.dto.VerificationRequest;
+import com.wooteco.sokdak.member.exception.DuplicateNicknameException;
 import com.wooteco.sokdak.member.exception.InvalidAuthCodeException;
 import com.wooteco.sokdak.member.exception.InvalidNicknameException;
 import com.wooteco.sokdak.member.exception.InvalidSignupFlowException;
 import com.wooteco.sokdak.member.exception.NotWootecoMemberException;
 import com.wooteco.sokdak.member.exception.PasswordConfirmationException;
 import com.wooteco.sokdak.member.exception.TicketUsedException;
-import com.wooteco.sokdak.member.dto.NicknameResponse;
-import com.wooteco.sokdak.member.dto.NicknameUpdateRequest;
-import com.wooteco.sokdak.member.exception.DuplicateNicknameException;
 import com.wooteco.sokdak.util.ControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -393,9 +392,6 @@ class MemberControllerTest extends ControllerTest {
     }
 
     private void setUpArgumentResolver() {
-        doReturn(true)
-                .when(authInterceptor)
-                .preHandle(any(), any(), any());
 
     }
 }

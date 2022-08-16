@@ -45,20 +45,20 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/posts/{id}/postReports/{postReportCount}")
-    public ResponseEntity<Void> BlockPost(@PathVariable Long id, @PathVariable Long postReportCount,
+    @PostMapping("/posts/{id}/postreports/{postReportCount}")
+    public ResponseEntity<Void> blockPost(@PathVariable Long id, @PathVariable Long postReportCount,
                                           @Login AuthInfo authInfo) {
         adminService.blockPost(id, postReportCount, authInfo);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/posts/{id}/postReports")
-    public ResponseEntity<Void> unBlockPost(@PathVariable Long id, @Login AuthInfo authInfo) {
-        adminService.unBlockPost(id, authInfo);
+    @DeleteMapping("/posts/{id}/postreports")
+    public ResponseEntity<Void> unblockPost(@PathVariable Long id, @Login AuthInfo authInfo) {
+        adminService.unblockPost(id, authInfo);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/postReports")
+    @GetMapping("/postreports")
     public ResponseEntity<PostReportsResponse> findAllPostReports(@Login AuthInfo authInfo) {
         PostReportsResponse postReportsResponse = adminService.findAllPostReport(authInfo);
         return ResponseEntity.ok().body(postReportsResponse);

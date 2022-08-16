@@ -1,13 +1,16 @@
 package com.wooteco.sokdak.admin.dto;
 
 import com.wooteco.sokdak.auth.domain.Ticket;
+import javax.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class TicketRequest {
 
+    @NotBlank(message = "이메일을 입력해주세요.")
     private final String serialNumber;
+    @NotBlank(message = "사용 여부를 입력해주세요.")
     private final boolean used;
 
     @Builder

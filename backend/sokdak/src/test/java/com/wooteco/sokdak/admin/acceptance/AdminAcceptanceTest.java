@@ -44,15 +44,15 @@ public class AdminAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("관리자 페이지에서 특정 글 블락 처리, 신고목록 조회, 블락 해제가 가능하다.")
     @Test
-    void blockAndFindReportsAndUnBlockPost() {
+    void blockAndFindReportsAndunblockPost() {
         String chrisToken = getChrisToken();
         String adminToken = getAdminToken();
         httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, chrisToken);
 
-        httpPostWithAuthorization("", "admin/posts/1/postReports/" + reportCount, adminToken);
-        ExtractableResponse<Response> response = httpGetWithAuthorization("admin/postReports", adminToken);
-        httpDeleteWithAuthorization("admin/posts/1/postReports", adminToken);
-        ExtractableResponse<Response> response2 = httpGetWithAuthorization("admin/postReports", adminToken);
+        httpPostWithAuthorization("", "admin/posts/1/postreports/" + reportCount, adminToken);
+        ExtractableResponse<Response> response = httpGetWithAuthorization("admin/postreports", adminToken);
+        httpDeleteWithAuthorization("admin/posts/1/postreports", adminToken);
+        ExtractableResponse<Response> response2 = httpGetWithAuthorization("admin/postreports", adminToken);
 
         assertAll(
                 () -> assertThat(getPostReports(response)).hasSize(reportCount),

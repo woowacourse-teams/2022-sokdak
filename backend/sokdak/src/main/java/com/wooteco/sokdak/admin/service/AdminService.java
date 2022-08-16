@@ -92,7 +92,7 @@ public class AdminService {
     }
 
     @Transactional
-    public void unBlockPost(Long id, AuthInfo authInfo) {
+    public void unblockPost(Long id, AuthInfo authInfo) {
         validateRole(authInfo);
 
         Post post = postRepository.findById(id)

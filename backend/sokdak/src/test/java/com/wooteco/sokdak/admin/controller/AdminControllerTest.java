@@ -75,9 +75,9 @@ class AdminControllerTest extends ControllerTest {
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "bearer admin")
-                .when().post("admin/posts/1/postReports/5")
+                .when().post("admin/posts/1/postreports/5")
                 .then().log().all()
-                .apply(document("admin/post/add/postReports/success"))
+                .apply(document("admin/post/add/postreports/success"))
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
@@ -91,41 +91,41 @@ class AdminControllerTest extends ControllerTest {
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "bearer noAdmin")
-                .when().post("admin/posts/1/postReports/5")
+                .when().post("admin/posts/1/postreports/5")
                 .then().log().all()
-                .apply(document("admin/post/add/postReports/fail/noAdmin"))
+                .apply(document("admin/post/add/postreports/fail/noAdmin"))
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
     @DisplayName("관리자는 게시글 신고를 초기화한다.")
     @Test
-    void unBlockPost() {
+    void unblockPost() {
         doNothing()
                 .when(adminService)
-                .unBlockPost(any(), any());
+                .unblockPost(any(), any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "bearer admin")
-                .when().delete("admin/posts/1/postReports")
+                .when().delete("admin/posts/1/postreports")
                 .then().log().all()
-                .apply(document("admin/post/delete/postReports/success"))
+                .apply(document("admin/post/delete/postreports/success"))
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @DisplayName("관리자가 아닐 경우 게시글 신고를 초기화할 수 없다.")
     @Test
-    void unBlockPost_Exception_NoAdmin() {
+    void unblockPost_Exception_NoAdmin() {
         doThrow(new NoAdminException())
                 .when(adminService)
-                .unBlockPost(any(), any());
+                .unblockPost(any(), any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "bearer noAdmin")
-                .when().delete("admin/posts/1/postReports")
+                .when().delete("admin/posts/1/postreports")
                 .then().log().all()
-                .apply(document("admin/post/delete/postReports/fail/noAdmin"))
+                .apply(document("admin/post/delete/postreports/fail/noAdmin"))
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
@@ -154,10 +154,10 @@ class AdminControllerTest extends ControllerTest {
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "bearer admin")
-                .when().get("admin/postReports")
+                .when().get("admin/postreports")
                 .then().log().all()
                 .assertThat()
-                .apply(document("admin/post/find/postReports/success"))
+                .apply(document("admin/post/find/postreports/success"))
                 .statusCode(HttpStatus.OK.value());
     }
 
@@ -171,10 +171,10 @@ class AdminControllerTest extends ControllerTest {
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "bearer noAdmin")
-                .when().get("admin/postReports")
+                .when().get("admin/postreports")
                 .then().log().all()
                 .assertThat()
-                .apply(document("admin/post/find/postReports/fail/noAdmin"))
+                .apply(document("admin/post/find/postreports/fail/noAdmin"))
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 

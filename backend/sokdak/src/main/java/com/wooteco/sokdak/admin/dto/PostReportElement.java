@@ -7,6 +7,7 @@ import lombok.Getter;
 
 @Getter
 public class PostReportElement {
+
     private Long id;
     private Long postId;
     private Long reporterId;

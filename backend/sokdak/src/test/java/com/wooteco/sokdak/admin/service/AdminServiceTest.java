@@ -128,13 +128,13 @@ class AdminServiceTest extends IntegrationTest {
 
     @DisplayName("관리자 권한으로 블라인드 해제")
     @Test
-    void unBlockPost() {
+    void unblockPost() {
         Post post = savePost();
         adminService.blockPost(post.getId(), BLOCKED_COUNT, AUTH_INFO_ADMIN);
         boolean blocked = postService.findPost(post.getId(), AUTH_INFO_ADMIN).isBlocked();
         assertThat(blocked).isTrue();
 
-        adminService.unBlockPost(post.getId(), AUTH_INFO_ADMIN);
+        adminService.unblockPost(post.getId(), AUTH_INFO_ADMIN);
 
         assertThat(postReportRepository.findAllByPostId(post.getId())).isEmpty();
         assertThat(postService.findPost(post.getId(), AUTH_INFO_ADMIN).isBlocked()).isFalse();
@@ -142,11 +142,11 @@ class AdminServiceTest extends IntegrationTest {
 
     @DisplayName("관리자 권한이 아닐 시 블라인드 해제되지 않는다.")
     @Test
-    void unBlockPost_Exception_NoAdmin() {
+    void unblockPost_Exception_NoAdmin() {
         Post post = savePost();
         adminService.blockPost(post.getId(), BLOCKED_COUNT, AUTH_INFO_ADMIN);
 
-        assertThatThrownBy(() -> adminService.unBlockPost(post.getId(), AUTH_INFO))
+        assertThatThrownBy(() -> adminService.unblockPost(post.getId(), AUTH_INFO))
                 .isInstanceOf(UnauthorizedException.class);
 
         assertThat(postReportRepository.findAllByPostId(post.getId())).hasSize(Math.toIntExact(BLOCKED_COUNT));

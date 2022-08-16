@@ -213,3 +213,53 @@ operation::notification/findNotifications/success[snippets='http-request,http-re
 
 operation::notification/deleteNotifications/success[snippets='http-request,http-response']
 
+== 관리자
+
+=== 관리자 페이지에서 글 삭제하기
+==== 성공
+operation::admin/post/delete/success[snippets='http-request,http-response']
+==== 실패
+===== 관리자가 아닐 경우
+operation::admin/post/delete/fail/noAdmin[snippets='http-request,http-response']
+
+=== 관리자 페이지에서 글 블락하기
+==== 성공
+operation::admin/post/add/postreports/success[snippets='http-request,http-response']
+==== 실패
+===== 관리자가 아닐 경우
+operation::admin/post/add/postreports/fail/noAdmin[snippets='http-request,http-response']
+
+=== 관리자 페이지에서 글 블락 복구하기
+==== 성공
+operation::admin/post/delete/postreports/success[snippets='http-request,http-response']
+==== 실패
+===== 관리자가 아닐 경우
+operation::admin/post/delete/postreports/fail/noAdmin[snippets='http-request,http-response']
+
+=== 관리자 페이지에서 글 신고 목록 조회하기
+==== 성공
+operation::admin/post/find/postreports/success[snippets='http-request,http-response']
+==== 실패
+===== 관리자가 아닐 경우
+operation::admin/post/find/postreports/fail/noAdmin[snippets='http-request,http-response']
+
+=== 관리자 페이지에서 티켓 조회하기
+==== 성공
+operation::admin/tickets/find/success[snippets='http-request,http-response']
+==== 실패
+===== 관리자가 아닐 경우
+operation::admin/tickets/find/fail/noAdmin[snippets='http-request,http-response']
+
+=== 관리자 페이지에서 티켓 저장하기
+==== 성공
+operation::admin/tickets/save/success[snippets='http-request,http-response']
+==== 실패
+===== 관리자가 아닐 경우
+operation::admin/tickets/save/fail/noAdmin[snippets='http-request,http-response']
+
+=== 관리자 페이지에서 티켓 사용여부 수정하기
+==== 성공
+operation::admin/tickets/update/success[snippets='http-request,http-response']
+==== 실패
+===== 관리자가 아닐 경우
+operation::admin/tickets/update/fail/noAdmin[snippets='http-request,http-response']

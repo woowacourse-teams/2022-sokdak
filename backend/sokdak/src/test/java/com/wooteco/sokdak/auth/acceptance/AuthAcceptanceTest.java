@@ -8,6 +8,7 @@ import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_LOGIN_REQUEST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.auth.domain.AuthCode;
@@ -123,6 +124,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         doReturn(Instant.now(FUTURE_CLOCK))
                 .when(clock)
                 .instant();
+
         ExtractableResponse<Response> response = httpPostWithAuthorization(new VerificationRequest(email, code),
                 "members/signup/email/verification", getChrisToken());
 

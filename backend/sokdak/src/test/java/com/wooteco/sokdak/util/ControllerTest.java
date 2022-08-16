@@ -1,5 +1,7 @@
 package com.wooteco.sokdak.util;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 
@@ -113,9 +115,7 @@ public class ControllerTest {
     protected AdminService adminService;
 
     @BeforeEach
-    void setRestDocs(WebApplicationContext webApplicationContext,
-                     RestDocumentationContextProvider restDocumentation) {
-
+    void setUp(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation) {
         restDocs = RestAssuredMockMvc.given()
                 .mockMvc(MockMvcBuilders.webAppContextSetup(webApplicationContext)
                         .apply(documentationConfiguration(restDocumentation)
@@ -124,5 +124,9 @@ public class ControllerTest {
                                 .withResponseDefaults(prettyPrint()))
                         .build())
                 .log().all();
+
+        doReturn(true)
+                .when(authInterceptor)
+                .preHandle(any(), any(), any());
     }
 }

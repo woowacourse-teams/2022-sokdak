@@ -16,20 +16,12 @@ import com.wooteco.sokdak.util.ControllerTest;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 class CommentControllerTest extends ControllerTest {
-
-    @BeforeEach
-    void setUpArgumentResolver() {
-        doReturn(true)
-                .when(authInterceptor)
-                .preHandle(any(), any(), any());
-    }
 
     @DisplayName("댓글 작성 요청이 오면 새로운 댓글을 작성한다.")
     @Test

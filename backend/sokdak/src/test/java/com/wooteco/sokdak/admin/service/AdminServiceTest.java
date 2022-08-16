@@ -1,9 +1,13 @@
 package com.wooteco.sokdak.admin.service;
 
+import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO_ADMIN;
+import static com.wooteco.sokdak.util.fixture.PostFixture.BLOCKED_COUNT;
+import static com.wooteco.sokdak.util.fixture.PostFixture.SERIAL_NUMBER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.admin.dto.PostReportsResponse;
 import com.wooteco.sokdak.admin.dto.TicketRequest;
@@ -34,12 +38,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+@DisplayName("관리자 서비스 테스트")
 @Transactional(propagation = Propagation.NEVER)
 class AdminServiceTest extends IntegrationTest {
-
-    private static final Long BLOCKED_COUNT = 5L;
-    private static final long WRITABLE_BOARD_ID = 2L;
-    private static final String SERIAL_NUMBER = "234567";
 
     @Autowired
     private AdminService adminService;
@@ -74,7 +75,7 @@ class AdminServiceTest extends IntegrationTest {
                 .likes(new ArrayList<>())
                 .comments(new ArrayList<>())
                 .build();
-        board = boardRepository.findById(WRITABLE_BOARD_ID)
+        board = boardRepository.findById((long) FREE_BOARD_ID)
                 .orElseThrow(BoardNotFoundException::new);
         ticket = Ticket.builder()
                 .serialNumber(SERIAL_NUMBER)
@@ -97,10 +98,11 @@ class AdminServiceTest extends IntegrationTest {
     void deletePost_Exception_NoAdmin() {
         Long postId = postRepository.save(post).getId();
 
-        assertThatThrownBy(() -> adminService.deletePost(postId, AUTH_INFO))
-                .isInstanceOf(NoAdminException.class);
-
-        assertThat(postRepository.findById(postId)).isNotEmpty();
+        assertAll(
+                () -> assertThatThrownBy(() -> adminService.deletePost(postId, AUTH_INFO))
+                        .isInstanceOf(NoAdminException.class),
+                () -> assertThat(postRepository.findById(postId)).isNotEmpty()
+        );
     }
 
     @DisplayName("관리자 권한으로 블라인드")
@@ -110,8 +112,11 @@ class AdminServiceTest extends IntegrationTest {
 
         adminService.blockPost(post.getId(), BLOCKED_COUNT, AUTH_INFO_ADMIN);
 
-        assertThat(postReportRepository.findAllByPostId(post.getId())).hasSize(Math.toIntExact(BLOCKED_COUNT));
-        assertThat(postService.findPost(post.getId(), AUTH_INFO_ADMIN).isBlocked()).isTrue();
+        assertAll(
+                () -> assertThat(postReportRepository.findAllByPostId(post.getId()))
+                        .hasSize(Math.toIntExact(BLOCKED_COUNT)),
+                () -> assertThat(postService.findPost(post.getId(), AUTH_INFO_ADMIN).isBlocked()).isTrue()
+        );
     }
 
     @DisplayName("관리자 권한이 아닐 시 블라인드 불가")
@@ -119,11 +124,12 @@ class AdminServiceTest extends IntegrationTest {
     void blockPost_Exception_NoAdmin() {
         Post post = savePost();
 
-        assertThatThrownBy(() -> adminService.blockPost(post.getId(), BLOCKED_COUNT, AUTH_INFO))
-                .isInstanceOf(NoAdminException.class);
-
-        assertThat(postReportRepository.findAllByPostId(post.getId())).isEmpty();
-        assertThat(postService.findPost(post.getId(), AUTH_INFO_ADMIN).isBlocked()).isFalse();
+        assertAll(
+                () -> assertThatThrownBy(() -> adminService.blockPost(post.getId(), BLOCKED_COUNT, AUTH_INFO))
+                        .isInstanceOf(NoAdminException.class),
+                () -> assertThat(postReportRepository.findAllByPostId(post.getId())).isEmpty(),
+                () -> assertThat(postService.findPost(post.getId(), AUTH_INFO_ADMIN).isBlocked()).isFalse()
+        );
     }
 
     @DisplayName("관리자 권한으로 블라인드 해제")
@@ -132,12 +138,13 @@ class AdminServiceTest extends IntegrationTest {
         Post post = savePost();
         adminService.blockPost(post.getId(), BLOCKED_COUNT, AUTH_INFO_ADMIN);
         boolean blocked = postService.findPost(post.getId(), AUTH_INFO_ADMIN).isBlocked();
-        assertThat(blocked).isTrue();
-
         adminService.unblockPost(post.getId(), AUTH_INFO_ADMIN);
 
-        assertThat(postReportRepository.findAllByPostId(post.getId())).isEmpty();
-        assertThat(postService.findPost(post.getId(), AUTH_INFO_ADMIN).isBlocked()).isFalse();
+        assertAll(
+                () -> assertThat(blocked).isTrue(),
+                () -> assertThat(postReportRepository.findAllByPostId(post.getId())).isEmpty(),
+                () -> assertThat(postService.findPost(post.getId(), AUTH_INFO_ADMIN).isBlocked()).isFalse()
+        );
     }
 
     @DisplayName("관리자 권한이 아닐 시 블라인드 해제 예외 발생")
@@ -146,11 +153,13 @@ class AdminServiceTest extends IntegrationTest {
         Post post = savePost();
         adminService.blockPost(post.getId(), BLOCKED_COUNT, AUTH_INFO_ADMIN);
 
-        assertThatThrownBy(() -> adminService.unblockPost(post.getId(), AUTH_INFO))
-                .isInstanceOf(NoAdminException.class);
-
-        assertThat(postReportRepository.findAllByPostId(post.getId())).hasSize(Math.toIntExact(BLOCKED_COUNT));
-        assertThat(postService.findPost(post.getId(), AUTH_INFO_ADMIN).isBlocked()).isTrue();
+        assertAll(
+                () -> assertThatThrownBy(() -> adminService.unblockPost(post.getId(), AUTH_INFO))
+                        .isInstanceOf(NoAdminException.class),
+                () -> assertThat(postReportRepository.findAllByPostId(post.getId()))
+                        .hasSize(Math.toIntExact(BLOCKED_COUNT)),
+                () -> assertThat(postService.findPost(post.getId(), AUTH_INFO_ADMIN).isBlocked()).isTrue()
+        );
     }
 
     @DisplayName("관리자 권한으로 모든 게시글 신고 조회")
@@ -159,14 +168,15 @@ class AdminServiceTest extends IntegrationTest {
         Post post = savePost();
         adminService.blockPost(post.getId(), BLOCKED_COUNT, AUTH_INFO_ADMIN);
 
-        PostReportsResponse allPostReport = adminService.findAllPostReport(AUTH_INFO_ADMIN);
+        PostReportsResponse allPostReport = adminService.findAllPostReports(AUTH_INFO_ADMIN);
+
         assertThat(allPostReport.getPostReports()).hasSize(Math.toIntExact(BLOCKED_COUNT));
     }
 
     @DisplayName("관리자 권한이 아닐 시 모든 게시글 신고를 조회 예외 발생")
     @Test
     void findAllPostReport_Exception_NoAdmin() {
-        assertThatThrownBy(() -> adminService.findAllPostReport(AUTH_INFO))
+        assertThatThrownBy(() -> adminService.findAllPostReports(AUTH_INFO))
                 .isInstanceOf(NoAdminException.class);
     }
 
@@ -186,6 +196,7 @@ class AdminServiceTest extends IntegrationTest {
         ticketRepository.save(ticket2);
 
         TicketsResponse tickets = adminService.findAllTickets(AUTH_INFO_ADMIN);
+
         assertThat(tickets.getTickets()).usingRecursiveComparison()
                 .comparingOnlyFields("serialNumber", "used")
                 .isEqualTo(List.of(ticket1, ticket2));
@@ -203,7 +214,9 @@ class AdminServiceTest extends IntegrationTest {
     void saveTicket() {
         adminService.saveTicket(AUTH_INFO_ADMIN, TicketRequest.of(ticket));
 
-        Ticket actual = ticketRepository.findBySerialNumber(SERIAL_NUMBER).orElseThrow();
+        Ticket actual = ticketRepository.findBySerialNumber(SERIAL_NUMBER)
+                .orElseThrow(SerialNumberNotFoundException::new);
+
         assertThat(actual).usingRecursiveComparison()
                 .comparingOnlyFields("serialNumber", "used")
                 .isEqualTo(ticket);
@@ -212,9 +225,11 @@ class AdminServiceTest extends IntegrationTest {
     @DisplayName("관리자 권한이 아닐 시 티켓 추가 예외 발생")
     @Test
     void saveTicket_Exception_NoAdmin() {
-        assertThatThrownBy(() -> adminService.saveTicket(AUTH_INFO, TicketRequest.of(ticket)))
-                .isInstanceOf(NoAdminException.class);
-        assertThat(ticketRepository.findBySerialNumber(SERIAL_NUMBER)).isEmpty();
+        assertAll(
+                () -> assertThatThrownBy(() -> adminService.saveTicket(AUTH_INFO, TicketRequest.of(ticket)))
+                        .isInstanceOf(NoAdminException.class),
+                () -> assertThat(ticketRepository.findBySerialNumber(SERIAL_NUMBER)).isEmpty()
+        );
     }
 
     @DisplayName("관리자 권한으로 티켓 상태 변경")
@@ -242,14 +257,15 @@ class AdminServiceTest extends IntegrationTest {
                 .used(true)
                 .build();
 
-        assertThatThrownBy(() -> adminService.changeTicketUsedState(AUTH_INFO, changedTicketRequest))
-                .isInstanceOf(NoAdminException.class);
-        Ticket actual = ticketRepository.findBySerialNumber(SERIAL_NUMBER)
-                .orElseThrow(SerialNumberNotFoundException::new);
-        assertThat(actual.isUsed()).isFalse();
+        assertAll(
+                () -> assertThatThrownBy(() -> adminService.changeTicketUsedState(AUTH_INFO, changedTicketRequest))
+                        .isInstanceOf(NoAdminException.class),
+                () -> assertThat(ticketRepository.findBySerialNumber(SERIAL_NUMBER)
+                        .orElseThrow(SerialNumberNotFoundException::new).isUsed()).isFalse()
+        );
     }
 
-    @DisplayName("없는 티켓 상태를 변경할 수 없다.")
+    @DisplayName("없는 티켓 상태를 변경 시 예외 발생")
     @Test
     void changeTicketUsedState_Exception_NoTicket() {
         TicketRequest changedTicketRequest = TicketRequest.builder()

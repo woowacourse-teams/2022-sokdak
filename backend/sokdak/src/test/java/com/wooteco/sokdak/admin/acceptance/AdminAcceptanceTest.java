@@ -22,6 +22,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+@DisplayName("관리자 인수테스트")
 public class AdminAcceptanceTest extends AcceptanceTest {
 
     private static final int reportCount = 5;

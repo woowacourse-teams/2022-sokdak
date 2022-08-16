@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+@DisplayName("관리자 컨트롤러 테스트")
 class AdminControllerTest extends ControllerTest {
 
     @BeforeEach
@@ -149,7 +150,7 @@ class AdminControllerTest extends ControllerTest {
         List<PostReportElement> postReportElements = List.of(postReportElement, postReportElement2);
         doReturn(PostReportsResponse.of(postReportElements))
                 .when(adminService)
-                .findAllPostReport(any());
+                .findAllPostReports(any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -166,7 +167,7 @@ class AdminControllerTest extends ControllerTest {
     void findAllPostReports_Exception_NoAdmin() {
         doThrow(new NoAdminException())
                 .when(adminService)
-                .findAllPostReport(any());
+                .findAllPostReports(any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

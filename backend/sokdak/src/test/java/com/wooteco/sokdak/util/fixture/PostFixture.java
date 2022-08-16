@@ -30,6 +30,9 @@ public class PostFixture {
     public static final String INVALID_POST_TITLE = "A".repeat(51);
     public static final String INVALID_POST_CONTENT = "A".repeat(5001);
 
+    public static final Long BLOCKED_COUNT = 5L;
+    public static final String SERIAL_NUMBER = "asd23456";
+
     public static final PostsElementResponse POSTS_ELEMENT_RESPONSE_1 = PostsElementResponse.builder()
             .id(1L)
             .title("제목")

@@ -100,7 +100,7 @@ public class AdminService {
         postReportRepository.deleteAllPostReportByPostId(post.getId());
     }
 
-    public PostReportsResponse findAllPostReport(AuthInfo authInfo) {
+    public PostReportsResponse findAllPostReports(AuthInfo authInfo) {
         validateRole(authInfo);
 
         List<PostReport> postReports = postReportRepository.findAll();

@@ -18,8 +18,6 @@ public class MemberFixture {
     public static final LoginRequest VALID_LOGIN_REQUEST = new LoginRequest(VALID_USERNAME, VALID_PASSWORD);
     public static final LoginRequest INVALID_LOGIN_REQUEST = new LoginRequest("invalidUsername", "invalidPassword1!");
 
-    public static final String SESSION_ID = "mySessionId";
-
     public static List<Member> getMembersForReport() {
         return List.of(
                 Member.builder().id(1L).username("chris").password("Abcd123!@").nickname("chrisNickname").build(),

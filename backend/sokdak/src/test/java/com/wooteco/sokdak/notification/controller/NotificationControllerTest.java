@@ -26,9 +26,6 @@ class NotificationControllerTest extends ControllerTest {
         doReturn(true)
                 .when(authInterceptor)
                 .preHandle(any(), any(), any());
-        doReturn(AUTH_INFO)
-                .when(authenticationPrincipalArgumentResolver)
-                .resolveArgument(any(), any(), any(), any());
     }
 
     @DisplayName("새로운 알림이 있는지 응답한다.")

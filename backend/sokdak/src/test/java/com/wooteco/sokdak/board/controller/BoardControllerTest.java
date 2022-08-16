@@ -21,9 +21,6 @@ class BoardControllerTest extends ControllerTest {
         doReturn(true)
                 .when(authInterceptor)
                 .preHandle(any(), any(), any());
-        doReturn(AUTH_INFO)
-                .when(authenticationPrincipalArgumentResolver)
-                .resolveArgument(any(), any(), any(), any());
     }
 
     @DisplayName("게시판을 생성하면 201 반환")

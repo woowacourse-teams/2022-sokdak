@@ -29,10 +29,6 @@ class CommentControllerTest extends ControllerTest {
         doReturn(true)
                 .when(authInterceptor)
                 .preHandle(any(), any(), any());
-
-        doReturn(AUTH_INFO)
-                .when(authenticationPrincipalArgumentResolver)
-                .resolveArgument(any(), any(), any(), any());
     }
 
     @DisplayName("댓글 작성 요청이 오면 새로운 댓글을 작성한다.")

@@ -96,3 +96,12 @@ export const Pagination = styled(PaginationComponent)`
   align-self: center;
   margin: 15px 0;
 `;
+
+export const EmptyPostList = styled.div`
+  font-family: 'BMHANNAPro';
+  height: 363px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${props => props.theme.colors.gray_200};
+`;

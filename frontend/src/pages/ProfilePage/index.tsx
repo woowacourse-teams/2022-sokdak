@@ -64,7 +64,7 @@ const ProfilePage = () => {
         </Styled.NicknameField>
         <Styled.PostField>
           <Styled.PostListHeader>내가 쓴 글</Styled.PostListHeader>
-          {data && data.posts && (
+          {data && data.posts && data.posts.length !== 0 ? (
             <>
               <Styled.PostList>
                 {data.posts.map(post => (
@@ -77,6 +77,8 @@ const ProfilePage = () => {
                 setCurrentPage={setCurrentPage}
               />
             </>
+          ) : (
+            <Styled.EmptyPostList>아직 작성된 글이 없어요 !</Styled.EmptyPostList>
           )}
         </Styled.PostField>
       </Styled.Container>

@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.board.controller;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -8,20 +7,12 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import com.wooteco.sokdak.board.dto.NewBoardRequest;
 import com.wooteco.sokdak.board.dto.NewBoardResponse;
 import com.wooteco.sokdak.util.ControllerTest;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 class BoardControllerTest extends ControllerTest {
-
-    @BeforeEach
-    void setUpArgumentResolver() {
-        doReturn(true)
-                .when(authInterceptor)
-                .preHandle(any(), any(), any());
-    }
 
     @DisplayName("게시판을 생성하면 201 반환")
     @Test

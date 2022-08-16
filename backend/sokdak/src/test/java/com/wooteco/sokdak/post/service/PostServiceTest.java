@@ -85,7 +85,7 @@ class PostServiceTest extends IntegrationTest {
         assertAll(
                 () -> assertThat(actual.getTitle()).isEqualTo(newPostRequest.getTitle()),
                 () -> assertThat(actual.getContent()).isEqualTo(newPostRequest.getContent()),
-                () -> assertThat(actual.getMember().getId()).isEqualTo(1L),
+                () -> assertThat(actual.getMember().getId()).isEqualTo(member.getId()),
                 () -> assertThat(actual.getNickname()).isNotEqualTo(actual.getMember().getNickname()),
                 () -> assertThat(actual.getCreatedAt()).isNotNull(),
                 () -> assertThat(actual.getPostBoards().get(0).getBoard().getTitle()).isNotNull()
@@ -103,7 +103,7 @@ class PostServiceTest extends IntegrationTest {
         assertAll(
                 () -> assertThat(actual.getTitle()).isEqualTo(newPostRequest.getTitle()),
                 () -> assertThat(actual.getContent()).isEqualTo(newPostRequest.getContent()),
-                () -> assertThat(actual.getMember().getId()).isEqualTo(1L),
+                () -> assertThat(actual.getMember().getId()).isEqualTo(member.getId()),
                 () -> assertThat(actual.getNickname()).isEqualTo(actual.getMember().getNickname()),
                 () -> assertThat(actual.getCreatedAt()).isNotNull(),
                 () -> assertThat(actual.getPostBoards().get(0).getBoard().getTitle()).isNotNull()

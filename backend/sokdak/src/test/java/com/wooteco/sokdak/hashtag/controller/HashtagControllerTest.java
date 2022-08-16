@@ -30,9 +30,6 @@ class HashtagControllerTest extends ControllerTest {
         doReturn(true)
                 .when(authInterceptor)
                 .preHandle(any(), any(), any());
-        doReturn(AUTH_INFO)
-                .when(authenticationPrincipalArgumentResolver)
-                .resolveArgument(any(), any(), any(), any());
     }
 
     @DisplayName("해시태그로 검색 시 200 반환")

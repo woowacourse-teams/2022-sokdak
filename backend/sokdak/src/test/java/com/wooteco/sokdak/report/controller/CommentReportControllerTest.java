@@ -26,9 +26,6 @@ class CommentReportControllerTest extends ControllerTest {
         doReturn(true)
                 .when(authInterceptor)
                 .preHandle(any(), any(), any());
-        doReturn(AUTH_INFO)
-                .when(authenticationPrincipalArgumentResolver)
-                .resolveArgument(any(), any(), any(), any());
     }
 
     @DisplayName("댓글을 신고한다")

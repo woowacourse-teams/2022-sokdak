@@ -18,7 +18,9 @@ const notificationHandlers = [
       ctx.json({
         notifications: notificationListByPage,
         lastPage:
-          notificationList.length - size * page - notificationListByPage.length === 0 && notificationList.length !== 0,
+          notificationListByPage.length == 0 ||
+          (notificationList.length - size * page - notificationListByPage.length === 0 &&
+            notificationList.length !== 0),
       }),
     );
   }),

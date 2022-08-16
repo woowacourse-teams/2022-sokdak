@@ -5,7 +5,7 @@ import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
 import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST;
-import static com.wooteco.sokdak.util.fixture.PostFixture.addPostAndGetPostId;
+import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
@@ -36,7 +36,7 @@ class CommentReportAcceptanceTest extends AcceptanceTest {
     @DisplayName("이미 신고한 댓글은 다시 신고할 수 없다.")
     @Test
     void reportComment_Exception_AlreadyReport() {
-        addPostAndGetPostId();
+        addNewPost();
         Long commentId = addCommentAndGetCommentId();
         httpPostWithAuthorization(REPORT_REQUEST,
                 "/comments/" + commentId + "/report", getChrisToken());
@@ -50,7 +50,7 @@ class CommentReportAcceptanceTest extends AcceptanceTest {
     @DisplayName("없는 댓글은 신고할 수 없다.")
     @Test
     void reportComment_Exception_NotFoundComment() {
-        addPostAndGetPostId();
+        addNewPost();
         long invalidCommentId = 9999L;
 
         ExtractableResponse<Response> response = httpPostWithAuthorization(REPORT_REQUEST,

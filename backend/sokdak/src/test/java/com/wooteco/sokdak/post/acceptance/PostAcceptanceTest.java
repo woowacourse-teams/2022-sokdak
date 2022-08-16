@@ -20,7 +20,7 @@ import static com.wooteco.sokdak.util.fixture.PostFixture.UPDATED_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.UPDATED_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
-import static com.wooteco.sokdak.util.fixture.PostFixture.addPostAndGetPostId;
+import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -109,8 +109,8 @@ class PostAcceptanceTest extends AcceptanceTest {
     @DisplayName("특정 게시판의 게시글 목록을 조회할때 누적신고 5개 이상인 게시글은 block된다.")
     @Test
     void findPosts_Block() {
-        Long blockedPostId = addPostAndGetPostId();
-        addPostAndGetPostId();
+        Long blockedPostId = addNewPost();
+        addNewPost();
         List<String> tokens = getTokensForReport();
         for (int i = 0; i < 5; ++i) {
             ReportRequest reportRequest = new ReportRequest("신고");
@@ -136,7 +136,7 @@ class PostAcceptanceTest extends AcceptanceTest {
     @DisplayName("특정 게시글을 조회할때 누적신고 5개 이상인 게시글은 block된다.")
     @Test
     void findPost_Block() {
-        Long blockedPostId = addPostAndGetPostId();
+        Long blockedPostId = addNewPost();
         List<String> tokens = getTokensForReport();
         for (int i = 0; i < 5; ++i) {
             ReportRequest reportRequest = new ReportRequest("신고");

@@ -14,6 +14,9 @@ public class PostReportElement {
     private String reportMessage;
     private LocalDateTime createdAt;
 
+    protected PostReportElement(){
+    }
+
     @Builder
     public PostReportElement(Long id, Long postId, Long reporterId, String reportMessage, LocalDateTime createdAt) {
         this.id = id;

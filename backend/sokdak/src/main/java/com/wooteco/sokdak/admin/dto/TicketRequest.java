@@ -9,9 +9,12 @@ import lombok.Getter;
 public class TicketRequest {
 
     @NotBlank(message = "이메일을 입력해주세요.")
-    private final String serialNumber;
+    private String serialNumber;
     @NotBlank(message = "사용 여부를 입력해주세요.")
-    private final boolean used;
+    private boolean used;
+
+    protected TicketRequest(){
+    }
 
     @Builder
     public TicketRequest(String serialNumber, boolean used) {

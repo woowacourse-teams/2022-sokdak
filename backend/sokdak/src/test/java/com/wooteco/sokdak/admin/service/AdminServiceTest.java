@@ -9,7 +9,6 @@ import com.wooteco.sokdak.admin.dto.PostReportsResponse;
 import com.wooteco.sokdak.admin.dto.TicketRequest;
 import com.wooteco.sokdak.admin.dto.TicketsResponse;
 import com.wooteco.sokdak.admin.exception.NoAdminException;
-import com.wooteco.sokdak.advice.UnauthorizedException;
 import com.wooteco.sokdak.auth.domain.Ticket;
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;
@@ -40,7 +39,8 @@ class AdminServiceTest extends IntegrationTest {
 
     private static final Long BLOCKED_COUNT = 5L;
     private static final long WRITABLE_BOARD_ID = 2L;
-    private static final String SERIAL_NUMBER = "test1@gmail.com";
+    private static final String SERIAL_NUMBER = "234567";
+
     @Autowired
     private AdminService adminService;
     @Autowired
@@ -98,7 +98,7 @@ class AdminServiceTest extends IntegrationTest {
         Long postId = postRepository.save(post).getId();
 
         assertThatThrownBy(() -> adminService.deletePost(postId, AUTH_INFO))
-                .isInstanceOf(UnauthorizedException.class);
+                .isInstanceOf(NoAdminException.class);
 
         assertThat(postRepository.findById(postId)).isNotEmpty();
     }
@@ -120,7 +120,7 @@ class AdminServiceTest extends IntegrationTest {
         Post post = savePost();
 
         assertThatThrownBy(() -> adminService.blockPost(post.getId(), BLOCKED_COUNT, AUTH_INFO))
-                .isInstanceOf(UnauthorizedException.class);
+                .isInstanceOf(NoAdminException.class);
 
         assertThat(postReportRepository.findAllByPostId(post.getId())).isEmpty();
         assertThat(postService.findPost(post.getId(), AUTH_INFO_ADMIN).isBlocked()).isFalse();
@@ -140,14 +140,14 @@ class AdminServiceTest extends IntegrationTest {
         assertThat(postService.findPost(post.getId(), AUTH_INFO_ADMIN).isBlocked()).isFalse();
     }
 
-    @DisplayName("관리자 권한이 아닐 시 블라인드 해제되지 않는다.")
+    @DisplayName("관리자 권한이 아닐 시 블라인드 해제 예외 발생")
     @Test
     void unblockPost_Exception_NoAdmin() {
         Post post = savePost();
         adminService.blockPost(post.getId(), BLOCKED_COUNT, AUTH_INFO_ADMIN);
 
         assertThatThrownBy(() -> adminService.unblockPost(post.getId(), AUTH_INFO))
-                .isInstanceOf(UnauthorizedException.class);
+                .isInstanceOf(NoAdminException.class);
 
         assertThat(postReportRepository.findAllByPostId(post.getId())).hasSize(Math.toIntExact(BLOCKED_COUNT));
         assertThat(postService.findPost(post.getId(), AUTH_INFO_ADMIN).isBlocked()).isTrue();
@@ -163,7 +163,7 @@ class AdminServiceTest extends IntegrationTest {
         assertThat(allPostReport.getPostReports()).hasSize(Math.toIntExact(BLOCKED_COUNT));
     }
 
-    @DisplayName("관리자 권한이 아닐 시 모든 게시글 신고를 조회할 수 없다.")
+    @DisplayName("관리자 권한이 아닐 시 모든 게시글 신고를 조회 예외 발생")
     @Test
     void findAllPostReport_Exception_NoAdmin() {
         assertThatThrownBy(() -> adminService.findAllPostReport(AUTH_INFO))
@@ -191,7 +191,7 @@ class AdminServiceTest extends IntegrationTest {
                 .isEqualTo(List.of(ticket1, ticket2));
     }
 
-    @DisplayName("관리자 권한이 아닐 시 티켓을 조회할 수 없다.")
+    @DisplayName("관리자 권한이 아닐 시 티켓 조회 예외 발생")
     @Test
     void findAllTickets_Exception_NoAdmin() {
         assertThatThrownBy(() -> adminService.findAllTickets(AUTH_INFO))
@@ -209,7 +209,7 @@ class AdminServiceTest extends IntegrationTest {
                 .isEqualTo(ticket);
     }
 
-    @DisplayName("관리자 권한이 아닐 시 티켓을 추가할 수 없다.")
+    @DisplayName("관리자 권한이 아닐 시 티켓 추가 예외 발생")
     @Test
     void saveTicket_Exception_NoAdmin() {
         assertThatThrownBy(() -> adminService.saveTicket(AUTH_INFO, TicketRequest.of(ticket)))
@@ -233,7 +233,7 @@ class AdminServiceTest extends IntegrationTest {
         assertThat(actual.isUsed()).isTrue();
     }
 
-    @DisplayName("관리자 권한이 아닐 시 티켓 상태를 변경할 수 없다.")
+    @DisplayName("관리자 권한이 아닐 시 티켓 상태 변경 예외 발생")
     @Test
     void changeTicketUsedState_Exception_NoAdmin() {
         adminService.saveTicket(AUTH_INFO_ADMIN, TicketRequest.of(ticket));

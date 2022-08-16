@@ -10,7 +10,7 @@ public class EmailsAddRequest {
     @NotBlank(message = "추가할 이메일을 입력해주세요.")
     private List<String> emails;
 
-    public EmailsAddRequest() {
+    protected EmailsAddRequest() {
     }
 
     public EmailsAddRequest(List<String> emails) {

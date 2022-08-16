@@ -62,7 +62,7 @@ class AdminControllerTest extends ControllerTest {
                 .when().delete("admin/posts/" + 1L)
                 .then().log().all()
                 .apply(document("admin/post/delete/fail/noAdmin"))
-                .statusCode(HttpStatus.UNAUTHORIZED.value());
+                .statusCode(HttpStatus.FORBIDDEN.value());
     }
 
     @DisplayName("관리자는 게시글을 블락한다.")
@@ -94,7 +94,7 @@ class AdminControllerTest extends ControllerTest {
                 .when().post("admin/posts/1/postreports/5")
                 .then().log().all()
                 .apply(document("admin/post/add/postreports/fail/noAdmin"))
-                .statusCode(HttpStatus.UNAUTHORIZED.value());
+                .statusCode(HttpStatus.FORBIDDEN.value());
     }
 
     @DisplayName("관리자는 게시글 신고를 초기화한다.")
@@ -126,7 +126,7 @@ class AdminControllerTest extends ControllerTest {
                 .when().delete("admin/posts/1/postreports")
                 .then().log().all()
                 .apply(document("admin/post/delete/postreports/fail/noAdmin"))
-                .statusCode(HttpStatus.UNAUTHORIZED.value());
+                .statusCode(HttpStatus.FORBIDDEN.value());
     }
 
     @DisplayName("관리자는 게시글 신고 목록을 조회한다.")
@@ -175,7 +175,7 @@ class AdminControllerTest extends ControllerTest {
                 .then().log().all()
                 .assertThat()
                 .apply(document("admin/post/find/postreports/fail/noAdmin"))
-                .statusCode(HttpStatus.UNAUTHORIZED.value());
+                .statusCode(HttpStatus.FORBIDDEN.value());
     }
 
     @DisplayName("관리자는 모든 티켓들을 조회한다.")
@@ -220,7 +220,7 @@ class AdminControllerTest extends ControllerTest {
                 .then().log().all()
                 .assertThat()
                 .apply(document("admin/tickets/find/fail/noAdmin"))
-                .statusCode(HttpStatus.UNAUTHORIZED.value());
+                .statusCode(HttpStatus.FORBIDDEN.value());
     }
 
     @DisplayName("관리자는 티켓을 저장한다.")
@@ -266,7 +266,7 @@ class AdminControllerTest extends ControllerTest {
                 .then().log().all()
                 .assertThat()
                 .apply(document("admin/tickets/save/fail/noAdmin"))
-                .statusCode(HttpStatus.UNAUTHORIZED.value());
+                .statusCode(HttpStatus.FORBIDDEN.value());
     }
 
     @DisplayName("관리자는 티켓을 수정한다.")
@@ -285,7 +285,7 @@ class AdminControllerTest extends ControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "bearer admin")
                 .body(ticketElement)
-                .when().post("admin/tickets/used")
+                .when().patch("admin/tickets")
                 .then().log().all()
                 .assertThat()
                 .apply(document("admin/tickets/update/success"))
@@ -308,10 +308,10 @@ class AdminControllerTest extends ControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "bearer noAdmin")
                 .body(ticketElement)
-                .when().post("admin/tickets/used")
+                .when().patch("admin/tickets")
                 .then().log().all()
                 .assertThat()
                 .apply(document("admin/tickets/update/fail/noAdmin"))
-                .statusCode(HttpStatus.UNAUTHORIZED.value());
+                .statusCode(HttpStatus.FORBIDDEN.value());
     }
 }

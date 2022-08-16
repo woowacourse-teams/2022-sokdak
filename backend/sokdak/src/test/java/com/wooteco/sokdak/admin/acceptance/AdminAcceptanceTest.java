@@ -4,6 +4,7 @@ import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getAdminToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPatchWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
 import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST;
@@ -77,7 +78,7 @@ public class AdminAcceptanceTest extends AcceptanceTest {
         httpPostWithAuthorization(initTicketRequest, "admin/tickets", adminToken);
         TicketElement initTicketElement = getTicketElements(httpGetWithAuthorization("admin/tickets", adminToken))
                 .get(lastTicketIndex);
-        httpPostWithAuthorization(usedTicketRequest, "admin/tickets/used", adminToken);
+        httpPatchWithAuthorization(usedTicketRequest, "admin/tickets", adminToken);
         TicketElement usedTicketElement = getTicketElements(httpGetWithAuthorization("admin/tickets", adminToken))
                 .get(lastTicketIndex);
 

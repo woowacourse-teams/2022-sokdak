@@ -7,9 +7,12 @@ import lombok.Getter;
 @Getter
 public class TicketElement {
 
-    private final Long id;
-    private final String serialNumber;
-    private final boolean used;
+    private Long id;
+    private String serialNumber;
+    private boolean used;
+
+    protected TicketElement() {
+    }
 
     @Builder
     public TicketElement(Long id, String serialNumber, boolean used) {

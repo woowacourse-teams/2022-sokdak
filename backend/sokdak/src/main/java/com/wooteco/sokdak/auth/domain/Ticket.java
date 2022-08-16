@@ -30,6 +30,10 @@ public class Ticket {
         this.used = used;
     }
 
+    public void updateUsed(boolean used) {
+        this.used = used;
+    }
+
     public void use() {
         this.used = true;
     }

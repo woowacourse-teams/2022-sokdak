@@ -16,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class IntegrationTest {
 
-    protected static final AuthInfo AUTH_INFO = new AuthInfo(1L, RoleType.USER.getName(), "chrisNickname");
-    protected static final AuthInfo AUTH_INFO2 = new AuthInfo(3L, RoleType.USER.getName(), "joshNickname");
+    protected static final AuthInfo AUTH_INFO = new AuthInfo(3L, RoleType.USER.getName(), "chrisNickname");
+    protected static final AuthInfo AUTH_INFO2 = new AuthInfo(4L, RoleType.USER.getName(), "joshNickname");
 
     @Autowired
     private DatabaseCleaner databaseCleaner;
@@ -31,7 +31,7 @@ public class IntegrationTest {
     void cleanAndSetData() {
         databaseCleaner.clear();
         databaseCleaner.insertInitialData();
-        member = memberRepository.findById(1L)
+        member = memberRepository.findById(3L)
                 .orElseThrow(MemberNotFoundException::new);
     }
 }

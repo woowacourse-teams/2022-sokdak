@@ -3,7 +3,7 @@ package com.wooteco.sokdak.board.acceptance;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.HOT_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.POSUTA_BOARD_ID;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getToken;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
@@ -41,7 +41,7 @@ class BoardAcceptanceTest extends AcceptanceTest {
     @Test
     void createBoard() {
         NewBoardRequest newBoardRequest = new NewBoardRequest("포수타");
-        ExtractableResponse<Response> response = httpPostWithAuthorization(newBoardRequest, "/boards", getToken());
+        ExtractableResponse<Response> response = httpPostWithAuthorization(newBoardRequest, "/boards", getChrisToken());
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
@@ -50,9 +50,9 @@ class BoardAcceptanceTest extends AcceptanceTest {
     @Test
     void findBoards() {
         NewBoardRequest newBoardRequest1 = new NewBoardRequest("포수타");
-        httpPostWithAuthorization(newBoardRequest1, "/boards", getToken());
+        httpPostWithAuthorization(newBoardRequest1, "/boards", getChrisToken());
         NewBoardRequest newBoardRequest2 = new NewBoardRequest("자유게시판");
-        httpPostWithAuthorization(newBoardRequest2, "/boards", getToken());
+        httpPostWithAuthorization(newBoardRequest2, "/boards", getChrisToken());
 
         ExtractableResponse<Response> response = httpGet("/boards");
 
@@ -65,7 +65,7 @@ class BoardAcceptanceTest extends AcceptanceTest {
     @Test
     void findBoardsContent() {
         // given
-        String token = getToken();
+        String token = getChrisToken();
         NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", false, Collections.emptyList());
         NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", false, Collections.emptyList());
         NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", false, Collections.emptyList());
@@ -116,7 +116,7 @@ class BoardAcceptanceTest extends AcceptanceTest {
     @Test
     void saveInHotBoardWithMoreThan5Likes() {
         // given
-        String token1 = getToken();
+        String token1 = getChrisToken();
         String token2 = httpPost(new LoginRequest("josh", "Abcd123!@"), "/login").header(AUTHORIZATION);
         String token3 = httpPost(new LoginRequest("thor", "Abcd123!@"), "/login").header(AUTHORIZATION);
         String token4 = httpPost(new LoginRequest("hunch", "Abcd123!@"), "/login").header(AUTHORIZATION);
@@ -147,7 +147,7 @@ class BoardAcceptanceTest extends AcceptanceTest {
     @Test
     void saveInHotBoardWith6Likes() {
         // given
-        String token1 = getToken();
+        String token1 = getChrisToken();
         String token2 = httpPost(new LoginRequest("josh", "Abcd123!@"), "/login").header(AUTHORIZATION);
         String token3 = httpPost(new LoginRequest("thor", "Abcd123!@"), "/login").header(AUTHORIZATION);
         String token4 = httpPost(new LoginRequest("hunch", "Abcd123!@"), "/login").header(AUTHORIZATION);
@@ -179,7 +179,7 @@ class BoardAcceptanceTest extends AcceptanceTest {
     @Test
     void keepPostInHotBoardAfterCancelLIke() {
         // given
-        String token1 = getToken();
+        String token1 = getChrisToken();
         String token2 = httpPost(new LoginRequest("josh", "Abcd123!@"), "/login").header(AUTHORIZATION);
         String token3 = httpPost(new LoginRequest("thor", "Abcd123!@"), "/login").header(AUTHORIZATION);
         String token4 = httpPost(new LoginRequest("hunch", "Abcd123!@"), "/login").header(AUTHORIZATION);
@@ -214,7 +214,7 @@ class BoardAcceptanceTest extends AcceptanceTest {
     @Test
     void deletePostInHotBoardAfterUserDeleteOriginalPost() {
         // given
-        String token1 = getToken();
+        String token1 = getChrisToken();
         String token2 = httpPost(new LoginRequest("josh", "Abcd123!@"), "/login").header(AUTHORIZATION);
         String token3 = httpPost(new LoginRequest("thor", "Abcd123!@"), "/login").header(AUTHORIZATION);
         String token4 = httpPost(new LoginRequest("hunch", "Abcd123!@"), "/login").header(AUTHORIZATION);

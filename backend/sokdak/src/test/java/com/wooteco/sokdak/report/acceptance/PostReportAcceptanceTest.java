@@ -1,11 +1,11 @@
 package com.wooteco.sokdak.report.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.*;
-import static com.wooteco.sokdak.util.fixture.PostFixture.*;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getChrisToken;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
+import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
@@ -25,7 +25,7 @@ class PostReportAcceptanceTest extends AcceptanceTest {
         Long postId = addPostAndGetPostId();
 
         ExtractableResponse<Response> response = httpPostWithAuthorization(REPORT_REQUEST,
-                "/posts/" + postId + "/report", getToken());
+                "/posts/" + postId + "/report", getChrisToken());
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
@@ -34,10 +34,10 @@ class PostReportAcceptanceTest extends AcceptanceTest {
     @Test
     void reportPost_Exception_AlreadyReport() {
         Long postId = addPostAndGetPostId();
-        httpPostWithAuthorization(REPORT_REQUEST, "/posts/" + postId + "/report", getToken());
+        httpPostWithAuthorization(REPORT_REQUEST, "/posts/" + postId + "/report", getChrisToken());
 
         ExtractableResponse<Response> response = httpPostWithAuthorization(REPORT_REQUEST,
-                "/posts/" + postId + "/report", getToken());
+                "/posts/" + postId + "/report", getChrisToken());
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
@@ -48,13 +48,13 @@ class PostReportAcceptanceTest extends AcceptanceTest {
         long invalidPostId = 9999L;
 
         ExtractableResponse<Response> response = httpPostWithAuthorization(REPORT_REQUEST,
-                "/posts/" + invalidPostId + "/report", getToken());
+                "/posts/" + invalidPostId + "/report", getChrisToken());
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
     private Long addPostAndGetPostId() {
-        return Long.parseLong(httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getToken())
+        return Long.parseLong(httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getChrisToken())
                 .header("Location").split("/posts/")[1]);
     }
 }

@@ -1,8 +1,11 @@
 package com.wooteco.sokdak.notification.acceptance;
 
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_COMMENT_REQUEST;
+import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_REPLY_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.addCommentAndGetCommentId;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getToken;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getChrisToken;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getJoshToken;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
@@ -39,13 +42,49 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         String token = httpPost(loginRequest, "/login").header(AUTHORIZATION);
         httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", token);
 
-        ExtractableResponse<Response> response = httpGetWithAuthorization("/notifications/check", getToken());
+        ExtractableResponse<Response> response = httpGetWithAuthorization("/notifications/check", getChrisToken());
         NewNotificationCheckResponse newNotificationCheckResponse =
                 response.jsonPath().getObject(".", NewNotificationCheckResponse.class);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(newNotificationCheckResponse.isExistence()).isTrue()
+        );
+    }
+
+    @DisplayName("자신의 게시글에 댓글을 달면 알림이 등록되지 않는다.")
+    @Test
+    void checkNewNotification_NewComment_MyPost() {
+        Long postId = addPostAndGetPostId();
+        String token = getChrisToken();
+        httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", token);
+
+        ExtractableResponse<Response> response = httpGetWithAuthorization("/notifications/check", token);
+        NewNotificationCheckResponse newNotificationCheckResponse =
+                response.jsonPath().getObject(".", NewNotificationCheckResponse.class);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(newNotificationCheckResponse.isExistence()).isFalse()
+        );
+    }
+
+    @DisplayName("자신의 댓글에 대댓글이 달리면 댓글 작성자에게 알림이 등록된다.")
+    @Test
+    void checkNewNotification_NewReply() {
+        Long postId = addPostAndGetPostId();
+        String chrisToken = getChrisToken();
+        String joshToken = getJoshToken();
+        httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", joshToken);
+        httpPostWithAuthorization(NEW_REPLY_REQUEST, "/comments" + 1 + "/reply", chrisToken);
+
+        ExtractableResponse<Response> response = httpGetWithAuthorization("/notifications/check", joshToken);
+        NewNotificationCheckResponse newNotificationCheckResponse =
+                response.jsonPath().getObject(".", NewNotificationCheckResponse.class);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(newNotificationCheckResponse.isExistence()).isFalse()
         );
     }
 
@@ -58,7 +97,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
             httpPutWithAuthorization("/posts/1/like", token);
         }
 
-        ExtractableResponse<Response> response = httpGetWithAuthorization("/notifications/check", getToken());
+        ExtractableResponse<Response> response = httpGetWithAuthorization("/notifications/check", getChrisToken());
         NewNotificationCheckResponse newNotificationCheckResponse =
                 response.jsonPath().getObject(".", NewNotificationCheckResponse.class);
 
@@ -78,7 +117,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
             httpPostWithAuthorization(reportRequest, "/posts/" + postId + "/report", reporterTokens.get(i));
         }
 
-        ExtractableResponse<Response> response = httpGetWithAuthorization("/notifications/check", getToken());
+        ExtractableResponse<Response> response = httpGetWithAuthorization("/notifications/check", getChrisToken());
         NewNotificationCheckResponse newNotificationCheckResponse =
                 response.jsonPath().getObject(".", NewNotificationCheckResponse.class);
 
@@ -92,7 +131,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
     @Test
     void checkNewNotification_CommentReport() {
         Long postId = addPostAndGetPostId();
-        String commenterToken = getToken();
+        String commenterToken = getChrisToken();
         httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", commenterToken);
         Long commentId = addCommentAndGetCommentId(postId);
         List<String> reporterTokens = getTokensForReport();
@@ -111,7 +150,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("알림을 조회할 수 있다.")
+    @DisplayName("알림 목록을 조회할 수 있다.")
     @Test
     void findNotifications() {
         Long postId = addPostAndGetPostId();
@@ -126,7 +165,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         }
 
         ExtractableResponse<Response> response =
-                httpGetWithAuthorization("/notifications?size=2&page=0", getToken());
+                httpGetWithAuthorization("/notifications?size=2&page=0", getChrisToken());
         NotificationsResponse notificationsResponse =
                 response.jsonPath().getObject(".", NotificationsResponse.class);
 
@@ -141,6 +180,27 @@ class NotificationAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(notificationResponse2.getPostId()).isEqualTo(postId),
                 () -> assertThat(notificationResponse2.getType()).isEqualTo("NEW_COMMENT"),
                 () -> assertThat(notificationResponse2.getContent()).isEqualTo(VALID_POST_TITLE)
+        );
+    }
+
+    @DisplayName("알림을 삭제할 수 있다.")
+    @Test
+    void deleteNotification() {
+        Long postId = addPostAndGetPostId();
+        LoginRequest loginRequest = new LoginRequest("josh", "Abcd123!@");
+        String token = httpPost(loginRequest, "/login").header(AUTHORIZATION);
+        httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", token);
+
+        ExtractableResponse<Response> response =
+                httpDeleteWithAuthorization("/notifications/1", getChrisToken());
+
+        NewNotificationCheckResponse newNotificationCheckResponseAfterDeletion =
+                httpGetWithAuthorization("/notifications/check", token)
+                        .jsonPath()
+                        .getObject(".", NewNotificationCheckResponse.class);
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
+                () -> assertThat(newNotificationCheckResponseAfterDeletion.isExistence()).isFalse()
         );
     }
 }

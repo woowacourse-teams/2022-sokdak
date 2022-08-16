@@ -10,6 +10,7 @@ const QUERY_KEYS = {
   BOARDS: 'boards',
   LOGOUT: 'logout',
   NOTIFICATION_EXISTS: 'notification-exists',
+  NOTIFICATIONS: 'notifications',
 };
 
 export const MUTATION_KEY = {
@@ -22,6 +23,7 @@ export const MUTATION_KEY = {
   DELETE_COMMENT: 'delete-comment',
   POST_COMMENT: 'post-comment',
   CREATE_REPLY: 'create-reply',
+  DELETE_NOTIFICATION: 'delete-notification',
 };
 
 export default QUERY_KEYS;

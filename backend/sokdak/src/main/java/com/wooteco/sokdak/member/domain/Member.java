@@ -50,6 +50,10 @@ public class Member {
         return id;
     }
 
+    public boolean hasId(Long id) {
+        return this.id.equals(id);
+    }
+
     public String getUsername() {
         return username.getValue();
     }

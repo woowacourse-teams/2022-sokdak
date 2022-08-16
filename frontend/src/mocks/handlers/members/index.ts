@@ -129,10 +129,6 @@ const memberHandler = [
 
     return res(ctx.status(201));
   }),
-
-  rest.get('/notifications/check', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json({ exists: true }));
-  }),
 ];
 
 export default memberHandler;

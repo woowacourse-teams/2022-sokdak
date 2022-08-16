@@ -3,6 +3,7 @@ package com.wooteco.sokdak.notification.service;
 import static com.wooteco.sokdak.notification.domain.NotificationType.COMMENT_REPORT;
 import static com.wooteco.sokdak.notification.domain.NotificationType.HOT_BOARD;
 import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_COMMENT;
+import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_REPLY;
 import static com.wooteco.sokdak.notification.domain.NotificationType.POST_REPORT;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
@@ -13,6 +14,7 @@ import com.wooteco.sokdak.notification.domain.NotificationType;
 import com.wooteco.sokdak.notification.dto.NewNotificationCheckResponse;
 import com.wooteco.sokdak.notification.dto.NotificationResponse;
 import com.wooteco.sokdak.notification.dto.NotificationsResponse;
+import com.wooteco.sokdak.notification.excpetion.NotificationNotFoundException;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import java.util.List;
@@ -32,12 +34,14 @@ public class NotificationService {
         this.notificationRepository = notificationRepository;
     }
 
-    public void notifyNewComment(Member member, Post post, Comment comment) {
-        notify(member, post, comment, NEW_COMMENT);
+    public void notifyNewCommentIfNotAuthenticated(Member member, Post post, Comment comment) {
+        if (!comment.isAuthenticated(member.getId())) {
+            notify(member, post, comment, NEW_COMMENT);
+        }
     }
 
-    public void notifyCommentReport(Member member, Post post, Comment comment) {
-        notify(member, post, comment, COMMENT_REPORT);
+    public void notifyCommentReport(Post post, Comment comment) {
+        notify(comment.getMember(), post, comment, COMMENT_REPORT);
     }
 
     public void notifyHotBoard(Post post) {
@@ -46,6 +50,12 @@ public class NotificationService {
 
     public void notifyPostReport(Post post) {
         notify(post.getMember(), post, null, POST_REPORT);
+    }
+
+    public void notifyReplyIfNotAuthenticated(Member member, Post post, Comment comment, Comment reply) {
+        if (!reply.isAuthenticated(member.getId())) {
+            notify(member, post, comment, NEW_REPLY);
+        }
     }
 
     private void notify(Member member, Post post, Comment comment, NotificationType notificationType) {
@@ -75,5 +85,12 @@ public class NotificationService {
                 .map(NotificationResponse::of)
                 .collect(Collectors.toUnmodifiableList());
         return new NotificationsResponse(notificationResponses, notifications.isLast());
+    }
+
+    public void deleteNotification(AuthInfo authInfo, Long notificationId) {
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(NotificationNotFoundException::new);
+        notification.validateOwner(authInfo.getId());
+        notificationRepository.deleteById(notificationId);
     }
 }

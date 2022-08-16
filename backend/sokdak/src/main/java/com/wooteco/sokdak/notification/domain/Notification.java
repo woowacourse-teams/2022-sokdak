@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.notification.domain;
 
+import com.wooteco.sokdak.auth.exception.AuthenticationException;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.post.domain.Post;
@@ -7,6 +8,7 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,15 +31,15 @@ public class Notification {
 
     private NotificationType notificationType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
     private Comment comment;
 
@@ -63,5 +65,11 @@ public class Notification {
             return post.getTitle();
         }
         return getComment().getMessage();
+    }
+
+    public void validateOwner(Long accessMemberId) {
+        if (!member.hasId(accessMemberId)) {
+            throw new AuthenticationException();
+        }
     }
 }

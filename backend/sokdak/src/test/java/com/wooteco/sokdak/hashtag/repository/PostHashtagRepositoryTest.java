@@ -1,15 +1,10 @@
 package com.wooteco.sokdak.hashtag.repository;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_ENCRYPTED_PASSWORD;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
-import com.wooteco.sokdak.auth.service.Encryptor;
-import com.wooteco.sokdak.config.JPAConfig;
 import com.wooteco.sokdak.hashtag.domain.Hashtag;
 import com.wooteco.sokdak.hashtag.domain.PostHashtag;
-import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.util.RepositoryTest;
@@ -19,20 +14,18 @@ import javax.persistence.Tuple;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
-@Import(JPAConfig.class)
 class PostHashtagRepositoryTest extends RepositoryTest {
 
     @Autowired
     private PostHashtagRepository postHashtagRepository;
-    @Autowired
-    private MemberRepository memberRepository;
+
     @Autowired
     private PostRepository postRepository;
+
     @Autowired
     private HashtagRepository hashtagRepository;
 
@@ -42,24 +35,20 @@ class PostHashtagRepositoryTest extends RepositoryTest {
 
     @BeforeEach
     void setUp() {
-        member = memberRepository
-                .findByUsernameValueAndPasswordValue(Encryptor.encrypt(VALID_USERNAME), VALID_ENCRYPTED_PASSWORD)
-                .orElseThrow();
-
         Post post1 = Post.builder()
                 .title("제목1")
                 .content("본문1")
-                .member(member)
+                .member(member1)
                 .build();
         Post post2 = Post.builder()
                 .title("제목2")
                 .content("본문2")
-                .member(member)
+                .member(member1)
                 .build();
         Post post3 = Post.builder()
                 .title("제목3")
                 .content("본문3")
-                .member(member)
+                .member(member1)
                 .build();
         postRepository.save(post1);
         postRepository.save(post2);

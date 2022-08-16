@@ -52,7 +52,4 @@ public class MemberFixture {
         LoginRequest loginRequest = new LoginRequest(username, password);
         return httpPost(loginRequest, "/login").header(AUTHORIZATION);
     }
-
-    public static final AuthInfo AUTH_INFO = new AuthInfo(3L, RoleType.USER.getName(), "chrisNickname");
-    public static final AuthInfo AUTH_INFO_ADMIN = new AuthInfo(3L, RoleType.ADMIN.getName(), "adminNickname");
 }

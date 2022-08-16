@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.hashtag.service;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -15,9 +14,6 @@ import com.wooteco.sokdak.hashtag.dto.HashtagsSearchResponse;
 import com.wooteco.sokdak.hashtag.exception.HashtagNotFoundException;
 import com.wooteco.sokdak.hashtag.repository.HashtagRepository;
 import com.wooteco.sokdak.hashtag.repository.PostHashtagRepository;
-import com.wooteco.sokdak.member.domain.Member;
-import com.wooteco.sokdak.member.exception.MemberNotFoundException;
-import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;

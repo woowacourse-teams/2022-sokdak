@@ -164,9 +164,13 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         }
 
         ExtractableResponse<Response> response =
-                httpGetWithAuthorization("/notifications?size=2&page=0", getChrisToken());
+                httpGetWithAuthorization("/notifications?size=2&page=0", chrisToken);
         NotificationsResponse notificationsResponse =
                 response.jsonPath().getObject(".", NotificationsResponse.class);
+        NewNotificationCheckResponse newNotificationCheckResponse =
+                httpGetWithAuthorization("/notifications/check", chrisToken)
+                        .jsonPath()
+                        .getObject(".", NewNotificationCheckResponse.class);
 
         NotificationResponse notificationResponse1 = notificationsResponse.getNotifications().get(0);
         NotificationResponse notificationResponse2 = notificationsResponse.getNotifications().get(1);
@@ -178,7 +182,8 @@ class NotificationAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(notificationResponse1.getContent()).isEqualTo(VALID_POST_TITLE),
                 () -> assertThat(notificationResponse2.getPostId()).isEqualTo(postId),
                 () -> assertThat(notificationResponse2.getType()).isEqualTo("NEW_COMMENT"),
-                () -> assertThat(notificationResponse2.getContent()).isEqualTo(VALID_POST_TITLE)
+                () -> assertThat(notificationResponse2.getContent()).isEqualTo(VALID_POST_TITLE),
+                () -> assertThat(newNotificationCheckResponse.isExistence()).isFalse()
         );
     }
 

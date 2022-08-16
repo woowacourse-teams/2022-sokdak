@@ -204,7 +204,7 @@ class NotificationServiceTest extends ServiceTest {
         assertThat(newNotificationCheckResponse.isExistence()).isEqualTo(expected);
     }
 
-    @DisplayName("알림 목록을 반환한다.")
+    @DisplayName("알림 목록을 반환하고 모든 알림을 조회한 알림으로 변경한다.")
     @Test
     void findNotifications() {
         Notification notification = Notification.builder()
@@ -223,23 +223,24 @@ class NotificationServiceTest extends ServiceTest {
                 .post(post)
                 .comment(comment)
                 .build();
-        notificationRepository.save(notification);
         notificationRepository.save(notification2);
         notificationRepository.save(notification3);
 
         NotificationsResponse notificationsResponse = notificationService
                 .findNotifications(AUTH_INFO, PageRequest.of(0, 2, Sort.by("createdAt").descending()));
         List<NotificationResponse> notificationResponses = notificationsResponse.getNotifications();
+        NewNotificationCheckResponse newNotificationCheckResponse = notificationService.checkNewNotification(AUTH_INFO);
 
         assertAll(
-                () -> assertThat(notificationsResponse.isLastPage()).isFalse(),
+                () -> assertThat(notificationsResponse.isLastPage()).isTrue(),
                 () -> assertThat(notificationResponses).hasSize(2),
                 () -> assertThat(notificationResponses.get(0).getPostId()).isEqualTo(post.getId()),
                 () -> assertThat(notificationResponses.get(0).getType()).isEqualTo("NEW_COMMENT"),
                 () -> assertThat(notificationResponses.get(0).getContent()).isEqualTo(post.getTitle()),
                 () -> assertThat(notificationResponses.get(1).getPostId()).isEqualTo(post.getId()),
                 () -> assertThat(notificationResponses.get(1).getType()).isEqualTo("POST_REPORT"),
-                () -> assertThat(notificationResponses.get(1).getContent()).isEqualTo(post.getTitle())
+                () -> assertThat(notificationResponses.get(1).getContent()).isEqualTo(post.getTitle()),
+                () -> assertThat(newNotificationCheckResponse.isExistence()).isFalse()
         );
     }
 

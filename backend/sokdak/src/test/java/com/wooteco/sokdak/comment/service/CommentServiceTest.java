@@ -19,7 +19,6 @@ import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
-import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.util.IntegrationTest;
@@ -52,7 +51,7 @@ class CommentServiceTest extends IntegrationTest {
 
     @BeforeEach
     void setUp() {
-        member2 = memberRepository.findById(3L).get();
+        member2 = memberRepository.findById(4L).get();
         randomNickname = RandomNicknameGenerator.generate(new HashSet<>());
         anonymousPost = Post.builder()
                 .member(member)

@@ -1,7 +1,6 @@
 package com.wooteco.sokdak.post.service;
 
 import static com.wooteco.sokdak.member.domain.RoleType.USER;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -15,8 +14,6 @@ import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.service.CommentService;
-import com.wooteco.sokdak.member.domain.Member;
-import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.MyPostsResponse;
@@ -48,9 +45,6 @@ class PostServiceTest extends IntegrationTest {
     private PostService postService;
 
     @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
     private PostRepository postRepository;
 
     @Autowired
@@ -65,12 +59,9 @@ class PostServiceTest extends IntegrationTest {
     private Post post;
     private Board board;
     private PostBoard postBoard;
-    private Member member;
 
     @BeforeEach
     public void setUp() {
-        member = memberRepository.findById(AUTH_INFO.getId())
-                .orElseThrow(MemberNotFoundException::new);
         post = Post.builder()
                 .title("제목")
                 .content("본문")

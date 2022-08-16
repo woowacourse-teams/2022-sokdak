@@ -18,7 +18,6 @@ import com.wooteco.sokdak.board.exception.BoardNotFoundException;
 import com.wooteco.sokdak.board.exception.BoardNotWritableException;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
-import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
@@ -41,9 +40,6 @@ class BoardServiceTest extends IntegrationTest {
 
     @Autowired
     private PostRepository postRepository;
-
-    @Autowired
-    private MemberRepository memberRepository;
 
     @Autowired
     private PostBoardRepository postBoardRepository;
@@ -80,7 +76,6 @@ class BoardServiceTest extends IntegrationTest {
     @DisplayName("작성 가능 게시판에서 허용된 사용자가 게시글을 쓸 수 있다.")
     @Test
     void savePostBoard() {
-        Member member = memberRepository.findById(1L).get();
         post = Post.builder()
                 .title("제목")
                 .content("본문")
@@ -107,7 +102,6 @@ class BoardServiceTest extends IntegrationTest {
     @DisplayName("작성 불가능 게시판에서 허용되지 않은 사용자가 게시글을 쓰면 예외가 발생한다.")
     @Test
     void savePostBoard_Exception() {
-        Member member = memberRepository.findById(1L).get();
         post = Post.builder()
                 .title("제목")
                 .content("본문")
@@ -128,7 +122,6 @@ class BoardServiceTest extends IntegrationTest {
     @DisplayName("핫게시판에 게시글이 저장될 수 있다.")
     @Test
     void saveInSpecialBoard() {
-        Member member = memberRepository.findById(1L).get();
         post = Post.builder()
                 .title("제목")
                 .content("본문")
@@ -153,7 +146,6 @@ class BoardServiceTest extends IntegrationTest {
     @DisplayName("게시글을 존재하지 않는 게시판에 작성하면 예외가 발생한다.")
     @Test
     void savePostBoard_Exception_NoBoard() {
-        Member member = memberRepository.findById(1L).get();
         post = Post.builder()
                 .title("제목")
                 .content("본문")

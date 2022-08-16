@@ -28,8 +28,10 @@ class AuthServiceTest extends IntegrationTest {
     private static final String EMAIL = "test@gmail.com";
     private static final String AUTH_CODE = "ABCDEF";
     private static final Clock FUTURE_CLOCK = Clock.fixed(Instant.parse("3333-08-22T10:00:00Z"), ZoneOffset.UTC);
+
     @Autowired
     private AuthService authService;
+
     @Autowired
     private AuthCodeRepository authCodeRepository;
 

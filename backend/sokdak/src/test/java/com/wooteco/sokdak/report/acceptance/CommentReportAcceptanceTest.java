@@ -3,8 +3,6 @@ package com.wooteco.sokdak.report.acceptance;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.VALID_COMMENT_MESSAGE;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
-import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST;
 import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -61,8 +59,7 @@ class CommentReportAcceptanceTest extends AcceptanceTest {
 
     private Long addCommentAndGetCommentId() {
         String token = getChrisToken();
-        String postId = parsePostId(
-                httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getChrisToken()));
+        Long postId = addNewPost();
 
         NewCommentRequest newCommentRequest = new NewCommentRequest(VALID_COMMENT_MESSAGE, true);
         Long commentId = Long.parseLong(

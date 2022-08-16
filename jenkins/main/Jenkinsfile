@@ -26,26 +26,6 @@ pipeline{
       }
     }
 
-    stage('FE-Test'){
-      steps{
-        sh "echo '########### FE TEST START ###########'"
-        dir('frontend'){
-          sh 'npm run test'
-        }
-        sh "echo '########### FE TEST SUCCESS ###########'"
-      }
-    }
-
-    stage('BE-Test'){
-      steps{
-        sh "echo '########### BE TEST START ###########'"
-        dir('backend/sokdak') {
-          sh './gradlew clean test'
-        }
-        sh "echo '########### BE TEST SUCCESS ###########'"
-      }
-    }
-
     stage('FE-Build'){
       steps{
         sh "echo '########### FE BUILD START ###########'"

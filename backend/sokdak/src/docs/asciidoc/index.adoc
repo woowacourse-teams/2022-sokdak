@@ -134,6 +134,10 @@ operation::comment/create/success[snippets='http-request,http-response']
 ===== 댓글 내용이 없는 경우
 operation::comment/create/fail/noMessage[snippets='http-request,http-response']
 
+=== 대댓글 작성
+==== 성공
+operation::reply/create/success[snippets='http-request,http-response']
+
 === 댓글 목록 조회
 ==== 성공
 operation::comment/find/all/success[snippets='http-request,http-response']
@@ -161,3 +165,51 @@ operation::hashtags/search/success[snippets='http-request,http-response']
 
 == 신고
 게시글/댓글 신고 관련 컨트롤러 테스트 구현 필요
+
+== 프로필
+
+=== 닉네임 조회
+==== 성공
+operation::member/find/nickname/success[snippets='http-request,http-response']
+
+=== 닉네임 변경
+==== 성공
+operation::member/patch/nickname/success[snippets='http-request,http-response']
+==== 실패
+===== 이미 있는 닉네임인 경우
+operation::member/patch/nickname/fail/duplicate[snippets='http-request,http-response']
+
+===== 잘못된 형식인 경우
+
+operation::member/patch/nickname/fail/invalidFormat[snippets='http-request,http-response']
+
+=== 내가 쓴 글 조회
+
+==== 성공
+
+===== 해당 페이지의 글이 존재할 경우
+
+operation::member/find/posts/success/postIn[snippets='http-request,http-response']
+
+===== 해당 페이지의 글이 없을 경우
+
+operation::member/find/posts/success/noPost[snippets='http-request,http-response']
+
+=== 새로 등록된 알림이 있는지 조회
+
+==== 성공
+
+operation::notification/checkNew/success[snippets='http-request,http-response']
+
+=== 알림 조회
+
+==== 성공
+
+operation::notification/findNotifications/success[snippets='http-request,http-response']
+
+=== 알림 삭제
+
+==== 삭제
+
+operation::notification/deleteNotifications/success[snippets='http-request,http-response']
+

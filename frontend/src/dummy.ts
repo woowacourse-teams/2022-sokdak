@@ -5,7 +5,7 @@ export const postList: Post[] = [
     createdAt: '2022-07-19T19:55:31.016376300',
     content: '날씨는 참 좋네요.',
     likeCount: 19,
-    commentCount: 16,
+    commentCount: 19,
     like: false,
     modified: false,
     hashtags: [
@@ -358,9 +358,14 @@ export const validMemberEmail: { email: string; isSignedUp: boolean; code: strin
 
 interface CommentListType extends CommentType {
   postId: number;
-  blocked: boolean;
-  postWriter: boolean;
+  blocked: boolean | null;
+  postWriter: boolean | null;
+  replies: Omit<CommentListType, 'replies' | 'postId'>[];
 }
+
+export const commentListTable = {
+  id: 19,
+};
 
 export const commentList: CommentListType[] = [
   {
@@ -373,6 +378,26 @@ export const commentList: CommentListType[] = [
     authorized: true,
     blocked: false,
     postWriter: true,
+    replies: [
+      {
+        id: 17,
+        nickname: '테스트 계정',
+        content: '비가 너무 많이 오네요 ~',
+        createdAt: '2022-08-09T07:55:31.016376300',
+        authorized: true,
+        postWriter: true,
+        blocked: false,
+      },
+      {
+        id: 18,
+        nickname: '신난 리액트',
+        content: '재택 계속 해줘 ~ ',
+        createdAt: '2022-08-09T08:55:31.016376300',
+        authorized: true,
+        postWriter: true,
+        blocked: false,
+      },
+    ],
   },
   {
     id: 2,
@@ -383,6 +408,17 @@ export const commentList: CommentListType[] = [
     authorized: true,
     blocked: false,
     postWriter: true,
+    replies: [
+      {
+        id: 19,
+        nickname: '신난 200',
+        content: '재택 계속 해줘 ~ ',
+        createdAt: '2022-08-09T08:55:31.016376300',
+        authorized: false,
+        postWriter: false,
+        blocked: false,
+      },
+    ],
   },
   {
     id: 3,
@@ -393,6 +429,7 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: true,
     postWriter: false,
+    replies: [],
   },
   {
     id: 4,
@@ -403,6 +440,7 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    replies: [],
   },
   {
     id: 5,
@@ -413,6 +451,7 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    replies: [],
   },
   {
     id: 6,
@@ -423,6 +462,7 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    replies: [],
   },
   {
     id: 7,
@@ -433,6 +473,7 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    replies: [],
   },
   {
     id: 8,
@@ -443,6 +484,7 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: true,
     postWriter: false,
+    replies: [],
   },
   {
     id: 9,
@@ -453,6 +495,7 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    replies: [],
   },
   {
     id: 10,
@@ -463,6 +506,7 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    replies: [],
   },
   {
     id: 11,
@@ -473,6 +517,7 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    replies: [],
   },
   {
     id: 12,
@@ -483,6 +528,7 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    replies: [],
   },
   {
     id: 13,
@@ -493,6 +539,7 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    replies: [],
   },
   {
     id: 14,
@@ -503,6 +550,7 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    replies: [],
   },
   {
     id: 15,
@@ -513,6 +561,7 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    replies: [],
   },
   {
     id: 16,
@@ -523,6 +572,7 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    replies: [],
   },
 ];
 
@@ -581,3 +631,114 @@ export const boardList = [
 export const reportList = [{ postId: 1, message: '그냥 마음에 들지 않는다' }];
 
 export const reportCommentList = [{ commentId: 1, message: '그냥 마음에 들지 않는다' }];
+
+interface NoticeTable extends Notice {
+  isChecked: boolean;
+}
+
+export const notificationList: NoticeTable[] = [
+  {
+    id: 0,
+    content: '알림 메시지입니다.',
+    createdAt: '2022-08-10 16:04',
+    type: 'NEW_COMMENT',
+    isChecked: false,
+    postId: 1,
+  },
+  {
+    id: 1,
+    content: '알림 메시지입니다.',
+    createdAt: '2022-08-08 16:04',
+    type: 'NEW_COMMENT',
+    isChecked: false,
+    postId: 2,
+  },
+  {
+    id: 2,
+    content: '새로운 대댓글',
+    createdAt: '2022-08-07 16:02',
+    type: 'NEW_REPLY',
+    isChecked: false,
+    postId: 3,
+  },
+  {
+    id: 3,
+    content: '새로운 댓글 신고',
+    createdAt: '2021-08-08 16:02',
+    type: 'COMMENT_REPORT',
+    isChecked: false,
+    postId: 4,
+  },
+  {
+    id: 4,
+    content: '댓글',
+    createdAt: '2022-08-11 00:02',
+    type: 'REPLY_COMMENT',
+    isChecked: false,
+    postId: 5,
+  },
+  {
+    id: 5,
+    content: '게시글',
+    createdAt: '2022-08-06 16:02',
+    type: 'HOT_BOARD',
+    isChecked: false,
+    postId: 6,
+  },
+  {
+    id: 6,
+    content: '알림 메시지입니다.',
+    createdAt: '2022-08-09 16:04',
+    type: 'NEW_COMMENT',
+    isChecked: false,
+    postId: 7,
+  },
+  {
+    id: 7,
+    content: '알림 메시지입니다.',
+    createdAt: '2022-08-09 16:04',
+    type: 'NEW_COMMENT',
+    isChecked: false,
+    postId: 7,
+  },
+  {
+    id: 8,
+    content: '알림 메시지입니다.',
+    createdAt: '2022-08-09 16:04',
+    type: 'NEW_COMMENT',
+    isChecked: false,
+    postId: 7,
+  },
+  {
+    id: 9,
+    content: '알림 메시지입니다.',
+    createdAt: '2022-08-09 16:04',
+    type: 'NEW_COMMENT',
+    isChecked: false,
+    postId: 7,
+  },
+  {
+    id: 10,
+    content: '알림 메시지입니다.',
+    createdAt: '2022-08-09 16:04',
+    type: 'NEW_COMMENT',
+    isChecked: false,
+    postId: 7,
+  },
+  {
+    id: 11,
+    content: '알림 메시지입니다.',
+    createdAt: '2022-08-09 16:04',
+    type: 'NEW_COMMENT',
+    isChecked: false,
+    postId: 7,
+  },
+  {
+    id: 12,
+    content: '알림 메시지입니다.',
+    createdAt: '2022-08-09 16:04',
+    type: 'NEW_COMMENT',
+    isChecked: false,
+    postId: 7,
+  },
+];

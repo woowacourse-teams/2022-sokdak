@@ -35,10 +35,10 @@ public class PostDetailResponse {
                                boolean like, boolean authorized, boolean modified) {
         this.id = id;
         this.boardId = boardId;
+        this.blocked = blocked;
         this.nickname = nickname;
         this.title = title;
         this.content = content;
-        this.blocked = blocked;
         this.hashtags = hashtagResponses;
         this.createdAt = createdAt;
         this.likeCount = likeCount;

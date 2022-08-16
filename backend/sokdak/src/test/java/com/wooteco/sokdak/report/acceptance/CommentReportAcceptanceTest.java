@@ -1,12 +1,13 @@
 package com.wooteco.sokdak.report.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.CommentFixture.*;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.*;
-import static com.wooteco.sokdak.util.fixture.PostFixture.*;
+import static com.wooteco.sokdak.util.fixture.CommentFixture.VALID_COMMENT_MESSAGE;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getChrisToken;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
+import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST;
+import static com.wooteco.sokdak.util.fixture.PostFixture.addPostAndGetPostId;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
@@ -27,7 +28,7 @@ class CommentReportAcceptanceTest extends AcceptanceTest {
         Long commentId = addCommentAndGetCommentId();
 
         ExtractableResponse<Response> response = httpPostWithAuthorization(REPORT_REQUEST,
-                "/comments/" + commentId + "/report", getToken());
+                "/comments/" + commentId + "/report", getChrisToken());
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
@@ -38,10 +39,10 @@ class CommentReportAcceptanceTest extends AcceptanceTest {
         addPostAndGetPostId();
         Long commentId = addCommentAndGetCommentId();
         httpPostWithAuthorization(REPORT_REQUEST,
-                "/comments/" + commentId + "/report", getToken());
+                "/comments/" + commentId + "/report", getChrisToken());
 
         ExtractableResponse<Response> response = httpPostWithAuthorization(REPORT_REQUEST,
-                "/comments/" + commentId + "/report", getToken());
+                "/comments/" + commentId + "/report", getChrisToken());
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
@@ -50,18 +51,18 @@ class CommentReportAcceptanceTest extends AcceptanceTest {
     @Test
     void reportComment_Exception_NotFoundComment() {
         addPostAndGetPostId();
-        Long invalidCommentId = 9999L;
+        long invalidCommentId = 9999L;
 
         ExtractableResponse<Response> response = httpPostWithAuthorization(REPORT_REQUEST,
-                "/comments/" + invalidCommentId + "/report", getToken());
+                "/comments/" + invalidCommentId + "/report", getChrisToken());
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
     private Long addCommentAndGetCommentId() {
-        String token = getToken();
+        String token = getChrisToken();
         String postId = parsePostId(
-                httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getToken()));
+                httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getChrisToken()));
 
         NewCommentRequest newCommentRequest = new NewCommentRequest(VALID_COMMENT_MESSAGE, true);
         Long commentId = Long.parseLong(
@@ -69,11 +70,6 @@ class CommentReportAcceptanceTest extends AcceptanceTest {
                         .header("Location").split("/comments/")[1]);
 
         return commentId;
-    }
-
-    private String getToken() {
-        LoginRequest loginRequest = new LoginRequest("chris", "Abcd123!@");
-        return httpPost(loginRequest, "/login").header(AUTHORIZATION);
     }
 
     private String parsePostId(ExtractableResponse<Response> response) {

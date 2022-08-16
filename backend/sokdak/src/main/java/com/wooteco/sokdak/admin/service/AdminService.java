@@ -16,11 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdminService {
 
     private final TicketRepository ticketRepository;
-    private final Encryptor encryptor;
 
-    public AdminService(TicketRepository ticketRepository, Encryptor encryptor) {
+    public AdminService(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository;
-        this.encryptor = encryptor;
     }
 
     @Transactional
@@ -32,7 +30,7 @@ public class AdminService {
         List<String> emails = emailsAddRequest.getEmails();
 
         for (String email : emails) {
-            String serialNumber = encryptor.encrypt(email);
+            String serialNumber = Encryptor.encrypt(email);
             Optional<Ticket> foundSerialNumber = ticketRepository.findBySerialNumber(serialNumber);
             if (foundSerialNumber.isEmpty()) {
                 Ticket ticket = Ticket.builder()

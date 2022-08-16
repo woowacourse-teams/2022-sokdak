@@ -11,14 +11,7 @@ public class Hashtags {
         this.value = value;
     }
 
-    public static Hashtags ofNames(List<String> names) {
-        List<Hashtag> hashtags = names.stream()
-                .map(name -> Hashtag.builder().name(name).build())
-                .collect(Collectors.toList());
-        return new Hashtags(hashtags);
-    }
-
-    public static Hashtags ofPostHashtags(List<PostHashtag> postHashtags) {
+    public static Hashtags of(List<PostHashtag> postHashtags) {
         List<Hashtag> hashtags = postHashtags.stream()
                 .map(PostHashtag::getHashtag)
                 .collect(Collectors.toList());

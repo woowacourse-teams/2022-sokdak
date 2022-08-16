@@ -14,16 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class EmailService {
 
-    private final Encryptor encryptor;
     private final AuthCodeGenerator authCodeGenerator;
     private final EmailSender emailSender;
     private final AuthService authService;
     private final AuthCodeRepository authCodeRepository;
 
 
-    public EmailService(Encryptor encryptor, AuthCodeGenerator authCodeGenerator,
+    public EmailService(AuthCodeGenerator authCodeGenerator,
                         AuthService authService, EmailSender emailSender, AuthCodeRepository authCodeRepository) {
-        this.encryptor = encryptor;
         this.authCodeGenerator = authCodeGenerator;
         this.authService = authService;
         this.emailSender = emailSender;
@@ -32,7 +30,7 @@ public class EmailService {
 
     @Transactional
     public void sendCodeToValidUser(EmailRequest emailRequest) {
-        String serialNumber = encryptor.encrypt(emailRequest.getEmail());
+        String serialNumber = Encryptor.encrypt(emailRequest.getEmail());
         authService.validateSignUpMember(serialNumber);
 
         String authCode = createAndSaveAuthCode(serialNumber);

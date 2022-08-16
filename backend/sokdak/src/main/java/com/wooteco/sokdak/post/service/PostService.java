@@ -12,7 +12,9 @@ import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
+import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
+import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
@@ -21,6 +23,7 @@ import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.Collections;
 import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -37,11 +40,12 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
+    private final NotificationRepository notificationRepository;
 
     public PostService(HashtagService hashtagService, BoardService boardService,
                        PostRepository postRepository, PostBoardRepository postBoardRepository,
                        MemberRepository memberRepository, CommentRepository commentRepository,
-                       LikeRepository likeRepository) {
+                       LikeRepository likeRepository, NotificationRepository notificationRepository) {
         this.hashtagService = hashtagService;
         this.boardService = boardService;
         this.postRepository = postRepository;
@@ -49,6 +53,7 @@ public class PostService {
         this.memberRepository = memberRepository;
         this.commentRepository = commentRepository;
         this.likeRepository = likeRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     @Transactional
@@ -83,12 +88,20 @@ public class PostService {
         boolean liked = likeRepository.existsByMemberIdAndPostId(authInfo.getId(), postId);
         Hashtags hashtags = hashtagService.findHashtagsByPostId(postId);
 
-        return PostDetailResponse.of(foundPost, postBoards.get(0), liked, foundPost.isAuthenticated(authInfo.getId()), hashtags);
+        return PostDetailResponse.of(foundPost, postBoards.get(0), liked,
+                foundPost.isAuthenticated(authInfo.getId()), hashtags);
     }
 
     public PostsResponse findPostsByBoard(Long boardId, Pageable pageable) {
         Slice<PostBoard> postBoards = postBoardRepository.findPostBoardsByBoardId(boardId, pageable);
         return PostsResponse.ofPostBoardSlice(postBoards);
+    }
+
+    public MyPostsResponse findMyPosts(Pageable pageable, AuthInfo authInfo) {
+        Member member = memberRepository.findById(authInfo.getId())
+                .orElseThrow(MemberNotFoundException::new);
+        Page<Post> posts = postRepository.findPostsByMemberOrderByCreatedAtDesc(pageable, member);
+        return MyPostsResponse.of(posts.getContent(), posts.getTotalPages());
     }
 
     @Transactional
@@ -114,6 +127,7 @@ public class PostService {
         commentRepository.deleteAllByPostId(post.getId());
         likeRepository.deleteAllByPostId(post.getId());
         hashtagService.deleteAllByPostId(hashtags, id);
+        notificationRepository.deleteAllByPostId(id);
 
         postRepository.delete(post);
     }

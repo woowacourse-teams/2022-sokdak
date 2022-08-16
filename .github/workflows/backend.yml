@@ -3,24 +3,27 @@ name: backend
 on:
   push:
     branches:
-      - tmp/github-actions-test
       - main
       - dev
     paths: 'backend/**'
   pull_request:
     branches:
-      - tmp/github-actions-test
       - main
       - dev
     paths: 'backend/**'
 
 defaults:
   run:
-    working-directory: ./backend/sokdak
+    working-directory: backend/sokdak
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SONARQUBE_PROJECT_KEY: sokdak
+      SONARQUBE_URL: ${{ secrets.SONARQUBE_URL }}
+      SONARQUBE_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
     steps:
       - name: 리포지토리를 가져옵니다
         uses: actions/checkout@v3
@@ -37,6 +40,27 @@ jobs:
       - name: Gradle build를 수행합니다
         run: ./gradlew build
 
+      # Gralde 의 Scanner 발동, 위의 env 에서 선언한 환경변수와 함께 발동
+      - name: Sonaqube Analysis
+        run: ./gradlew test sonarqube
+          -Dsonar.host.url=${{ env.SONARQUBE_URL }}
+          -Dsonar.projectKey=${{ env.SONARQUBE_PROJECT_KEY }}
+          -Dsonar.projectName=${{ env.SONARQUBE_PROJECT_KEY }}-${{ env.PR_NUMBER }}
+          -Dsonar.login=${{ env.SONARQUBE_TOKEN }}
+
+      # PR 에 Comment 를 달아주는 스크립트 실행
+      - name: Comment Sonarqube URL
+        uses: actions/github-script@v4
+        with:
+          script: |
+            const { SONARQUBE_PROJECT_KEY, SONARQUBE_URL, PR_NUMBER } = process.env
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `📊 ${ SONARQUBE_PROJECT_KEY }-${ PR_NUMBER } 분석 결과 확인하기 [링크](${SONARQUBE_URL})`
+            })
+
       - name: 테스트 결과를 PR에 코멘트로 등록합니다
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
@@ -49,3 +73,8 @@ jobs:
         with:
           report_paths: '**/build/test-results/test/TEST-*.xml'
           token: ${{ github.token }}
+
+  analysis:
+    runs-on: ubuntu-latest
+    env:
+      SONARQUBE_PROJECT_KEY: sokdak

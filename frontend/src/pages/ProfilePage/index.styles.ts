@@ -27,21 +27,39 @@ export const Panda = styled(PandaIcon)`
   margin-left: -12px;
 `;
 
-export const NicknameField = styled.div`
+export const NicknameField = styled.form`
   width: 100%;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
   padding: 30px 0;
+  position: relative;
+  justify-content: center;
 `;
 
-export const Nickname = styled.p`
+export const Nickname = styled.input`
+  min-width: 50px;
   font-family: 'BMHANNAPro';
   grid-column: 2;
+  text-align: center;
 
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 20px;
+  padding-bottom: 5px;
+
+  :disabled {
+    color: black;
+    background-color: transparent;
+  }
+
+  :enabled {
+    padding-bottom: 4px;
+    border-bottom: 1px solid ${props => props.theme.colors.gray_400};
+  }
+
+  ::placeholder {
+    font-size: 15px;
+  }
 `;
 
 export const UpdateButton = styled.button`
@@ -50,6 +68,10 @@ export const UpdateButton = styled.button`
   align-items: center;
   background-color: transparent;
   color: ${props => props.theme.colors.pink_300};
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate3d(0, -50%, 0);
 `;
 
 export const PostField = styled.div`

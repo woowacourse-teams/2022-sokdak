@@ -48,10 +48,11 @@ public class PostFixture {
     public static final NewPostRequest NEW_POST_REQUEST2 =
             new NewPostRequest("제목2", "본문2", false, List.of("태그1", "태그2"));
 
-    public static Long addPostAndGetPostId() {
+    public static Long addNewPost() {
         NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT, false,
                 Collections.emptyList());
-        return Long.parseLong(httpPostWithAuthorization(newPostRequest, CREATE_POST_URI, getToken("chris", "Abcd123!@"))
-                .header("Location").split("/posts/")[1]);
+        return Long.parseLong(
+                httpPostWithAuthorization(newPostRequest, CREATE_POST_URI, getToken("chris", "Abcd123!@"))
+                        .header("Location").split("/posts/")[1]);
     }
 }

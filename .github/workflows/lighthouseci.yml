@@ -2,6 +2,7 @@ name: Run lighthouse CI When Push
 on:
   pull_request:
     types: [opened, reopened]
+    paths: 'frontend/**'
 jobs:
   lhci:
     name: Lighthouse CI
@@ -24,7 +25,7 @@ jobs:
 
       - name: Build
         run: |
-          npm run build
+          npm run build-dev
         working-directory: ${{ env.working-directory }}
 
       - name: Run Lighthouse CI

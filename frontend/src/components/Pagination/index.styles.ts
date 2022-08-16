@@ -6,8 +6,8 @@ export const Container = styled.div`
 
 export const Page = styled.button<{ isCurrentPage: boolean }>`
   background-color: transparent;
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;

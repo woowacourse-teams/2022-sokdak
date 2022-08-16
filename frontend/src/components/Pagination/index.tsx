@@ -6,11 +6,16 @@ const MAX_PAGE_LOAD = 8;
 const STANDARD = MAX_PAGE_LOAD / 2;
 const DISPLAY_STANDARD = STANDARD + 1;
 
-const Pagination = () => {
-  const firstPage = 1;
-  const lastPage = 11;
+interface PaginationProps {
+  className?: string;
+  firstPage?: number;
+  lastPage: number;
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const Pagination = ({ className, firstPage = 1, lastPage, currentPage, setCurrentPage }: PaginationProps) => {
   const pages = Array.from({ length: lastPage }, (_, i) => i + 1);
-  const [currentPage, setCurrentPage] = useState(firstPage);
   const [currentPages, setCurrentPages] = useState<(number | string)[]>(pages);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -41,7 +46,7 @@ const Pagination = () => {
   }, [currentPage]);
 
   return (
-    <Styled.Container>
+    <Styled.Container className={className}>
       {currentPages.map((page, index) => (
         <Styled.Page key={index} onClick={handleClick} isCurrentPage={page === currentPage}>
           {page}

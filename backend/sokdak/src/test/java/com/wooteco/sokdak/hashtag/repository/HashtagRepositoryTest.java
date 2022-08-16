@@ -17,12 +17,13 @@ import org.springframework.context.annotation.Import;
 
 @Import(JPAConfig.class)
 class HashtagRepositoryTest extends RepositoryTest {
+
     @Autowired
     private PostHashtagRepository postHashtagRepository;
-    @Autowired
-    private MemberRepository memberRepository;
+
     @Autowired
     private PostRepository postRepository;
+
     @Autowired
     private HashtagRepository hashtagRepository;
 
@@ -34,17 +35,17 @@ class HashtagRepositoryTest extends RepositoryTest {
         Post post1 = Post.builder()
                 .title("제목1")
                 .content("본문1")
-                .member(member)
+                .member(member1)
                 .build();
         Post post2 = Post.builder()
                 .title("제목2")
                 .content("본문2")
-                .member(member)
+                .member(member1)
                 .build();
         Post post3 = Post.builder()
                 .title("제목3")
                 .content("본문3")
-                .member(member)
+                .member(member1)
                 .build();
         postRepository.save(post1);
         postRepository.save(post2);

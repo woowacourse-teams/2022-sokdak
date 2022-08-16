@@ -33,7 +33,7 @@ const ProfilePage = () => {
     },
   });
 
-  const handleClick = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!disabled) {
@@ -49,10 +49,14 @@ const ProfilePage = () => {
         <Styled.Avatar>
           <Styled.Panda />
         </Styled.Avatar>
-        <Styled.NicknameField>
+        <Styled.NicknameField onSubmit={handleSubmit}>
           <Styled.Nickname
             value={nickname}
             onChange={e => setNickname(e.target.value)}
+            onInvalid={(e: React.FormEvent<HTMLInputElement>) => {
+              e.preventDefault();
+              showSnackbar(e.currentTarget.placeholder);
+            }}
             maxLength={16}
             disabled={disabled}
             ref={nicknameRef}
@@ -60,7 +64,7 @@ const ProfilePage = () => {
             placeholder="닉네임을 입력해주세요."
             required
           />
-          <Styled.UpdateButton onClick={handleClick}>{disabled ? '수정' : '완료'}</Styled.UpdateButton>
+          <Styled.UpdateButton>{disabled ? '수정' : '완료'}</Styled.UpdateButton>
         </Styled.NicknameField>
         <Styled.PostField>
           <Styled.PostListHeader>내가 쓴 글</Styled.PostListHeader>

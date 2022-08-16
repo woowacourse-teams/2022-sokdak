@@ -19,11 +19,6 @@ defaults:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      SONARQUBE_PROJECT_KEY: sokdak
-      SONARQUBE_URL: ${{ secrets.SONARQUBE_URL }}
-      SONARQUBE_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
-      PR_NUMBER: ${{ github.event.pull_request.number }}
     steps:
       - name: 리포지토리를 가져옵니다
         uses: actions/checkout@v3
@@ -39,6 +34,33 @@ jobs:
 
       - name: Gradle build를 수행합니다
         run: ./gradlew build
+
+      - name: 테스트 결과를 PR에 코멘트로 등록합니다
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: '**/build/test-results/test/TEST-*.xml'
+
+      - name: 테스트 실패 시, 실패한 코드 라인에 Check 코멘트를 등록합니다
+        uses: mikepenz/action-junit-report@v3
+        if: always()
+        with:
+          report_paths: '**/build/test-results/test/TEST-*.xml'
+          token: ${{ github.token }}
+
+  analysis:
+    runs-on: ubuntu-latest
+    env:
+      SONARQUBE_PROJECT_KEY: sokdak
+      SONARQUBE_URL: ${{ secrets.SONARQUBE_URL }}
+      SONARQUBE_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+    steps:
+      - name: 리포지토리를 가져옵니다
+        uses: actions/checkout@v3
+
+      - name: Gradle 명령 실행을 위한 권한을 부여합니다.
+        run: chmod 755 gradlew
 
       # Gralde 의 Scanner 발동, 위의 env 에서 선언한 환경변수와 함께 발동
       - name: Sonaqube Analysis
@@ -60,21 +82,3 @@ jobs:
               repo: context.repo.repo,
               body: `📊 ${ SONARQUBE_PROJECT_KEY }-${ PR_NUMBER } 분석 결과 확인하기 [링크](${SONARQUBE_URL})`
             })
-
-      - name: 테스트 결과를 PR에 코멘트로 등록합니다
-        uses: EnricoMi/publish-unit-test-result-action@v1
-        if: always()
-        with:
-          files: '**/build/test-results/test/TEST-*.xml'
-
-      - name: 테스트 실패 시, 실패한 코드 라인에 Check 코멘트를 등록합니다
-        uses: mikepenz/action-junit-report@v3
-        if: always()
-        with:
-          report_paths: '**/build/test-results/test/TEST-*.xml'
-          token: ${{ github.token }}
-
-  analysis:
-    runs-on: ubuntu-latest
-    env:
-      SONARQUBE_PROJECT_KEY: sokdak

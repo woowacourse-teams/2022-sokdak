@@ -7,7 +7,7 @@ import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getTokensForReport;
-import static com.wooteco.sokdak.util.fixture.PostFixture.addPostAndGetPostId;
+import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -30,7 +30,7 @@ class CommentAcceptanceTest extends AcceptanceTest {
     @DisplayName("새로운 익명 댓글을 작성할 수 있다.")
     @Test
     void addComment_Anonymous() {
-        Long postId = addPostAndGetPostId();
+        Long postId = addNewPost();
 
         ExtractableResponse<Response> response = httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST,
                 "/posts/" + postId + "/comments",
@@ -42,7 +42,7 @@ class CommentAcceptanceTest extends AcceptanceTest {
     @DisplayName("새로운 기명 댓글을 작성할 수 있다.")
     @Test
     void addComment_Nickname() {
-        Long postId = addPostAndGetPostId();
+        Long postId = addNewPost();
 
         ExtractableResponse<Response> response = httpPostWithAuthorization(NEW_COMMENT_REQUEST,
                 "/posts/" + postId + "/comments",
@@ -54,7 +54,7 @@ class CommentAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인하지 않고, 댓글을 작성할 수 없다.")
     @Test
     void addComment_Unauthorized() {
-        Long postId = addPostAndGetPostId();
+        Long postId = addNewPost();
 
         ExtractableResponse<Response> response = httpPost(NEW_ANONYMOUS_COMMENT_REQUEST,
                 "/posts/" + postId + "/comments");
@@ -66,8 +66,8 @@ class CommentAcceptanceTest extends AcceptanceTest {
     @DisplayName("특정 게시글의 댓글을 조회할 수 있다.")
     @Test
     void findComments() {
-        Long postId = addPostAndGetPostId();
-        Long otherPostId = addPostAndGetPostId();
+        Long postId = addNewPost();
+        Long otherPostId = addNewPost();
         httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST,
                 "/posts/" + postId + "/comments",
                 getToken());
@@ -93,7 +93,7 @@ class CommentAcceptanceTest extends AcceptanceTest {
     @DisplayName("댓글 목록을 조회하면 총 댓글 개수도 조회할 수 있다.")
     @Test
     void findComments_With_TotalCount() {
-        Long postId = addPostAndGetPostId();
+        Long postId = addNewPost();
         Long commentId = addCommentAndGetCommentId(postId);
         httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST,
                 "/comments/" + commentId + "/reply",
@@ -113,7 +113,7 @@ class CommentAcceptanceTest extends AcceptanceTest {
     @DisplayName("누적 신고가 5개 이상인 댓글은 block된다.")
     @Test
     void findComments_Block() {
-        Long postId = addPostAndGetPostId();
+        Long postId = addNewPost();
         Long commentId = addCommentAndGetCommentId(postId);
         addCommentAndGetCommentId(postId);
         List<String> tokens = getTokensForReport();
@@ -136,7 +136,7 @@ class CommentAcceptanceTest extends AcceptanceTest {
     @DisplayName("특정 게시글의 댓글과 대댓글을 조회할 수 있다.")
     @Test
     void findComments_With_Replies() {
-        Long postId = addPostAndGetPostId();
+        Long postId = addNewPost();
         Long commentId = addCommentAndGetCommentId(postId);
         httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST,
                 "/comments/" + commentId + "/reply",
@@ -161,7 +161,7 @@ class CommentAcceptanceTest extends AcceptanceTest {
     @DisplayName("댓글을 삭제할 수 있다.")
     @Test
     void deleteComment() {
-        Long postId = addPostAndGetPostId();
+        Long postId = addNewPost();
         httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST, "/posts/" + postId + "/comments", getToken());
 
         ExtractableResponse<Response> response = httpDeleteWithAuthorization("/comments/1", getToken());
@@ -172,7 +172,7 @@ class CommentAcceptanceTest extends AcceptanceTest {
     @DisplayName("대댓글을 가진 댓글을 삭제하고 해당 게시글의 댓글을 조회하면 대댓글만 조회할 수 있다.")
     @Test
     void deleteComment_Having_Reply() {
-        Long postId = addPostAndGetPostId();
+        Long postId = addNewPost();
         Long commentId = addCommentAndGetCommentId(postId);
         httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST,
                 "/comments/" + commentId + "/reply",

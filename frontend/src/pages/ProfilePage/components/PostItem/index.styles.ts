@@ -8,6 +8,7 @@ export const Container = styled.div`
   justify-content: space-between;
   border-bottom: 1px solid ${props => props.theme.colors.gray_400};
   padding: 10px 0;
+  cursor: pointer;
 `;
 
 export const Title = styled.p`

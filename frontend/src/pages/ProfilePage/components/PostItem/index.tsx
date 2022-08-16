@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 import PostCountInfo from '@/components/PostCountInfo';
 
 import * as Styled from './index.styles';
@@ -5,6 +7,7 @@ import * as Styled from './index.styles';
 import timeConverter from '@/utils/timeConverter';
 
 interface PostItemProps {
+  id: number;
   title: string;
   content: string;
   createdAt: string;
@@ -12,9 +15,11 @@ interface PostItemProps {
   commentCount: number;
 }
 
-const PostItem = ({ title, content, createdAt, likeCount, commentCount }: PostItemProps) => {
+const PostItem = ({ id, title, content, createdAt, likeCount, commentCount }: PostItemProps) => {
+  const navagate = useNavigate();
+
   return (
-    <Styled.Container>
+    <Styled.Container onClick={() => navagate(`/post/${id}`)}>
       <Styled.Title>{title}</Styled.Title>
       <Styled.Content>{content}</Styled.Content>
       <Styled.Information>

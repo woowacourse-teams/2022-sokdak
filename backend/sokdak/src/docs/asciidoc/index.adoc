@@ -78,6 +78,7 @@ operation::login/fail[snippets='http-request,http-response']
 operation::logout/success[snippets='http-request,http-response']
 
 === 리프레시
+==== 성공
 operation::refresh/success[snippets='http-request,http-response']
 
 == 게시판 관리

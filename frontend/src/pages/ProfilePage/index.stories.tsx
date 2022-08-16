@@ -4,7 +4,7 @@ import ProfilePage from '.';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 export default {
-  title: 'Pages/ProfilePage',
+  title: 'Pages/ProfilePage/Page',
   component: ProfilePage,
   decorators: [withRouter],
 } as ComponentMeta<typeof ProfilePage>;

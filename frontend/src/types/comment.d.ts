@@ -4,4 +4,5 @@ interface CommentType {
   content: string | null;
   createdAt: string | null;
   authorized: boolean | null;
+  likeCount: number;
 }

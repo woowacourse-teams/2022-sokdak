@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.post.controller;
 
-import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST;
 import static com.wooteco.sokdak.util.fixture.PostFixture.UPDATED_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.UPDATED_POST_TITLE;
 import static org.mockito.ArgumentMatchers.any;
@@ -35,6 +34,8 @@ import org.springframework.restdocs.RestDocumentationExtension;
 @ExtendWith(RestDocumentationExtension.class)
 class PostControllerTest extends ControllerTest {
 
+    private static final NewPostRequest NEW_POST_REQUEST =
+            new NewPostRequest("제목", "본문", false, List.of("태그1", "태그2"));
     private static final int WRONG_PAGE = 99;
     private static final PostsElementResponse POSTS_ELEMENT_RESPONSE_1 = PostsElementResponse.builder()
             .id(1L)

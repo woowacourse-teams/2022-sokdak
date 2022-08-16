@@ -6,7 +6,6 @@ import static com.wooteco.sokdak.util.fixture.MemberFixture.getToken;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 public class PostFixture {
@@ -43,14 +42,9 @@ public class PostFixture {
             .modified(false)
             .build();
 
-    public static final NewPostRequest NEW_POST_REQUEST =
-            new NewPostRequest("제목", "본문", false, List.of("태그1", "태그2"));
-    public static final NewPostRequest NEW_POST_REQUEST2 =
-            new NewPostRequest("제목2", "본문2", false, List.of("태그1", "태그2"));
-
     public static Long addNewPost() {
         NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT, false,
-                Collections.emptyList());
+                List.of("태그1", "태그2"));
         return Long.parseLong(
                 httpPostWithAuthorization(newPostRequest, CREATE_POST_URI, getToken("chris", "Abcd123!@"))
                         .header("Location").split("/posts/")[1]);

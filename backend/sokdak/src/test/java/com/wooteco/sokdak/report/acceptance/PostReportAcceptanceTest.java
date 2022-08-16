@@ -2,8 +2,7 @@ package com.wooteco.sokdak.report.acceptance;
 
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
-import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST;
+import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.wooteco.sokdak.report.dto.ReportRequest;
@@ -22,7 +21,7 @@ class PostReportAcceptanceTest extends AcceptanceTest {
     @DisplayName("게시글을 신고할 수 있다.")
     @Test
     void reportPost() {
-        Long postId = addPostAndGetPostId();
+        Long postId = addNewPost();
 
         ExtractableResponse<Response> response = httpPostWithAuthorization(REPORT_REQUEST,
                 "/posts/" + postId + "/report", getChrisToken());
@@ -33,7 +32,7 @@ class PostReportAcceptanceTest extends AcceptanceTest {
     @DisplayName("이미 신고한 게시물은 다시 신고할 수 없다.")
     @Test
     void reportPost_Exception_AlreadyReport() {
-        Long postId = addPostAndGetPostId();
+        Long postId = addNewPost();
         httpPostWithAuthorization(REPORT_REQUEST, "/posts/" + postId + "/report", getChrisToken());
 
         ExtractableResponse<Response> response = httpPostWithAuthorization(REPORT_REQUEST,
@@ -51,10 +50,5 @@ class PostReportAcceptanceTest extends AcceptanceTest {
                 "/posts/" + invalidPostId + "/report", getChrisToken());
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
-    }
-
-    private Long addPostAndGetPostId() {
-        return Long.parseLong(httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getChrisToken())
-                .header("Location").split("/posts/")[1]);
     }
 }

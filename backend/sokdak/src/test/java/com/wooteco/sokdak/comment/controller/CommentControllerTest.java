@@ -1,7 +1,5 @@
 package com.wooteco.sokdak.comment.controller;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.SESSION_ID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -62,8 +60,7 @@ class CommentControllerTest extends ControllerTest {
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .sessionId(SESSION_ID)
-                .sessionAttr("member", AUTH_INFO)
+                .header("Authorization", "any")
                 .body(newCommentRequest)
                 .when().post("/posts/1/comments")
                 .then().log().all()

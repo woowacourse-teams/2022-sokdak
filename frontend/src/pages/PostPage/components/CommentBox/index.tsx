@@ -1,6 +1,7 @@
 import { useReducer } from 'react';
 
 import ConfirmModal from '@/components/ConfirmModal';
+import LikeButton from '@/components/LikeButton';
 
 import useDeleteComment from '@/hooks/queries/comment/useDeleteComment';
 import useReportComment from '@/hooks/queries/comment/useReportComment';
@@ -83,7 +84,10 @@ const CommentBox = ({
           </Styled.ButtonContainer>
         </Styled.CommentHeader>
         <Styled.Content>{content}</Styled.Content>
-        <Styled.Date>{timeConverter(createdAt!)}</Styled.Date>
+        <Styled.Footer>
+          <Styled.Date>{timeConverter(createdAt!)}</Styled.Date>
+          <LikeButton isLiked={false} onClick={() => {}} likeCount={3}></LikeButton>
+        </Styled.Footer>
       </Styled.Container>
 
       {isReplyFormOpen && <ReplyForm commentId={id} />}

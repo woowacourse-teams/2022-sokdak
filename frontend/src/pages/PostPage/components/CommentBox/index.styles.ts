@@ -81,3 +81,9 @@ export const Date = styled.p`
   margin: 10px 0;
   font-size: 10px;
 `;
+
+export const Footer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;

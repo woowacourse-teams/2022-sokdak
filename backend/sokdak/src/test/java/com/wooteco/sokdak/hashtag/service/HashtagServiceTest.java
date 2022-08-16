@@ -39,17 +39,19 @@ import org.springframework.data.domain.Pageable;
 class HashtagServiceTest extends IntegrationTest {
 
     public static final long WRITABLE_BOARD_ID = 2L;
+
     @Autowired
     private PostService postService;
+
     @Autowired
     private HashtagService hashtagService;
 
     @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
     private PostRepository postRepository;
+
     @Autowired
     private PostHashtagRepository postHashtagRepository;
+
     @Autowired
     private HashtagRepository hashtagRepository;
 
@@ -61,8 +63,6 @@ class HashtagServiceTest extends IntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        Member member = memberRepository.findById(1L)
-                .orElseThrow(MemberNotFoundException::new);
         post = Post.builder()
                 .title("제목")
                 .content("본문")

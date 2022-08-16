@@ -26,6 +26,7 @@ public class HashtagService {
 
     private final HashtagRepository hashtagRepository;
     private final PostHashtagRepository postHashtagRepository;
+    
 
     public HashtagService(HashtagRepository hashtagRepository,
                           PostHashtagRepository postHashtagRepository) {

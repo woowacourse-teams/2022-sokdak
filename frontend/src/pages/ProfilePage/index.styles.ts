@@ -36,7 +36,7 @@ export const NicknameField = styled.form`
 `;
 
 export const Nickname = styled.input`
-  min-width: 50px;
+  max-width: 240px;
   font-family: 'BMHANNAPro';
   grid-column: 2;
   text-align: center;

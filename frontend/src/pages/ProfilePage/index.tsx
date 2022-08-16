@@ -13,16 +13,18 @@ import * as Styled from './index.styles';
 
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
+const SIZE = 3;
+const OFFSET = 1.5;
+
 const ProfilePage = () => {
   const { showSnackbar } = useSnackbar();
   const { username, setUserName } = useContext(AuthContext);
   const [nickname, setNickname] = useState(username);
   const [disabled, handleDisabled] = useReducer(state => !state, true);
 
-  const size = 3;
   const [currentPage, setCurrentPage] = useState(1);
   const { data } = useMyPosts({
-    storeCode: [size, currentPage],
+    storeCode: [SIZE, currentPage],
   });
 
   const nicknameRef = useRef<HTMLInputElement>(null);
@@ -60,7 +62,7 @@ const ProfilePage = () => {
             maxLength={16}
             disabled={disabled}
             ref={nicknameRef}
-            size={nickname.length}
+            size={nickname.length * OFFSET}
             placeholder="닉네임을 입력해주세요."
             required
           />

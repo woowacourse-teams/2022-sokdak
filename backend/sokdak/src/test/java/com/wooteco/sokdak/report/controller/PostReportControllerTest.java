@@ -27,9 +27,6 @@ class PostReportControllerTest extends ControllerTest {
         doReturn(true)
                 .when(authInterceptor)
                 .preHandle(any(), any(), any());
-        doReturn(AUTH_INFO)
-                .when(authenticationPrincipalArgumentResolver)
-                .resolveArgument(any(), any(), any(), any());
     }
 
     @DisplayName("게시글을 신고한다")
@@ -40,7 +37,7 @@ class PostReportControllerTest extends ControllerTest {
                 .when(postReportService)
                 .reportPost(any(), any(), any());
 
-        ValidatableMockMvcResponse response = restDocs
+        restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "any")
                 .body(reportRequest)

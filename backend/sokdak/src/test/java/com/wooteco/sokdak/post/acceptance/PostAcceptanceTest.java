@@ -12,8 +12,6 @@ import static com.wooteco.sokdak.util.fixture.MemberFixture.getTokensForReport;
 import static com.wooteco.sokdak.util.fixture.PostFixture.BOARD_ID_POST_CREATED;
 import static com.wooteco.sokdak.util.fixture.PostFixture.CANNOT_CREATE_POST_URI;
 import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
-import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST;
-import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST2;
 import static com.wooteco.sokdak.util.fixture.PostFixture.POSTS_ELEMENT_RESPONSE_1;
 import static com.wooteco.sokdak.util.fixture.PostFixture.POSTS_ELEMENT_RESPONSE_2;
 import static com.wooteco.sokdak.util.fixture.PostFixture.UPDATED_POST_CONTENT;
@@ -43,6 +41,11 @@ import org.springframework.http.HttpStatus;
 
 @DisplayName("게시글 관련 인수테스트")
 class PostAcceptanceTest extends AcceptanceTest {
+
+    private static final NewPostRequest NEW_POST_REQUEST =
+            new NewPostRequest("제목", "본문", false, List.of("태그1", "태그2"));
+    private static final NewPostRequest NEW_POST_REQUEST2 =
+            new NewPostRequest("제목2", "본문2", false, List.of("태그1", "태그2"));
 
     private static final long WRITABLE_BOARD_ID = 2L;
     private static final String WRONG_PAGE = "5";

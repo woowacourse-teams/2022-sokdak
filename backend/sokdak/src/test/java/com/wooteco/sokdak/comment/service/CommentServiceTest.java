@@ -1,8 +1,6 @@
 package com.wooteco.sokdak.comment.service;
 
 import static com.wooteco.sokdak.member.domain.RoleType.USER;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO2;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,18 +45,13 @@ class CommentServiceTest extends IntegrationTest {
     @Autowired
     private CommentRepository commentRepository;
 
-    @Autowired
-    private NotificationRepository notificationRepository;
-
     private Post anonymousPost;
     private Post identifiedPost;
-    private Member member;
     private Member member2;
     private String randomNickname;
 
     @BeforeEach
     void setUp() {
-        member = memberRepository.findById(1L).get();
         member2 = memberRepository.findById(3L).get();
         randomNickname = RandomNicknameGenerator.generate(new HashSet<>());
         anonymousPost = Post.builder()

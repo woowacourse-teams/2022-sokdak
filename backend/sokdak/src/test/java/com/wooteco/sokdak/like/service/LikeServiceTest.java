@@ -1,12 +1,10 @@
 package com.wooteco.sokdak.like.service;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.*;
 import static com.wooteco.sokdak.util.fixture.PostFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.like.dto.LikeFlipResponse;
-import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
@@ -24,21 +22,10 @@ class LikeServiceTest extends IntegrationTest {
     @Autowired
     private PostRepository postRepository;
 
-    @Autowired
-    private MemberRepository memberRepository;
-
-    private Member member;
     private Post post;
 
     @BeforeEach
     void setUp() {
-        member = Member.builder()
-                .username(VALID_USERNAME)
-                .password(VALID_PASSWORD)
-                .nickname(VALID_NICKNAME)
-                .build();
-        memberRepository.save(member);
-
         post = Post.builder()
                 .title(VALID_POST_TITLE)
                 .content(VALID_POST_CONTENT)

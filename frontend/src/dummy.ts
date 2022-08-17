@@ -378,6 +378,9 @@ export const commentList: CommentListType[] = [
     authorized: true,
     blocked: false,
     postWriter: true,
+    like: false,
+    likeCount: 3,
+
     replies: [
       {
         id: 17,
@@ -386,6 +389,8 @@ export const commentList: CommentListType[] = [
         createdAt: '2022-08-09T07:55:31.016376300',
         authorized: true,
         postWriter: true,
+        like: false,
+        likeCount: 3,
         blocked: false,
       },
       {
@@ -395,6 +400,8 @@ export const commentList: CommentListType[] = [
         createdAt: '2022-08-09T08:55:31.016376300',
         authorized: true,
         postWriter: true,
+        like: false,
+        likeCount: 3,
         blocked: false,
       },
     ],
@@ -408,6 +415,8 @@ export const commentList: CommentListType[] = [
     authorized: true,
     blocked: false,
     postWriter: true,
+    like: false,
+    likeCount: 3,
     replies: [
       {
         id: 19,
@@ -416,6 +425,9 @@ export const commentList: CommentListType[] = [
         createdAt: '2022-08-09T08:55:31.016376300',
         authorized: false,
         postWriter: false,
+        like: false,
+
+        likeCount: 5,
         blocked: false,
       },
     ],
@@ -429,6 +441,9 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: true,
     postWriter: false,
+    like: false,
+
+    likeCount: 5,
     replies: [],
   },
   {
@@ -440,6 +455,9 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    like: false,
+
+    likeCount: 5,
     replies: [],
   },
   {
@@ -451,6 +469,9 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    like: false,
+
+    likeCount: 5,
     replies: [],
   },
   {
@@ -462,6 +483,9 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    like: false,
+
+    likeCount: 5,
     replies: [],
   },
   {
@@ -473,6 +497,9 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    like: false,
+
+    likeCount: 5,
     replies: [],
   },
   {
@@ -484,6 +511,9 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: true,
     postWriter: false,
+    like: false,
+
+    likeCount: 5,
     replies: [],
   },
   {
@@ -495,6 +525,9 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    like: false,
+
+    likeCount: 5,
     replies: [],
   },
   {
@@ -506,6 +539,9 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    like: false,
+
+    likeCount: 5,
     replies: [],
   },
   {
@@ -517,6 +553,9 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    like: false,
+
+    likeCount: 5,
     replies: [],
   },
   {
@@ -528,6 +567,9 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    like: false,
+
+    likeCount: 5,
     replies: [],
   },
   {
@@ -539,6 +581,9 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    like: false,
+
+    likeCount: 5,
     replies: [],
   },
   {
@@ -550,6 +595,9 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    like: false,
+
+    likeCount: 5,
     replies: [],
   },
   {
@@ -561,6 +609,9 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    like: false,
+
+    likeCount: 5,
     replies: [],
   },
   {
@@ -572,6 +623,9 @@ export const commentList: CommentListType[] = [
     authorized: false,
     blocked: false,
     postWriter: false,
+    like: false,
+
+    likeCount: 5,
     replies: [],
   },
 ];

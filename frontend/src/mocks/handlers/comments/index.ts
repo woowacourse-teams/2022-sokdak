@@ -37,7 +37,9 @@ const commentHandlers = [
       postId: id,
       authorized: true,
       blocked: false,
+      like: false,
       postWriter: targetPost.authorized,
+      likeCount: 0,
       replies: [],
     });
 
@@ -131,10 +133,54 @@ const commentHandlers = [
       createdAt: new Date().toISOString(),
       authorized: true,
       blocked: false,
+      likeCount: 0,
+      like: false,
       postWriter: targetPost.authorized,
     });
 
     return res(ctx.status(201));
+  }),
+
+  rest.put('/comments/:id/like', (req, res, ctx) => {
+    const { id } = req.params;
+    const targetComment = commentList.find(comment => comment.id === Number(id));
+
+    if (!targetComment) {
+      const targetReply = commentList.flatMap(comment => comment.replies).find(reply => reply.id === Number(id));
+
+      if (!targetReply) return res(ctx.status(400), ctx.json({ message: '존재하지 않는 댓글입니다.' }));
+
+      targetReply.like = !targetReply.like;
+      if (targetReply.like) {
+        targetReply.likeCount += 1;
+      }
+      if (!targetReply.like) {
+        targetReply.likeCount -= 1;
+      }
+      return res(
+        ctx.status(200),
+        ctx.json({
+          like: targetReply.like,
+          likeCount: targetReply.likeCount,
+        }),
+      );
+    }
+
+    targetComment.like = !targetComment.like;
+    if (targetComment.like) {
+      targetComment.likeCount += 1;
+    }
+    if (!targetComment.like) {
+      targetComment.likeCount -= 1;
+    }
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        like: targetComment.like,
+        likeCount: targetComment.likeCount,
+      }),
+    );
   }),
 ];
 

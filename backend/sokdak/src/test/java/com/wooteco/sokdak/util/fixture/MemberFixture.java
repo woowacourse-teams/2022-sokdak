@@ -20,9 +20,9 @@ public class MemberFixture {
         return List.of(
                 Member.builder().id(1L).username("chris").password("Abcd123!@").nickname("chrisNickname").build(),
                 Member.builder().id(2L).username("josh").password("Abcd123!@").nickname("joshNickname").build(),
-                Member.builder().id(3L).username("hunch").password("Abcd123!@").nickname("hunchNickname").build(),
-                Member.builder().id(4L).username("east").password("Abcd123!@").nickname("eastNickname").build(),
-                Member.builder().id(5L).username("thor").password("Abcd123!@").nickname("thorNickname").build()
+                Member.builder().id(3L).username("thor").password("Abcd123!@").nickname("thorNickname").build(),
+                Member.builder().id(4L).username("hunch").password("Abcd123!@").nickname("hunchNickname").build(),
+                Member.builder().id(5L).username("east").password("Abcd123!@").nickname("eastNickname").build()
         );
     }
 

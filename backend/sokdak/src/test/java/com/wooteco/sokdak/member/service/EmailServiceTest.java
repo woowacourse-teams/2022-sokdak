@@ -8,7 +8,6 @@ import com.wooteco.sokdak.auth.domain.Ticket;
 import com.wooteco.sokdak.auth.service.AuthCodeGenerator;
 import com.wooteco.sokdak.auth.service.Encryptor;
 import com.wooteco.sokdak.member.dto.EmailRequest;
-import com.wooteco.sokdak.member.repository.AuthCodeRepository;
 import com.wooteco.sokdak.member.repository.TicketRepository;
 import com.wooteco.sokdak.util.IntegrationTest;
 import org.junit.jupiter.api.DisplayName;
@@ -23,9 +22,6 @@ class EmailServiceTest extends IntegrationTest {
 
     @Autowired
     private TicketRepository ticketRepository;
-
-    @Autowired
-    private AuthCodeRepository authCodeRepository;
 
     @MockBean
     private AuthCodeGenerator authCodeGenerator;

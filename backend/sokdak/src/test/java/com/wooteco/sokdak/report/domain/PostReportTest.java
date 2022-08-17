@@ -1,22 +1,19 @@
 package com.wooteco.sokdak.report.domain;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.*;
-import static com.wooteco.sokdak.util.fixture.PostFixture.*;
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
+import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
+import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.wooteco.sokdak.member.domain.Member;
-import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.report.exception.AlreadyReportPostException;
-import com.wooteco.sokdak.util.fixture.MemberFixture;
-import com.wooteco.sokdak.util.fixture.PostFixture;
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 class PostReportTest {

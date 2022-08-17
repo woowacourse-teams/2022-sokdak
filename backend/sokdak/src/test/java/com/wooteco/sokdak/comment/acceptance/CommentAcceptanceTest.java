@@ -2,17 +2,17 @@ package com.wooteco.sokdak.comment.acceptance;
 
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_ANONYMOUS_COMMENT_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_COMMENT_REQUEST;
+import static com.wooteco.sokdak.util.fixture.CommentFixture.addNewCommentInPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getFiveTokens;
 import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.CommentsResponse;
 import com.wooteco.sokdak.comment.dto.ReplyResponse;
@@ -34,7 +34,7 @@ class CommentAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> response = httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST,
                 "/posts/" + postId + "/comments",
-                getToken());
+                getChrisToken());
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
@@ -46,7 +46,7 @@ class CommentAcceptanceTest extends AcceptanceTest {
 
         ExtractableResponse<Response> response = httpPostWithAuthorization(NEW_COMMENT_REQUEST,
                 "/posts/" + postId + "/comments",
-                getToken());
+                getChrisToken());
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
@@ -70,13 +70,13 @@ class CommentAcceptanceTest extends AcceptanceTest {
         Long otherPostId = addNewPost();
         httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST,
                 "/posts/" + postId + "/comments",
-                getToken());
+                getChrisToken());
         httpPostWithAuthorization(NEW_COMMENT_REQUEST,
                 "/posts/" + postId + "/comments",
-                getToken());
+                getChrisToken());
         httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST,
                 "/posts/" + otherPostId + "/comments",
-                getToken());
+                getChrisToken());
 
         ExtractableResponse<Response> response = httpGet("/posts/" + postId + "/comments");
         List<CommentResponse> commentResponses = response
@@ -94,13 +94,13 @@ class CommentAcceptanceTest extends AcceptanceTest {
     @Test
     void findComments_With_TotalCount() {
         Long postId = addNewPost();
-        Long commentId = addCommentAndGetCommentId(postId);
+        Long commentId = addNewCommentInPost(postId);
         httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST,
                 "/comments/" + commentId + "/reply",
-                getToken());
+                getChrisToken());
         httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST,
                 "/comments/" + commentId + "/reply",
-                getToken());
+                getChrisToken());
 
         ExtractableResponse<Response> response = httpGet("/posts/" + postId + "/comments");
         CommentsResponse commentsResponse = response
@@ -114,8 +114,8 @@ class CommentAcceptanceTest extends AcceptanceTest {
     @Test
     void findComments_Block() {
         Long postId = addNewPost();
-        Long commentId = addCommentAndGetCommentId(postId);
-        addCommentAndGetCommentId(postId);
+        Long commentId = addNewCommentInPost(postId);
+        addNewCommentInPost(postId);
         List<String> tokens = getFiveTokens();
 
         for (int i = 0; i < 5; ++i) {
@@ -124,7 +124,8 @@ class CommentAcceptanceTest extends AcceptanceTest {
         }
 
         ExtractableResponse<Response> response = httpGet("/posts/" + postId + "/comments");
-        List<CommentResponse> commentResponses = response.jsonPath().getObject(".", CommentsResponse.class).getComments();
+        List<CommentResponse> commentResponses = response.jsonPath().getObject(".", CommentsResponse.class)
+                .getComments();
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
@@ -137,13 +138,13 @@ class CommentAcceptanceTest extends AcceptanceTest {
     @Test
     void findComments_With_Replies() {
         Long postId = addNewPost();
-        Long commentId = addCommentAndGetCommentId(postId);
+        Long commentId = addNewCommentInPost(postId);
         httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST,
                 "/comments/" + commentId + "/reply",
-                getToken());
+                getChrisToken());
         httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST,
                 "/comments/" + commentId + "/reply",
-                getToken());
+                getChrisToken());
 
         ExtractableResponse<Response> response = httpGet("/posts/" + postId + "/comments");
         List<CommentResponse> commentResponses = response
@@ -162,9 +163,9 @@ class CommentAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteComment() {
         Long postId = addNewPost();
-        httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST, "/posts/" + postId + "/comments", getToken());
+        httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST, "/posts/" + postId + "/comments", getChrisToken());
 
-        ExtractableResponse<Response> response = httpDeleteWithAuthorization("/comments/1", getToken());
+        ExtractableResponse<Response> response = httpDeleteWithAuthorization("/comments/1", getChrisToken());
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
@@ -173,12 +174,12 @@ class CommentAcceptanceTest extends AcceptanceTest {
     @Test
     void deleteComment_Having_Reply() {
         Long postId = addNewPost();
-        Long commentId = addCommentAndGetCommentId(postId);
+        Long commentId = addNewCommentInPost(postId);
         httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST,
                 "/comments/" + commentId + "/reply",
-                getToken());
+                getChrisToken());
 
-        httpDeleteWithAuthorization("/comments/" + commentId, getToken());
+        httpDeleteWithAuthorization("/comments/" + commentId, getChrisToken());
         ExtractableResponse<Response> response = httpGet("/posts/" + postId + "/comments");
         CommentResponse commentResponse = response.jsonPath()
                 .getObject(".", CommentsResponse.class)
@@ -193,16 +194,5 @@ class CommentAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(commentResponse.getNickname()).isNull(),
                 () -> assertThat(replyResponses).hasSize(1)
         );
-    }
-
-    private String getToken() {
-        LoginRequest loginRequest = new LoginRequest("chris", "Abcd123!@");
-        return httpPost(loginRequest, "/login").header(AUTHORIZATION);
-    }
-
-    private Long addCommentAndGetCommentId(Long postId) {
-        return Long.parseLong(httpPostWithAuthorization(NEW_COMMENT_REQUEST,
-                "/posts/" + postId + "/comments", getToken())
-                .header("Location").split("/comments/")[1]);
     }
 }

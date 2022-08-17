@@ -16,9 +16,9 @@ public class CommentFixture {
     public static final NewCommentRequest NEW_REPLY_REQUEST =
             new NewCommentRequest(VALID_COMMENT_MESSAGE, false);
 
-    public static Long addCommentAndGetCommentId(Long postId) {
-        return Long.parseLong(httpPostWithAuthorization(NEW_COMMENT_REQUEST,
-                "/posts/" + postId + "/comments", getChrisToken())
-                .header("Location").split("/comments/")[1]);
+    public static Long addNewCommentInPost(Long postId) {
+        return Long.parseLong(
+                httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", getChrisToken())
+                        .header("Location").split("/comments/")[1]);
     }
 }

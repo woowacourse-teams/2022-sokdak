@@ -1,14 +1,13 @@
 package com.wooteco.sokdak.auth.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.INVALID_LOGIN_REQUEST;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_LOGIN_REQUEST;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.auth.domain.AuthCode;

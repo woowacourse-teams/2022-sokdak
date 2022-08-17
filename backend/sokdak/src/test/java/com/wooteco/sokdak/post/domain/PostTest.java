@@ -1,13 +1,15 @@
 package com.wooteco.sokdak.post.domain;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.*;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getMembersForReport;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.wooteco.sokdak.auth.exception.AuthenticationException;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.report.domain.PostReport;
-import com.wooteco.sokdak.util.fixture.MemberFixture;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

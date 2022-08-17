@@ -19,7 +19,6 @@ import com.wooteco.sokdak.board.exception.BoardNotWritableException;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.member.domain.RoleType;
-import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;

@@ -1,7 +1,8 @@
 import { QueryKey, useQuery, UseQueryOptions } from 'react-query';
 
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 
+import authFetcher from '@/apis';
 import QUERY_KEYS from '@/constants/queries';
 
 type Size = number;
@@ -21,7 +22,7 @@ const useMyPosts = ({
 }) =>
   useQuery(
     [QUERY_KEYS.MY_POSTS, ...storeCode],
-    ({ queryKey: [, size, page] }) => axios.get(`/posts/me?size=${size}&page=${page - 1}`),
+    ({ queryKey: [, size, page] }) => authFetcher.get(`/posts/me?size=${size}&page=${page - 1}`),
     {
       select: data => data.data,
       ...options,

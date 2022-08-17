@@ -1,6 +1,8 @@
 import { useMutation, UseMutationOptions } from 'react-query';
 
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
+
+import authFetcher from '@/apis';
 
 interface UseUpdateNicknameProps {
   nickname: string;
@@ -11,7 +13,7 @@ const useUpdateNickname = (
 ) => {
   return useMutation(
     ({ nickname }): Promise<AxiosResponse> =>
-      axios.patch('/members/nickname', {
+      authFetcher.patch('/members/nickname', {
         nickname,
       }),
     {

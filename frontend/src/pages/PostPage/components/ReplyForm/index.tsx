@@ -35,8 +35,6 @@ const ReplyForm = ({ commentId }: ReplyFormProps) => {
 
   useEffect(() => {
     scrollToCurrent(SCROLL.REPLY_FORM_HEIGHT);
-
-    return () => scrollToCurrent(-SCROLL.REPLY_FORM_HEIGHT);
   }, []);
 
   return (

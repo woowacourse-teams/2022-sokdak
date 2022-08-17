@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 
 import ConfirmModal from '@/components/ConfirmModal';
 
@@ -26,6 +26,8 @@ interface CommentBoxProps extends CommentType {
   postWriter: boolean;
   mode?: typeof Mode[keyof typeof Mode];
   className?: string;
+  openedFormId?: undefined | number;
+  setOpenedFormId?: React.Dispatch<React.SetStateAction<undefined | number>>;
 }
 
 const CommentBox = ({
@@ -40,10 +42,12 @@ const CommentBox = ({
   likeCount,
   className,
   like,
+  openedFormId,
+  setOpenedFormId,
 }: CommentBoxProps) => {
   const [isReportModalOpen, handleReportModal] = useReducer(state => !state, false);
   const [isDeleteModalOpen, handleDeleteModal] = useReducer(state => !state, false);
-  const [isReplyFormOpen, handleReplyForm] = useReducer(state => !state, false);
+  const [isReplyFormOpen, setIsReplyFormOpen] = useState(false);
   const theme = useTheme();
   const strokeColor = like ? theme.colors.pink_300 : theme.colors.gray_300;
   const fillColor = like ? theme.colors.pink_300 : 'white';
@@ -64,6 +68,11 @@ const CommentBox = ({
     handleDeleteModal();
   };
 
+  const handleClickReplyButton = () => {
+    setOpenedFormId?.(id);
+    setIsReplyFormOpen(state => !state);
+  };
+
   const submitReportComment = (message: string) => {
     reportComment({ id, message });
   };
@@ -80,6 +89,12 @@ const CommentBox = ({
     return <Styled.EmptyComment>신고에 의해 블라인드 처리되었습니다.</Styled.EmptyComment>;
   }
 
+  useEffect(() => {
+    if (openedFormId !== id) {
+      setIsReplyFormOpen(false);
+    }
+  }, [openedFormId]);
+
   return (
     <>
       <Styled.Container className={className}>
@@ -88,7 +103,7 @@ const CommentBox = ({
             {nickname} {postWriter && <Styled.PostWriter>작성자</Styled.PostWriter>}
           </Styled.Nickname>
           <Styled.ButtonContainer>
-            {mode === Mode.COMMENTS && <Styled.ReplyButton onClick={handleReplyForm}>답글</Styled.ReplyButton>}
+            {mode === Mode.COMMENTS && <Styled.ReplyButton onClick={handleClickReplyButton}>답글</Styled.ReplyButton>}
             {authorized ? (
               <Styled.DeleteButton onClick={handleClickDeleteButton}>삭제</Styled.DeleteButton>
             ) : (

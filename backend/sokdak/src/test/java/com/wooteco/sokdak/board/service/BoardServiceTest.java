@@ -22,14 +22,14 @@ import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
-import com.wooteco.sokdak.util.IntegrationTest;
+import com.wooteco.sokdak.util.ServiceTest;
 import java.util.ArrayList;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class BoardServiceTest extends IntegrationTest {
+class BoardServiceTest extends ServiceTest {
 
     @Autowired
     private BoardService boardService;

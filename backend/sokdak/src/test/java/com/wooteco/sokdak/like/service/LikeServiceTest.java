@@ -8,13 +8,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.wooteco.sokdak.like.dto.LikeFlipResponse;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
-import com.wooteco.sokdak.util.IntegrationTest;
+import com.wooteco.sokdak.util.ServiceTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class LikeServiceTest extends IntegrationTest {
+class LikeServiceTest extends ServiceTest {
 
     @Autowired
     private LikeService likeService;

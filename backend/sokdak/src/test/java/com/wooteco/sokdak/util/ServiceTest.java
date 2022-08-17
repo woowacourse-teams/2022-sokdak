@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
-public class IntegrationTest {
+public class ServiceTest {
 
     protected static final AuthInfo AUTH_INFO = new AuthInfo(3L, RoleType.USER.getName(), "chrisNickname");
     protected static final AuthInfo AUTH_INFO2 = new AuthInfo(4L, RoleType.USER.getName(), "joshNickname");

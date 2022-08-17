@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.post.service;
 
 import static com.wooteco.sokdak.member.domain.RoleType.USER;
+import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -14,7 +15,6 @@ import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.service.CommentService;
-import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
@@ -37,9 +37,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 class PostServiceTest extends IntegrationTest {
-
-    private static final long WRITABLE_BOARD_ID = 2L;
-    private static final int WRONG_PAGE = 99;
 
     @Autowired
     private PostService postService;
@@ -79,7 +76,7 @@ class PostServiceTest extends IntegrationTest {
     void addPost_Anonymous() {
         NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", true, Collections.emptyList());
 
-        Long postId = postService.addPost(WRITABLE_BOARD_ID, newPostRequest, AUTH_INFO);
+        Long postId = postService.addPost(FREE_BOARD_ID, newPostRequest, AUTH_INFO);
         Post actual = postRepository.findById(postId).orElseThrow();
 
         assertAll(
@@ -97,7 +94,7 @@ class PostServiceTest extends IntegrationTest {
     void addPost_Identified() {
         NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", false, Collections.emptyList());
 
-        Long postId = postService.addPost(WRITABLE_BOARD_ID, newPostRequest, AUTH_INFO);
+        Long postId = postService.addPost(FREE_BOARD_ID, newPostRequest, AUTH_INFO);
         Post actual = postRepository.findById(postId).orElseThrow();
 
         assertAll(
@@ -286,11 +283,12 @@ class PostServiceTest extends IntegrationTest {
                 .comments(new ArrayList<>())
                 .build();
         postRepository.save(post);
+        int wrongPage = 99;
 
-        MyPostsResponse myPosts = postService.findMyPosts(PageRequest.of(WRONG_PAGE, 3), AUTH_INFO);
+        MyPostsResponse myPosts = postService.findMyPosts(PageRequest.of(wrongPage, 3), AUTH_INFO);
 
         assertAll(
-                () -> assertThat(myPosts.getPosts()).hasSize(0),
+                () -> assertThat(myPosts.getPosts()).isEmpty(),
                 () -> assertThat(myPosts.getTotalPageCount()).isEqualTo(1)
         );
     }

@@ -1,4 +1,4 @@
-import { useContext, useReducer, useRef, useState } from 'react';
+import { useContext, useEffect, useReducer, useRef, useState } from 'react';
 
 import PostItem from './components/PostItem';
 import Layout from '@/components/@styled/Layout';
@@ -18,16 +18,15 @@ const OFFSET = 1.5;
 
 const ProfilePage = () => {
   const { showSnackbar } = useSnackbar();
+  const [currentPage, setCurrentPage] = useState(1);
   const { username, setUserName } = useContext(AuthContext);
   const [nickname, setNickname] = useState(username);
   const [disabled, handleDisabled] = useReducer(state => !state, true);
+  const nicknameRef = useRef<HTMLInputElement>(null);
 
-  const [currentPage, setCurrentPage] = useState(1);
   const { data } = useMyPosts({
     storeCode: [SIZE, currentPage],
   });
-
-  const nicknameRef = useRef<HTMLInputElement>(null);
   const { mutate } = useUpdateNickname({
     onSuccess: () => {
       setUserName(nickname);
@@ -44,6 +43,12 @@ const ProfilePage = () => {
 
     handleDisabled();
   };
+
+  useEffect(() => {
+    if (!disabled) {
+      nicknameRef.current?.focus();
+    }
+  }, [disabled]);
 
   return (
     <Layout>

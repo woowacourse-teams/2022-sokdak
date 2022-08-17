@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import CheckBox from '@/components/CheckBox';
 
@@ -19,6 +19,7 @@ const ReplyForm = ({ commentId }: ReplyFormProps) => {
 
   const [content, setContent] = useState('');
   const [anonymous, setAnonymous] = useState(true);
+  const scrollRef = useRef<HTMLFormElement>(null);
 
   const { mutate: postReply } = useCreateReply({
     onSuccess: () => {
@@ -34,11 +35,11 @@ const ReplyForm = ({ commentId }: ReplyFormProps) => {
   };
 
   useEffect(() => {
-    scrollToCurrent(SCROLL.REPLY_FORM_HEIGHT);
+    scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, []);
 
   return (
-    <Styled.Form onSubmit={handleSubmit}>
+    <Styled.Form onSubmit={handleSubmit} ref={scrollRef}>
       <Styled.Input
         value={content}
         onChange={e => setContent(e.target.value)}

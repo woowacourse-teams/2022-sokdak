@@ -56,7 +56,7 @@ public class CommentService {
         Comment comment = Comment.parent(member, post, nickname, newCommentRequest.getContent());
 
         commentRepository.save(comment);
-        notificationService.notifyNewCommentIfNotAuthenticated(post.getMember(), post, comment);
+        notificationService.notifyCommentIfNotMine(post.getMember(), post, comment);
 
         return comment.getId();
     }
@@ -77,7 +77,7 @@ public class CommentService {
         Comment reply = Comment.child(member, post, nickname, newReplyRequest.getContent(), parent);
 
         commentRepository.save(reply);
-        notificationService.notifyReplyIfNotAuthenticated(parent.getMember(), post, parent, reply);
+        notificationService.notifyReplyIfNotMine(parent.getMember(), post, parent, reply);
         return reply.getId();
     }
 
@@ -87,7 +87,7 @@ public class CommentService {
         if (!anonymous) { // 기명이면 member table에서 memberId로 닉네임 가져옴.
             return memberNickname;
         }
-        if (post.isAuthenticated(authInfo.getId())) { // 댓글 작성하는 사람과 게시글 작성자 일치
+        if (post.isAuthorized(authInfo.getId())) { // 댓글 작성하는 사람과 게시글 작성자 일치
             return getPostWriterNickname(post);
         }
 

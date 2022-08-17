@@ -34,8 +34,8 @@ public class NotificationService {
         this.notificationRepository = notificationRepository;
     }
 
-    public void notifyNewCommentIfNotAuthenticated(Member member, Post post, Comment comment) {
-        if (!comment.isAuthenticated(member.getId())) {
+    public void notifyCommentIfNotMine(Member member, Post post, Comment comment) {
+        if (!comment.isAuthorized(member.getId())) {
             notify(member, post, comment, NEW_COMMENT);
         }
     }
@@ -52,8 +52,8 @@ public class NotificationService {
         notify(post.getMember(), post, null, POST_REPORT);
     }
 
-    public void notifyReplyIfNotAuthenticated(Member member, Post post, Comment comment, Comment reply) {
-        if (!reply.isAuthenticated(member.getId())) {
+    public void notifyReplyIfNotMine(Member member, Post post, Comment comment, Comment reply) {
+        if (!reply.isAuthorized(member.getId())) {
             notify(member, post, comment, NEW_REPLY);
         }
     }

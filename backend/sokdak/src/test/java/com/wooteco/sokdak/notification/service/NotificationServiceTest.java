@@ -177,7 +177,7 @@ class NotificationServiceTest extends ServiceTest {
                 .build();
         commentRepository.save(reply);
 
-        notificationService.notifyReplyIfNotAuthenticated(comment.getMember(), post, comment, reply);
+        notificationService.notifyReplyIfNotMine(comment.getMember(), post, comment, reply);
 
         List<Notification> notifications = notificationRepository.findByMemberId(comment.getMember().getId());
         Notification notification = notifications.get(0);

@@ -3,12 +3,12 @@ package com.wooteco.sokdak.board.acceptance;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.HOT_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.POSUTA_BOARD_ID;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.tuple;
@@ -80,8 +80,8 @@ class BoardAcceptanceTest extends AcceptanceTest {
 
         // then
         List<BoardContentElement> boardsAll = getBoardContentElements(response);
-        BoardContentElement board1 = getBoardContentElements(response).get(FREE_BOARD_ID - 1);
-        BoardContentElement board2 = getBoardContentElements(response).get(POSUTA_BOARD_ID - 1);
+        BoardContentElement board1 = getBoardContentElements(response).get((int) FREE_BOARD_ID - 1);
+        BoardContentElement board2 = getBoardContentElements(response).get((int) POSUTA_BOARD_ID - 1);
         List<BoardContentPostElement> posts1 = board1.getPosts();
         List<BoardContentPostElement> posts2 = board2.getPosts();
 

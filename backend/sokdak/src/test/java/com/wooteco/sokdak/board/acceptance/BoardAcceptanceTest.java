@@ -151,7 +151,7 @@ class BoardAcceptanceTest extends AcceptanceTest {
         String token3 = httpPost(new LoginRequest("thor", "Abcd123!@"), "/login").header(AUTHORIZATION);
         String token4 = httpPost(new LoginRequest("hunch", "Abcd123!@"), "/login").header(AUTHORIZATION);
         String token5 = httpPost(new LoginRequest("east", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        String token6 = httpPost(new LoginRequest("testAdmin", "Abcd123!@"), "/login").header(AUTHORIZATION);
+        String token6 = httpPost(new LoginRequest("movie", "Abcd123!@"), "/login").header(AUTHORIZATION);
         List<String> tokens = List.of(token1, token2, token3, token4, token5, token6);
 
         addNewPost();

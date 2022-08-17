@@ -3,10 +3,8 @@ package com.wooteco.sokdak.util.fixture;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.member.domain.Member;
-import com.wooteco.sokdak.member.domain.RoleType;
 import java.util.List;
 
 public class MemberFixture {
@@ -28,26 +26,21 @@ public class MemberFixture {
         );
     }
 
-    public static List<String> getTokensForReport() {
-        String token1 = getToken("chris", "Abcd123!@");
-        String token2 = getToken("josh", "Abcd123!@");
-        String token3 = getToken("thor", "Abcd123!@");
-        String token4 = getToken("hunch", "Abcd123!@");
-        String token5 = getToken("east", "Abcd123!@");
+    public static List<String> getFiveTokens() {
+        String token1 = getToken("chris");
+        String token2 = getToken("josh");
+        String token3 = getToken("thor");
+        String token4 = getToken("hunch");
+        String token5 = getToken("east");
         return List.of(token1, token2, token3, token4, token5);
     }
 
-    public static List<String> getTokensForLike() {
-        String token1 = getToken("chris", "Abcd123!@");
-        String token2 = getToken("josh", "Abcd123!@");
-        String token3 = getToken("thor", "Abcd123!@");
-        String token4 = getToken("hunch", "Abcd123!@");
-        String token5 = getToken("east", "Abcd123!@");
-        return List.of(token1, token2, token3, token4, token5);
+    public static String getChrisToken() {
+        return getToken("chris");
     }
 
-    public static String getToken(String username, String password) {
-        LoginRequest loginRequest = new LoginRequest(username, password);
+    public static String getToken(String username) {
+        LoginRequest loginRequest = new LoginRequest(username, "Abcd123!@");
         return httpPost(loginRequest, "/login").header(AUTHORIZATION);
     }
 }

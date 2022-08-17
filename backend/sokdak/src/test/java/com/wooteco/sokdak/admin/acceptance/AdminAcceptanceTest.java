@@ -1,17 +1,19 @@
 package com.wooteco.sokdak.admin.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getAdminToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPatchWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.admin.dto.PostReportElement;
 import com.wooteco.sokdak.admin.dto.TicketElement;
 import com.wooteco.sokdak.admin.dto.TicketRequest;
+import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -95,5 +97,10 @@ public class AdminAcceptanceTest extends AcceptanceTest {
         return response.body()
                 .jsonPath()
                 .getList("postReports", PostReportElement.class);
+    }
+
+    private String getAdminToken() {
+        LoginRequest loginRequest = new LoginRequest("admin1", "Abcd123!@");
+        return httpPost(loginRequest, "/login").header(AUTHORIZATION);
     }
 }

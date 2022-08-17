@@ -1,7 +1,8 @@
+import PostCountInfo from '@/components/PostCountInfo';
+
 import * as Styled from './index.styles';
 
 import PATH from '@/constants/path';
-import countFormatter from '@/utils/countFormatter';
 
 interface BoardItemProps {
   id: number;
@@ -17,16 +18,7 @@ const BoardItem = ({ id, title, posts }: BoardItemProps) => {
         {posts.map(post => (
           <Styled.Item key={post.id} to={`${PATH.POST}/${post.id}`} data-testid={post.id}>
             <Styled.ItemTitle>{post.title}</Styled.ItemTitle>
-            <Styled.PostInfoContainer>
-              <Styled.IconContainer>
-                <Styled.LikeIcon />
-                <Styled.LikeCount>{countFormatter(post.likeCount)}</Styled.LikeCount>
-              </Styled.IconContainer>
-              <Styled.IconContainer>
-                <Styled.CommentIcon />
-                <Styled.CommentCount>{countFormatter(post.commentCount)}</Styled.CommentCount>
-              </Styled.IconContainer>
-            </Styled.PostInfoContainer>
+            <PostCountInfo likeCount={post.likeCount} commentCount={post.commentCount} />
           </Styled.Item>
         ))}
       </Styled.ItemContainer>

@@ -11,6 +11,7 @@ const QUERY_KEYS = {
   LOGOUT: 'logout',
   NOTIFICATION_EXISTS: 'notification-exists',
   NOTIFICATIONS: 'notifications',
+  MY_POSTS: 'my-posts',
 };
 
 export const MUTATION_KEY = {

@@ -129,6 +129,10 @@ const memberHandler = [
 
     return res(ctx.status(201));
   }),
+
+  rest.patch('/members/nickname', (req, res, ctx) => {
+    return res(ctx.status(204));
+  }),
 ];
 
 export default memberHandler;

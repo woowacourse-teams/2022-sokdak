@@ -26,7 +26,7 @@ class LikeControllerTest extends ControllerTest {
     void flipLike() {
         doReturn(new LikeFlipResponse(1, true))
                 .when(likeService)
-                .flipLike(any(), any());
+                .flipLikePost(any(), any());
 
         restDocs
                 .when().put("/posts/1/like")

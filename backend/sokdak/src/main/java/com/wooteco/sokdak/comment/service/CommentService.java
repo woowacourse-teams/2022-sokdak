@@ -9,6 +9,7 @@ import com.wooteco.sokdak.comment.dto.NewReplyRequest;
 import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
 import com.wooteco.sokdak.comment.exception.ReplyDepthException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
+import com.wooteco.sokdak.like.repository.CommentLikeRepository;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
@@ -35,13 +36,16 @@ public class CommentService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
     private final NotificationService notificationService;
+    private final CommentLikeRepository commentLikeRepository;
 
     public CommentService(CommentRepository commentRepository, MemberRepository memberRepository,
-                          PostRepository postRepository, NotificationService notificationService) {
+                          PostRepository postRepository, NotificationService notificationService,
+                          CommentLikeRepository commentLikeRepository) {
         this.commentRepository = commentRepository;
         this.memberRepository = memberRepository;
         this.postRepository = postRepository;
         this.notificationService = notificationService;
+        this.commentLikeRepository = commentLikeRepository;
     }
 
     @Transactional
@@ -155,6 +159,7 @@ public class CommentService {
                 .orElseThrow(CommentNotFoundException::new);
         comment.validateOwner(authInfo.getId());
         notificationService.deleteCommentNotification(commentId);
+        commentLikeRepository.deleteAllByCommentId(commentId);
 
         Comment parent = comment.getParent();
         deleteCommentOrReply(comment, parent);

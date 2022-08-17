@@ -51,7 +51,7 @@ class LikeServiceTest extends IntegrationTest {
     @DisplayName("좋아요 등록")
     @Test
     void flipLike_create() {
-        LikeFlipResponse putLikeResponse = likeService.flipLike(post.getId(), AUTH_INFO);
+        LikeFlipResponse putLikeResponse = likeService.flipLikePost(post.getId(), AUTH_INFO);
 
         assertAll(
                 () -> assertThat(putLikeResponse.isLike()).isTrue(),
@@ -62,9 +62,9 @@ class LikeServiceTest extends IntegrationTest {
     @DisplayName("처음 좋아요를 누른 상태")
     @Test
     void flipLike_delete() {
-        likeService.flipLike(post.getId(), AUTH_INFO);
+        likeService.flipLikePost(post.getId(), AUTH_INFO);
 
-        LikeFlipResponse putLikeResponse2 = likeService.flipLike(post.getId(), AUTH_INFO);
+        LikeFlipResponse putLikeResponse2 = likeService.flipLikePost(post.getId(), AUTH_INFO);
 
         assertAll(
                 () -> assertThat(putLikeResponse2.isLike()).isFalse(),

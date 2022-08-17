@@ -1,6 +1,6 @@
 package com.wooteco.sokdak.auth.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getChrisToken;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.INVALID_LOGIN_REQUEST;

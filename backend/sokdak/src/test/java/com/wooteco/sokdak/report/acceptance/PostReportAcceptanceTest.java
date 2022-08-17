@@ -1,6 +1,6 @@
 package com.wooteco.sokdak.report.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getChrisToken;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;

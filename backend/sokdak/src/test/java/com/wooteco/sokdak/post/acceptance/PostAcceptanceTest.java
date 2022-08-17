@@ -1,6 +1,6 @@
 package com.wooteco.sokdak.post.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getChrisToken;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getExceptionMessage;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
@@ -8,7 +8,7 @@ import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithAutho
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getTokensForReport;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getFiveTokens;
 import static com.wooteco.sokdak.util.fixture.PostFixture.BOARD_ID_POST_CREATED;
 import static com.wooteco.sokdak.util.fixture.PostFixture.CANNOT_CREATE_POST_URI;
 import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
@@ -114,7 +114,7 @@ class PostAcceptanceTest extends AcceptanceTest {
     void findPosts_Block() {
         Long blockedPostId = addNewPost();
         addNewPost();
-        List<String> tokens = getTokensForReport();
+        List<String> tokens = getFiveTokens();
         for (int i = 0; i < 5; ++i) {
             ReportRequest reportRequest = new ReportRequest("신고");
             httpPostWithAuthorization(reportRequest, "/posts/" + blockedPostId + "/report", tokens.get(i));
@@ -140,7 +140,7 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void findPost_Block() {
         Long blockedPostId = addNewPost();
-        List<String> tokens = getTokensForReport();
+        List<String> tokens = getFiveTokens();
         for (int i = 0; i < 5; ++i) {
             ReportRequest reportRequest = new ReportRequest("신고");
             httpPostWithAuthorization(reportRequest, "/posts/" + blockedPostId + "/report", tokens.get(i));

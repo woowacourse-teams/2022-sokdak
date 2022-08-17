@@ -28,7 +28,7 @@ import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.post.service.PostService;
 import com.wooteco.sokdak.report.repository.PostReportRepository;
-import com.wooteco.sokdak.util.IntegrationTest;
+import com.wooteco.sokdak.util.ServiceTest;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @DisplayName("관리자 서비스 테스트")
 @Transactional(propagation = Propagation.NEVER)
-class AdminServiceTest extends IntegrationTest {
+class AdminServiceTest extends ServiceTest {
 
     private static final AuthInfo AUTH_INFO_ADMIN = new AuthInfo(1L, RoleType.ADMIN.getName(), "adminNickname");
 

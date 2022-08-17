@@ -2,6 +2,8 @@ import { useMutation, UseMutationOptions } from 'react-query';
 
 import { AxiosError, AxiosResponse } from 'axios';
 
+import useSnackbar from '@/hooks/useSnackbar';
+
 import authFetcher from '@/apis';
 
 interface UseUpdateNicknameProps {
@@ -11,6 +13,8 @@ interface UseUpdateNicknameProps {
 const useUpdateNickname = (
   options?: UseMutationOptions<AxiosResponse, AxiosError<ErrorResponse>, UseUpdateNicknameProps>,
 ) => {
+  const { showSnackbar } = useSnackbar();
+
   return useMutation(
     ({ nickname }): Promise<AxiosResponse> =>
       authFetcher.patch('/members/nickname', {
@@ -18,6 +22,12 @@ const useUpdateNickname = (
       }),
     {
       ...options,
+      onError: (error, variables, context) => {
+        if (options && options.onError) {
+          options.onError(error, variables, context);
+        }
+        showSnackbar(error.response?.data.message!);
+      },
     },
   );
 };

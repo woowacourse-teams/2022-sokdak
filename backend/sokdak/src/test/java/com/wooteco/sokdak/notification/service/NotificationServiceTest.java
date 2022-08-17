@@ -90,7 +90,7 @@ class NotificationServiceTest extends IntegrationTest {
     @DisplayName("새 댓글 알림을 등록한다.")
     @Test
     void notifyNewComment() {
-        notificationService.notifyNewCommentIfNotAuthenticated(member1, post, comment);
+        notificationService.notifyCommentIfNotMine(member1, post, comment);
 
         List<Notification> notifications = notificationRepository.findByMemberId(member1.getId());
         Notification notification = notifications.get(0);
@@ -108,7 +108,7 @@ class NotificationServiceTest extends IntegrationTest {
     @DisplayName("자신의 게시글에 댓글을 동록하면 댓글 알림이 생성되지 않는다.")
     @Test
     void notifyNewComment_MyPostMyComment() {
-        notificationService.notifyNewCommentIfNotAuthenticated(member1, post, comment2);
+        notificationService.notifyCommentIfNotMine(member1, post, comment2);
 
         List<Notification> notifications = notificationRepository.findByMemberId(member1.getId());
 
@@ -181,7 +181,7 @@ class NotificationServiceTest extends IntegrationTest {
                 .build();
         commentRepository.save(reply);
 
-        notificationService.notifyReplyIfNotAuthenticated(comment.getMember(), post, comment, reply);
+        notificationService.notifyReplyIfNotMine(comment.getMember(), post, comment, reply);
 
         List<Notification> notifications = notificationRepository.findByMemberId(comment.getMember().getId());
         Notification notification = notifications.get(0);

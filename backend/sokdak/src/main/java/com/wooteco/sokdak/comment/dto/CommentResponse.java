@@ -39,7 +39,7 @@ public class CommentResponse {
 
         return new CommentResponse(comment.getId(), comment.getNickname(), comment.getMessage(),
                 comment.getCreatedAt(), comment.isBlocked(), comment.isPostWriter(),
-                comment.isAuthenticated(accessMemberId), replyResponses);
+                comment.isAuthorized(accessMemberId), replyResponses);
     }
 
     public static CommentResponse softRemovedOf(Comment comment, Map<Comment, Long> accessMemberIdByReply) {

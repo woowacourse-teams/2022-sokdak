@@ -4,6 +4,7 @@ import PostItem from './components/PostItem';
 import Layout from '@/components/@styled/Layout';
 
 import AuthContext from '@/context/Auth';
+import PaginationContext from '@/context/Pagination';
 
 import useUpdateNickname from '@/hooks/queries/member/useUpdateNickname';
 import useMyPosts from '@/hooks/queries/profile/useMyPosts';
@@ -17,14 +18,17 @@ const SIZE = 3;
 
 const ProfilePage = () => {
   const { showSnackbar } = useSnackbar();
-  const [currentPage, setCurrentPage] = useState(1);
+  const { page, setPage } = useContext(PaginationContext);
   const { username, setUserName } = useContext(AuthContext);
   const [nickname, setNickname] = useState(username);
   const [disabled, handleDisabled] = useReducer(state => !state, true);
   const nicknameRef = useRef<HTMLInputElement>(null);
 
   const { data } = useMyPosts({
-    storeCode: [SIZE, currentPage],
+    storeCode: [SIZE, page],
+    options: {
+      keepPreviousData: true,
+    },
   });
   const { mutate } = useUpdateNickname({
     onSuccess: () => {
@@ -84,11 +88,7 @@ const ProfilePage = () => {
                   <PostItem key={post.id} {...post} />
                 ))}
               </Styled.PostList>
-              <Styled.Pagination
-                lastPage={data.totalPageCount}
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-              />
+              <Styled.Pagination lastPage={data.totalPageCount} currentPage={page} setCurrentPage={setPage} />
             </>
           ) : (
             <Styled.EmptyPostList>아직 작성된 글이 없어요 !</Styled.EmptyPostList>

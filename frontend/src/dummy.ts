@@ -341,6 +341,21 @@ export const postList: Post[] = [
     nickname: '못된 젠킨스',
     blocked: false,
   },
+  {
+    id: 21,
+    title: '속닥속닥이 이번 감동크루 맡는다는데',
+    createdAt: '2022-08-16T11:55:31.016376300',
+    content: '쩐다.',
+    likeCount: 1,
+    commentCount: 0,
+    like: true,
+    modified: false,
+    hashtags: [],
+    authorized: true,
+    boardId: 3,
+    nickname: '테스트 계정',
+    blocked: false,
+  },
 ];
 
 export const memberList: Member[] = [

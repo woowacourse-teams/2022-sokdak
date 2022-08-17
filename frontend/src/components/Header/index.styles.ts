@@ -87,7 +87,7 @@ export const optionStyle = css`
   font-size: 0.7rem;
 `;
 
-export const ProfileButton = styled.button`
+export const ProfileLink = styled(Link)`
   ${optionStyle}
   color: ${props => props.theme.colors.gray_150};
 `;

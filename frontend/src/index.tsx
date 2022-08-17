@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import axios from 'axios';
 
 import { AuthContextProvider } from './context/Auth';
+import { PaginationContextProvider } from './context/Pagination';
 import { SnackBarContextProvider } from './context/Snackbar';
 
 import authFetcher from './apis';
@@ -53,7 +54,9 @@ ReactDOM.createRoot(rootNode).render(
         <QueryClientProvider client={queryClient}>
           <ThemeProvider theme={theme}>
             <SnackBarContextProvider>
-              <App />
+              <PaginationContextProvider>
+                <App />
+              </PaginationContextProvider>
             </SnackBarContextProvider>
           </ThemeProvider>
         </QueryClientProvider>

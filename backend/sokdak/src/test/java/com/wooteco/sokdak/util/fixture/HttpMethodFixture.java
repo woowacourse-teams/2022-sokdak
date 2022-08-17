@@ -2,7 +2,6 @@ package com.wooteco.sokdak.util.fixture;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-import com.wooteco.sokdak.auth.dto.LoginRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

@@ -8,8 +8,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
-import com.wooteco.sokdak.member.exception.MemberNotFoundException;
-import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;

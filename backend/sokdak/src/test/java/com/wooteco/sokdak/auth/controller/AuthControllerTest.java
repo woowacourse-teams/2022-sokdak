@@ -36,7 +36,7 @@ class AuthControllerTest extends ControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("존재하지 않는 회원정보로 로그인하면 400 반환")
+    @DisplayName("존재하지 않는 회원정보로 로그인하면 401 반환")
     @Test
     void login_Exception() {
         doThrow(new LoginFailedException())
@@ -50,7 +50,7 @@ class AuthControllerTest extends ControllerTest {
                 .assertThat()
                 .body("message", equalTo("아이디나 비밀번호가 잘못되었습니다"))
                 .apply(document("login/fail"))
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
 
     }
 

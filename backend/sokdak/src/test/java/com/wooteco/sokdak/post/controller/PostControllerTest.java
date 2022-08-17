@@ -12,7 +12,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
-import com.wooteco.sokdak.auth.exception.AuthenticationException;
+import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.hashtag.dto.HashtagResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
@@ -195,7 +195,7 @@ class PostControllerTest extends ControllerTest {
     void updatePost_Exception_ForbiddenMemberId() {
         PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT,
                 List.of("tag"));
-        doThrow(new AuthenticationException())
+        doThrow(new AuthorizationException())
                 .when(postService)
                 .updatePost(any(), any(), any());
 
@@ -214,7 +214,7 @@ class PostControllerTest extends ControllerTest {
     void updatePost_Exception_NoContentTitle() {
         PostUpdateRequest postUpdateRequest = new PostUpdateRequest(null, UPDATED_POST_CONTENT,
                 List.of("tag"));
-        doThrow(new AuthenticationException())
+        doThrow(new AuthorizationException())
                 .when(postService)
                 .updatePost(any(), any(), any());
 
@@ -246,7 +246,7 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("권한이 없는 게시글을 삭제하려고 하면 403을 반환한다.")
     @Test
     void deletePost_Exception_ForbiddenMemberId() {
-        doThrow(new AuthenticationException())
+        doThrow(new AuthorizationException())
                 .when(postService)
                 .deletePost(any(), any());
 

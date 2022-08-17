@@ -4,10 +4,9 @@ import static com.wooteco.sokdak.util.fixture.MemberFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.wooteco.sokdak.auth.exception.AuthenticationException;
+import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.report.domain.PostReport;
-import com.wooteco.sokdak.util.fixture.MemberFixture;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -49,7 +48,7 @@ class PostTest {
         Long forbiddenMemberId = 2L;
 
         assertThatThrownBy(() -> post.updateTitle("변경된 제목", forbiddenMemberId))
-                .isInstanceOf(AuthenticationException.class);
+                .isInstanceOf(AuthorizationException.class);
     }
 
     @DisplayName("게시글 본문 수정")
@@ -66,7 +65,7 @@ class PostTest {
         Long forbiddenMemberId = 2L;
 
         assertThatThrownBy(() -> post.updateContent("변경된 본문", forbiddenMemberId))
-                .isInstanceOf(AuthenticationException.class);
+                .isInstanceOf(AuthorizationException.class);
     }
 
     @DisplayName("신고가 5개 이상이면 isBlocked()가 true를 반환 그 이외는 False반환")
@@ -88,8 +87,8 @@ class PostTest {
     @DisplayName("게시글의 회원 정보가 일치하는지 반환")
     @ParameterizedTest
     @CsvSource({"1, true", "2, false"})
-    void isAuthenticated(Long accessMemberId, boolean expected) {
-        boolean actual = post.isAuthenticated(accessMemberId);
+    void isAuthorized(Long accessMemberId, boolean expected) {
+        boolean actual = post.isAuthorized(accessMemberId);
 
         assertThat(actual).isEqualTo(expected);
     }

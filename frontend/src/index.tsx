@@ -49,19 +49,19 @@ if (accessToken) authFetcher.defaults.headers.common['Authorization'] = accessTo
 
 ReactDOM.createRoot(rootNode).render(
   <React.StrictMode>
-    <SnackBarContextProvider>
-      <ThemeProvider theme={theme}>
-        <BrowserRouter>
-          <QueryClientProvider client={queryClient}>
-            <AuthContextProvider>
+    <AuthContextProvider>
+      <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={theme}>
+            <SnackBarContextProvider>
               <PaginationContextProvider>
                 <App />
               </PaginationContextProvider>
-            </AuthContextProvider>
-          </QueryClientProvider>
-        </BrowserRouter>
-        <GlobalStyle />
-      </ThemeProvider>
-    </SnackBarContextProvider>
+            </SnackBarContextProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </BrowserRouter>
+      <GlobalStyle />
+    </AuthContextProvider>
   </React.StrictMode>,
 );

@@ -28,6 +28,6 @@ public class ReplyResponse {
 
     public static ReplyResponse of(Comment reply, Long accessMemberId) {
         return new ReplyResponse(reply.getId(), reply.getNickname(), reply.getMessage(), reply.getCreatedAt(),
-                reply.isBlocked(), reply.isPostWriter(), reply.isAuthenticated(accessMemberId));
+                reply.isBlocked(), reply.isPostWriter(), reply.isAuthorized(accessMemberId));
     }
 }

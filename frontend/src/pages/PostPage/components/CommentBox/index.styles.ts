@@ -81,3 +81,20 @@ export const Date = styled.p`
   margin: 10px 0;
   font-size: 10px;
 `;
+
+export const Footer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const LikeContainer = styled.button<{ isLiked: boolean }>`
+  display: flex;
+  color: ${props => props.theme.colors.pink_300};
+  font-size: 0.7rem;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5em;
+  background-color: transparent;
+  color: ${props => (props.isLiked ? props.theme.colors.pink_300 : props.theme.colors.gray_300)};
+`;

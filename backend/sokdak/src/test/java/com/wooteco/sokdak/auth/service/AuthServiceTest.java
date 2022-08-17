@@ -14,7 +14,7 @@ import com.wooteco.sokdak.member.dto.VerificationRequest;
 import com.wooteco.sokdak.member.exception.InvalidAuthCodeException;
 import com.wooteco.sokdak.member.exception.SerialNumberNotFoundException;
 import com.wooteco.sokdak.member.repository.AuthCodeRepository;
-import com.wooteco.sokdak.util.IntegrationTest;
+import com.wooteco.sokdak.util.ServiceTest;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
-class AuthServiceTest extends IntegrationTest {
+class AuthServiceTest extends ServiceTest {
 
     private static final String EMAIL = "test@gmail.com";
     private static final String AUTH_CODE = "ABCDEF";

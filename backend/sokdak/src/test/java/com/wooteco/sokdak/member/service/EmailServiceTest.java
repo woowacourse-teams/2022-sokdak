@@ -9,13 +9,13 @@ import com.wooteco.sokdak.auth.service.AuthCodeGenerator;
 import com.wooteco.sokdak.auth.service.Encryptor;
 import com.wooteco.sokdak.member.dto.EmailRequest;
 import com.wooteco.sokdak.member.repository.TicketRepository;
-import com.wooteco.sokdak.util.IntegrationTest;
+import com.wooteco.sokdak.util.ServiceTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-class EmailServiceTest extends IntegrationTest {
+class EmailServiceTest extends ServiceTest {
 
     @Autowired
     private EmailService emailService;

@@ -49,6 +49,7 @@ const ReplyForm = ({ commentId }: ReplyFormProps) => {
           e.preventDefault();
           showSnackbar(e.target.placeholder);
         }}
+        autoFocus
         required
       />
       <Styled.Controller>

@@ -95,7 +95,11 @@ public class DatabaseCleaner implements InitializingBean {
                 "insert into ticket (serial_number, used) values ('ce89c8413662dffc17a4644ddf0386432404cd943b18eeee45740be5c35ef03b', false);")
                 .executeUpdate();
         entityManager.createNativeQuery(
-                "insert into ticket (serial_number, used) values ('49d3b5b2d51e0f03cd1c0b85e2312dbd740023856ce16a725a3617f58b91da1c', false);")
+                "insert into ticket (serial_number, used) values ('277da9dd2879115a42e90b5ac344315ac5fc0222378d5c8b6c110f5e3539b743', false);")
+                .executeUpdate();
+
+        entityManager.createNativeQuery(
+                "insert into auth_code (code, serial_number, created_at) values ('123456', '277da9dd2879115a42e90b5ac344315ac5fc0222378d5c8b6c110f5e3539b743', CURRENT_TIMESTAMP());")
                 .executeUpdate();
 
         // 게시판 추가

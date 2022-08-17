@@ -5,7 +5,10 @@ import lombok.Getter;
 @Getter
 public class UniqueResponse {
 
-    private final boolean unique;
+    private boolean unique;
+
+    public UniqueResponse() {
+    }
 
     public UniqueResponse(boolean unique) {
         this.unique = unique;

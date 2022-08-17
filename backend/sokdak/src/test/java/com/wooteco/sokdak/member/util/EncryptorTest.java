@@ -16,7 +16,6 @@ class EncryptorTest {
         String encrypt1 = Encryptor.encrypt(text);
         String encrypt2 = Encryptor.encrypt(text);
 
-        System.out.println(encrypt1);
         assertThat(encrypt1).isEqualTo(encrypt2);
     }
 
@@ -29,7 +28,6 @@ class EncryptorTest {
         String encrypt1 = Encryptor.encrypt(text);
         String encrypt2 = Encryptor.encrypt(other);
 
-        System.out.println(encrypt2);
         assertThat(encrypt1).isNotEqualTo(encrypt2);
     }
 }

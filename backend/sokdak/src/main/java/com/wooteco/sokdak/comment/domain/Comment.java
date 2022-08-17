@@ -1,6 +1,6 @@
 package com.wooteco.sokdak.comment.domain;
 
-import com.wooteco.sokdak.auth.exception.AuthenticationException;
+import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.report.domain.CommentReport;
@@ -87,7 +87,7 @@ public class Comment {
 
     public void validateOwner(Long accessMemberId) {
         if (!accessMemberId.equals(member.getId())) {
-            throw new AuthenticationException();
+            throw new AuthorizationException();
         }
     }
 

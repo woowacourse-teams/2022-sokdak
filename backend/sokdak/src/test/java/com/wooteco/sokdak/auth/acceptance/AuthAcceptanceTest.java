@@ -8,7 +8,6 @@ import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_LOGIN_REQUEST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.auth.domain.AuthCode;
@@ -55,7 +54,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
     void login_Exception_NotExistUser() {
         ExtractableResponse<Response> response = httpPost(INVALID_LOGIN_REQUEST, "/login");
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
     @DisplayName("올바른 인증번호로 인증할 수 있다.")

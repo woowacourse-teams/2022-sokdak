@@ -4,7 +4,7 @@ import static com.wooteco.sokdak.util.fixture.MemberFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.wooteco.sokdak.auth.exception.AuthenticationException;
+import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.report.domain.PostReport;
 import java.util.List;
@@ -48,7 +48,7 @@ class PostTest {
         Long forbiddenMemberId = 2L;
 
         assertThatThrownBy(() -> post.updateTitle("변경된 제목", forbiddenMemberId))
-                .isInstanceOf(AuthenticationException.class);
+                .isInstanceOf(AuthorizationException.class);
     }
 
     @DisplayName("게시글 본문 수정")
@@ -65,7 +65,7 @@ class PostTest {
         Long forbiddenMemberId = 2L;
 
         assertThatThrownBy(() -> post.updateContent("변경된 본문", forbiddenMemberId))
-                .isInstanceOf(AuthenticationException.class);
+                .isInstanceOf(AuthorizationException.class);
     }
 
     @DisplayName("신고가 5개 이상이면 isBlocked()가 true를 반환 그 이외는 False반환")

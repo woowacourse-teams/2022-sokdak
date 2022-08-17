@@ -1,7 +1,7 @@
 package com.wooteco.sokdak.comment.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_ANONYMOUS_COMMENT_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_COMMENT_REQUEST;
+import static com.wooteco.sokdak.util.fixture.CommentFixture.VALID_COMMENT_MESSAGE;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.addNewCommentInPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.CommentsResponse;
+import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.dto.ReplyResponse;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
@@ -26,6 +27,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 class CommentAcceptanceTest extends AcceptanceTest {
+
+    private static final NewCommentRequest NEW_ANONYMOUS_COMMENT_REQUEST
+            = new NewCommentRequest(VALID_COMMENT_MESSAGE, true);
 
     @DisplayName("새로운 익명 댓글을 작성할 수 있다.")
     @Test

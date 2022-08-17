@@ -12,9 +12,10 @@ import scrollToCurrent from '@/utils/scrollToCurrent';
 
 interface ReplyFormProps {
   commentId: string | number;
+  setIsReplyFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ReplyForm = ({ commentId }: ReplyFormProps) => {
+const ReplyForm = ({ commentId, setIsReplyFormOpen }: ReplyFormProps) => {
   const { showSnackbar } = useSnackbar();
 
   const [content, setContent] = useState('');
@@ -32,6 +33,11 @@ const ReplyForm = ({ commentId }: ReplyFormProps) => {
     e.preventDefault();
 
     postReply({ commentId, content, anonymous });
+  };
+
+  const handleClickCancel = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    setIsReplyFormOpen(false);
   };
 
   useEffect(() => {
@@ -54,7 +60,10 @@ const ReplyForm = ({ commentId }: ReplyFormProps) => {
       />
       <Styled.Controller>
         <CheckBox isChecked={anonymous} setIsChecked={setAnonymous} labelText="익명" />
-        <Styled.SubmitButton>작성</Styled.SubmitButton>
+        <Styled.ButtonContainer>
+          <Styled.CancelButton onClick={handleClickCancel}>취소</Styled.CancelButton>
+          <Styled.SubmitButton>작성</Styled.SubmitButton>
+        </Styled.ButtonContainer>
       </Styled.Controller>
     </Styled.Form>
   );

@@ -121,7 +121,7 @@ const CommentBox = ({
         </Styled.Footer>
       </Styled.Container>
 
-      {isReplyFormOpen && <ReplyForm commentId={id} />}
+      {isReplyFormOpen && <ReplyForm commentId={id} setIsReplyFormOpen={setIsReplyFormOpen} />}
       {isDeleteModalOpen && (
         <ConfirmModal
           title="삭제"

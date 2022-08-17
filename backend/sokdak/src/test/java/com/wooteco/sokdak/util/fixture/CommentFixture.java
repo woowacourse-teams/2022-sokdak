@@ -8,7 +8,6 @@ import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 public class CommentFixture {
 
     public static final String VALID_COMMENT_MESSAGE = "댓글";
-    public static final String VALID_REPLY_MESSAGE = "대댓글";
 
     public static final NewCommentRequest NEW_ANONYMOUS_COMMENT_REQUEST
             = new NewCommentRequest(VALID_COMMENT_MESSAGE, true);

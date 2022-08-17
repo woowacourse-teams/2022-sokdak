@@ -3,15 +3,14 @@ package com.wooteco.sokdak.notification.acceptance;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_COMMENT_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_REPLY_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.addCommentAndGetCommentId;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getChrisToken;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getJoshToken;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getTokensForLike;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getTokensForReport;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getToken;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getFiveTokens;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -74,7 +73,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
     void checkNewNotification_NewReply() {
         Long postId = addNewPost();
         String chrisToken = getChrisToken();
-        String joshToken = getJoshToken();
+        String joshToken = getToken("josh");
         httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", joshToken);
         httpPostWithAuthorization(NEW_REPLY_REQUEST, "/comments" + 1 + "/reply", chrisToken);
 
@@ -92,7 +91,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
     @Test
     void checkNewNotification_PostInHotBoard() {
         addNewPost();
-        List<String> otherTokens = getTokensForLike();
+        List<String> otherTokens = getFiveTokens();
         for (String token : otherTokens) {
             httpPutWithAuthorization("/posts/1/like", token);
         }
@@ -111,7 +110,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
     @Test
     void checkNewNotification_PostReport() {
         Long postId = addNewPost();
-        List<String> reporterTokens = getTokensForReport();
+        List<String> reporterTokens = getFiveTokens();
         for (int i = 0; i < 5; ++i) {
             ReportRequest reportRequest = new ReportRequest("신고");
             httpPostWithAuthorization(reportRequest, "/posts/" + postId + "/report", reporterTokens.get(i));
@@ -134,7 +133,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         String commenterToken = getChrisToken();
         httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", commenterToken);
         Long commentId = addCommentAndGetCommentId(postId);
-        List<String> reporterTokens = getTokensForReport();
+        List<String> reporterTokens = getFiveTokens();
         for (int i = 0; i < 5; ++i) {
             ReportRequest reportRequest = new ReportRequest("댓글신고");
             httpPostWithAuthorization(reportRequest, "/comments/" + commentId + "/report", reporterTokens.get(i));
@@ -159,7 +158,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         String token = httpPost(loginRequest, "/login").header(AUTHORIZATION);
         httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", token);
 
-        List<String> otherTokens = getTokensForLike();
+        List<String> otherTokens = getFiveTokens();
         for (String other : otherTokens) {
             httpPutWithAuthorization("/posts/1/like", other);
         }

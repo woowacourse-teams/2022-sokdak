@@ -1,7 +1,7 @@
 package com.wooteco.sokdak.util.fixture;
 
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getToken;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
 
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
@@ -46,7 +46,7 @@ public class PostFixture {
         NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT, false,
                 List.of("태그1", "태그2"));
         return Long.parseLong(
-                httpPostWithAuthorization(newPostRequest, CREATE_POST_URI, getToken("chris", "Abcd123!@"))
+                httpPostWithAuthorization(newPostRequest, CREATE_POST_URI, getChrisToken())
                         .header("Location").split("/posts/")[1]);
     }
 }

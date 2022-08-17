@@ -76,8 +76,8 @@ class CommentTest {
     @DisplayName("내가 작성한 댓글이면 true를 반환")
     @ParameterizedTest
     @CsvSource({"1, true", "2, false"})
-    void isAuthenticated(Long userId, boolean expected) {
-        assertThat(comment.isAuthenticated(userId)).isEqualTo(expected);
+    void isAuthorized(Long userId, boolean expected) {
+        assertThat(comment.isAuthorized(userId)).isEqualTo(expected);
     }
 
     @DisplayName("게시글 작성자의 댓글인지 반환")

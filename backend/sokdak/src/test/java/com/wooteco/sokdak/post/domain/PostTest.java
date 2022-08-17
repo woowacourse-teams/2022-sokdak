@@ -7,7 +7,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.wooteco.sokdak.auth.exception.AuthenticationException;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.report.domain.PostReport;
-import com.wooteco.sokdak.util.fixture.MemberFixture;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -88,8 +87,8 @@ class PostTest {
     @DisplayName("게시글의 회원 정보가 일치하는지 반환")
     @ParameterizedTest
     @CsvSource({"1, true", "2, false"})
-    void isAuthenticated(Long accessMemberId, boolean expected) {
-        boolean actual = post.isAuthenticated(accessMemberId);
+    void isAuthorized(Long accessMemberId, boolean expected) {
+        boolean actual = post.isAuthorized(accessMemberId);
 
         assertThat(actual).isEqualTo(expected);
     }

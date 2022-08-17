@@ -99,7 +99,7 @@ public class Comment {
         return commentReports.size() >= BLOCKED_CONDITION;
     }
 
-    public boolean isAuthenticated(Long accessMemberId) {
+    public boolean isAuthorized(Long accessMemberId) {
         if (accessMemberId == null) {
             return false;
         }

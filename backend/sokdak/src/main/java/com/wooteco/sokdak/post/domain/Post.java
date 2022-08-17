@@ -109,7 +109,7 @@ public class Post {
         }
     }
 
-    public boolean isAuthenticated(Long accessMemberId) {
+    public boolean isAuthorized(Long accessMemberId) {
         if (accessMemberId == null) {
             return false;
         }

@@ -35,7 +35,7 @@ public class NotificationService {
     }
 
     public void notifyNewCommentIfNotAuthenticated(Member member, Post post, Comment comment) {
-        if (!comment.isAuthenticated(member.getId())) {
+        if (!comment.isAuthorized(member.getId())) {
             notify(member, post, comment, NEW_COMMENT);
         }
     }
@@ -53,7 +53,7 @@ public class NotificationService {
     }
 
     public void notifyReplyIfNotAuthenticated(Member member, Post post, Comment comment, Comment reply) {
-        if (!reply.isAuthenticated(member.getId())) {
+        if (!reply.isAuthorized(member.getId())) {
             notify(member, post, comment, NEW_REPLY);
         }
     }

@@ -2,15 +2,15 @@ package com.wooteco.sokdak.notification.acceptance;
 
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_COMMENT_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_REPLY_REQUEST;
-import static com.wooteco.sokdak.util.fixture.CommentFixture.addCommentAndGetCommentId;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
+import static com.wooteco.sokdak.util.fixture.CommentFixture.addNewCommentInPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getToken;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getFiveTokens;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getToken;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -132,7 +132,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         Long postId = addNewPost();
         String commenterToken = getChrisToken();
         httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", commenterToken);
-        Long commentId = addCommentAndGetCommentId(postId);
+        Long commentId = addNewCommentInPost(postId);
         List<String> reporterTokens = getFiveTokens();
         for (int i = 0; i < 5; ++i) {
             ReportRequest reportRequest = new ReportRequest("댓글신고");

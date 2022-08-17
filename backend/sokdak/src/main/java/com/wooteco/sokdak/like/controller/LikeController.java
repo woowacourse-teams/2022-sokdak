@@ -25,7 +25,8 @@ public class LikeController {
     }
 
     @PutMapping("/comments/{id}/like")
-    public ResponseEntity<LikeFlipResponse> flipLikeComment(@PathVariable("id") Long commentId, @Login AuthInfo authInfo) {
+    public ResponseEntity<LikeFlipResponse> flipLikeComment(@PathVariable("id") Long commentId,
+                                                            @Login AuthInfo authInfo) {
         LikeFlipResponse likeFlipResponse = likeService.flipLikeComment(commentId, authInfo);
         return ResponseEntity.ok(likeFlipResponse);
     }

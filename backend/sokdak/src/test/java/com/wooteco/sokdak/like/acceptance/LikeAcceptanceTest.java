@@ -53,7 +53,7 @@ class LikeAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("로그인 하지 않은 회원이 좋아요를 누를 경우 예외를 반환한다")
+    @DisplayName("로그인 하지 않은 회원이 게시글에 좋아요를 누를 경우 예외를 반환한다")
     @Test
     void flipLike_Unauthorized() {
         String sessionId = getChrisToken();
@@ -78,6 +78,26 @@ class LikeAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(likeFlipResponse.isLike()).isTrue(),
                 () -> assertThat(likeFlipResponse.getLikeCount()).isEqualTo(1)
+        );
+    }
+
+    @DisplayName("로그인한 회원이 좋아요를 누른 댓글에 좋아요를 취소할 수 있다.")
+    @Test
+    void flipLikeComment_Delete() {
+        String chrisToken = getChrisToken();
+        String joshToken = getJoshToken();
+        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, chrisToken);
+        Long commentId = addCommentAndGetCommentId(1L);
+
+        httpPutWithAuthorization("/comments/" + commentId + "/like", joshToken);
+        ExtractableResponse<Response> response = httpPutWithAuthorization("/comments/" + commentId + "/like",
+                joshToken);
+        LikeFlipResponse likeFlipResponse = response.jsonPath().getObject(".", LikeFlipResponse.class);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(likeFlipResponse.isLike()).isFalse(),
+                () -> assertThat(likeFlipResponse.getLikeCount()).isZero()
         );
     }
 

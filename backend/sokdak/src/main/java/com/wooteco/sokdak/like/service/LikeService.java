@@ -61,6 +61,7 @@ public class LikeService {
         return new LikeFlipResponse(likeCount, liked);
     }
 
+    @Transactional
     public LikeFlipResponse flipLikeComment(Long commentId, AuthInfo authInfo) {
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
@@ -81,7 +82,8 @@ public class LikeService {
     }
 
     private void flipComment(Member member, Comment comment) {
-        Optional<CommentLike> foundCommentLike = commentLikeRepository.findByMemberIdAndCommentId(member.getId(), comment.getId());
+        Optional<CommentLike> foundCommentLike = commentLikeRepository.findByMemberIdAndCommentId(member.getId(),
+                comment.getId());
         if (foundCommentLike.isPresent()) {
             commentLikeRepository.delete(foundCommentLike.get());
             return;

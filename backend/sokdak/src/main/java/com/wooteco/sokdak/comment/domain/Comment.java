@@ -161,6 +161,10 @@ public class Comment {
         return commentLikes;
     }
 
+    public int getCommentLikesCount() {
+        return commentLikes.size();
+    }
+
     public boolean isSoftRemoved() {
         return softRemoved;
     }

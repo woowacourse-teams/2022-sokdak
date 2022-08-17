@@ -248,7 +248,8 @@ class CommentServiceTest extends IntegrationTest {
 
         assertAll(
                 () -> assertThat(commentResponses.size()).isEqualTo(1),
-                () -> assertThat(commentResponses.get(0).getContent()).isEqualTo("댓글")
+                () -> assertThat(commentResponses.get(0).getContent()).isEqualTo("댓글"),
+                () -> assertThat(commentResponses.get(0).getLikeCount()).isEqualTo(0)
         );
     }
 

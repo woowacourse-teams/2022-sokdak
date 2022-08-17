@@ -1,6 +1,6 @@
 package com.wooteco.sokdak.notification.domain;
 
-import com.wooteco.sokdak.auth.exception.AuthenticationException;
+import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.post.domain.Post;
@@ -69,7 +69,7 @@ public class Notification {
 
     public void validateOwner(Long accessMemberId) {
         if (!member.hasId(accessMemberId)) {
-            throw new AuthenticationException();
+            throw new AuthorizationException();
         }
     }
 

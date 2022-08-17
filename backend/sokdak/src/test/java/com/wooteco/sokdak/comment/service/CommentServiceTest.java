@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
-import com.wooteco.sokdak.auth.exception.AuthenticationException;
+import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
@@ -310,7 +310,7 @@ class CommentServiceTest extends ServiceTest {
 
         assertThatThrownBy(() -> commentService
                 .deleteComment(commentId, new AuthInfo(invalidOwnerId, USER.getName(), member.getNickname())))
-                .isInstanceOf(AuthenticationException.class);
+                .isInstanceOf(AuthorizationException.class);
     }
 
     @DisplayName("대댓글이 존재하는 댓글을 삭제하면 해당 댓글은 완전 삭제 되지 않고 softRemoved 필드를 true로 변환한다.")

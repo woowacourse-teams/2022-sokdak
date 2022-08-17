@@ -27,6 +27,17 @@ export const Panda = styled(PandaIcon)`
   margin-left: -12px;
 `;
 
+export const FocusBorder = styled.span`
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 1px;
+  background-color: ${props => props.theme.colors.gray_400};
+  transition: 0.4s;
+`;
+
 export const NicknameField = styled.form`
   width: 100%;
   display: flex;
@@ -35,8 +46,16 @@ export const NicknameField = styled.form`
   justify-content: center;
 `;
 
-export const Nickname = styled.input`
-  max-width: 240px;
+export const NicknameInputField = styled.div`
+  width: 100%;
+  height: 30px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+`;
+
+export const Nickname = styled.input<{ length: number }>`
+  width: 200px;
   font-family: 'BMHANNAPro';
   grid-column: 2;
   text-align: center;
@@ -44,7 +63,7 @@ export const Nickname = styled.input`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 20px;
+  font-size: ${props => (props.length > 10 ? 30 - props.length + 'px' : '20px')};
   padding-bottom: 5px;
 
   :disabled {
@@ -52,13 +71,13 @@ export const Nickname = styled.input`
     background-color: transparent;
   }
 
-  :enabled {
-    padding-bottom: 4px;
-    border-bottom: 1px solid ${props => props.theme.colors.gray_400};
-  }
-
   ::placeholder {
     font-size: 15px;
+  }
+
+  :enabled ~ ${FocusBorder} {
+    width: 200px;
+    transition: 0.4s;
   }
 `;
 

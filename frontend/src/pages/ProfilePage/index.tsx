@@ -14,7 +14,6 @@ import * as Styled from './index.styles';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
 const SIZE = 3;
-const OFFSET = 1.5;
 
 const ProfilePage = () => {
   const { showSnackbar } = useSnackbar();
@@ -57,20 +56,23 @@ const ProfilePage = () => {
           <Styled.Panda />
         </Styled.Avatar>
         <Styled.NicknameField onSubmit={handleSubmit}>
-          <Styled.Nickname
-            value={nickname}
-            onChange={e => setNickname(e.target.value)}
-            onInvalid={(e: React.FormEvent<HTMLInputElement>) => {
-              e.preventDefault();
-              showSnackbar(e.currentTarget.placeholder);
-            }}
-            maxLength={16}
-            disabled={disabled}
-            ref={nicknameRef}
-            size={nickname.length * OFFSET}
-            placeholder="닉네임을 입력해주세요."
-            required
-          />
+          <Styled.NicknameInputField>
+            <Styled.Nickname
+              value={nickname}
+              onChange={e => setNickname(e.target.value)}
+              onInvalid={(e: React.FormEvent<HTMLInputElement>) => {
+                e.preventDefault();
+                showSnackbar(e.currentTarget.placeholder);
+              }}
+              length={nickname.length}
+              maxLength={16}
+              disabled={disabled}
+              ref={nicknameRef}
+              placeholder="닉네임을 입력해주세요."
+              required
+            />
+            <Styled.FocusBorder />
+          </Styled.NicknameInputField>
           <Styled.UpdateButton>{disabled ? '수정' : '완료'}</Styled.UpdateButton>
         </Styled.NicknameField>
         <Styled.PostField>

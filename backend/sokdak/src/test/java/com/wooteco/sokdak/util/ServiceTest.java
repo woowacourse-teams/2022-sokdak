@@ -1,5 +1,7 @@
 package com.wooteco.sokdak.util;
 
+import static com.wooteco.sokdak.util.fixture.MemberFixture.CHRIS_ID;
+
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.domain.RoleType;
@@ -14,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ServiceTest {
 
-    protected static final AuthInfo AUTH_INFO = new AuthInfo(3L, RoleType.USER.getName(), "chrisNickname");
+    protected static final AuthInfo AUTH_INFO = new AuthInfo(CHRIS_ID, RoleType.USER.getName(), "chrisNickname");
     protected static final AuthInfo AUTH_INFO2 = new AuthInfo(4L, RoleType.USER.getName(), "joshNickname");
 
     @Autowired
@@ -29,7 +31,7 @@ public class ServiceTest {
     void cleanAndSetData() {
         databaseCleaner.clear();
         databaseCleaner.insertInitialData();
-        member = memberRepository.findById(3L)
+        member = memberRepository.findById(CHRIS_ID)
                 .orElseThrow(MemberNotFoundException::new);
     }
 }

@@ -22,22 +22,20 @@ export const TitleContainer = styled.div`
 `;
 
 export const Title = styled.p`
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
   white-space: nowrap;
   font-size: 1.2rem;
+  color: black;
 `;
 
 export const BoardItem = styled(Link)`
-  font-family: 'BMHANNAAir';
-  width: 100%;
+  font-family: 'BMHANNAAir', 'Noto Sans KR';
+  width: fit-content;
   font-size: 14px;
   color: ${props => props.theme.colors.gray_200};
-  text-align: left;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   height: 100%;
   padding: 1em 0;
+  white-space: nowrap;
 `;
 
 export const BoardList = styled.div`

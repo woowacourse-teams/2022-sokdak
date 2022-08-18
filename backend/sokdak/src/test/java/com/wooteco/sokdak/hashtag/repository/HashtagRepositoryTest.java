@@ -6,7 +6,6 @@ import com.wooteco.sokdak.config.JPAConfig;
 import com.wooteco.sokdak.hashtag.domain.Hashtag;
 import com.wooteco.sokdak.hashtag.domain.Hashtags;
 import com.wooteco.sokdak.hashtag.domain.PostHashtag;
-import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.util.RepositoryTest;
@@ -17,12 +16,13 @@ import org.springframework.context.annotation.Import;
 
 @Import(JPAConfig.class)
 class HashtagRepositoryTest extends RepositoryTest {
+
     @Autowired
     private PostHashtagRepository postHashtagRepository;
-    @Autowired
-    private MemberRepository memberRepository;
+
     @Autowired
     private PostRepository postRepository;
+
     @Autowired
     private HashtagRepository hashtagRepository;
 
@@ -34,17 +34,17 @@ class HashtagRepositoryTest extends RepositoryTest {
         Post post1 = Post.builder()
                 .title("제목1")
                 .content("본문1")
-                .member(member)
+                .member(member1)
                 .build();
         Post post2 = Post.builder()
                 .title("제목2")
                 .content("본문2")
-                .member(member)
+                .member(member1)
                 .build();
         Post post3 = Post.builder()
                 .title("제목3")
                 .content("본문3")
-                .member(member)
+                .member(member1)
                 .build();
         postRepository.save(post1);
         postRepository.save(post2);

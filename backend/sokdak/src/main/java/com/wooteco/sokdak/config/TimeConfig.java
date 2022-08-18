@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.member.util;
+package com.wooteco.sokdak.config;
 
 import java.time.Clock;
 import org.springframework.context.annotation.Bean;

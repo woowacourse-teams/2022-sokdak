@@ -4,7 +4,7 @@ export const Form = styled.form``;
 
 export const CommentCount = styled.p`
   font-size: 20px;
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
 `;
 
 export const ContentInput = styled.textarea`
@@ -34,6 +34,6 @@ export const SubmitButton = styled.button`
   font-size: 13px;
   background-color: ${props => props.theme.colors.sub};
   color: white;
-  font-family: 'BMHANNAAir';
+  font-family: 'BMHANNAAir', 'Noto Sans KR';
   border-radius: 8px;
 `;

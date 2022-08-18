@@ -74,7 +74,7 @@ export const Spinner = styled.span`
     height: 48px;
     border: 2px solid black;
     background-color: #fff;
-    background-image: radial-gradient(circle 14px, #0d161b 100%, transparent 0);
+    background-image: radial-gradient(circle 14px, black 95%, transparent 0);
     background-repeat: no-repeat;
     border-radius: 50%;
     animation: ${eyeMove} 10s infinite, ${blink} 10s infinite;

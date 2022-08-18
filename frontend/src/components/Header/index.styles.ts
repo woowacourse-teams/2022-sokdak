@@ -41,12 +41,12 @@ export const Avartar = styled.div`
   background-color: inherit;
   border: 1px solid ${props => props.theme.colors.main};
   cursor: pointer;
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
 `;
 
 export const Search = styled(SearchIcon)`
   cursor: pointer;
-  margin: 10px;
+  margin: 8px;
   overflow: visible;
 `;
 
@@ -57,7 +57,7 @@ export const LoginLink = styled(Link)`
 
   width: 50px;
   height: 20px;
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
   font-size: 12px;
   color: ${props => props.theme.colors.gray_900};
   border: 1px solid black;
@@ -87,7 +87,7 @@ export const optionStyle = css`
   font-size: 0.7rem;
 `;
 
-export const ProfileButton = styled.button`
+export const ProfileLink = styled(Link)`
   ${optionStyle}
   color: ${props => props.theme.colors.gray_150};
 `;

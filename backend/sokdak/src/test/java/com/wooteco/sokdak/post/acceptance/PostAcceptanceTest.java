@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.post.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getExceptionMessage;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
@@ -8,19 +7,16 @@ import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithAutho
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getTokensForReport;
-import static com.wooteco.sokdak.util.fixture.PostFixture.BOARD_ID_POST_CREATED;
-import static com.wooteco.sokdak.util.fixture.PostFixture.CANNOT_CREATE_POST_URI;
-import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getTokens;
+import static com.wooteco.sokdak.util.fixture.PostFixture.FREE_BOARD_POST_URI;
 import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST;
 import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST2;
-import static com.wooteco.sokdak.util.fixture.PostFixture.POSTS_ELEMENT_RESPONSE_1;
-import static com.wooteco.sokdak.util.fixture.PostFixture.POSTS_ELEMENT_RESPONSE_2;
 import static com.wooteco.sokdak.util.fixture.PostFixture.UPDATED_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.UPDATED_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
-import static com.wooteco.sokdak.util.fixture.PostFixture.addPostAndGetPostId;
+import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -44,13 +40,10 @@ import org.springframework.http.HttpStatus;
 @DisplayName("게시글 관련 인수테스트")
 class PostAcceptanceTest extends AcceptanceTest {
 
-    private static final long WRITABLE_BOARD_ID = 2L;
-    private static final String WRONG_PAGE = "5";
-
     @DisplayName("새로운 게시글을 작성할 수 있다.")
     @Test
     void addPost() {
-        ExtractableResponse<Response> response = httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI,
+        ExtractableResponse<Response> response = httpPostWithAuthorization(NEW_POST_REQUEST, FREE_BOARD_POST_URI,
                 getChrisToken());
 
         assertAll(
@@ -62,7 +55,7 @@ class PostAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인하지 않고, 게시물을 작성할 수 없다.")
     @Test
     void addPost_Unauthorized() {
-        ExtractableResponse<Response> response = httpPost(NEW_POST_REQUEST, CREATE_POST_URI);
+        ExtractableResponse<Response> response = httpPost(NEW_POST_REQUEST, FREE_BOARD_POST_URI);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
@@ -73,11 +66,12 @@ class PostAcceptanceTest extends AcceptanceTest {
         String token = getChrisToken();
         NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", false, Collections.emptyList());
         NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", false, Collections.emptyList());
-        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, token);
-        httpPostWithAuthorization(postRequest2, CREATE_POST_URI, token);
-        httpPostWithAuthorization(postRequest3, CREATE_POST_URI, token);
+        httpPostWithAuthorization(NEW_POST_REQUEST, FREE_BOARD_POST_URI, token);
+        httpPostWithAuthorization(postRequest2, FREE_BOARD_POST_URI, token);
+        httpPostWithAuthorization(postRequest3, FREE_BOARD_POST_URI, token);
+        Long writableBoardID = 2L;
 
-        ExtractableResponse<Response> response = httpGet("/boards/" + WRITABLE_BOARD_ID + "/posts?size=2&page=0");
+        ExtractableResponse<Response> response = httpGet("/boards/" + writableBoardID + "/posts?size=2&page=0");
         List<String> postNames = parsePostTitles(response);
 
         assertAll(
@@ -93,8 +87,8 @@ class PostAcceptanceTest extends AcceptanceTest {
         NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", false, Collections.emptyList());
         NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", false, Collections.emptyList());
         NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", false, Collections.emptyList());
-        httpPostWithAuthorization(postRequest1, CREATE_POST_URI, token);
-        httpPostWithAuthorization(postRequest2, CREATE_POST_URI, token);
+        httpPostWithAuthorization(postRequest1, FREE_BOARD_POST_URI, token);
+        httpPostWithAuthorization(postRequest2, FREE_BOARD_POST_URI, token);
         httpPostWithAuthorization(postRequest3, "/boards/3/posts", token);
 
         ExtractableResponse<Response> response = httpGet("/boards/3/posts?size=2&page=0");
@@ -109,16 +103,15 @@ class PostAcceptanceTest extends AcceptanceTest {
     @DisplayName("특정 게시판의 게시글 목록을 조회할때 누적신고 5개 이상인 게시글은 block된다.")
     @Test
     void findPosts_Block() {
-        Long blockedPostId = addPostAndGetPostId();
-        addPostAndGetPostId();
-        List<String> tokens = getTokensForReport();
+        Long blockedPostId = addNewPost();
+        addNewPost();
+        List<String> tokens = getTokens();
         for (int i = 0; i < 5; ++i) {
             ReportRequest reportRequest = new ReportRequest("신고");
             httpPostWithAuthorization(reportRequest, "/posts/" + blockedPostId + "/report", tokens.get(i));
         }
 
-        ExtractableResponse<Response> response = httpGet(
-                "/boards/" + BOARD_ID_POST_CREATED + "/posts?size=2&page=0");
+        ExtractableResponse<Response> response = httpGet(FREE_BOARD_POST_URI + "?size=2&page=0");
         List<PostsElementResponse> postsElementResponses = response
                 .jsonPath()
                 .getObject(".", PostsResponse.class)
@@ -136,8 +129,8 @@ class PostAcceptanceTest extends AcceptanceTest {
     @DisplayName("특정 게시글을 조회할때 누적신고 5개 이상인 게시글은 block된다.")
     @Test
     void findPost_Block() {
-        Long blockedPostId = addPostAndGetPostId();
-        List<String> tokens = getTokensForReport();
+        Long blockedPostId = addNewPost();
+        List<String> tokens = getTokens();
         for (int i = 0; i < 5; ++i) {
             ReportRequest reportRequest = new ReportRequest("신고");
             httpPostWithAuthorization(reportRequest, "/posts/" + blockedPostId + "/report", tokens.get(i));
@@ -160,8 +153,10 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void findPostsInBoard_Exception() {
         String token = getChrisToken();
-        ExtractableResponse<Response> response = httpPostWithAuthorization(NEW_POST_REQUEST, CANNOT_CREATE_POST_URI,
-                token);
+        String invalidCreatePostUri = "/boards/1/posts";
+
+        ExtractableResponse<Response> response =
+                httpPostWithAuthorization(NEW_POST_REQUEST, invalidCreatePostUri, token);
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
@@ -170,7 +165,7 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void findPost_IdentifiedNickname() {
         String postId = parsePostId(
-                httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getChrisToken()));
+                httpPostWithAuthorization(NEW_POST_REQUEST, FREE_BOARD_POST_URI, getChrisToken()));
 
         ExtractableResponse<Response> response = httpGet("/posts/" + postId);
         PostDetailResponse postDetailResponse = response.jsonPath().getObject(".", PostDetailResponse.class);
@@ -190,7 +185,7 @@ class PostAcceptanceTest extends AcceptanceTest {
         NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT, true,
                 Collections.emptyList());
         String postId = parsePostId(
-                httpPostWithAuthorization(newPostRequest, CREATE_POST_URI, getChrisToken()));
+                httpPostWithAuthorization(newPostRequest, FREE_BOARD_POST_URI, getChrisToken()));
 
         ExtractableResponse<Response> response = httpGet("/posts/" + postId);
         PostDetailResponse postDetailResponse = response.jsonPath().getObject(".", PostDetailResponse.class);
@@ -210,7 +205,7 @@ class PostAcceptanceTest extends AcceptanceTest {
         NewPostRequest newPostRequestWithoutTitle = new NewPostRequest(null, VALID_POST_CONTENT,
                 false, Collections.emptyList());
         ExtractableResponse<Response> response =
-                httpPostWithAuthorization(newPostRequestWithoutTitle, CREATE_POST_URI, getChrisToken());
+                httpPostWithAuthorization(newPostRequestWithoutTitle, FREE_BOARD_POST_URI, getChrisToken());
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
@@ -234,7 +229,7 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void updatePost() {
         String postId = parsePostId(
-                httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getChrisToken()));
+                httpPostWithAuthorization(NEW_POST_REQUEST, FREE_BOARD_POST_URI, getChrisToken()));
 
         PostUpdateRequest postUpdateRequest = new PostUpdateRequest(
                 UPDATED_POST_TITLE, UPDATED_POST_CONTENT, Collections.emptyList());
@@ -254,7 +249,7 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void deletePost() {
         String postId = parsePostId(
-                httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getChrisToken()));
+                httpPostWithAuthorization(NEW_POST_REQUEST, FREE_BOARD_POST_URI, getChrisToken()));
 
         ExtractableResponse<Response> response = httpDeleteWithAuthorization("/posts/" + postId, getChrisToken());
 
@@ -265,22 +260,22 @@ class PostAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("내가 쓴 글을 볼 수 있다.")
+    @DisplayName("내가 쓴 글을 최신순으로 볼 수 있다.")
     @Test
     void searchMyPosts() {
         String token = getChrisToken();
-        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, token);
-        httpPostWithAuthorization(NEW_POST_REQUEST2, CREATE_POST_URI, token);
+        httpPostWithAuthorization(NEW_POST_REQUEST, FREE_BOARD_POST_URI, token);
+        httpPostWithAuthorization(NEW_POST_REQUEST2, FREE_BOARD_POST_URI, token);
 
         ExtractableResponse<Response> response = httpGetWithAuthorization("/posts/me?size=3&page=0", token);
-        MyPostsResponse myPostsResponse = toMyPostsResponse(response);
+        List<PostsElementResponse> myPostsResponse = toMyPostsResponse(response).getPosts();
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(myPostsResponse.getPosts().size()).isEqualTo(2),
-                () -> assertThat(myPostsResponse.getPosts()).usingRecursiveComparison()
-                        .comparingOnlyFields("title", "content")
-                        .isEqualTo(List.of(POSTS_ELEMENT_RESPONSE_2, POSTS_ELEMENT_RESPONSE_1))
+                () -> assertThat(myPostsResponse.get(0).getTitle()).isEqualTo("제목2"),
+                () -> assertThat(myPostsResponse.get(0).getContent()).isEqualTo("본문2"),
+                () -> assertThat(myPostsResponse.get(1).getTitle()).isEqualTo("제목"),
+                () -> assertThat(myPostsResponse.get(1).getContent()).isEqualTo("본문")
         );
     }
 
@@ -288,10 +283,11 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void searchMyPosts_Exception_NoPage() {
         String token = getChrisToken();
-        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, token);
-        httpPostWithAuthorization(NEW_POST_REQUEST2, CREATE_POST_URI, token);
+        httpPostWithAuthorization(NEW_POST_REQUEST, FREE_BOARD_POST_URI, token);
+        httpPostWithAuthorization(NEW_POST_REQUEST2, FREE_BOARD_POST_URI, token);
+        long wrongPage = 5L;
 
-        ExtractableResponse<Response> response = httpGetWithAuthorization("/posts/me?size=3&page=" + WRONG_PAGE, token);
+        ExtractableResponse<Response> response = httpGetWithAuthorization("/posts/me?size=3&page=" + wrongPage, token);
         MyPostsResponse postsResponse = toMyPostsResponse(response);
 
         assertAll(

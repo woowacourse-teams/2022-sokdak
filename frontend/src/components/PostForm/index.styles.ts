@@ -13,12 +13,12 @@ export const Container = styled.form`
 `;
 
 export const Heading = styled.h1`
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
   font-size: 27px;
 `;
 
 export const Board = styled.p`
-  font-family: 'BMHANNAAir';
+  font-family: 'BMHANNAAir', 'Noto Sans KR';
   margin: 15px 0 30px 0;
   color: ${props => props.theme.colors.gray_200};
 `;
@@ -29,7 +29,7 @@ interface InputProps {
 }
 
 export const TitleInput = styled.input<InputProps>`
-  font-family: 'BMHANNAAir';
+  font-family: 'BMHANNAAir', 'Noto Sans KR';
   border-bottom: 1px solid ${props => (props.isValid ? props.theme.colors.sub : props.theme.colors.red_100)};
 
   width: 100%;
@@ -62,7 +62,7 @@ export const ContentInput = styled.textarea<InputProps>`
 `;
 
 export const SubmitButton = styled.button`
-  font-family: 'BMHANNAAir';
+  font-family: 'BMHANNAAir', 'Noto Sans KR';
   background-color: ${props => props.theme.colors.sub};
   color: white;
   border-radius: 15px;

@@ -1,8 +1,12 @@
 package com.wooteco.sokdak.util;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 
+import com.wooteco.sokdak.admin.controller.AdminController;
+import com.wooteco.sokdak.admin.service.AdminService;
 import com.wooteco.sokdak.auth.controller.AuthController;
 import com.wooteco.sokdak.auth.service.AuthService;
 import com.wooteco.sokdak.auth.service.RefreshTokenService;
@@ -51,7 +55,8 @@ import org.springframework.web.context.WebApplicationContext;
         BoardController.class,
         HashtagController.class,
         NotificationController.class,
-        HashtagController.class
+        HashtagController.class,
+        AdminController.class
 })
 @ExtendWith(RestDocumentationExtension.class)
 public class ControllerTest {
@@ -106,10 +111,11 @@ public class ControllerTest {
     @MockBean
     protected RefreshTokenService refreshTokenService;
 
-    @BeforeEach
-    void setRestDocs(WebApplicationContext webApplicationContext,
-                     RestDocumentationContextProvider restDocumentation) {
+    @MockBean
+    protected AdminService adminService;
 
+    @BeforeEach
+    void setUp(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation) {
         restDocs = RestAssuredMockMvc.given()
                 .mockMvc(MockMvcBuilders.webAppContextSetup(webApplicationContext)
                         .apply(documentationConfiguration(restDocumentation)
@@ -118,5 +124,9 @@ public class ControllerTest {
                                 .withResponseDefaults(prettyPrint()))
                         .build())
                 .log().all();
+
+        doReturn(true)
+                .when(authInterceptor)
+                .preHandle(any(), any(), any());
     }
 }

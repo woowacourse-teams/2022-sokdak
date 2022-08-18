@@ -1,13 +1,13 @@
 package com.wooteco.sokdak.hashtag.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getExceptionMessage;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
-import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
+import static com.wooteco.sokdak.util.fixture.PostFixture.FREE_BOARD_POST_URI;
+import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -29,13 +29,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 @DisplayName("해시태그 관련 인수테스트")
-public class HashtagAcceptanceTest extends AcceptanceTest {
+class HashtagAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("게시글을 작성하면서 해시태그를 추가하면, 게시글이 조회될 때 해시태그도 조회된다.")
     @Test
     void addPostWithHashtags() {
-        String postId = parsePostId(
-                httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getChrisToken()));
+        Long postId = addNewPost();
 
         ExtractableResponse<Response> response = httpGet("/posts/" + postId);
 
@@ -52,10 +51,9 @@ public class HashtagAcceptanceTest extends AcceptanceTest {
     @DisplayName("해시태그가 포함된 게시글을 작성하고, 게시글의 해시태그를 수정하면, 게시글을 조회 했을 때 수정된 해시태그를 조회할 수 있다.")
     @Test
     void modifyPostWithHashtags() {
-        String postId = parsePostId(
-                httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getChrisToken()));
+        Long postId = addNewPost();
         PostUpdateRequest requestBody = new PostUpdateRequest("제목", "본문", List.of("변경1", "변경2"));
-        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getChrisToken());
+        addNewPost();
 
         httpPutWithAuthorization(requestBody, "/posts/" + postId, getChrisToken());
 
@@ -75,8 +73,7 @@ public class HashtagAcceptanceTest extends AcceptanceTest {
     @DisplayName("해시태그가 포함된 게시글이 정상적으로 삭제된다.")
     @Test
     void deletePostWithHashtags() {
-        String postId = parsePostId(
-                httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getChrisToken()));
+        Long postId = addNewPost();
 
         ExtractableResponse<Response> response = httpDeleteWithAuthorization("/posts/" + postId, getChrisToken());
 
@@ -89,9 +86,9 @@ public class HashtagAcceptanceTest extends AcceptanceTest {
         NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", false, List.of("태그1"));
         NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", false, List.of("태그2"));
         NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", false, List.of("태그1", "태그2"));
-        httpPostWithAuthorization(postRequest1, CREATE_POST_URI, getChrisToken());
-        httpPostWithAuthorization(postRequest2, CREATE_POST_URI, getChrisToken());
-        httpPostWithAuthorization(postRequest3, CREATE_POST_URI, getChrisToken());
+        httpPostWithAuthorization(postRequest1, FREE_BOARD_POST_URI, getChrisToken());
+        httpPostWithAuthorization(postRequest2, FREE_BOARD_POST_URI, getChrisToken());
+        httpPostWithAuthorization(postRequest3, FREE_BOARD_POST_URI, getChrisToken());
 
         ExtractableResponse<Response> response = httpGet("/posts?hashtag=태그1&size=3&page=0");
 
@@ -122,8 +119,8 @@ public class HashtagAcceptanceTest extends AcceptanceTest {
     void searchHashtagsWithName() {
         NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", false, List.of("태그1", "태그2"));
         NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", false, List.of("태그2"));
-        httpPostWithAuthorization(postRequest1, CREATE_POST_URI, getChrisToken());
-        httpPostWithAuthorization(postRequest2, CREATE_POST_URI, getChrisToken());
+        httpPostWithAuthorization(postRequest1, FREE_BOARD_POST_URI, getChrisToken());
+        httpPostWithAuthorization(postRequest2, FREE_BOARD_POST_URI, getChrisToken());
 
         ExtractableResponse<Response> response = httpGet("/hashtags/popular?limit=3&include=태그");
 
@@ -147,8 +144,8 @@ public class HashtagAcceptanceTest extends AcceptanceTest {
     void searchHashtagsWithName_NoKeyword() {
         NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", false, List.of("태그1", "태그2"));
         NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", false, List.of("태그2"));
-        httpPostWithAuthorization(postRequest1, CREATE_POST_URI, getChrisToken());
-        httpPostWithAuthorization(postRequest2, CREATE_POST_URI, getChrisToken());
+        httpPostWithAuthorization(postRequest1, FREE_BOARD_POST_URI, getChrisToken());
+        httpPostWithAuthorization(postRequest2, FREE_BOARD_POST_URI, getChrisToken());
 
         ExtractableResponse<Response> response = httpGet("/hashtags/popular?limit=3&include=");
 

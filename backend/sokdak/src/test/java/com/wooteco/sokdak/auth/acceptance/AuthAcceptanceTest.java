@@ -1,8 +1,6 @@
 package com.wooteco.sokdak.auth.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.INVALID_LOGIN_REQUEST;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_LOGIN_REQUEST;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,7 +52,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
     void login_Exception_NotExistUser() {
         ExtractableResponse<Response> response = httpPost(INVALID_LOGIN_REQUEST, "/login");
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
     @DisplayName("올바른 인증번호로 인증할 수 있다.")
@@ -68,8 +66,8 @@ class AuthAcceptanceTest extends AcceptanceTest {
                 .build();
         authCodeRepository.save(authCode);
 
-        ExtractableResponse<Response> response = httpPostWithAuthorization(new VerificationRequest(email, code),
-                "members/signup/email/verification", getChrisToken());
+        ExtractableResponse<Response> response =
+                httpPost(new VerificationRequest(email, code), "members/signup/email/verification");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
@@ -85,8 +83,8 @@ class AuthAcceptanceTest extends AcceptanceTest {
                 .build();
         authCodeRepository.save(authCode);
 
-        ExtractableResponse<Response> response = httpPostWithAuthorization(new VerificationRequest(email, "NONONO"),
-                "members/signup/email/verification", getChrisToken());
+        ExtractableResponse<Response> response =
+                httpPost(new VerificationRequest(email, "NONONO"), "members/signup/email/verification");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
@@ -102,9 +100,8 @@ class AuthAcceptanceTest extends AcceptanceTest {
                 .build();
         authCodeRepository.save(authCode);
 
-        ExtractableResponse<Response> response = httpPostWithAuthorization(
-                new VerificationRequest("wrong@gmail.com", code),
-                "members/signup/email/verification", getChrisToken());
+        ExtractableResponse<Response> response = httpPost(
+                new VerificationRequest("wrong@gmail.com", code), "members/signup/email/verification");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
@@ -123,8 +120,9 @@ class AuthAcceptanceTest extends AcceptanceTest {
         doReturn(Instant.now(FUTURE_CLOCK))
                 .when(clock)
                 .instant();
-        ExtractableResponse<Response> response = httpPostWithAuthorization(new VerificationRequest(email, code),
-                "members/signup/email/verification", getChrisToken());
+
+        ExtractableResponse<Response> response =
+                httpPost(new VerificationRequest(email, code), "members/signup/email/verification");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }

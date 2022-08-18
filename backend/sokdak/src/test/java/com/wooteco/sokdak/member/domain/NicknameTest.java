@@ -1,8 +1,7 @@
-package com.wooteco.sokdak.member.domain.member;
+package com.wooteco.sokdak.member.domain;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.wooteco.sokdak.member.domain.Nickname;
 import com.wooteco.sokdak.member.exception.InvalidNicknameException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;

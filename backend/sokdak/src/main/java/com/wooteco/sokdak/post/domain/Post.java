@@ -1,6 +1,6 @@
 package com.wooteco.sokdak.post.domain;
 
-import com.wooteco.sokdak.auth.exception.AuthenticationException;
+import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.hashtag.domain.PostHashtag;
@@ -105,11 +105,11 @@ public class Post {
 
     public void validateOwner(Long accessMemberId) {
         if (!Objects.equals(accessMemberId, member.getId())) {
-            throw new AuthenticationException();
+            throw new AuthorizationException();
         }
     }
 
-    public boolean isAuthenticated(Long accessMemberId) {
+    public boolean isAuthorized(Long accessMemberId) {
         if (accessMemberId == null) {
             return false;
         }

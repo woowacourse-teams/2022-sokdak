@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.hashtag.service;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -15,9 +14,6 @@ import com.wooteco.sokdak.hashtag.dto.HashtagsSearchResponse;
 import com.wooteco.sokdak.hashtag.exception.HashtagNotFoundException;
 import com.wooteco.sokdak.hashtag.repository.HashtagRepository;
 import com.wooteco.sokdak.hashtag.repository.PostHashtagRepository;
-import com.wooteco.sokdak.member.domain.Member;
-import com.wooteco.sokdak.member.exception.MemberNotFoundException;
-import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
@@ -25,7 +21,7 @@ import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.post.service.PostService;
-import com.wooteco.sokdak.util.IntegrationTest;
+import com.wooteco.sokdak.util.ServiceTest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,20 +32,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-class HashtagServiceTest extends IntegrationTest {
+class HashtagServiceTest extends ServiceTest {
 
     public static final long WRITABLE_BOARD_ID = 2L;
+
     @Autowired
     private PostService postService;
+
     @Autowired
     private HashtagService hashtagService;
 
     @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
     private PostRepository postRepository;
+
     @Autowired
     private PostHashtagRepository postHashtagRepository;
+
     @Autowired
     private HashtagRepository hashtagRepository;
 
@@ -61,8 +59,6 @@ class HashtagServiceTest extends IntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        Member member = memberRepository.findById(1L)
-                .orElseThrow(MemberNotFoundException::new);
         post = Post.builder()
                 .title("제목")
                 .content("본문")

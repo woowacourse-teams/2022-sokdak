@@ -1,7 +1,7 @@
 package com.wooteco.sokdak.post.service;
 
 import static com.wooteco.sokdak.member.domain.RoleType.USER;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
+import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -15,9 +15,6 @@ import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.service.CommentService;
-import com.wooteco.sokdak.member.domain.Member;
-import com.wooteco.sokdak.member.exception.MemberNotFoundException;
-import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
@@ -27,7 +24,7 @@ import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
-import com.wooteco.sokdak.util.IntegrationTest;
+import com.wooteco.sokdak.util.ServiceTest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,16 +36,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-class PostServiceTest extends IntegrationTest {
-
-    private static final long WRITABLE_BOARD_ID = 2L;
-    private static final int WRONG_PAGE = 99;
+class PostServiceTest extends ServiceTest {
 
     @Autowired
     private PostService postService;
-
-    @Autowired
-    private MemberRepository memberRepository;
 
     @Autowired
     private PostRepository postRepository;
@@ -65,12 +56,9 @@ class PostServiceTest extends IntegrationTest {
     private Post post;
     private Board board;
     private PostBoard postBoard;
-    private Member member;
 
     @BeforeEach
     public void setUp() {
-        member = memberRepository.findById(AUTH_INFO.getId())
-                .orElseThrow(MemberNotFoundException::new);
         post = Post.builder()
                 .title("제목")
                 .content("본문")
@@ -88,13 +76,13 @@ class PostServiceTest extends IntegrationTest {
     void addPost_Anonymous() {
         NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", true, Collections.emptyList());
 
-        Long postId = postService.addPost(WRITABLE_BOARD_ID, newPostRequest, AUTH_INFO);
+        Long postId = postService.addPost(FREE_BOARD_ID, newPostRequest, AUTH_INFO);
         Post actual = postRepository.findById(postId).orElseThrow();
 
         assertAll(
                 () -> assertThat(actual.getTitle()).isEqualTo(newPostRequest.getTitle()),
                 () -> assertThat(actual.getContent()).isEqualTo(newPostRequest.getContent()),
-                () -> assertThat(actual.getMember().getId()).isEqualTo(1L),
+                () -> assertThat(actual.getMember().getId()).isEqualTo(member.getId()),
                 () -> assertThat(actual.getNickname()).isNotEqualTo(actual.getMember().getNickname()),
                 () -> assertThat(actual.getCreatedAt()).isNotNull(),
                 () -> assertThat(actual.getPostBoards().get(0).getBoard().getTitle()).isNotNull()
@@ -106,13 +94,13 @@ class PostServiceTest extends IntegrationTest {
     void addPost_Identified() {
         NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", false, Collections.emptyList());
 
-        Long postId = postService.addPost(WRITABLE_BOARD_ID, newPostRequest, AUTH_INFO);
+        Long postId = postService.addPost(FREE_BOARD_ID, newPostRequest, AUTH_INFO);
         Post actual = postRepository.findById(postId).orElseThrow();
 
         assertAll(
                 () -> assertThat(actual.getTitle()).isEqualTo(newPostRequest.getTitle()),
                 () -> assertThat(actual.getContent()).isEqualTo(newPostRequest.getContent()),
-                () -> assertThat(actual.getMember().getId()).isEqualTo(1L),
+                () -> assertThat(actual.getMember().getId()).isEqualTo(member.getId()),
                 () -> assertThat(actual.getNickname()).isEqualTo(actual.getMember().getNickname()),
                 () -> assertThat(actual.getCreatedAt()).isNotNull(),
                 () -> assertThat(actual.getPostBoards().get(0).getBoard().getTitle()).isNotNull()
@@ -295,11 +283,12 @@ class PostServiceTest extends IntegrationTest {
                 .comments(new ArrayList<>())
                 .build();
         postRepository.save(post);
+        int wrongPage = 99;
 
-        MyPostsResponse myPosts = postService.findMyPosts(PageRequest.of(WRONG_PAGE, 3), AUTH_INFO);
+        MyPostsResponse myPosts = postService.findMyPosts(PageRequest.of(wrongPage, 3), AUTH_INFO);
 
         assertAll(
-                () -> assertThat(myPosts.getPosts()).hasSize(0),
+                () -> assertThat(myPosts.getPosts()).isEmpty(),
                 () -> assertThat(myPosts.getTotalPageCount()).isEqualTo(1)
         );
     }

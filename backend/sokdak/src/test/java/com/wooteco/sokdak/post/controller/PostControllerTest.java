@@ -1,7 +1,5 @@
 package com.wooteco.sokdak.post.controller;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
-import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST;
 import static com.wooteco.sokdak.util.fixture.PostFixture.UPDATED_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.UPDATED_POST_TITLE;
 import static org.mockito.ArgumentMatchers.any;
@@ -12,20 +10,19 @@ import static org.mockito.Mockito.doThrow;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
-import com.wooteco.sokdak.auth.exception.AuthenticationException;
+import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.hashtag.dto.HashtagResponse;
+import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
-import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import com.wooteco.sokdak.util.ControllerTest;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,6 +34,8 @@ import org.springframework.restdocs.RestDocumentationExtension;
 @ExtendWith(RestDocumentationExtension.class)
 class PostControllerTest extends ControllerTest {
 
+    private static final NewPostRequest NEW_POST_REQUEST =
+            new NewPostRequest("제목", "본문", false, List.of("태그1", "태그2"));
     private static final int WRONG_PAGE = 99;
     private static final PostsElementResponse POSTS_ELEMENT_RESPONSE_1 = PostsElementResponse.builder()
             .id(1L)
@@ -57,23 +56,9 @@ class PostControllerTest extends ControllerTest {
             .modified(false)
             .build();
 
-    @BeforeEach
-    void setUpArgumentResolver() {
-        doReturn(true)
-                .when(authInterceptor)
-                .preHandle(any(), any(), any());
-        doReturn(AUTH_INFO)
-                .when(authenticationPrincipalArgumentResolver)
-                .resolveArgument(any(), any(), any(), any());
-    }
-
     @DisplayName("글 작성 요청을 받으면 새로운 게시글을 등록한다.")
     @Test
     void addPost() {
-        doReturn(true)
-                .when(authInterceptor)
-                .preHandle(any(), any(), any());
-
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "any")
@@ -195,7 +180,7 @@ class PostControllerTest extends ControllerTest {
     void updatePost_Exception_ForbiddenMemberId() {
         PostUpdateRequest postUpdateRequest = new PostUpdateRequest(UPDATED_POST_TITLE, UPDATED_POST_CONTENT,
                 List.of("tag"));
-        doThrow(new AuthenticationException())
+        doThrow(new AuthorizationException())
                 .when(postService)
                 .updatePost(any(), any(), any());
 
@@ -214,7 +199,7 @@ class PostControllerTest extends ControllerTest {
     void updatePost_Exception_NoContentTitle() {
         PostUpdateRequest postUpdateRequest = new PostUpdateRequest(null, UPDATED_POST_CONTENT,
                 List.of("tag"));
-        doThrow(new AuthenticationException())
+        doThrow(new AuthorizationException())
                 .when(postService)
                 .updatePost(any(), any(), any());
 
@@ -246,7 +231,7 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("권한이 없는 게시글을 삭제하려고 하면 403을 반환한다.")
     @Test
     void deletePost_Exception_ForbiddenMemberId() {
-        doThrow(new AuthenticationException())
+        doThrow(new AuthorizationException())
                 .when(postService)
                 .deletePost(any(), any());
 

@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.member.service;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -14,7 +13,7 @@ import com.wooteco.sokdak.member.exception.DuplicateNicknameException;
 import com.wooteco.sokdak.member.exception.InvalidNicknameException;
 import com.wooteco.sokdak.member.repository.AuthCodeRepository;
 import com.wooteco.sokdak.member.repository.MemberRepository;
-import com.wooteco.sokdak.util.IntegrationTest;
+import com.wooteco.sokdak.util.ServiceTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,7 +21,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class MemberServiceTest extends IntegrationTest {
+class MemberServiceTest extends ServiceTest {
 
     @Autowired
     private MemberService memberService;

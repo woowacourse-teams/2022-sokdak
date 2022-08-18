@@ -1,10 +1,9 @@
 package com.wooteco.sokdak.support.token;
 
-import static com.wooteco.sokdak.member.domain.RoleType.*;
+import static com.wooteco.sokdak.member.domain.RoleType.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
-import com.wooteco.sokdak.member.domain.RoleType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

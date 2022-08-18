@@ -3,14 +3,13 @@ package com.wooteco.sokdak.board.acceptance;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.HOT_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.POSUTA_BOARD_ID;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
-import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
+import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -81,8 +80,8 @@ class BoardAcceptanceTest extends AcceptanceTest {
 
         // then
         List<BoardContentElement> boardsAll = getBoardContentElements(response);
-        BoardContentElement board1 = getBoardContentElements(response).get(FREE_BOARD_ID - 1);
-        BoardContentElement board2 = getBoardContentElements(response).get(POSUTA_BOARD_ID - 1);
+        BoardContentElement board1 = getBoardContentElements(response).get((int) FREE_BOARD_ID - 1);
+        BoardContentElement board2 = getBoardContentElements(response).get((int) POSUTA_BOARD_ID - 1);
         List<BoardContentPostElement> posts1 = board1.getPosts();
         List<BoardContentPostElement> posts2 = board2.getPosts();
 
@@ -123,7 +122,7 @@ class BoardAcceptanceTest extends AcceptanceTest {
         String token5 = httpPost(new LoginRequest("east", "Abcd123!@"), "/login").header(AUTHORIZATION);
         List<String> tokens = List.of(token1, token2, token3, token4, token5);
 
-        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, token1);
+        addNewPost();
 
         // when
         for (String token : tokens) {
@@ -152,10 +151,10 @@ class BoardAcceptanceTest extends AcceptanceTest {
         String token3 = httpPost(new LoginRequest("thor", "Abcd123!@"), "/login").header(AUTHORIZATION);
         String token4 = httpPost(new LoginRequest("hunch", "Abcd123!@"), "/login").header(AUTHORIZATION);
         String token5 = httpPost(new LoginRequest("east", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        String token6 = httpPost(new LoginRequest("testAdmin", "Abcd123!@"), "/login").header(AUTHORIZATION);
+        String token6 = httpPost(new LoginRequest("movie", "Abcd123!@"), "/login").header(AUTHORIZATION);
         List<String> tokens = List.of(token1, token2, token3, token4, token5, token6);
 
-        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, token1);
+        addNewPost();
 
         // when
         for (String token : tokens) {
@@ -186,7 +185,7 @@ class BoardAcceptanceTest extends AcceptanceTest {
         String token5 = httpPost(new LoginRequest("east", "Abcd123!@"), "/login").header(AUTHORIZATION);
         List<String> tokens = List.of(token1, token2, token3, token4, token5);
 
-        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, token1);
+        addNewPost();
 
         for (String token : tokens) {
             httpPutWithAuthorization("/posts/1/like", token);
@@ -221,7 +220,7 @@ class BoardAcceptanceTest extends AcceptanceTest {
         String token5 = httpPost(new LoginRequest("east", "Abcd123!@"), "/login").header(AUTHORIZATION);
         List<String> tokens = List.of(token1, token2, token3, token4, token5);
 
-        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, token1);
+        addNewPost();
 
         for (String token : tokens) {
             httpPutWithAuthorization("/posts/1/like", token);

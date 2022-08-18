@@ -2,18 +2,17 @@ package com.wooteco.sokdak.notification.acceptance;
 
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_COMMENT_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_REPLY_REQUEST;
-import static com.wooteco.sokdak.util.fixture.CommentFixture.addCommentAndGetCommentId;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getChrisToken;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getJoshToken;
+import static com.wooteco.sokdak.util.fixture.CommentFixture.addNewCommentInPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getTokensForLike;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getTokensForReport;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getToken;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getTokens;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
-import static com.wooteco.sokdak.util.fixture.PostFixture.addPostAndGetPostId;
+import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -37,7 +36,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
     @DisplayName("게시글에 댓글이 등록되면 게시글 사용자에게 알림이 등록된다.")
     @Test
     void checkNewNotification_NewComment() {
-        Long postId = addPostAndGetPostId();
+        Long postId = addNewPost();
         LoginRequest loginRequest = new LoginRequest("josh", "Abcd123!@");
         String token = httpPost(loginRequest, "/login").header(AUTHORIZATION);
         httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", token);
@@ -55,7 +54,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
     @DisplayName("자신의 게시글에 댓글을 달면 알림이 등록되지 않는다.")
     @Test
     void checkNewNotification_NewComment_MyPost() {
-        Long postId = addPostAndGetPostId();
+        Long postId = addNewPost();
         String token = getChrisToken();
         httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", token);
 
@@ -72,9 +71,9 @@ class NotificationAcceptanceTest extends AcceptanceTest {
     @DisplayName("자신의 댓글에 대댓글이 달리면 댓글 작성자에게 알림이 등록된다.")
     @Test
     void checkNewNotification_NewReply() {
-        Long postId = addPostAndGetPostId();
+        Long postId = addNewPost();
         String chrisToken = getChrisToken();
-        String joshToken = getJoshToken();
+        String joshToken = getToken("josh");
         httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", joshToken);
         httpPostWithAuthorization(NEW_REPLY_REQUEST, "/comments" + 1 + "/reply", chrisToken);
 
@@ -91,8 +90,8 @@ class NotificationAcceptanceTest extends AcceptanceTest {
     @DisplayName("게시글이 HOT 게시판에 등록되면 게시글 사용자에게 알림이 등록된다.")
     @Test
     void checkNewNotification_PostInHotBoard() {
-        addPostAndGetPostId();
-        List<String> otherTokens = getTokensForLike();
+        addNewPost();
+        List<String> otherTokens = getTokens();
         for (String token : otherTokens) {
             httpPutWithAuthorization("/posts/1/like", token);
         }
@@ -110,8 +109,8 @@ class NotificationAcceptanceTest extends AcceptanceTest {
     @DisplayName("게시글이 5회 신고 되면 게시글 작성자에게 알림이 등록된다.")
     @Test
     void checkNewNotification_PostReport() {
-        Long postId = addPostAndGetPostId();
-        List<String> reporterTokens = getTokensForReport();
+        Long postId = addNewPost();
+        List<String> reporterTokens = getTokens();
         for (int i = 0; i < 5; ++i) {
             ReportRequest reportRequest = new ReportRequest("신고");
             httpPostWithAuthorization(reportRequest, "/posts/" + postId + "/report", reporterTokens.get(i));
@@ -130,11 +129,11 @@ class NotificationAcceptanceTest extends AcceptanceTest {
     @DisplayName("댓글이 5회 신고 되면 댓글 작성자에게 알림이 등록된다.")
     @Test
     void checkNewNotification_CommentReport() {
-        Long postId = addPostAndGetPostId();
+        Long postId = addNewPost();
         String commenterToken = getChrisToken();
         httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", commenterToken);
-        Long commentId = addCommentAndGetCommentId(postId);
-        List<String> reporterTokens = getTokensForReport();
+        Long commentId = addNewCommentInPost(postId);
+        List<String> reporterTokens = getTokens();
         for (int i = 0; i < 5; ++i) {
             ReportRequest reportRequest = new ReportRequest("댓글신고");
             httpPostWithAuthorization(reportRequest, "/comments/" + commentId + "/report", reporterTokens.get(i));
@@ -153,21 +152,25 @@ class NotificationAcceptanceTest extends AcceptanceTest {
     @DisplayName("알림 목록을 조회할 수 있다.")
     @Test
     void findNotifications() {
-        Long postId = addPostAndGetPostId();
+        Long postId = addNewPost();
+        String token = getChrisToken();
 
-        LoginRequest loginRequest = new LoginRequest("josh", "Abcd123!@");
-        String token = httpPost(loginRequest, "/login").header(AUTHORIZATION);
-        httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", token);
+        String joshToken = getToken("josh");
+        httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", joshToken);
 
-        List<String> otherTokens = getTokensForLike();
+        List<String> otherTokens = getTokens();
         for (String other : otherTokens) {
             httpPutWithAuthorization("/posts/1/like", other);
         }
 
         ExtractableResponse<Response> response =
-                httpGetWithAuthorization("/notifications?size=2&page=0", getChrisToken());
-        NotificationsResponse notificationsResponse =
-                response.jsonPath().getObject(".", NotificationsResponse.class);
+                httpGetWithAuthorization("/notifications?size=2&page=0", token);
+        NotificationsResponse notificationsResponse = response.jsonPath()
+                .getObject(".", NotificationsResponse.class);
+        NewNotificationCheckResponse newNotificationCheckResponse =
+                httpGetWithAuthorization("/notifications/check", token)
+                        .jsonPath()
+                        .getObject(".", NewNotificationCheckResponse.class);
 
         NotificationResponse notificationResponse1 = notificationsResponse.getNotifications().get(0);
         NotificationResponse notificationResponse2 = notificationsResponse.getNotifications().get(1);
@@ -179,14 +182,15 @@ class NotificationAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(notificationResponse1.getContent()).isEqualTo(VALID_POST_TITLE),
                 () -> assertThat(notificationResponse2.getPostId()).isEqualTo(postId),
                 () -> assertThat(notificationResponse2.getType()).isEqualTo("NEW_COMMENT"),
-                () -> assertThat(notificationResponse2.getContent()).isEqualTo(VALID_POST_TITLE)
+                () -> assertThat(notificationResponse2.getContent()).isEqualTo(VALID_POST_TITLE),
+                () -> assertThat(newNotificationCheckResponse.isExistence()).isFalse()
         );
     }
 
     @DisplayName("알림을 삭제할 수 있다.")
     @Test
     void deleteNotification() {
-        Long postId = addPostAndGetPostId();
+        Long postId = addNewPost();
         LoginRequest loginRequest = new LoginRequest("josh", "Abcd123!@");
         String token = httpPost(loginRequest, "/login").header(AUTHORIZATION);
         httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", token);

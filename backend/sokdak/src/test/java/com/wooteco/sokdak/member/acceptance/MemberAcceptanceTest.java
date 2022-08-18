@@ -3,12 +3,14 @@ package com.wooteco.sokdak.member.acceptance;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPatchWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.member.dto.NicknameResponse;
 import com.wooteco.sokdak.member.dto.NicknameUpdateRequest;
+import com.wooteco.sokdak.member.dto.SignupRequest;
 import com.wooteco.sokdak.member.dto.UniqueResponse;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
@@ -50,6 +52,18 @@ class MemberAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(unique).isEqualTo(expected)
         );
+    }
+
+    @DisplayName("회원 가입을 할 수 있다.")
+    @Test
+    void signUp() {
+        SignupRequest signupRequest =
+                new SignupRequest("sokdakX2@gmail.com", "username", "nickname",
+                        "123456", "Abcd123!@", "Abcd123!@");
+
+        ExtractableResponse<Response> response = httpPost(signupRequest, "/members/signup");
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
     @DisplayName("닉네임을 수정할 수 있다.")

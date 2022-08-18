@@ -12,14 +12,12 @@ import useSnackbar from '@/hooks/useSnackbar';
 
 import * as Styled from './index.styles';
 
-import SNACKBAR_MESSAGE from '@/constants/snackbar';
-
 const SIZE = 3;
 
 const ProfilePage = () => {
   const { showSnackbar } = useSnackbar();
   const { page, setPage } = useContext(PaginationContext);
-  const { username, setUserName } = useContext(AuthContext);
+  const { username } = useContext(AuthContext);
   const [nickname, setNickname] = useState(username);
   const [disabled, handleDisabled] = useReducer(state => !state, true);
   const nicknameRef = useRef<HTMLInputElement>(null);
@@ -32,8 +30,6 @@ const ProfilePage = () => {
   });
   const { mutate, isError } = useUpdateNickname({
     onSuccess: () => {
-      setUserName(nickname);
-      showSnackbar(SNACKBAR_MESSAGE.SUCCESS_UPDATE_NICKNAME);
       handleDisabled();
     },
     onError: () => {

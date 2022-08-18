@@ -30,10 +30,14 @@ const ProfilePage = () => {
       keepPreviousData: true,
     },
   });
-  const { mutate } = useUpdateNickname({
+  const { mutate, isError } = useUpdateNickname({
     onSuccess: () => {
       setUserName(nickname);
       showSnackbar(SNACKBAR_MESSAGE.SUCCESS_UPDATE_NICKNAME);
+      handleDisabled();
+    },
+    onError: () => {
+      nicknameRef.current?.focus();
     },
   });
 
@@ -42,6 +46,7 @@ const ProfilePage = () => {
 
     if (!disabled) {
       mutate({ nickname });
+      return;
     }
 
     handleDisabled();
@@ -73,6 +78,7 @@ const ProfilePage = () => {
               disabled={disabled}
               ref={nicknameRef}
               placeholder="닉네임을 입력해주세요."
+              isAnimationActive={isError}
               required
             />
             <Styled.FocusBorder />

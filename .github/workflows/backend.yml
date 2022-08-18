@@ -56,16 +56,27 @@ jobs:
       SONARQUBE_PROJECT_KEY: sokdak
       SONARQUBE_URL: ${{ secrets.SONARQUBE_URL }}
       SONARQUBE_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+<<<<<<< HEAD
       SONARQUBE_AUTH_URL: ${{ secrets.SONARQUBE_AUTH_URL }}
       PR_NUMBER: ${{ github.event.pull_request.number }}
       PR_BRANCH: ${{ github.event.pull_request.branch }}
     steps:
       - name: 리포지토리를 가져옵니다
         uses: actions/checkout@v3
-        
+
       - name: Gradle 명령 실행을 위한 권한을 부여합니다.
         run: chmod +x gradlew
+
+=======
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+    steps:
+      - name: 리포지토리를 가져옵니다
+        uses: actions/checkout@v3
         
+      - name: Gradle 명령 실행을 위한 권한을 부여합니다.
+        run: chmod 755 gradlew
+        
+>>>>>>> 738f1c4 (feat: dev브랜치 깃헙액션 소나큐브 관련 스크립트 변경 (#483))
       # Gralde 의 Scanner 발동, 위의 env 에서 선언한 환경변수와 함께 발동
       - name: Sonaqube Analysis
         run: ./gradlew test sonarqube
@@ -73,7 +84,8 @@ jobs:
           -Dsonar.projectKey=${{ env.SONARQUBE_PROJECT_KEY }}
           -Dsonar.projectName=${{ env.SONARQUBE_PROJECT_KEY }}-${{ env.PR_NUMBER }}
           -Dsonar.login=${{ env.SONARQUBE_TOKEN }}
-          
+<<<<<<< HEAD
+
       - name: get analysis results
         id: analysis_results
         run: |
@@ -90,10 +102,13 @@ jobs:
             if [ $BEST_VALUE == true ]; then
               echo "::set-output name=${METRIC}_best_value::✅"
             else
-              echo "::set-output name=${METRIC}_best_value::❌"                 
+              echo "::set-output name=${METRIC}_best_value::❌"
             fi
           done
+
+=======
       
+>>>>>>> 738f1c4 (feat: dev브랜치 깃헙액션 소나큐브 관련 스크립트 변경 (#483))
       # PR 에 Comment 를 달아주는 스크립트 실행
       - name: Comment Sonarqube URL
         uses: actions/github-script@v4
@@ -104,19 +119,25 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
+<<<<<<< HEAD
               body: `## 🚧 Analysis Results
             ${ SONARQUBE_PROJECT_KEY }-${ PR_NUMBER }
-            
+
             Bugs :    ${{ steps.analysis_results.outputs.bugs_value }}    ${{ steps.analysis_results.outputs.bugs_best_value }}
-            Vulnerabilities :    ${{ steps.analysis_results.outputs.vulnerabilities_value }}    ${{ steps.analysis_results.outputs.vulnerabilities_best_value }} 
-            Security Hotspots :    ${{ steps.analysis_results.outputs.security_hotspots_value }}    ${{ steps.analysis_results.outputs.security_hotspots_best_value }} 
-            Code Smells :    ${{ steps.analysis_results.outputs.code_smells_value }}    ${{ steps.analysis_results.outputs.code_smells_best_value }} 
-            Coverage :    ${{ steps.analysis_results.outputs.coverage_value }}    ${{ steps.analysis_results.outputs.coverage_best_value }} 
-            Tests :    ${{ steps.analysis_results.outputs.tests_value }}    ${{ steps.analysis_results.outputs.tests_best_value }} 
-            Test Success Density :    ${{ steps.analysis_results.outputs.test_success_density_value }}    ${{ steps.analysis_results.outputs.test_success_density_best_value }} 
-            Test Failures :    ${{ steps.analysis_results.outputs.test_failures_value }}    ${{ steps.analysis_results.outputs.test_failures_best_value }}             
+            Vulnerabilities :    ${{ steps.analysis_results.outputs.vulnerabilities_value }}    ${{ steps.analysis_results.outputs.vulnerabilities_best_value }}
+            Security Hotspots :    ${{ steps.analysis_results.outputs.security_hotspots_value }}    ${{ steps.analysis_results.outputs.security_hotspots_best_value }}
+            Code Smells :    ${{ steps.analysis_results.outputs.code_smells_value }}    ${{ steps.analysis_results.outputs.code_smells_best_value }}
+            Coverage :    ${{ steps.analysis_results.outputs.coverage_value }}    ${{ steps.analysis_results.outputs.coverage_best_value }}
+            Tests :    ${{ steps.analysis_results.outputs.tests_value }}    ${{ steps.analysis_results.outputs.tests_best_value }}
+            Test Success Density :    ${{ steps.analysis_results.outputs.test_success_density_value }}    ${{ steps.analysis_results.outputs.test_success_density_best_value }}
+            Test Failures :    ${{ steps.analysis_results.outputs.test_failures_value }}    ${{ steps.analysis_results.outputs.test_failures_best_value }}
             Duplicated Lines Density :    ${{ steps.analysis_results.outputs.duplicated_lines_density_value }}    ${{ steps.analysis_results.outputs.duplicated_lines_density_best_value }}
-            
+
             [분석 결과 확인하기](${SONARQUBE_URL})`
             })
+
+=======
+              body: `📊 ${ SONARQUBE_PROJECT_KEY }-${ PR_NUMBER } 분석 결과 확인하기 [링크](${SONARQUBE_URL})`
+            })
         
+>>>>>>> 738f1c4 (feat: dev브랜치 깃헙액션 소나큐브 관련 스크립트 변경 (#483))

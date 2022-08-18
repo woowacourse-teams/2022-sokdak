@@ -13,6 +13,10 @@ export const CommentsContainer = styled.div`
   margin-top: 50px;
   display: flex;
   flex-direction: column;
+
+  :last-child {
+    border-bottom: 0.5px solid ${props => props.theme.colors.gray_150};
+  }
 `;
 
 export const ReplyBox = styled(CommentBox)`

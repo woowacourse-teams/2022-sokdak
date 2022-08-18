@@ -316,7 +316,6 @@ class MemberControllerTest extends ControllerTest {
     @DisplayName("닉네임 조회 시 200 반환")
     @Test
     void findNickname() {
-        setUpArgumentResolver();
         doReturn(new NicknameResponse("chrisNickname"))
                 .when(memberService)
                 .findNickname(any());
@@ -334,7 +333,6 @@ class MemberControllerTest extends ControllerTest {
     @DisplayName("닉네임 변경 시 204 반환")
     @Test
     void editNickname() {
-        setUpArgumentResolver();
         NicknameUpdateRequest nicknameUpdateRequest = new NicknameUpdateRequest("chrisNick2");
         doNothing()
                 .when(memberService)
@@ -354,7 +352,6 @@ class MemberControllerTest extends ControllerTest {
     @DisplayName("닉네임 변경 시 이미 있는 닉네임이면 400 반환")
     @Test
     void editNickname_Exception_Duplicate() {
-        setUpArgumentResolver();
         NicknameUpdateRequest nicknameUpdateRequest = new NicknameUpdateRequest("hunchNickname");
         doThrow(new DuplicateNicknameException())
                 .when(memberService)
@@ -374,7 +371,6 @@ class MemberControllerTest extends ControllerTest {
     @DisplayName("닉네임 변경 시 잘못된 형식이면 400 반환")
     @Test
     void editNickname_Exception_InvalidFormat() {
-        setUpArgumentResolver();
         NicknameUpdateRequest nicknameUpdateRequest = new NicknameUpdateRequest("");
         doThrow(new InvalidNicknameException())
                 .when(memberService)
@@ -389,9 +385,5 @@ class MemberControllerTest extends ControllerTest {
                 .assertThat()
                 .apply(document("member/patch/nickname/fail/invalidFormat"))
                 .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    private void setUpArgumentResolver() {
-
     }
 }

@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.auth.controller;
 
+import static com.wooteco.sokdak.util.fixture.MemberFixture.CHRIS_ID;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.INVALID_LOGIN_REQUEST;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_LOGIN_REQUEST;
 import static org.hamcrest.Matchers.equalTo;
@@ -24,7 +25,7 @@ class AuthControllerTest extends ControllerTest {
     @DisplayName("올바른 회원정보로 로그인하면 200 반환")
     @Test
     void login() {
-        AuthInfo authInfo = new AuthInfo(3L, RoleType.USER.getName(), "chrisNickname");
+        AuthInfo authInfo = new AuthInfo(CHRIS_ID, RoleType.USER.getName(), "chrisNickname");
         given(authService.login(any(LoginRequest.class)))
                 .willReturn(authInfo);
 

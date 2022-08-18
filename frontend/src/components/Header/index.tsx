@@ -45,7 +45,7 @@ const Header = () => {
                 </Dropdown.Trigger>
                 <Dropdown.OptionList>
                   <Styled.OptionsContainer>
-                    <Styled.ProfileLink to={PATH.PROFILE}>프로필</Styled.ProfileLink>
+                    <Styled.ProfileButton>프로필</Styled.ProfileButton>
                     <Styled.LogoutButton onClick={handleClickLogout}>로그아웃</Styled.LogoutButton>
                   </Styled.OptionsContainer>
                 </Dropdown.OptionList>

@@ -34,8 +34,8 @@ public class NotificationService {
         this.notificationRepository = notificationRepository;
     }
 
-    public void notifyCommentIfNotMine(Member member, Post post, Comment comment) {
-        if (!comment.isAuthorized(member.getId())) {
+    public void notifyNewCommentIfNotAuthenticated(Member member, Post post, Comment comment) {
+        if (!comment.isAuthenticated(member.getId())) {
             notify(member, post, comment, NEW_COMMENT);
         }
     }
@@ -52,8 +52,8 @@ public class NotificationService {
         notify(post.getMember(), post, null, POST_REPORT);
     }
 
-    public void notifyReplyIfNotMine(Member member, Post post, Comment comment, Comment reply) {
-        if (!reply.isAuthorized(member.getId())) {
+    public void notifyReplyIfNotAuthenticated(Member member, Post post, Comment comment, Comment reply) {
+        if (!reply.isAuthenticated(member.getId())) {
             notify(member, post, comment, NEW_REPLY);
         }
     }
@@ -72,35 +72,19 @@ public class NotificationService {
         notificationRepository.deleteAllByCommentId(commentId);
     }
 
-    @Transactional(readOnly = true)
     public NewNotificationCheckResponse checkNewNotification(AuthInfo authInfo) {
         return new NewNotificationCheckResponse(
                 notificationRepository.existsByMemberIdAndInquiredIsFalse(authInfo.getId()));
     }
 
     public NotificationsResponse findNotifications(AuthInfo authInfo, Pageable pageable) {
-        Slice<Notification> foundNotifications = notificationRepository
+        Slice<Notification> notifications = notificationRepository
                 .findNotificationsByMemberId(authInfo.getId(), pageable);
-        List<Notification> notifications = foundNotifications.getContent();
-        inquireNotification(notifications);
-
-        List<NotificationResponse> notificationResponses = notifications
+        List<NotificationResponse> notificationResponses = notifications.getContent()
                 .stream()
                 .map(NotificationResponse::of)
                 .collect(Collectors.toUnmodifiableList());
-        return new NotificationsResponse(notificationResponses, foundNotifications.isLast());
-    }
-
-    private void inquireNotification(List<Notification> notifications) {
-        for (Notification notification : notifications) {
-            inquire(notification);
-        }
-    }
-
-    private void inquire(Notification notification) {
-        if (!notification.isInquired()) {
-            notification.inquire();
-        }
+        return new NotificationsResponse(notificationResponses, notifications.isLast());
     }
 
     public void deleteNotification(AuthInfo authInfo, Long notificationId) {

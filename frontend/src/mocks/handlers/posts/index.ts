@@ -81,24 +81,6 @@ const postHandlers = [
 
   rest.get('/posts/:id', (req, res, ctx) => {
     const { id } = req.params;
-
-    if (isNaN(Number(id))) {
-      const size = Number(req.url.searchParams.get('size'));
-      const page = Number(req.url.searchParams.get('page'));
-
-      const myPosts = postList.filter(post => post.authorized);
-      const currentPage = myPosts.slice(page * size, page * size + size);
-      const totalPageCount = Math.ceil(myPosts.length / size);
-
-      return res(
-        ctx.status(200),
-        ctx.json({
-          posts: currentPage,
-          totalPageCount,
-        }),
-      );
-    }
-
     const targetPost = postList.find(post => post.id === Number(id));
 
     if (!targetPost) {

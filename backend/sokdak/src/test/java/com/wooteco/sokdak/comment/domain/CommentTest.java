@@ -7,7 +7,7 @@ import static com.wooteco.sokdak.util.fixture.MemberFixture.getMembersForReport;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.wooteco.sokdak.auth.exception.AuthorizationException;
+import com.wooteco.sokdak.auth.exception.AuthenticationException;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.report.domain.CommentReport;
@@ -54,7 +54,7 @@ class CommentTest {
         Long invalidOwnerId = 2L;
 
         assertThatThrownBy(() -> comment.validateOwner(invalidOwnerId))
-                .isInstanceOf(AuthorizationException.class);
+                .isInstanceOf(AuthenticationException.class);
     }
 
     @DisplayName("신고가 5개 이상이면 isBlocked()가 true를 반환 그 이외는 False반환")
@@ -76,8 +76,8 @@ class CommentTest {
     @DisplayName("내가 작성한 댓글이면 true를 반환")
     @ParameterizedTest
     @CsvSource({"1, true", "2, false"})
-    void isAuthorized(Long userId, boolean expected) {
-        assertThat(comment.isAuthorized(userId)).isEqualTo(expected);
+    void isAuthenticated(Long userId, boolean expected) {
+        assertThat(comment.isAuthenticated(userId)).isEqualTo(expected);
     }
 
     @DisplayName("게시글 작성자의 댓글인지 반환")

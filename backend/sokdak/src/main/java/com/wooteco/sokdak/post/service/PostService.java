@@ -89,7 +89,7 @@ public class PostService {
         Hashtags hashtags = hashtagService.findHashtagsByPostId(postId);
 
         return PostDetailResponse.of(foundPost, postBoards.get(0), liked,
-                foundPost.isAuthorized(authInfo.getId()), hashtags);
+                foundPost.isAuthenticated(authInfo.getId()), hashtags);
     }
 
     public PostsResponse findPostsByBoard(Long boardId, Pageable pageable) {

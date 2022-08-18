@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import CheckBox from '@/components/CheckBox';
 
@@ -12,15 +12,13 @@ import scrollToCurrent from '@/utils/scrollToCurrent';
 
 interface ReplyFormProps {
   commentId: string | number;
-  setIsReplyFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ReplyForm = ({ commentId, setIsReplyFormOpen }: ReplyFormProps) => {
+const ReplyForm = ({ commentId }: ReplyFormProps) => {
   const { showSnackbar } = useSnackbar();
 
   const [content, setContent] = useState('');
   const [anonymous, setAnonymous] = useState(true);
-  const scrollRef = useRef<HTMLFormElement>(null);
 
   const { mutate: postReply } = useCreateReply({
     onSuccess: () => {
@@ -35,17 +33,14 @@ const ReplyForm = ({ commentId, setIsReplyFormOpen }: ReplyFormProps) => {
     postReply({ commentId, content, anonymous });
   };
 
-  const handleClickCancel = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
-    setIsReplyFormOpen(false);
-  };
-
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    scrollToCurrent(SCROLL.REPLY_FORM_HEIGHT);
+
+    return () => scrollToCurrent(-SCROLL.REPLY_FORM_HEIGHT);
   }, []);
 
   return (
-    <Styled.Form onSubmit={handleSubmit} ref={scrollRef}>
+    <Styled.Form onSubmit={handleSubmit}>
       <Styled.Input
         value={content}
         onChange={e => setContent(e.target.value)}
@@ -55,15 +50,11 @@ const ReplyForm = ({ commentId, setIsReplyFormOpen }: ReplyFormProps) => {
           e.preventDefault();
           showSnackbar(e.target.placeholder);
         }}
-        autoFocus
         required
       />
       <Styled.Controller>
         <CheckBox isChecked={anonymous} setIsChecked={setAnonymous} labelText="익명" />
-        <Styled.ButtonContainer>
-          <Styled.CancelButton onClick={handleClickCancel}>취소</Styled.CancelButton>
-          <Styled.SubmitButton>작성</Styled.SubmitButton>
-        </Styled.ButtonContainer>
+        <Styled.SubmitButton>작성</Styled.SubmitButton>
       </Styled.Controller>
     </Styled.Form>
   );

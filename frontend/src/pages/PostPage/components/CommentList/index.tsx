@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 
 import CommentBox from '@/pages/PostPage/components/CommentBox';
 
@@ -14,7 +14,6 @@ interface CommentListProps {
 
 const CommentList = ({ id }: CommentListProps) => {
   const { data } = useComments({ storeCode: id });
-  const [openedFormId, setOpenedFormId] = useState<undefined | number>(undefined);
 
   return (
     <>
@@ -24,7 +23,7 @@ const CommentList = ({ id }: CommentListProps) => {
           <Styled.CommentsContainer>
             {data.comments.map(comment => (
               <Fragment key={comment.id}>
-                <CommentBox {...comment} openedFormId={openedFormId} setOpenedFormId={setOpenedFormId} />
+                <CommentBox {...comment} />
                 {comment.replies.map(reply => (
                   <Styled.ReplyBox key={reply.id} mode="replies" {...reply} />
                 ))}

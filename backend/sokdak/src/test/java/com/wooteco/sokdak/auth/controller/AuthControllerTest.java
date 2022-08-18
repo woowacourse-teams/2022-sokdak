@@ -5,6 +5,7 @@ import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_LOGIN_REQUEST;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -36,7 +37,7 @@ class AuthControllerTest extends ControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("존재하지 않는 회원정보로 로그인하면 401 반환")
+    @DisplayName("존재하지 않는 회원정보로 로그인하면 400 반환")
     @Test
     void login_Exception() {
         doThrow(new LoginFailedException())
@@ -50,7 +51,7 @@ class AuthControllerTest extends ControllerTest {
                 .assertThat()
                 .body("message", equalTo("아이디나 비밀번호가 잘못되었습니다"))
                 .apply(document("login/fail"))
-                .statusCode(HttpStatus.UNAUTHORIZED.value());
+                .statusCode(HttpStatus.BAD_REQUEST.value());
 
     }
 
@@ -67,19 +68,6 @@ class AuthControllerTest extends ControllerTest {
                 .then().log().all()
                 .assertThat()
                 .apply(document("logout/success"))
-                .statusCode(HttpStatus.NO_CONTENT.value());
-    }
-
-    @DisplayName("리프레시 요청을 받으면 204 반환")
-    @Test
-    void refresh() {
-        restDocs
-                .header("Authorization", "any")
-                .header("Refresh-Token", "any")
-                .when().get("/refresh")
-                .then().log().all()
-                .assertThat()
-                .apply(document("refresh/success"))
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }

@@ -14,11 +14,9 @@ public class ReplyResponse {
     private final boolean blocked;
     private final boolean postWriter;
     private final boolean authorized;
-    private final int likeCount;
-    private final boolean like;
 
     public ReplyResponse(Long id, String nickname, String content, LocalDateTime createdAt, boolean blocked,
-                         boolean postWriter, boolean authorized, int likeCount, boolean like) {
+                         boolean postWriter, boolean authorized) {
         this.id = id;
         this.nickname = nickname;
         this.content = content;
@@ -26,13 +24,10 @@ public class ReplyResponse {
         this.blocked = blocked;
         this.postWriter = postWriter;
         this.authorized = authorized;
-        this.likeCount = likeCount;
-        this.like = like;
     }
 
-    public static ReplyResponse of(Comment reply, Long accessMemberId, boolean like) {
+    public static ReplyResponse of(Comment reply, Long accessMemberId) {
         return new ReplyResponse(reply.getId(), reply.getNickname(), reply.getMessage(), reply.getCreatedAt(),
-                reply.isBlocked(), reply.isPostWriter(), reply.isAuthorized(accessMemberId),
-                reply.getCommentLikesCount(), like);
+                reply.isBlocked(), reply.isPostWriter(), reply.isAuthenticated(accessMemberId));
     }
 }

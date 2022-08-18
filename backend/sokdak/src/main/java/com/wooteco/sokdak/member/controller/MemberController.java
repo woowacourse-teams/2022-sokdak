@@ -10,7 +10,9 @@ import com.wooteco.sokdak.member.service.MemberService;
 import com.wooteco.sokdak.member.dto.NicknameResponse;
 import com.wooteco.sokdak.member.dto.NicknameUpdateRequest;
 import com.wooteco.sokdak.support.token.Login;
+import com.wooteco.sokdak.support.token.TokenManager;
 import javax.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,10 +29,13 @@ public class MemberController {
 
     private final EmailService emailService;
     private final MemberService memberService;
+    private final TokenManager tokenManager;
 
-    public MemberController(EmailService emailService, MemberService memberService) {
+    public MemberController(EmailService emailService, MemberService memberService,
+                            TokenManager tokenManager) {
         this.emailService = emailService;
         this.memberService = memberService;
+        this.tokenManager = tokenManager;
     }
 
     @PostMapping("/signup/email")
@@ -73,6 +78,10 @@ public class MemberController {
     public ResponseEntity<Void> editNickname(@RequestBody NicknameUpdateRequest nicknameUpdateRequest,
                                              @Login AuthInfo authInfo) {
         memberService.editNickname(nicknameUpdateRequest, authInfo);
-        return ResponseEntity.noContent().build();
+        AuthInfo newAuthInfo = new AuthInfo(authInfo.getId(), authInfo.getRole(), nicknameUpdateRequest.getNickname());
+        String accessToken = tokenManager.createAccessToken(newAuthInfo);
+        return ResponseEntity.noContent()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .build();
     }
 }

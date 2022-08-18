@@ -1,12 +1,10 @@
 package com.wooteco.sokdak.like.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_COMMENT_REQUEST;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getChrisToken;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getJoshToken;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.CommentFixture.addNewCommentInPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
-import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getToken;
+import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -23,9 +21,10 @@ class LikeAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인한 회원은 좋아요 하지 않은 게시물에 좋아요를 할 수 있다.")
     @Test
     void flipLike_Create() {
-        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getChrisToken());
+        Long postId = addNewPost();
 
-        ExtractableResponse<Response> response = httpPutWithAuthorization("/posts/1/like", getChrisToken());
+        ExtractableResponse<Response> response = httpPutWithAuthorization("/posts/" + postId + "/like",
+                getChrisToken());
         LikeFlipResponse likeFlipResponse = response.jsonPath().getObject(".", LikeFlipResponse.class);
 
         assertAll(
@@ -38,12 +37,12 @@ class LikeAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인한 회원이 좋아요를 누른 게시물에 좋아요를 취소할 수 있다.")
     @Test
     void flipLike_Delete() {
-        String sessionId = getChrisToken();
-        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, sessionId);
+        String token = getChrisToken();
+        Long postId = addNewPost();
 
-        httpPutWithAuthorization("/posts/1/like", sessionId);
+        httpPutWithAuthorization("/posts/" + postId + "/like", token);
 
-        ExtractableResponse<Response> response = httpPutWithAuthorization("/posts/1/like", sessionId);
+        ExtractableResponse<Response> response = httpPutWithAuthorization("/posts/" + postId + "/like", token);
         LikeFlipResponse likeFlipResponse = response.jsonPath().getObject(".", LikeFlipResponse.class);
 
         assertAll(
@@ -56,10 +55,9 @@ class LikeAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인 하지 않은 회원이 게시글에 좋아요를 누를 경우 예외를 반환한다")
     @Test
     void flipLike_Unauthorized() {
-        String sessionId = getChrisToken();
-        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, sessionId);
+        Long postId = addNewPost();
 
-        ExtractableResponse<Response> response = httpPutWithAuthorization("/posts/1/like", "");
+        ExtractableResponse<Response> response = httpPutWithAuthorization("/posts/" + postId + "/like", "");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
@@ -67,11 +65,11 @@ class LikeAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인한 회원은 좋아요 하지 않은 댓글에 좋아요를 할 수 있다.")
     @Test
     void flipLikeComment_Create() {
-        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, getChrisToken());
-        Long commentId = addCommentAndGetCommentId(1L);
+        Long postId = addNewPost();
+        Long commentId = addNewCommentInPost(postId);
 
-        ExtractableResponse<Response> response = httpPutWithAuthorization("/comments/" + commentId + "/like",
-                getJoshToken());
+        ExtractableResponse<Response> response =
+                httpPutWithAuthorization("/comments/" + commentId + "/like", getToken("josh"));
         LikeFlipResponse likeFlipResponse = response.jsonPath().getObject(".", LikeFlipResponse.class);
 
         assertAll(
@@ -84,15 +82,15 @@ class LikeAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인한 회원이 좋아요를 누른 댓글에 좋아요를 취소할 수 있다.")
     @Test
     void flipLikeComment_Delete() {
-        String chrisToken = getChrisToken();
-        String joshToken = getJoshToken();
-        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, chrisToken);
-        Long commentId = addCommentAndGetCommentId(1L);
-
+        Long postId = addNewPost();
+        Long commentId = addNewCommentInPost(postId);
+        String joshToken = getToken("josh");
         httpPutWithAuthorization("/comments/" + commentId + "/like", joshToken);
-        ExtractableResponse<Response> response = httpPutWithAuthorization("/comments/" + commentId + "/like",
-                joshToken);
-        LikeFlipResponse likeFlipResponse = response.jsonPath().getObject(".", LikeFlipResponse.class);
+
+        ExtractableResponse<Response> response =
+                httpPutWithAuthorization("/comments/" + commentId + "/like", joshToken);
+        LikeFlipResponse likeFlipResponse = response.jsonPath()
+                .getObject(".", LikeFlipResponse.class);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
@@ -104,18 +102,11 @@ class LikeAcceptanceTest extends AcceptanceTest {
     @DisplayName("로그인 하지 않은 회원이 댓글에 좋아요를 누를 경우 예외를 반환한다")
     @Test
     void flipLikeComment_Unauthorized() {
-        String sessionId = getChrisToken();
-        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, sessionId);
-        Long commentId = addCommentAndGetCommentId(1L);
+        Long postId = addNewPost();
+        Long commentId = addNewCommentInPost(postId);
 
         ExtractableResponse<Response> response = httpPutWithAuthorization("/comments/" + commentId + "/like", "");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
-    }
-
-    private Long addCommentAndGetCommentId(Long postId) {
-        return Long.parseLong(httpPostWithAuthorization(NEW_COMMENT_REQUEST,
-                "/posts/" + postId + "/comments", getChrisToken())
-                .header("Location").split("/comments/")[1]);
     }
 }

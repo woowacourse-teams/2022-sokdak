@@ -1,8 +1,6 @@
 package com.wooteco.sokdak.comment.service;
 
 import static com.wooteco.sokdak.member.domain.RoleType.USER;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO2;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,7 +21,7 @@ import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
-import com.wooteco.sokdak.util.IntegrationTest;
+import com.wooteco.sokdak.util.ServiceTest;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +30,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class CommentServiceTest extends IntegrationTest {
+class CommentServiceTest extends ServiceTest {
 
     @Autowired
     private CommentService commentService;
@@ -48,14 +46,12 @@ class CommentServiceTest extends IntegrationTest {
 
     private Post anonymousPost;
     private Post identifiedPost;
-    private Member member;
     private Member member2;
     private String randomNickname;
 
     @BeforeEach
     void setUp() {
-        member = memberRepository.findById(1L).orElseThrow();
-        member2 = memberRepository.findById(3L).orElseThrow();
+        member2 = memberRepository.findById(4L).get();
         randomNickname = RandomNicknameGenerator.generate(new HashSet<>());
         anonymousPost = Post.builder()
                 .member(member)

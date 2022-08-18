@@ -1,7 +1,5 @@
 package com.wooteco.sokdak.comment.controller;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.SESSION_ID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -16,24 +14,12 @@ import com.wooteco.sokdak.util.ControllerTest;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 class CommentControllerTest extends ControllerTest {
-
-    @BeforeEach
-    void setUpArgumentResolver() {
-        doReturn(true)
-                .when(authInterceptor)
-                .preHandle(any(), any(), any());
-
-        doReturn(AUTH_INFO)
-                .when(authenticationPrincipalArgumentResolver)
-                .resolveArgument(any(), any(), any(), any());
-    }
 
     @DisplayName("댓글 작성 요청이 오면 새로운 댓글을 작성한다.")
     @Test
@@ -74,8 +60,7 @@ class CommentControllerTest extends ControllerTest {
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .sessionId(SESSION_ID)
-                .sessionAttr("member", AUTH_INFO)
+                .header("Authorization", "any")
                 .body(newCommentRequest)
                 .when().post("/posts/1/comments")
                 .then().log().all()

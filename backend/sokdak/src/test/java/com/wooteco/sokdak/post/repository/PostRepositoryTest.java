@@ -1,13 +1,9 @@
 package com.wooteco.sokdak.post.repository;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_ENCRYPTED_PASSWORD;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.wooteco.sokdak.auth.service.Encryptor;
 import com.wooteco.sokdak.config.JPAConfig;
-import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.util.RepositoryTest;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,9 +19,6 @@ import org.springframework.data.domain.Slice;
 class PostRepositoryTest extends RepositoryTest {
 
     @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
     private PostRepository postRepository;
 
     private Post post1;
@@ -36,34 +29,30 @@ class PostRepositoryTest extends RepositoryTest {
 
     @BeforeEach
     void setUp() {
-        member = memberRepository
-                .findByUsernameValueAndPasswordValue(Encryptor.encrypt(VALID_USERNAME), VALID_ENCRYPTED_PASSWORD)
-                .orElseThrow();
-
         post1 = Post.builder()
                 .title("제목1")
                 .content("본문1")
-                .member(member)
+                .member(member1)
                 .build();
         post2 = Post.builder()
                 .title("제목2")
                 .content("본문2")
-                .member(member)
+                .member(member1)
                 .build();
         post3 = Post.builder()
                 .title("제목3")
                 .content("본문3")
-                .member(member)
+                .member(member1)
                 .build();
         post4 = Post.builder()
                 .title("제목4")
                 .content("본문4")
-                .member(member)
+                .member(member1)
                 .build();
         post5 = Post.builder()
                 .title("제목5")
                 .content("본문5")
-                .member(member)
+                .member(member1)
                 .build();
         postRepository.save(post1);
         postRepository.save(post2);
@@ -106,7 +95,7 @@ class PostRepositoryTest extends RepositoryTest {
     @DisplayName("특점 멤버의 글을 시간순으로 가져오는지 확인")
     @Test
     void findPostsByMember() {
-        Page<Post> result = postRepository.findPostsByMemberOrderByCreatedAtDesc(PageRequest.of(0, 2), member);
+        Page<Post> result = postRepository.findPostsByMemberOrderByCreatedAtDesc(PageRequest.of(0, 2), member1);
 
         assertAll(
                 () -> assertThat(result.getContent()).containsExactly(post5, post4),

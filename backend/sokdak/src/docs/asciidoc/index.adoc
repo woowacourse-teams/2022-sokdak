@@ -139,28 +139,43 @@ operation::comment/create/fail/noMessage[snippets='http-request,http-response']
 operation::reply/create/success[snippets='http-request,http-response']
 
 === 댓글 목록 조회
+
 ==== 성공
+
 operation::comment/find/all/success[snippets='http-request,http-response']
 
 === 댓글 삭제
+
 ==== 성공
+
 operation::comment/delete/success[snippets='http-request,http-response']
 
 == 추천
+
 === 게시글 추천
+
 ==== 성공
+
 operation::like/post/success[snippets='http-request,http-response']
+
 === 댓글 추천
+
 ==== 성공
+
 operation::like/comment/success[snippets='http-request,http-response']
 
 == 해시태그
 
 === 해시태그로 검색
+
 ==== 성공
+
 operation::search/byHashtag/success[snippets='http-request,http-response']
+
 ==== 실패
+
 ===== 댓글 내용이 없는 경우
+
 operation::search/byHashtag/fail/noHashtag[snippets='http-request,http-response']
 
 === 해시태그 목록 조회

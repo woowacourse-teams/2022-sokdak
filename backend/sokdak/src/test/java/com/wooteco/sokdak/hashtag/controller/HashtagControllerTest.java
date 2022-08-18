@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.hashtag.controller;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.matches;
 import static org.mockito.ArgumentMatchers.refEq;
@@ -17,23 +16,12 @@ import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.util.ControllerTest;
 import java.time.LocalDateTime;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 class HashtagControllerTest extends ControllerTest {
-
-    @BeforeEach
-    void setUpArgumentResolver() {
-        doReturn(true)
-                .when(authInterceptor)
-                .preHandle(any(), any(), any());
-        doReturn(AUTH_INFO)
-                .when(authenticationPrincipalArgumentResolver)
-                .resolveArgument(any(), any(), any(), any());
-    }
 
     @DisplayName("해시태그로 검색 시 200 반환")
     @Test

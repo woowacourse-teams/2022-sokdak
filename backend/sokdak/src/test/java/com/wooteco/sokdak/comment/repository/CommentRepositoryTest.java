@@ -1,29 +1,20 @@
 package com.wooteco.sokdak.comment.repository;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.wooteco.sokdak.comment.domain.Comment;
-import com.wooteco.sokdak.config.JPAConfig;
-import com.wooteco.sokdak.member.domain.Member;
-import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
+import com.wooteco.sokdak.util.RepositoryTest;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 
-@DataJpaTest
-@Import(JPAConfig.class)
-class CommentRepositoryTest {
+class CommentRepositoryTest extends RepositoryTest {
 
     @Autowired
     private CommentRepository commentRepository;
@@ -31,23 +22,12 @@ class CommentRepositoryTest {
     @Autowired
     private PostRepository postRepository;
 
-    @Autowired
-    private MemberRepository memberRepository;
-
-    private Member member;
     private Post post;
 
     @BeforeEach
     void setUp() {
-        member = Member.builder()
-                .username(VALID_USERNAME)
-                .password(VALID_PASSWORD)
-                .nickname(VALID_NICKNAME)
-                .build();
-        memberRepository.save(member);
-
         post = Post.builder()
-                .member(member)
+                .member(member1)
                 .title(VALID_POST_TITLE)
                 .content(VALID_POST_CONTENT)
                 .build();
@@ -58,13 +38,13 @@ class CommentRepositoryTest {
     @Test
     void findAllByPostId() {
         Comment comment1 = Comment.builder()
-                .member(member)
+                .member(member1)
                 .post(post)
                 .message("댓글")
                 .nickname("josh")
                 .build();
         Comment comment2 = Comment.builder()
-                .member(member)
+                .member(member1)
                 .post(post)
                 .message("댓글2")
                 .nickname("josh")

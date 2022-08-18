@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.member.controller;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.refEq;
@@ -12,18 +11,18 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
 import com.wooteco.sokdak.member.dto.EmailRequest;
+import com.wooteco.sokdak.member.dto.NicknameResponse;
+import com.wooteco.sokdak.member.dto.NicknameUpdateRequest;
 import com.wooteco.sokdak.member.dto.SignupRequest;
 import com.wooteco.sokdak.member.dto.UniqueResponse;
 import com.wooteco.sokdak.member.dto.VerificationRequest;
+import com.wooteco.sokdak.member.exception.DuplicateNicknameException;
 import com.wooteco.sokdak.member.exception.InvalidAuthCodeException;
 import com.wooteco.sokdak.member.exception.InvalidNicknameException;
 import com.wooteco.sokdak.member.exception.InvalidSignupFlowException;
 import com.wooteco.sokdak.member.exception.NotWootecoMemberException;
 import com.wooteco.sokdak.member.exception.PasswordConfirmationException;
 import com.wooteco.sokdak.member.exception.TicketUsedException;
-import com.wooteco.sokdak.member.dto.NicknameResponse;
-import com.wooteco.sokdak.member.dto.NicknameUpdateRequest;
-import com.wooteco.sokdak.member.exception.DuplicateNicknameException;
 import com.wooteco.sokdak.util.ControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -317,7 +316,6 @@ class MemberControllerTest extends ControllerTest {
     @DisplayName("닉네임 조회 시 200 반환")
     @Test
     void findNickname() {
-        setUpArgumentResolver();
         doReturn(new NicknameResponse("chrisNickname"))
                 .when(memberService)
                 .findNickname(any());
@@ -335,7 +333,6 @@ class MemberControllerTest extends ControllerTest {
     @DisplayName("닉네임 변경 시 204 반환")
     @Test
     void editNickname() {
-        setUpArgumentResolver();
         NicknameUpdateRequest nicknameUpdateRequest = new NicknameUpdateRequest("chrisNick2");
         doNothing()
                 .when(memberService)
@@ -355,7 +352,6 @@ class MemberControllerTest extends ControllerTest {
     @DisplayName("닉네임 변경 시 이미 있는 닉네임이면 400 반환")
     @Test
     void editNickname_Exception_Duplicate() {
-        setUpArgumentResolver();
         NicknameUpdateRequest nicknameUpdateRequest = new NicknameUpdateRequest("hunchNickname");
         doThrow(new DuplicateNicknameException())
                 .when(memberService)
@@ -375,7 +371,6 @@ class MemberControllerTest extends ControllerTest {
     @DisplayName("닉네임 변경 시 잘못된 형식이면 400 반환")
     @Test
     void editNickname_Exception_InvalidFormat() {
-        setUpArgumentResolver();
         NicknameUpdateRequest nicknameUpdateRequest = new NicknameUpdateRequest("");
         doThrow(new InvalidNicknameException())
                 .when(memberService)
@@ -390,14 +385,5 @@ class MemberControllerTest extends ControllerTest {
                 .assertThat()
                 .apply(document("member/patch/nickname/fail/invalidFormat"))
                 .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    private void setUpArgumentResolver() {
-        doReturn(true)
-                .when(authInterceptor)
-                .preHandle(any(), any(), any());
-        doReturn(AUTH_INFO)
-                .when(authenticationPrincipalArgumentResolver)
-                .resolveArgument(any(), any(), any(), any());
     }
 }

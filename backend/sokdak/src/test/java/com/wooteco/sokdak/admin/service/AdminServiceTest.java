@@ -1,8 +1,6 @@
 package com.wooteco.sokdak.admin.service;
 
 import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO_ADMIN;
 import static com.wooteco.sokdak.util.fixture.PostFixture.BLOCKED_COUNT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.SERIAL_NUMBER;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -14,12 +12,14 @@ import com.wooteco.sokdak.admin.dto.TicketRequest;
 import com.wooteco.sokdak.admin.dto.TicketsResponse;
 import com.wooteco.sokdak.admin.exception.NoAdminException;
 import com.wooteco.sokdak.auth.domain.Ticket;
+import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.board.exception.BoardNotFoundException;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.exception.SerialNumberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
@@ -28,7 +28,7 @@ import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.post.service.PostService;
 import com.wooteco.sokdak.report.repository.PostReportRepository;
-import com.wooteco.sokdak.util.IntegrationTest;
+import com.wooteco.sokdak.util.ServiceTest;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +40,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @DisplayName("관리자 서비스 테스트")
 @Transactional(propagation = Propagation.NEVER)
-class AdminServiceTest extends IntegrationTest {
+class AdminServiceTest extends ServiceTest {
+
+    private static final AuthInfo AUTH_INFO_ADMIN = new AuthInfo(1L, RoleType.ADMIN.getName(), "adminNickname");
 
     @Autowired
     private AdminService adminService;

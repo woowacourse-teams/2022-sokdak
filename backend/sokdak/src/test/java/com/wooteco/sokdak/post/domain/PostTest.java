@@ -1,6 +1,9 @@
 package com.wooteco.sokdak.post.domain;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.*;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getMembersForReport;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

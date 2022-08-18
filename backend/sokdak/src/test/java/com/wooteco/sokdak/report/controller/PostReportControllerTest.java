@@ -1,17 +1,13 @@
 package com.wooteco.sokdak.report.controller;
 
-import static com.wooteco.sokdak.util.fixture.MemberFixture.AUTH_INFO;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.report.exception.AlreadyReportPostException;
 import com.wooteco.sokdak.report.exception.InvalidReportMessageException;
 import com.wooteco.sokdak.util.ControllerTest;
-import io.restassured.module.mockmvc.response.ValidatableMockMvcResponse;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,16 +18,6 @@ import org.springframework.restdocs.RestDocumentationExtension;
 @ExtendWith(RestDocumentationExtension.class)
 class PostReportControllerTest extends ControllerTest {
 
-    @BeforeEach
-    void setUpArgumentResolver() {
-        doReturn(true)
-                .when(authInterceptor)
-                .preHandle(any(), any(), any());
-        doReturn(AUTH_INFO)
-                .when(authenticationPrincipalArgumentResolver)
-                .resolveArgument(any(), any(), any(), any());
-    }
-
     @DisplayName("게시글을 신고한다")
     @Test
     void reportPost() {
@@ -40,7 +26,7 @@ class PostReportControllerTest extends ControllerTest {
                 .when(postReportService)
                 .reportPost(any(), any(), any());
 
-        ValidatableMockMvcResponse response = restDocs
+        restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "any")
                 .body(reportRequest)

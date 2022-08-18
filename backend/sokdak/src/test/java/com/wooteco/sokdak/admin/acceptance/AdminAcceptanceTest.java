@@ -1,19 +1,19 @@
 package com.wooteco.sokdak.admin.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getAdminToken;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPatchWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.PostFixture.CREATE_POST_URI;
-import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST;
+import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.admin.dto.PostReportElement;
 import com.wooteco.sokdak.admin.dto.TicketElement;
 import com.wooteco.sokdak.admin.dto.TicketRequest;
+import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -31,9 +31,8 @@ public class AdminAcceptanceTest extends AcceptanceTest {
     @DisplayName("관리자 페이지에서 특정 게시글을 삭제할 수 있다.")
     @Test
     void deletePost() {
-        String chrisToken = getChrisToken();
         String adminToken = getAdminToken();
-        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, chrisToken);
+        addNewPost();
 
         httpDeleteWithAuthorization("admin/posts/1", adminToken);
 
@@ -47,9 +46,8 @@ public class AdminAcceptanceTest extends AcceptanceTest {
     @DisplayName("관리자 페이지에서 특정 글 블락 처리, 신고목록 조회, 블락 해제가 가능하다.")
     @Test
     void blockAndFindReportsAndunblockPost() {
-        String chrisToken = getChrisToken();
         String adminToken = getAdminToken();
-        httpPostWithAuthorization(NEW_POST_REQUEST, CREATE_POST_URI, chrisToken);
+        addNewPost();
 
         httpPostWithAuthorization("", "admin/posts/1/postreports/" + reportCount, adminToken);
         ExtractableResponse<Response> response = httpGetWithAuthorization("admin/postreports", adminToken);
@@ -99,5 +97,10 @@ public class AdminAcceptanceTest extends AcceptanceTest {
         return response.body()
                 .jsonPath()
                 .getList("postReports", PostReportElement.class);
+    }
+
+    private String getAdminToken() {
+        LoginRequest loginRequest = new LoginRequest("admin1", "Abcd123!@");
+        return httpPost(loginRequest, "/login").header(AUTHORIZATION);
     }
 }

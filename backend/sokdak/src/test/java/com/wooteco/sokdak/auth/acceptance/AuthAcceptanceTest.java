@@ -54,7 +54,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
     void login_Exception_NotExistUser() {
         ExtractableResponse<Response> response = httpPost(INVALID_LOGIN_REQUEST, "/login");
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
     @DisplayName("올바른 인증번호로 인증할 수 있다.")

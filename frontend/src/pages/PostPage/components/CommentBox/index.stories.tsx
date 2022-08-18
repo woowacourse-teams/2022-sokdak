@@ -2,7 +2,7 @@ import Comment from '.';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 export default {
-  title: 'Components/Comment',
+  title: 'Pages/PostPage/Comment',
   component: Comment,
 } as ComponentMeta<typeof Comment>;
 

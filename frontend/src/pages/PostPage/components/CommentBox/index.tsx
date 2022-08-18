@@ -3,14 +3,18 @@ import { useReducer } from 'react';
 import ConfirmModal from '@/components/ConfirmModal';
 
 import useDeleteComment from '@/hooks/queries/comment/useDeleteComment';
+import useLikeComment from '@/hooks/queries/comment/useLikeComment';
 import useReportComment from '@/hooks/queries/comment/useReportComment';
 
 import * as Styled from './index.styles';
 
+import HeartImg from '@/assets/images/heart.svg';
+import countFormatter from '@/utils/countFormatter';
 import timeConverter from '@/utils/timeConverter';
 
 import ReplyForm from '../ReplyForm';
 import ReportModal from '../ReportModal';
+import { useTheme } from '@emotion/react';
 
 const Mode = {
   COMMENTS: 'comments',
@@ -33,11 +37,16 @@ const CommentBox = ({
   blocked,
   postWriter,
   mode = Mode.COMMENTS,
+  likeCount,
   className,
+  like,
 }: CommentBoxProps) => {
   const [isReportModalOpen, handleReportModal] = useReducer(state => !state, false);
   const [isDeleteModalOpen, handleDeleteModal] = useReducer(state => !state, false);
   const [isReplyFormOpen, handleReplyForm] = useReducer(state => !state, false);
+  const theme = useTheme();
+  const strokeColor = like ? theme.colors.pink_300 : theme.colors.gray_300;
+  const fillColor = like ? theme.colors.pink_300 : 'white';
 
   const { mutate: deleteComment } = useDeleteComment();
   const { mutate: reportComment } = useReportComment({
@@ -45,6 +54,7 @@ const CommentBox = ({
       handleReportModal();
     },
   });
+  const { mutate: likeComment } = useLikeComment();
 
   const handleClickReportButton = () => {
     handleReportModal();
@@ -56,6 +66,10 @@ const CommentBox = ({
 
   const submitReportComment = (message: string) => {
     reportComment({ id, message });
+  };
+
+  const handleLikeButton = () => {
+    likeComment({ id });
   };
 
   if (!content) {
@@ -83,7 +97,13 @@ const CommentBox = ({
           </Styled.ButtonContainer>
         </Styled.CommentHeader>
         <Styled.Content>{content}</Styled.Content>
-        <Styled.Date>{timeConverter(createdAt!)}</Styled.Date>
+        <Styled.Footer>
+          <Styled.Date>{timeConverter(createdAt!)}</Styled.Date>
+          <Styled.LikeContainer isLiked={like} onClick={handleLikeButton}>
+            <HeartImg fill={fillColor} stroke={strokeColor} width="12px" height="11px" />
+            {countFormatter(likeCount)}
+          </Styled.LikeContainer>
+        </Styled.Footer>
       </Styled.Container>
 
       {isReplyFormOpen && <ReplyForm commentId={id} />}

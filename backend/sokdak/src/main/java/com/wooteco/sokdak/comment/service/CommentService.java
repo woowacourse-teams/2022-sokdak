@@ -6,9 +6,11 @@ import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.CommentsResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.dto.NewReplyRequest;
+import com.wooteco.sokdak.comment.dto.ReplyResponse;
 import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
 import com.wooteco.sokdak.comment.exception.ReplyDepthException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
+import com.wooteco.sokdak.like.repository.CommentLikeRepository;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
@@ -17,10 +19,9 @@ import com.wooteco.sokdak.notification.service.NotificationService;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -35,13 +36,16 @@ public class CommentService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
     private final NotificationService notificationService;
+    private final CommentLikeRepository commentLikeRepository;
 
     public CommentService(CommentRepository commentRepository, MemberRepository memberRepository,
-                          PostRepository postRepository, NotificationService notificationService) {
+                          PostRepository postRepository, NotificationService notificationService,
+                          CommentLikeRepository commentLikeRepository) {
         this.commentRepository = commentRepository;
         this.memberRepository = memberRepository;
         this.postRepository = postRepository;
         this.notificationService = notificationService;
+        this.commentLikeRepository = commentLikeRepository;
     }
 
     @Transactional
@@ -56,7 +60,7 @@ public class CommentService {
         Comment comment = Comment.parent(member, post, nickname, newCommentRequest.getContent());
 
         commentRepository.save(comment);
-        notificationService.notifyNewCommentIfNotAuthenticated(post.getMember(), post, comment);
+        notificationService.notifyCommentIfNotMine(post.getMember(), post, comment);
 
         return comment.getId();
     }
@@ -77,7 +81,7 @@ public class CommentService {
         Comment reply = Comment.child(member, post, nickname, newReplyRequest.getContent(), parent);
 
         commentRepository.save(reply);
-        notificationService.notifyReplyIfNotAuthenticated(parent.getMember(), post, parent, reply);
+        notificationService.notifyReplyIfNotMine(parent.getMember(), post, parent, reply);
         return reply.getId();
     }
 
@@ -87,7 +91,7 @@ public class CommentService {
         if (!anonymous) { // 기명이면 member table에서 memberId로 닉네임 가져옴.
             return memberNickname;
         }
-        if (post.isAuthenticated(authInfo.getId())) { // 댓글 작성하는 사람과 게시글 작성자 일치
+        if (post.isAuthorized(authInfo.getId())) { // 댓글 작성하는 사람과 게시글 작성자 일치
             return getPostWriterNickname(post);
         }
 
@@ -125,8 +129,7 @@ public class CommentService {
         List<CommentResponse> commentResponses = comments.stream()
                 .map(it -> convertToCommentResponse(postId, authInfo, it))
                 .collect(Collectors.toList());
-        int numOfComment = (int) commentResponses.stream()
-                .count();
+        int numOfComment = commentResponses.size();
         int numOfReply = commentResponses.stream()
                 .map(it -> it.getReplies().size())
                 .reduce(Integer::sum).orElse(0);
@@ -134,19 +137,22 @@ public class CommentService {
     }
 
     private CommentResponse convertToCommentResponse(Long postId, AuthInfo authInfo, Comment comment) {
+        Long id = authInfo.getId();
         if (comment.isSoftRemoved()) {
-            return CommentResponse.softRemovedOf(comment, findReplies(comment, postId, authInfo.getId()));
+            return CommentResponse.softRemovedOf(comment, convertToReplyResponses(comment, postId, id));
         }
-        return CommentResponse.of(comment, authInfo.getId(), findReplies(comment, postId, authInfo.getId()));
+        boolean liked = commentLikeRepository.existsByMemberIdAndCommentId(id, comment.getId());
+        return CommentResponse.of(comment, id, convertToReplyResponses(comment, postId, id), liked);
     }
 
-    private Map<Comment, Long> findReplies(Comment parent, Long postId, Long accessMemberId) {
+    private List<ReplyResponse> convertToReplyResponses(Comment parent, Long postId, Long accessMemberId) {
         List<Comment> replies = commentRepository.findAllByPostIdAndParentId(postId, parent.getId());
-        Map<Comment, Long> accessMemberIdByReply = new LinkedHashMap<>();
+        List<ReplyResponse> replyResponses = new ArrayList<>();
         for (Comment reply : replies) {
-            accessMemberIdByReply.put(reply, accessMemberId);
+            boolean liked = commentLikeRepository.existsByMemberIdAndCommentId(accessMemberId, reply.getId());
+            replyResponses.add(ReplyResponse.of(reply, accessMemberId, liked));
         }
-        return accessMemberIdByReply;
+        return replyResponses;
     }
 
     @Transactional
@@ -155,6 +161,7 @@ public class CommentService {
                 .orElseThrow(CommentNotFoundException::new);
         comment.validateOwner(authInfo.getId());
         notificationService.deleteCommentNotification(commentId);
+        commentLikeRepository.deleteAllByCommentId(commentId);
 
         Comment parent = comment.getParent();
         deleteCommentOrReply(comment, parent);
@@ -184,7 +191,6 @@ public class CommentService {
             return;
         }
         comment.changePretendingToBeRemoved();
-        return;
     }
 
     private boolean isComment(Comment parent) {

@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import axios from 'axios';
 
 import { AuthContextProvider } from './context/Auth';
+import { PaginationContextProvider } from './context/Pagination';
 import { SnackBarContextProvider } from './context/Snackbar';
 
 import authFetcher from './apis';
@@ -48,17 +49,19 @@ if (accessToken) authFetcher.defaults.headers.common['Authorization'] = accessTo
 
 ReactDOM.createRoot(rootNode).render(
   <React.StrictMode>
-    <SnackBarContextProvider>
-      <ThemeProvider theme={theme}>
-        <BrowserRouter>
-          <QueryClientProvider client={queryClient}>
-            <AuthContextProvider>
-              <App />
-            </AuthContextProvider>
-          </QueryClientProvider>
-        </BrowserRouter>
-        <GlobalStyle />
-      </ThemeProvider>
-    </SnackBarContextProvider>
+    <AuthContextProvider>
+      <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={theme}>
+            <SnackBarContextProvider>
+              <PaginationContextProvider>
+                <App />
+              </PaginationContextProvider>
+            </SnackBarContextProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </BrowserRouter>
+      <GlobalStyle />
+    </AuthContextProvider>
   </React.StrictMode>,
 );

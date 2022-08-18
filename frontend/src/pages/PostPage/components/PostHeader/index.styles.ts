@@ -16,7 +16,7 @@ export const TitleContainer = styled.div`
 
 export const Title = styled.p`
   font-size: 24px;
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
   word-break: keep-all;
   line-height: 30px;
 `;
@@ -58,7 +58,7 @@ export const PostInfo = styled.div`
 
 export const Author = styled.span`
   font-size: 14px;
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
 `;
 
 export const Date = styled.span`

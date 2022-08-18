@@ -19,12 +19,12 @@ export const BlockContainer = styled.div`
   justify-content: center;
   height: calc(100vh - 166px);
   overflow: hidden;
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
   gap: 2em;
 `;
 
 export const BackButton = styled.button`
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
   background-color: ${props => props.theme.colors.sub};
   color: white;
   padding: 1em;
@@ -38,7 +38,7 @@ export const ListButtonContainer = styled.div`
 `;
 
 export const ListButton = styled(Link)`
-  font-family: 'BMHANNAAir';
+  font-family: 'BMHANNAAir', 'Noto Sans KR';
   background-color: ${props => props.theme.colors.sub};
   color: white;
   border-radius: 8px;
@@ -61,7 +61,7 @@ export const SpinnerContainer = styled.div`
 export const ErrorContainer = styled.div`
   width: 100%;
   height: 500px;
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
   display: flex;
   flex-direction: column;
   justify-content: center;

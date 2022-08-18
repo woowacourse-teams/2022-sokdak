@@ -10,7 +10,7 @@ export const NotificationPageContainer = styled.div`
 export const Title = styled.h1`
   width: calc(100% - 1em);
   font-size: 2rem;
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
   text-align: left;
   padding: 0.5em;
 `;
@@ -22,7 +22,7 @@ export const NotificationContainer = styled.div`
 
 export const NotificationTime = styled.h2`
   font-size: 1.2rem;
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
   margin: 0.7em;
   margin-top: 1.2em;
 `;
@@ -40,7 +40,7 @@ export const EmptyContainer = styled.div`
   height: 5rem;
   justify-content: center;
   align-items: center;
-  font-family: 'BMHANNAAir';
+  font-family: 'BMHANNAAir', 'Noto Sans KR';
   font-size: 1rem;
   color: ${props => props.theme.colors.gray_300};
 `;

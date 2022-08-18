@@ -14,6 +14,10 @@ export const Container = styled.div`
 export const Title = styled.p`
   font-weight: 700;
   font-size: 15px;
+  width: 85%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 export const Content = styled.p`

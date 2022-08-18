@@ -90,7 +90,7 @@ class NotificationServiceTest extends IntegrationTest {
     @DisplayName("새 댓글 알림을 등록한다.")
     @Test
     void notifyNewComment() {
-        notificationService.notifyNewCommentIfNotAuthenticated(member1, post, comment);
+        notificationService.notifyCommentIfNotMine(member1, post, comment);
 
         List<Notification> notifications = notificationRepository.findByMemberId(member1.getId());
         Notification notification = notifications.get(0);
@@ -108,7 +108,7 @@ class NotificationServiceTest extends IntegrationTest {
     @DisplayName("자신의 게시글에 댓글을 동록하면 댓글 알림이 생성되지 않는다.")
     @Test
     void notifyNewComment_MyPostMyComment() {
-        notificationService.notifyNewCommentIfNotAuthenticated(member1, post, comment2);
+        notificationService.notifyCommentIfNotMine(member1, post, comment2);
 
         List<Notification> notifications = notificationRepository.findByMemberId(member1.getId());
 
@@ -181,7 +181,7 @@ class NotificationServiceTest extends IntegrationTest {
                 .build();
         commentRepository.save(reply);
 
-        notificationService.notifyReplyIfNotAuthenticated(comment.getMember(), post, comment, reply);
+        notificationService.notifyReplyIfNotMine(comment.getMember(), post, comment, reply);
 
         List<Notification> notifications = notificationRepository.findByMemberId(comment.getMember().getId());
         Notification notification = notifications.get(0);
@@ -208,14 +208,9 @@ class NotificationServiceTest extends IntegrationTest {
         assertThat(newNotificationCheckResponse.isExistence()).isEqualTo(expected);
     }
 
-    @DisplayName("알림 목록을 반환한다.")
+    @DisplayName("알림 목록을 반환하고 모든 알림을 조회한 알림으로 변경한다.")
     @Test
     void findNotifications() {
-        Notification notification = Notification.builder()
-                .member(member1)
-                .notificationType(HOT_BOARD)
-                .post(post)
-                .build();
         Notification notification2 = Notification.builder()
                 .member(member1)
                 .notificationType(POST_REPORT)
@@ -227,23 +222,24 @@ class NotificationServiceTest extends IntegrationTest {
                 .post(post)
                 .comment(comment)
                 .build();
-        notificationRepository.save(notification);
         notificationRepository.save(notification2);
         notificationRepository.save(notification3);
 
         NotificationsResponse notificationsResponse = notificationService
                 .findNotifications(AUTH_INFO, PageRequest.of(0, 2, Sort.by("createdAt").descending()));
         List<NotificationResponse> notificationResponses = notificationsResponse.getNotifications();
+        NewNotificationCheckResponse newNotificationCheckResponse = notificationService.checkNewNotification(AUTH_INFO);
 
         assertAll(
-                () -> assertThat(notificationsResponse.isLastPage()).isFalse(),
+                () -> assertThat(notificationsResponse.isLastPage()).isTrue(),
                 () -> assertThat(notificationResponses).hasSize(2),
                 () -> assertThat(notificationResponses.get(0).getPostId()).isEqualTo(post.getId()),
                 () -> assertThat(notificationResponses.get(0).getType()).isEqualTo("NEW_COMMENT"),
                 () -> assertThat(notificationResponses.get(0).getContent()).isEqualTo(post.getTitle()),
                 () -> assertThat(notificationResponses.get(1).getPostId()).isEqualTo(post.getId()),
                 () -> assertThat(notificationResponses.get(1).getType()).isEqualTo("POST_REPORT"),
-                () -> assertThat(notificationResponses.get(1).getContent()).isEqualTo(post.getTitle())
+                () -> assertThat(notificationResponses.get(1).getContent()).isEqualTo(post.getTitle()),
+                () -> assertThat(newNotificationCheckResponse.isExistence()).isFalse()
         );
     }
 

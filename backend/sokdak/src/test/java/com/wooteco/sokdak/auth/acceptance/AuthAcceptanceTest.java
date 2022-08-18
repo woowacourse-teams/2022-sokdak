@@ -1,10 +1,8 @@
 package com.wooteco.sokdak.auth.acceptance;
 
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.INVALID_LOGIN_REQUEST;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_LOGIN_REQUEST;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.doReturn;
@@ -68,8 +66,8 @@ class AuthAcceptanceTest extends AcceptanceTest {
                 .build();
         authCodeRepository.save(authCode);
 
-        ExtractableResponse<Response> response = httpPostWithAuthorization(new VerificationRequest(email, code),
-                "members/signup/email/verification", getChrisToken());
+        ExtractableResponse<Response> response =
+                httpPost(new VerificationRequest(email, code), "members/signup/email/verification");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
@@ -85,8 +83,8 @@ class AuthAcceptanceTest extends AcceptanceTest {
                 .build();
         authCodeRepository.save(authCode);
 
-        ExtractableResponse<Response> response = httpPostWithAuthorization(new VerificationRequest(email, "NONONO"),
-                "members/signup/email/verification", getChrisToken());
+        ExtractableResponse<Response> response =
+                httpPost(new VerificationRequest(email, "NONONO"), "members/signup/email/verification");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
@@ -102,9 +100,8 @@ class AuthAcceptanceTest extends AcceptanceTest {
                 .build();
         authCodeRepository.save(authCode);
 
-        ExtractableResponse<Response> response = httpPostWithAuthorization(
-                new VerificationRequest("wrong@gmail.com", code),
-                "members/signup/email/verification", getChrisToken());
+        ExtractableResponse<Response> response = httpPost(
+                new VerificationRequest("wrong@gmail.com", code), "members/signup/email/verification");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
@@ -124,8 +121,8 @@ class AuthAcceptanceTest extends AcceptanceTest {
                 .when(clock)
                 .instant();
 
-        ExtractableResponse<Response> response = httpPostWithAuthorization(new VerificationRequest(email, code),
-                "members/signup/email/verification", getChrisToken());
+        ExtractableResponse<Response> response =
+                httpPost(new VerificationRequest(email, code), "members/signup/email/verification");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }

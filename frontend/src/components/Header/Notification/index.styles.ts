@@ -17,12 +17,12 @@ export const NotificationContainer = styled(Link)`
 `;
 
 export const AlarmPointer = styled.div`
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background-color: ${props => props.theme.colors.sub};
   position: absolute;
   top: 15%;
-  right: 15%;
+  right: 25%;
   z-index: 2;
 `;

@@ -46,7 +46,7 @@ export const Avartar = styled.div`
 
 export const Search = styled(SearchIcon)`
   cursor: pointer;
-  margin: 10px;
+  margin: 8px;
   overflow: visible;
 `;
 

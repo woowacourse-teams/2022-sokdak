@@ -26,7 +26,9 @@ const style = css`
     font-style: normal;
   }
 
-  html {
+  html,
+  span,
+  a {
     font-family: 'Noto Sans KR', sans-serif;
   }
 

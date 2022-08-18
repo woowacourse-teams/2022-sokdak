@@ -31,6 +31,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class Comment {
 
     private static final int BLOCKED_CONDITION = 5;
+    private static final String BLIND_MESSAGE = "블라인드 처리되었습니다.";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -142,10 +143,16 @@ public class Comment {
     }
 
     public String getNickname() {
+        if (isBlocked()) {
+            return BLIND_MESSAGE;
+        }
         return nickname;
     }
 
     public String getMessage() {
+        if (isBlocked()) {
+            return BLIND_MESSAGE;
+        }
         return message.getValue();
     }
 

@@ -121,6 +121,7 @@ class CommentAcceptanceTest extends AcceptanceTest {
         Long commentId = addNewCommentInPost(postId);
         addNewCommentInPost(postId);
         List<String> tokens = getTokens();
+        String blindMessage = "블라인드 처리되었습니다.";
 
         for (int i = 0; i < 5; ++i) {
             ReportRequest reportRequest = new ReportRequest("댓글신고");
@@ -134,7 +135,11 @@ class CommentAcceptanceTest extends AcceptanceTest {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(commentResponses.get(0).isBlocked()).isTrue(),
-                () -> assertThat(commentResponses.get(1).isBlocked()).isFalse()
+                () -> assertThat(commentResponses.get(0).getNickname()).isEqualTo(blindMessage),
+                () -> assertThat(commentResponses.get(0).getContent()).isEqualTo(blindMessage),
+                () -> assertThat(commentResponses.get(1).isBlocked()).isFalse(),
+                () -> assertThat(commentResponses.get(1).getNickname()).isNotEqualTo(blindMessage),
+                () -> assertThat(commentResponses.get(1).getContent()).isNotEqualTo(blindMessage)
         );
     }
 

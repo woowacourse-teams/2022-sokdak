@@ -40,7 +40,7 @@ export const TitleContainer = styled.div`
 
 export const Title = styled.p<{ isModified: boolean }>`
   font-size: 24px;
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
 
   overflow: hidden;
   text-overflow: ellipsis;

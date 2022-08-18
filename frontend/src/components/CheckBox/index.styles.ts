@@ -24,8 +24,9 @@ export const HiddenCheckBox = styled.input`
     font-size: 11px;
     color: ${props => props.theme.colors.sub};
     position: absolute;
-    left: 2px;
-    top: 2px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 `;
 

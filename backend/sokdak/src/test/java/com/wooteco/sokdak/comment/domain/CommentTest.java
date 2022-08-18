@@ -6,6 +6,7 @@ import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getMembersForReport;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.member.domain.Member;
@@ -94,6 +95,28 @@ class CommentTest {
         boolean actual = comment.isPostWriter();
 
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @DisplayName("블락 처리된 Comment는 실제 내용을 반환하지 않는다.")
+    @ParameterizedTest
+    @CsvSource({"5, true", "4, false"})
+    void getMessage_Blocked(int reportCount, boolean expected) {
+        List<Member> members = getMembersForReport();
+        for (int i = 0; i < reportCount; ++i) {
+            CommentReport.builder()
+                    .comment(comment)
+                    .reporter(members.get(i))
+                    .reportMessage("신고")
+                    .build();
+        }
+
+        boolean nicknameActual = comment.getNickname().equals("블라인드 처리되었습니다.");
+        boolean messageActual = comment.getMessage().equals("블라인드 처리되었습니다.");
+
+        assertAll(
+                () -> assertThat(nicknameActual).isEqualTo(expected),
+                () -> assertThat(messageActual).isEqualTo(expected)
+        );
     }
 
     private static Stream<Arguments> provideMemberAndExpected() {

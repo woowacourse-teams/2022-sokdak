@@ -8,7 +8,7 @@ import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getFiveTokens;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getTokens;
 import static com.wooteco.sokdak.util.fixture.PostFixture.FREE_BOARD_POST_URI;
 import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST;
 import static com.wooteco.sokdak.util.fixture.PostFixture.NEW_POST_REQUEST2;
@@ -105,7 +105,7 @@ class PostAcceptanceTest extends AcceptanceTest {
     void findPosts_Block() {
         Long blockedPostId = addNewPost();
         addNewPost();
-        List<String> tokens = getFiveTokens();
+        List<String> tokens = getTokens();
         for (int i = 0; i < 5; ++i) {
             ReportRequest reportRequest = new ReportRequest("신고");
             httpPostWithAuthorization(reportRequest, "/posts/" + blockedPostId + "/report", tokens.get(i));
@@ -130,7 +130,7 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void findPost_Block() {
         Long blockedPostId = addNewPost();
-        List<String> tokens = getFiveTokens();
+        List<String> tokens = getTokens();
         for (int i = 0; i < 5; ++i) {
             ReportRequest reportRequest = new ReportRequest("신고");
             httpPostWithAuthorization(reportRequest, "/posts/" + blockedPostId + "/report", tokens.get(i));

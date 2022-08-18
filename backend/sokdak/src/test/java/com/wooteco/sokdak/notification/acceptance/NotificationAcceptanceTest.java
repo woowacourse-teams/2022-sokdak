@@ -9,8 +9,8 @@ import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getFiveTokens;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getToken;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getTokens;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -91,7 +91,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
     @Test
     void checkNewNotification_PostInHotBoard() {
         addNewPost();
-        List<String> otherTokens = getFiveTokens();
+        List<String> otherTokens = getTokens();
         for (String token : otherTokens) {
             httpPutWithAuthorization("/posts/1/like", token);
         }
@@ -110,7 +110,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
     @Test
     void checkNewNotification_PostReport() {
         Long postId = addNewPost();
-        List<String> reporterTokens = getFiveTokens();
+        List<String> reporterTokens = getTokens();
         for (int i = 0; i < 5; ++i) {
             ReportRequest reportRequest = new ReportRequest("신고");
             httpPostWithAuthorization(reportRequest, "/posts/" + postId + "/report", reporterTokens.get(i));
@@ -133,7 +133,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         String commenterToken = getChrisToken();
         httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", commenterToken);
         Long commentId = addNewCommentInPost(postId);
-        List<String> reporterTokens = getFiveTokens();
+        List<String> reporterTokens = getTokens();
         for (int i = 0; i < 5; ++i) {
             ReportRequest reportRequest = new ReportRequest("댓글신고");
             httpPostWithAuthorization(reportRequest, "/comments/" + commentId + "/report", reporterTokens.get(i));
@@ -165,7 +165,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", token);
 >>>>>>> f28f1a8 (refactor: 메서드명 addPostAndGetPostId -> addNewPost로 수정)
 
-        List<String> otherTokens = getFiveTokens();
+        List<String> otherTokens = getTokens();
         for (String other : otherTokens) {
             httpPutWithAuthorization("/posts/1/like", other);
         }

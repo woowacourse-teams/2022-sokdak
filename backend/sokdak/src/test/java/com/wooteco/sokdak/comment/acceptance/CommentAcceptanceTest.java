@@ -8,7 +8,7 @@ import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getFiveTokens;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.getTokens;
 import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -120,7 +120,7 @@ class CommentAcceptanceTest extends AcceptanceTest {
         Long postId = addNewPost();
         Long commentId = addNewCommentInPost(postId);
         addNewCommentInPost(postId);
-        List<String> tokens = getFiveTokens();
+        List<String> tokens = getTokens();
 
         for (int i = 0; i < 5; ++i) {
             ReportRequest reportRequest = new ReportRequest("댓글신고");

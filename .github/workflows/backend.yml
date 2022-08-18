@@ -30,6 +30,11 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
+          
+      - name: Setup timezone
+        uses: zcong1993/setup-timezone@master
+        with:
+          timezone: Asia/Seoul
 
       - name: Setup timezone
         uses: zcong1993/setup-timezone@master
@@ -70,7 +75,11 @@ jobs:
 
       - name: Gradle 명령 실행을 위한 권한을 부여합니다.
         run: chmod +x gradlew
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> 3745753 (chore: 깃헙액션 스크립트에 타임존 kst로 설정하는 코드 ㅊ가 (#520))
       - name: Setup timezone
         uses: zcong1993/setup-timezone@master
         with:

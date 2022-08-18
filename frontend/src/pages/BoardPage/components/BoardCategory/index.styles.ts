@@ -25,6 +25,7 @@ export const Title = styled.p`
   font-family: 'BMHANNAPro';
   white-space: nowrap;
   font-size: 1.2rem;
+  color: black;
 `;
 
 export const BoardItem = styled(Link)`

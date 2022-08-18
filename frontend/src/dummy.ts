@@ -1,7 +1,7 @@
 export const postList: Post[] = [
   {
     id: 1,
-    title: '오늘 날씨 맑네요',
+    title: '❤️ 오늘 날씨 맑네요',
     createdAt: '2022-07-19T19:55:31.016376300',
     content: '날씨는 참 좋네요.',
     likeCount: 19,

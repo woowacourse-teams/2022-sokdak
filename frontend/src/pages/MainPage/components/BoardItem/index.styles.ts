@@ -15,6 +15,7 @@ export const ItemTitle = styled.p`
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  line-height: initial;
 `;
 
 export const Item = styled(Link)`
@@ -23,6 +24,7 @@ export const Item = styled(Link)`
   justify-content: space-between;
   font-family: 'BMHANNAPro', 'Noto Sans KR';
   padding: 1em 0;
+  align-items: center;
 `;
 
 export const ItemContainer = styled.section`

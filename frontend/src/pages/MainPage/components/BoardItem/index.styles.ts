@@ -6,7 +6,7 @@ import Heart from '@/assets/images/heart.svg';
 import styled from '@emotion/styled';
 
 export const Title = styled.p`
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
   font-size: 1.5rem;
   margin-bottom: 0.5em;
 `;
@@ -21,7 +21,7 @@ export const Item = styled(Link)`
   width: calc(100%-2em);
   display: flex;
   justify-content: space-between;
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
   padding: 1em 0;
 `;
 

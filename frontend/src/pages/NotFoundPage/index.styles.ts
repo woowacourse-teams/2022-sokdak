@@ -13,12 +13,12 @@ export const Container = styled.div`
 `;
 
 export const ErrorCode = styled.p`
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
   font-size: 80px;
 `;
 
 export const ErrorMessage = styled.p`
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
   font-size: 20px;
   line-height: 25px;
 `;

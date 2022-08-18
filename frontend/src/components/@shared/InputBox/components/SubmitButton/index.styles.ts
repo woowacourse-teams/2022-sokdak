@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 
 export const Button = styled.button`
   background-color: inherit;
-  font-family: 'BMHANNAAir';
+  font-family: 'BMHANNAAir', 'Noto Sans KR';
   color: ${props => props.theme.colors.sub};
   border: none;
   cursor: pointer;

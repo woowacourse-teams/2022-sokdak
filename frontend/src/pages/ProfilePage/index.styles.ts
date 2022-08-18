@@ -57,7 +57,7 @@ export const NicknameInputField = styled.div`
 
 export const Nickname = styled.input<{ length: number; isAnimationActive?: boolean }>`
   width: 200px;
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
   grid-column: 2;
   text-align: center;
 
@@ -103,7 +103,7 @@ export const PostField = styled.div`
 
 export const PostListHeader = styled.p`
   border-top: 1px solid ${props => props.theme.colors.gray_400};
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
   font-size: 20px;
   padding: 15px 0;
 `;
@@ -120,7 +120,7 @@ export const Pagination = styled(PaginationComponent)`
 `;
 
 export const EmptyPostList = styled.div`
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
   height: 363px;
   display: flex;
   justify-content: center;

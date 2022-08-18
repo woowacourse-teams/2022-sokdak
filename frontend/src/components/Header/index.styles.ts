@@ -41,7 +41,7 @@ export const Avartar = styled.div`
   background-color: inherit;
   border: 1px solid ${props => props.theme.colors.main};
   cursor: pointer;
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
 `;
 
 export const Search = styled(SearchIcon)`
@@ -57,7 +57,7 @@ export const LoginLink = styled(Link)`
 
   width: 50px;
   height: 20px;
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
   font-size: 12px;
   color: ${props => props.theme.colors.gray_900};
   border: 1px solid black;

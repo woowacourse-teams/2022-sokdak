@@ -14,18 +14,18 @@ export const Error = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-family: 'BMHANNAAir';
+  font-family: 'BMHANNAAir', 'Noto Sans KR';
   gap: 2em;
 `;
 
 export const ErrorCode = styled.p`
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
   font-size: 80px;
 `;
 
 export const HashTag = styled.p`
   width: 100%;
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
   font-size: 20px;
   margin: -8px 0 25px -35px;
 `;

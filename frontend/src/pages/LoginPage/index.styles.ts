@@ -10,14 +10,14 @@ export const LoginForm = styled.form`
 `;
 
 export const Heading = styled.h1`
-  font-family: 'BMHANNAPro';
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
   font-size: 27px;
   margin: 40px 0 70px;
 `;
 
 export const SubmitButton = styled.button`
   width: 100%;
-  font-family: 'BMHANNAAir';
+  font-family: 'BMHANNAAir', 'Noto Sans KR';
   background-color: ${props => props.theme.colors.sub};
   color: white;
   border-radius: 15px;

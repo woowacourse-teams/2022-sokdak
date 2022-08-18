@@ -30,11 +30,6 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
-          
-      - name: Setup timezone
-        uses: zcong1993/setup-timezone@master
-        with:
-          timezone: Asia/Seoul
 
       - name: Setup timezone
         uses: zcong1993/setup-timezone@master

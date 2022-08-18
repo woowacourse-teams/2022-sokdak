@@ -174,6 +174,19 @@ class CommentServiceTest extends ServiceTest {
         );
     }
 
+    @DisplayName("기명 게시글에서 게시글 작성자가 익명으로 댓글 등록을 여러번하면 동일한 닉네임이 할당된다.")
+    @Test
+    void addComment_Anonymous_PostWriterIdentified() {
+        NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
+        Long firstCommentId = commentService.addComment(identifiedPost.getId(), newCommentRequest, AUTH_INFO);
+        Long secondCommentId = commentService.addComment(identifiedPost.getId(), newCommentRequest, AUTH_INFO);
+
+        Comment firstFoundComment = commentRepository.findById(firstCommentId).orElseThrow();
+        Comment secondFoundComment = commentRepository.findById(secondCommentId).orElseThrow();
+
+        assertThat(firstFoundComment.getNickname()).isEqualTo(secondFoundComment.getNickname());
+    }
+
     @DisplayName("익명 게시글에서 게시글 작성자 아닌 사용자가 익명으로 댓글 등록")
     @Test
     void addComment_Anonymous_PostWriterAnonymous_PostWriterCommentWriterDifferent() {

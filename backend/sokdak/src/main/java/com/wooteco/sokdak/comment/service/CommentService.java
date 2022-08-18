@@ -92,7 +92,7 @@ public class CommentService {
             return memberNickname;
         }
         if (post.isAuthorized(authInfo.getId())) { // 댓글 작성하는 사람과 게시글 작성자 일치
-            return getPostWriterNickname(post);
+            return getPostWriterNickname(post, authInfo.getId());
         }
 
         // 익명이면, comment table에서 memberId에 해당하는 nickname들을 다 가져와서, member
@@ -106,9 +106,13 @@ public class CommentService {
                 .orElseGet(() -> RandomNicknameGenerator.generate(new HashSet<>(usedNicknames)));
     }
 
-    private String getPostWriterNickname(Post post) {
+    private String getPostWriterNickname(Post post, Long memberId) {
         if (post.isAnonymous()) { // 작성자가 기명으로 글 작성
             return post.getNickname();
+        }
+        if (commentRepository.existsByPostIdAndMemberId(post.getId(), memberId)) {
+            return commentRepository.findNickNamesByPostIdAndMemberId(post.getId(), memberId)
+                    .get(0);
         }
         List<String> commentNicknames = commentRepository.findNicknamesByPostId(post.getId());
         return RandomNicknameGenerator.generate(new HashSet<>(commentNicknames));

@@ -124,7 +124,9 @@ class CommentAcceptanceTest extends AcceptanceTest {
         }
 
         ExtractableResponse<Response> response = httpGet("/posts/" + postId + "/comments");
-        List<CommentResponse> commentResponses = response.jsonPath().getObject(".", CommentsResponse.class).getComments();
+        List<CommentResponse> commentResponses = response.jsonPath()
+                .getObject(".", CommentsResponse.class)
+                .getComments();
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),

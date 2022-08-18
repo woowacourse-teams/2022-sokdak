@@ -87,12 +87,14 @@ class CommentControllerTest extends ControllerTest {
     @DisplayName("특정 글의 댓글 조회 요청이 오면 모든 댓글들을 반환한다.")
     @Test
     void findComments() {
-        ReplyResponse replyResponse1 = new ReplyResponse(3L, "이스트1", "대댓글1", LocalDateTime.now(), false, false, false);
-        ReplyResponse replyResponse2 = new ReplyResponse(4L, "이스트2", "대댓글2", LocalDateTime.now(), false, false, false);
+        ReplyResponse replyResponse1 = new ReplyResponse(3L, "이스트1", "대댓글1", LocalDateTime.now(), false, false, false,
+                2, false);
+        ReplyResponse replyResponse2 = new ReplyResponse(4L, "이스트2", "대댓글2", LocalDateTime.now(), false, false, false,
+                3, true);
         CommentResponse commentResponse1 = new CommentResponse(1L, "조시1", "댓글1", LocalDateTime.now(), false, false,
-                false, List.of(replyResponse1, replyResponse2));
+                false, 3, false, List.of(replyResponse1, replyResponse2));
         CommentResponse commentResponse2 = new CommentResponse(2L, "조시2", "댓글2", LocalDateTime.now(), false, true,
-                false, Collections.emptyList());
+                false, 2, true, Collections.emptyList());
         doReturn(new CommentsResponse(List.of(commentResponse1, commentResponse2), 4))
                 .when(commentService)
                 .findComments(any(), any());

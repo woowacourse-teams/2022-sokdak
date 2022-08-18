@@ -154,9 +154,10 @@ class NotificationAcceptanceTest extends AcceptanceTest {
     @Test
     void findNotifications() {
         Long postId = addPostAndGetPostId();
-        String chrisToken = getChrisToken();
-        String joshToken = getJoshToken();
-        httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", joshToken);
+
+        LoginRequest loginRequest = new LoginRequest("josh", "Abcd123!@");
+        String token = httpPost(loginRequest, "/login").header(AUTHORIZATION);
+        httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", token);
 
         List<String> otherTokens = getTokensForLike();
         for (String other : otherTokens) {
@@ -164,13 +165,9 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         }
 
         ExtractableResponse<Response> response =
-                httpGetWithAuthorization("/notifications?size=2&page=0", chrisToken);
+                httpGetWithAuthorization("/notifications?size=2&page=0", getChrisToken());
         NotificationsResponse notificationsResponse =
                 response.jsonPath().getObject(".", NotificationsResponse.class);
-        NewNotificationCheckResponse newNotificationCheckResponse =
-                httpGetWithAuthorization("/notifications/check", chrisToken)
-                        .jsonPath()
-                        .getObject(".", NewNotificationCheckResponse.class);
 
         NotificationResponse notificationResponse1 = notificationsResponse.getNotifications().get(0);
         NotificationResponse notificationResponse2 = notificationsResponse.getNotifications().get(1);
@@ -182,8 +179,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(notificationResponse1.getContent()).isEqualTo(VALID_POST_TITLE),
                 () -> assertThat(notificationResponse2.getPostId()).isEqualTo(postId),
                 () -> assertThat(notificationResponse2.getType()).isEqualTo("NEW_COMMENT"),
-                () -> assertThat(notificationResponse2.getContent()).isEqualTo(VALID_POST_TITLE),
-                () -> assertThat(newNotificationCheckResponse.isExistence()).isFalse()
+                () -> assertThat(notificationResponse2.getContent()).isEqualTo(VALID_POST_TITLE)
         );
     }
 

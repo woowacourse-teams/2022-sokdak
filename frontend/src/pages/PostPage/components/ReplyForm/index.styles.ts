@@ -33,21 +33,6 @@ export const Controller = styled.div`
   margin: 10px 0;
 `;
 
-export const ButtonContainer = styled.div`
-  display: flex;
-`;
-
-export const CancelButton = styled.button`
-  width: 60px;
-  height: 24px;
-  background-color: transparent;
-  color: ${props => props.theme.colors.sub};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 11px;
-`;
-
 export const SubmitButton = styled.button`
   width: 60px;
   height: 24px;

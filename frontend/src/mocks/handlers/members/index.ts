@@ -129,30 +129,6 @@ const memberHandler = [
 
     return res(ctx.status(201));
   }),
-
-  rest.patch<{ nickname: string }>('/members/nickname', (req, res, ctx) => {
-    const { nickname } = req.body;
-
-    if (!/^[가-힣a-zA-Z]+$/.test(nickname)) {
-      if (/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/.test(nickname)) {
-        return res(ctx.status(400), ctx.json({ message: '닉네임에는 특수문자가 포함될 수 없습니다.' }));
-      }
-
-      if (/\s/.test(nickname)) {
-        return res(ctx.status(400), ctx.json({ message: '닉네임에는 공백이 포함될 수 없습니다.' }));
-      }
-
-      return res(ctx.status(400), ctx.json({ message: '닉네임은 완전한 음절로만 작성해주세요.' }));
-    }
-
-    const existedNickname = validMemberEmail.find(member => member.nickname === nickname);
-
-    if (existedNickname) {
-      return res(ctx.status(400), ctx.json({ message: '이미 존재하는 닉네임입니다.' }));
-    }
-
-    return res(ctx.status(204));
-  }),
 ];
 
 export default memberHandler;

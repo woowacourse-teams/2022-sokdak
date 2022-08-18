@@ -1,7 +1,5 @@
 import { forwardRef } from 'react';
 
-import PostCountInfo from '@/components/PostCountInfo';
-
 import * as Styled from './index.styles';
 
 import countFormatter from '@/utils/countFormatter';
@@ -28,7 +26,12 @@ const PostListItem = forwardRef<HTMLDivElement, PostListItemProps>(
           <Styled.ContentContainer>
             <Styled.Content>블라인드 처리된 글입니다.</Styled.Content>
           </Styled.ContentContainer>
-          <PostCountInfo likeCount={likeCount} commentCount={commentCount} />
+          <Styled.PostInfoContainer>
+            <Styled.LikeIcon />
+            <Styled.LikeCount>{countFormatter(likeCount)}</Styled.LikeCount>
+            <Styled.CommentIcon />
+            <Styled.CommentCount>{countFormatter(commentCount)}</Styled.CommentCount>
+          </Styled.PostInfoContainer>
         </Styled.BlockedContainer>
       );
     }

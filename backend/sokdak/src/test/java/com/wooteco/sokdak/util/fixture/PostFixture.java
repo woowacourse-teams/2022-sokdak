@@ -1,16 +1,10 @@
 package com.wooteco.sokdak.util.fixture;
 
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getToken;
 
-import com.wooteco.sokdak.auth.dto.AuthInfo;
-import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
-import com.wooteco.sokdak.report.dto.ReportRequest;
-import com.wooteco.sokdak.report.repository.PostReportRepository;
-import com.wooteco.sokdak.report.service.PostReportService;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -29,9 +23,6 @@ public class PostFixture {
 
     public static final String INVALID_POST_TITLE = "A".repeat(51);
     public static final String INVALID_POST_CONTENT = "A".repeat(5001);
-
-    public static final Long BLOCKED_COUNT = 5L;
-    public static final String SERIAL_NUMBER = "asd23456";
 
     public static final PostsElementResponse POSTS_ELEMENT_RESPONSE_1 = PostsElementResponse.builder()
             .id(1L)

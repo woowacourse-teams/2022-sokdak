@@ -54,7 +54,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
     void login_Exception_NotExistUser() {
         ExtractableResponse<Response> response = httpPost(INVALID_LOGIN_REQUEST, "/login");
 
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("올바른 인증번호로 인증할 수 있다.")
@@ -123,7 +123,6 @@ class AuthAcceptanceTest extends AcceptanceTest {
         doReturn(Instant.now(FUTURE_CLOCK))
                 .when(clock)
                 .instant();
-
         ExtractableResponse<Response> response = httpPostWithAuthorization(new VerificationRequest(email, code),
                 "members/signup/email/verification", getChrisToken());
 

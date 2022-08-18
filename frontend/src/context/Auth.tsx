@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 import { STORAGE_KEY } from '@/constants/localStorage';
 import { parseJwt } from '@/utils/decodeJwt';
@@ -9,23 +9,21 @@ interface AuthContextValue {
   username: string;
   setUserName: Dispatch<SetStateAction<string>>;
 }
+
 const AuthContext = React.createContext<AuthContextValue>({} as AuthContextValue);
 
 export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const accessToken = localStorage.getItem(STORAGE_KEY.ACCESS_TOKEN);
-  const [isLogin, setIsLogin] = useState(() => {
-    if (accessToken) {
-      return true;
-    }
-    return false;
-  });
+  const [isLogin, setIsLogin] = useState(false);
+  const [username, setUserName] = useState('');
 
-  const [username, setUserName] = useState(() => {
+  useEffect(() => {
+    const accessToken = localStorage.getItem(STORAGE_KEY.ACCESS_TOKEN);
+
     if (accessToken) {
-      return parseJwt(accessToken)?.nickname!;
+      setIsLogin(true);
+      setUserName(parseJwt(accessToken)?.nickname!);
     }
-    return '';
-  });
+  }, []);
 
   return <AuthContext.Provider value={{ isLogin, setIsLogin, username, setUserName }}>{children}</AuthContext.Provider>;
 };

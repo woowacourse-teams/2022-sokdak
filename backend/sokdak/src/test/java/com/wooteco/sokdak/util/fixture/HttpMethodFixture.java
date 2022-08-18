@@ -104,9 +104,4 @@ public class HttpMethodFixture {
         LoginRequest loginRequest = new LoginRequest("josh", "Abcd123!@");
         return httpPost(loginRequest, "/login").header(AUTHORIZATION);
     }
-
-    public static String getAdminToken() {
-        LoginRequest loginRequest = new LoginRequest("east", "Abcd123!@");
-        return httpPost(loginRequest, "/login").header(AUTHORIZATION);
-    }
 }

@@ -10,7 +10,6 @@ import MainPage from './pages/MainPage';
 import NotFoundPage from './pages/NotFoundPage';
 import NotificationPage from './pages/NotificationPage';
 import PostPage from './pages/PostPage';
-import ProfilePage from './pages/ProfilePage';
 import SignUpPage from './pages/SignUpPage';
 import UpdatePostPage from './pages/UpdatePostPage';
 
@@ -59,7 +58,6 @@ const App = () => {
         <Route path="*" element={<NotFoundPage />} />
         <Route element={<PrivateRoute />}>
           <Route path={PATH.CREATE_POST} element={<CreatePostPage />} />
-          <Route path={PATH.PROFILE} element={<ProfilePage />} />
           <Route path={PATH.NOTIFICATION} element={<NotificationPage />} />
         </Route>
         <Route element={<PublicRoute />}>

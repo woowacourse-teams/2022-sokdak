@@ -22,4 +22,4 @@
 |[EastHShin](https://github.com/EastHShin)|[hyunrrr](https://github.com/hyunrrr)|[injoon2019](https://github.com/injoon2019)|[Byeongju-Kong](https://github.com/Byeongju-Kong)|[BETTERFUTURE4](https://github.com/BETTERFUTURE4)|
 
 
-[RESTDocs 로 구현된 API 명세](https://woowacourse-teams.github.io/2022-sokdak/backend/sokdak/src/main/resources/static/index.html)
+[RESTDocs 로 구현된 API 명세](backend/sokdak/src/main/resources/static/index.html)

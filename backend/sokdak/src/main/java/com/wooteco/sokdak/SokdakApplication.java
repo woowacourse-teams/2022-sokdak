@@ -9,4 +9,5 @@ public class SokdakApplication {
     public static void main(String[] args) {
         SpringApplication.run(SokdakApplication.class, args);
     }
+
 }

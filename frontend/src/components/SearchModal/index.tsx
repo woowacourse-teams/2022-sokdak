@@ -7,6 +7,8 @@ import useQueryDebounce from '@/hooks/queries/hashtag/useQueryDebounce';
 
 import * as Styled from './index.styles';
 
+import PATH from '@/constants/path';
+
 import useModalHistory from './useModalHistory';
 
 interface SearchModalProps {
@@ -26,7 +28,7 @@ const SearchModal = ({ handleSearchModal: closeModal }: SearchModalProps) => {
 
   const handleHashTagClick = (name: string) => {
     closeModal();
-    navigate(`/hashtag/${name}`);
+    navigate(`${PATH.HASHTAG}/${name}`);
   };
 
   return (

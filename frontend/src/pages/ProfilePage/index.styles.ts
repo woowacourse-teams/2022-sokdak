@@ -2,6 +2,7 @@ import PaginationComponent from '@/components/Pagination';
 
 import PandaIcon from '@/assets/images/panda_logo.svg';
 
+import { invalidInputAnimation } from '@/style/GlobalStyle';
 import styled from '@emotion/styled';
 
 export const Container = styled.div`
@@ -54,7 +55,7 @@ export const NicknameInputField = styled.div`
   justify-content: center;
 `;
 
-export const Nickname = styled.input<{ length: number }>`
+export const Nickname = styled.input<{ length: number; isAnimationActive?: boolean }>`
   width: 200px;
   font-family: 'BMHANNAPro';
   grid-column: 2;
@@ -79,6 +80,8 @@ export const Nickname = styled.input<{ length: number }>`
     width: 200px;
     transition: 0.4s;
   }
+
+  ${invalidInputAnimation}
 `;
 
 export const UpdateButton = styled.button`

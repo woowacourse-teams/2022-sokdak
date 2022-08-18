@@ -50,7 +50,7 @@ class LikeAcceptanceTest extends AcceptanceTest {
         );
     }
 
-    @DisplayName("로그인 하지 않은 회원이 좋아요를 누를 경우 예외를 반환한다")
+    @DisplayName("로그인 하지 않은 회원이 게시글에 좋아요를 누를 경우 예외를 반환한다")
     @Test
     void flipLike_Unauthorized() {
         Long postId = addNewPost();

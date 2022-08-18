@@ -51,7 +51,12 @@ class CommentServiceTest extends ServiceTest {
 
     @BeforeEach
     void setUp() {
+<<<<<<< HEAD
         member2 = memberRepository.findById(4L).get();
+=======
+        member = memberRepository.findById(1L).orElseThrow();
+        member2 = memberRepository.findById(3L).orElseThrow();
+>>>>>>> b5db00c (feat: 댓글 좋아요 기능 #395 (#501))
         randomNickname = RandomNicknameGenerator.generate(new HashSet<>());
         anonymousPost = Post.builder()
                 .member(member)
@@ -76,7 +81,7 @@ class CommentServiceTest extends ServiceTest {
 
         Long commentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, AUTH_INFO);
 
-        Comment foundComment = commentRepository.findById(commentId).get();
+        Comment foundComment = commentRepository.findById(commentId).orElseThrow();
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
                 () -> assertThat(foundComment.getMember()).isEqualTo(member),
@@ -93,8 +98,8 @@ class CommentServiceTest extends ServiceTest {
 
         Long replyId = commentService.addReply(commentId, newReplyRequest, AUTH_INFO);
 
-        Comment comment = commentRepository.findById(commentId).get();
-        Comment reply = commentRepository.findById(replyId).get();
+        Comment comment = commentRepository.findById(commentId).orElseThrow();
+        Comment reply = commentRepository.findById(replyId).orElseThrow();
         assertAll(
                 () -> assertThat(reply.getMessage()).isEqualTo("대댓글"),
                 () -> assertThat(reply.getParent()).isEqualTo(comment)
@@ -120,7 +125,7 @@ class CommentServiceTest extends ServiceTest {
         NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", false);
         Long commentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, AUTH_INFO);
 
-        Comment foundComment = commentRepository.findById(commentId).get();
+        Comment foundComment = commentRepository.findById(commentId).orElseThrow();
 
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
@@ -135,7 +140,7 @@ class CommentServiceTest extends ServiceTest {
         NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", false);
         Long commentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, AUTH_INFO2);
 
-        Comment foundComment = commentRepository.findById(commentId).get();
+        Comment foundComment = commentRepository.findById(commentId).orElseThrow();
 
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
@@ -150,7 +155,7 @@ class CommentServiceTest extends ServiceTest {
         NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
         Long commentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, AUTH_INFO);
 
-        Comment foundComment = commentRepository.findById(commentId).get();
+        Comment foundComment = commentRepository.findById(commentId).orElseThrow();
 
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
@@ -165,7 +170,7 @@ class CommentServiceTest extends ServiceTest {
         NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
         Long commentId = commentService.addComment(identifiedPost.getId(), newCommentRequest, AUTH_INFO);
 
-        Comment foundComment = commentRepository.findById(commentId).get();
+        Comment foundComment = commentRepository.findById(commentId).orElseThrow();
 
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
@@ -180,7 +185,7 @@ class CommentServiceTest extends ServiceTest {
         NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
         Long commentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, AUTH_INFO2);
 
-        Comment foundComment = commentRepository.findById(commentId).get();
+        Comment foundComment = commentRepository.findById(commentId).orElseThrow();
 
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
@@ -195,7 +200,7 @@ class CommentServiceTest extends ServiceTest {
         NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
         Long commentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, AUTH_INFO);
 
-        Comment foundComment = commentRepository.findById(commentId).get();
+        Comment foundComment = commentRepository.findById(commentId).orElseThrow();
 
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo("댓글"),
@@ -211,8 +216,8 @@ class CommentServiceTest extends ServiceTest {
         Long firstCommentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, AUTH_INFO);
         Long secondCommentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, AUTH_INFO);
 
-        Comment firstComment = commentRepository.findById(firstCommentId).get();
-        Comment secondComment = commentRepository.findById(secondCommentId).get();
+        Comment firstComment = commentRepository.findById(firstCommentId).orElseThrow();
+        Comment secondComment = commentRepository.findById(secondCommentId).orElseThrow();
 
         assertAll(
                 () -> assertThat(firstComment.getNickname()).isEqualTo(secondComment.getNickname()),
@@ -240,7 +245,8 @@ class CommentServiceTest extends ServiceTest {
 
         assertAll(
                 () -> assertThat(commentResponses.size()).isEqualTo(1),
-                () -> assertThat(commentResponses.get(0).getContent()).isEqualTo("댓글")
+                () -> assertThat(commentResponses.get(0).getContent()).isEqualTo("댓글"),
+                () -> assertThat(commentResponses.get(0).getLikeCount()).isZero()
         );
     }
 
@@ -323,7 +329,7 @@ class CommentServiceTest extends ServiceTest {
 
         commentService.deleteComment(commentId, AUTH_INFO);
 
-        Comment comment = commentRepository.findById(commentId).get();
+        Comment comment = commentRepository.findById(commentId).orElseThrow();
         assertThat(comment.isSoftRemoved()).isTrue();
     }
 
@@ -382,7 +388,7 @@ class CommentServiceTest extends ServiceTest {
 
         commentService.deleteComment(replyId, AUTH_INFO);
 
-        Comment comment = commentRepository.findById(commentId).get();
+        Comment comment = commentRepository.findById(commentId).orElseThrow();
         Optional<Comment> reply = commentRepository.findById(replyId);
         assertAll(
                 () -> assertThat(comment.getId()).isEqualTo(commentId),

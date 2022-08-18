@@ -1,5 +1,11 @@
 package com.wooteco.sokdak.comment.repository;
 
+<<<<<<< HEAD
+=======
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
+>>>>>>> b5db00c (feat: 댓글 좋아요 기능 #395 (#501))
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;

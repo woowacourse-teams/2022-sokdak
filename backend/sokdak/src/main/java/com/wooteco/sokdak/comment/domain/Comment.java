@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.comment.domain;
 
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
+import com.wooteco.sokdak.like.domain.CommentLike;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.report.domain.CommentReport;
@@ -8,6 +9,7 @@ import com.wooteco.sokdak.report.exception.AlreadyReportCommentException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ConstraintMode;
 import javax.persistence.Embedded;
@@ -52,6 +54,9 @@ public class Comment {
 
     @OneToMany(mappedBy = "comment")
     private List<CommentReport> commentReports = new ArrayList<>();
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<CommentLike> commentLikes = new ArrayList<>();
 
     private String nickname;
 
@@ -150,6 +155,14 @@ public class Comment {
 
     public List<CommentReport> getCommentReports() {
         return commentReports;
+    }
+
+    public List<CommentLike> getCommentLikes() {
+        return commentLikes;
+    }
+
+    public int getCommentLikesCount() {
+        return commentLikes.size();
     }
 
     public boolean isSoftRemoved() {

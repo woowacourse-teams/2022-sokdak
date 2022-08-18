@@ -128,7 +128,12 @@ class CommentAcceptanceTest extends AcceptanceTest {
         }
 
         ExtractableResponse<Response> response = httpGet("/posts/" + postId + "/comments");
+<<<<<<< HEAD
         List<CommentResponse> commentResponses = response.jsonPath().getObject(".", CommentsResponse.class)
+=======
+        List<CommentResponse> commentResponses = response.jsonPath()
+                .getObject(".", CommentsResponse.class)
+>>>>>>> b5db00c (feat: 댓글 좋아요 기능 #395 (#501))
                 .getComments();
 
         assertAll(

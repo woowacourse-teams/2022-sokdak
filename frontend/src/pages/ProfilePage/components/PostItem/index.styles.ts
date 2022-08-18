@@ -19,6 +19,15 @@ export const Title = styled.p`
 export const Content = styled.p`
   font-size: 14px;
   color: ${props => props.theme.colors.gray_200};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  word-wrap: break-word;
+  line-height: 19px;
+  max-height: 57px;
+  white-space: pre-wrap;
 `;
 
 export const Information = styled.div`

@@ -26,7 +26,7 @@ public class MemberFixture {
         );
     }
 
-    public static List<String> getFiveTokens() {
+    public static List<String> getTokens() {
         String token1 = getToken("chris");
         String token2 = getToken("josh");
         String token3 = getToken("thor");

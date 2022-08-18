@@ -30,6 +30,11 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
+          
+      - name: Setup timezone
+        uses: zcong1993/setup-timezone@master
+        with:
+          timezone: Asia/Seoul
 
       - name: Gradle 명령 실행을 위한 권한을 부여합니다.
         run: chmod +x gradlew

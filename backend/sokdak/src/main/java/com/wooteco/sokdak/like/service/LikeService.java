@@ -47,7 +47,7 @@ public class LikeService {
     }
 
     @Transactional
-    public LikeFlipResponse flipLikePost(Long postId, AuthInfo authInfo) {
+    public LikeFlipResponse flipPostLike(Long postId, AuthInfo authInfo) {
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
         Post post = postRepository.findById(postId)
@@ -62,7 +62,7 @@ public class LikeService {
     }
 
     @Transactional
-    public LikeFlipResponse flipLikeComment(Long commentId, AuthInfo authInfo) {
+    public LikeFlipResponse flipCommentLike(Long commentId, AuthInfo authInfo) {
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
         Comment comment = commentRepository.findById(commentId)

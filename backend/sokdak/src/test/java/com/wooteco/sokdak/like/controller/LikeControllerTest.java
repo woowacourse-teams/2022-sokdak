@@ -32,7 +32,7 @@ class LikeControllerTest extends ControllerTest {
         LikeFlipResponse likeFlipResponse = new LikeFlipResponse(1, true);
         doReturn(likeFlipResponse)
                 .when(likeService)
-                .flipLikePost(any(), any());
+                .flipPostLike(any(), any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -49,7 +49,7 @@ class LikeControllerTest extends ControllerTest {
         LikeFlipResponse likeFlipResponse = new LikeFlipResponse(1, true);
         doReturn(likeFlipResponse)
                 .when(likeService)
-                .flipLikeComment(any(), any());
+                .flipCommentLike(any(), any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

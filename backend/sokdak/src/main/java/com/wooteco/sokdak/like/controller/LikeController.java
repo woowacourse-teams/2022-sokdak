@@ -19,15 +19,15 @@ public class LikeController {
     }
 
     @PutMapping("/posts/{id}/like")
-    public ResponseEntity<LikeFlipResponse> flipLikePost(@PathVariable("id") Long postId, @Login AuthInfo authInfo) {
-        LikeFlipResponse likeFlipResponse = likeService.flipLikePost(postId, authInfo);
+    public ResponseEntity<LikeFlipResponse> flipPostLike(@PathVariable("id") Long postId, @Login AuthInfo authInfo) {
+        LikeFlipResponse likeFlipResponse = likeService.flipPostLike(postId, authInfo);
         return ResponseEntity.ok(likeFlipResponse);
     }
 
     @PutMapping("/comments/{id}/like")
-    public ResponseEntity<LikeFlipResponse> flipLikeComment(@PathVariable("id") Long commentId,
+    public ResponseEntity<LikeFlipResponse> flipCommentLike(@PathVariable("id") Long commentId,
                                                             @Login AuthInfo authInfo) {
-        LikeFlipResponse likeFlipResponse = likeService.flipLikeComment(commentId, authInfo);
+        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(commentId, authInfo);
         return ResponseEntity.ok(likeFlipResponse);
     }
 }

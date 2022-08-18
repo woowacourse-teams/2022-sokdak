@@ -21,9 +21,7 @@ import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -139,32 +137,22 @@ public class CommentService {
     }
 
     private CommentResponse convertToCommentResponse(Long postId, AuthInfo authInfo, Comment comment) {
+        Long id = authInfo.getId();
         if (comment.isSoftRemoved()) {
-            return CommentResponse.softRemovedOf(comment,
-                    toReplyResponses(findReplies(comment, postId, authInfo.getId())));
+            return CommentResponse.softRemovedOf(comment, convertToReplyResponses(comment, postId, id));
         }
-        boolean liked = commentLikeRepository.existsByMemberIdAndCommentId(authInfo.getId(), comment.getId());
-        return CommentResponse.of(comment, authInfo.getId(),
-                toReplyResponses(findReplies(comment, postId, authInfo.getId())), liked);
+        boolean liked = commentLikeRepository.existsByMemberIdAndCommentId(id, comment.getId());
+        return CommentResponse.of(comment, id, convertToReplyResponses(comment, postId, id), liked);
     }
 
-    private List<ReplyResponse> toReplyResponses(Map<Comment, Long> accessMemberIdByReply) {
+    private List<ReplyResponse> convertToReplyResponses(Comment parent, Long postId, Long accessMemberId) {
+        List<Comment> replies = commentRepository.findAllByPostIdAndParentId(postId, parent.getId());
         List<ReplyResponse> replyResponses = new ArrayList<>();
-        for (Comment reply : accessMemberIdByReply.keySet()) {
-            Long accessMemberId = accessMemberIdByReply.get(reply);
+        for (Comment reply : replies) {
             boolean liked = commentLikeRepository.existsByMemberIdAndCommentId(accessMemberId, reply.getId());
             replyResponses.add(ReplyResponse.of(reply, accessMemberId, liked));
         }
         return replyResponses;
-    }
-
-    private Map<Comment, Long> findReplies(Comment parent, Long postId, Long accessMemberId) {
-        List<Comment> replies = commentRepository.findAllByPostIdAndParentId(postId, parent.getId());
-        Map<Comment, Long> accessMemberIdByReply = new LinkedHashMap<>();
-        for (Comment reply : replies) {
-            accessMemberIdByReply.put(reply, accessMemberId);
-        }
-        return accessMemberIdByReply;
     }
 
     @Transactional

@@ -77,7 +77,7 @@ class LikeServiceTest extends IntegrationTest {
     @DisplayName("게시글 좋아요 등록")
     @Test
     void flipLike_create() {
-        LikeFlipResponse putLikeResponse = likeService.flipLikePost(post.getId(), AUTH_INFO);
+        LikeFlipResponse putLikeResponse = likeService.flipPostLike(post.getId(), AUTH_INFO);
 
         assertAll(
                 () -> assertThat(putLikeResponse.isLike()).isTrue(),
@@ -88,9 +88,9 @@ class LikeServiceTest extends IntegrationTest {
     @DisplayName("게시글 좋아요 취소")
     @Test
     void flipLike_delete() {
-        likeService.flipLikePost(post.getId(), AUTH_INFO);
+        likeService.flipPostLike(post.getId(), AUTH_INFO);
 
-        LikeFlipResponse putLikeResponse2 = likeService.flipLikePost(post.getId(), AUTH_INFO);
+        LikeFlipResponse putLikeResponse2 = likeService.flipPostLike(post.getId(), AUTH_INFO);
 
         assertAll(
                 () -> assertThat(putLikeResponse2.isLike()).isFalse(),
@@ -101,7 +101,7 @@ class LikeServiceTest extends IntegrationTest {
     @DisplayName("댓글 좋아요 등록")
     @Test
     void flipLikeComment_create() {
-        LikeFlipResponse likeFlipResponse = likeService.flipLikeComment(comment.getId(), AUTH_INFO);
+        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(comment.getId(), AUTH_INFO);
 
         assertAll(
                 () -> assertThat(likeFlipResponse.isLike()).isTrue(),
@@ -112,9 +112,9 @@ class LikeServiceTest extends IntegrationTest {
     @DisplayName("댓글 좋아요 취소")
     @Test
     void flipLikeComment_delete() {
-        likeService.flipLikeComment(comment.getId(), AUTH_INFO);
+        likeService.flipCommentLike(comment.getId(), AUTH_INFO);
 
-        LikeFlipResponse likeFlipResponse = likeService.flipLikeComment(comment.getId(), AUTH_INFO);
+        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(comment.getId(), AUTH_INFO);
 
         assertAll(
                 () -> assertThat(likeFlipResponse.isLike()).isFalse(),
@@ -125,7 +125,7 @@ class LikeServiceTest extends IntegrationTest {
     @DisplayName("대댓글 좋아요 등록")
     @Test
     void flipLikeReply_create() {
-        LikeFlipResponse likeFlipResponse = likeService.flipLikeComment(reply.getId(), AUTH_INFO);
+        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(reply.getId(), AUTH_INFO);
 
         assertAll(
                 () -> assertThat(likeFlipResponse.isLike()).isTrue(),
@@ -136,9 +136,9 @@ class LikeServiceTest extends IntegrationTest {
     @DisplayName("대댓글 좋아요 취소")
     @Test
     void flipLikeReply_delete() {
-        likeService.flipLikeComment(reply.getId(), AUTH_INFO);
+        likeService.flipCommentLike(reply.getId(), AUTH_INFO);
 
-        LikeFlipResponse likeFlipResponse = likeService.flipLikeComment(reply.getId(), AUTH_INFO);
+        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(reply.getId(), AUTH_INFO);
 
         assertAll(
                 () -> assertThat(likeFlipResponse.isLike()).isFalse(),
@@ -150,7 +150,7 @@ class LikeServiceTest extends IntegrationTest {
     @Test
     @Transactional(propagation = Propagation.NEVER)
     void getCommentsLikes() {
-        likeService.flipLikeComment(comment.getId(), AUTH_INFO);
+        likeService.flipCommentLike(comment.getId(), AUTH_INFO);
 
         List<CommentResponse> comments = commentService.findComments(post.getId(), AUTH_INFO).getComments();
 
@@ -164,7 +164,7 @@ class LikeServiceTest extends IntegrationTest {
     @Test
     @Transactional(propagation = Propagation.NEVER)
     void getCommentsLikesOfOther() {
-        likeService.flipLikeComment(comment.getId(), AUTH_INFO);
+        likeService.flipCommentLike(comment.getId(), AUTH_INFO);
 
         List<CommentResponse> comments = commentService.findComments(post.getId(), AUTH_INFO2)
                 .getComments();
@@ -179,7 +179,7 @@ class LikeServiceTest extends IntegrationTest {
     @Test
     @Transactional(propagation = Propagation.NEVER)
     void getCommentsLikesReply() {
-        likeService.flipLikeComment(reply.getId(), AUTH_INFO);
+        likeService.flipCommentLike(reply.getId(), AUTH_INFO);
 
         List<ReplyResponse> replies = commentService.findComments(post.getId(), AUTH_INFO)
                 .getComments()
@@ -196,7 +196,7 @@ class LikeServiceTest extends IntegrationTest {
     @Test
     @Transactional(propagation = Propagation.NEVER)
     void getCommentsLikesReplyOfOther() {
-        likeService.flipLikeComment(reply.getId(), AUTH_INFO);
+        likeService.flipCommentLike(reply.getId(), AUTH_INFO);
 
         List<ReplyResponse> replies = commentService.findComments(post.getId(), AUTH_INFO2)
                 .getComments()

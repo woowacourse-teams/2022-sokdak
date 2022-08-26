@@ -121,7 +121,7 @@ class CommentAcceptanceTest extends AcceptanceTest {
         Long commentId = addNewCommentInPost(postId);
         addNewCommentInPost(postId);
         List<String> tokens = getTokens();
-        String blindMessage = "블라인드 처리되었습니다.";
+        String blindMessage = "블라인드 처리된 댓글입니다.";
 
         for (int i = 0; i < 5; ++i) {
             ReportRequest reportRequest = new ReportRequest("댓글신고");

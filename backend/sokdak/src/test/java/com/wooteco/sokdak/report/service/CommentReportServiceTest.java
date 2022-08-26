@@ -103,7 +103,7 @@ class CommentReportServiceTest extends ServiceTest {
                 .isInstanceOf(InvalidReportMessageException.class);
     }
 
-    @DisplayName("댓글 신고가 5회 신고시 ")
+    @DisplayName("댓글 신고가 5회 신고시 댓글의 내용이 반환되지 않는다.")
     @Test
     void reportComment_Block() {
         AuthInfo authInfo;
@@ -111,14 +111,15 @@ class CommentReportServiceTest extends ServiceTest {
             authInfo = new AuthInfo(i, "USER", VALID_NICKNAME);
             commentReportService.reportComment(comment.getId(), REPORT_REQUEST, authInfo);
         }
+        String blindCommentMessage = "블라인드 처리된 댓글입니다.";
 
         Comment found = commentRepository.findById(this.comment.getId())
                 .orElseThrow(CommentNotFoundException::new);
 
         assertAll(
                 () -> assertThat(found.isBlocked()).isTrue(),
-                () -> assertThat(found.getNickname()).isNotEqualTo(VALID_NICKNAME),
-                () -> assertThat(found.getMessage()).isNotEqualTo(VALID_COMMENT_MESSAGE)
+                () -> assertThat(found.getNickname()).isEqualTo(blindCommentMessage),
+                () -> assertThat(found.getMessage()).isEqualTo(blindCommentMessage)
         );
     }
 

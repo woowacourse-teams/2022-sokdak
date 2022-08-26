@@ -4,8 +4,12 @@ import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getMembersForReport;
+import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
+import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
+import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_WRITER_NICKNAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.member.domain.Member;
@@ -31,8 +35,9 @@ class PostTest {
                 .nickname(VALID_NICKNAME)
                 .build();
         post = Post.builder()
-                .title("제목")
-                .content("본문")
+                .title(VALID_POST_TITLE)
+                .content(VALID_POST_CONTENT)
+                .writerNickname(VALID_POST_WRITER_NICKNAME)
                 .member(member)
                 .build();
     }
@@ -71,12 +76,12 @@ class PostTest {
                 .isInstanceOf(AuthorizationException.class);
     }
 
-    @DisplayName("신고가 5개 이상이면 isBlocked()가 true를 반환 그 이외는 False반환")
-    @ParameterizedTest
-    @CsvSource({"4, false", "5, true"})
-    void isBlocked(int reportCount, boolean expected) {
+    @DisplayName("신고가 5개 이상이면 isBlocked()가 true를 반환하고, 게시글의 정보는 반환되지 않는다.")
+    @Test
+    void isBlocked_true() {
         List<Member> members = getMembersForReport();
-        for (int i = 0; i < reportCount; ++i) {
+        int blockCondition = 5;
+        for (int i = 0; i < blockCondition; ++i) {
             PostReport.builder()
                     .post(post)
                     .reporter(members.get(i))
@@ -84,7 +89,33 @@ class PostTest {
                     .build();
         }
 
-        assertThat(post.isBlocked()).isEqualTo(expected);
+        assertAll(
+                () -> assertThat(post.isBlocked()).isTrue(),
+                () -> assertThat(post.getNickname()).isEqualTo("블라인드 처리된 게시글입니다."),
+                () -> assertThat(post.getTitle()).isEqualTo("블라인드 처리된 게시글입니다."),
+                () -> assertThat(post.getContent()).isEqualTo("블라인드 처리된 게시글입니다.")
+        );
+    }
+
+    @DisplayName("신고가 5개 이상이면 isBlocked()가 false를 반환하고 게시글 정보들이 반환된다.")
+    @Test
+    void isBlocked_false() {
+        List<Member> members = getMembersForReport();
+        int unblockCondition = 4;
+        for (int i = 0; i < unblockCondition; ++i) {
+            PostReport.builder()
+                    .post(post)
+                    .reporter(members.get(i))
+                    .reportMessage("신고")
+                    .build();
+        }
+
+        assertAll(
+                () -> assertThat(post.isBlocked()).isFalse(),
+                () -> assertThat(post.getNickname()).isEqualTo(VALID_POST_WRITER_NICKNAME),
+                () -> assertThat(post.getTitle()).isEqualTo(VALID_POST_TITLE),
+                () -> assertThat(post.getContent()).isEqualTo(VALID_POST_CONTENT)
+        );
     }
 
     @DisplayName("게시글의 회원 정보가 일치하는지 반환")

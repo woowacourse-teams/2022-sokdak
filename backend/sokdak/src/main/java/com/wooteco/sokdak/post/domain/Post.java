@@ -34,7 +34,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class Post {
 
     private static final int BLOCKED_CONDITION = 5;
-    private static final String BLIND_MESSAGE = "블라인드 처리된 글입니다";
+    private static final String BLIND_MESSAGE = "블라인드 처리된 게시글입니다.";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -124,7 +124,7 @@ public class Post {
         postReports.stream()
                 .filter(other::isSameReporter)
                 .findAny()
-                 .ifPresent(it -> {
+                .ifPresent(it -> {
                     throw new AlreadyReportPostException();
                 });
         postReports.add(other);
@@ -187,6 +187,9 @@ public class Post {
     }
 
     public String getNickname() {
+        if (isBlocked()) {
+            return BLIND_MESSAGE;
+        }
         return writerNickname;
     }
 }

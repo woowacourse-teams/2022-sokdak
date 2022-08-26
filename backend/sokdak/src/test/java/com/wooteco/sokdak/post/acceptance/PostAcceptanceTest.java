@@ -121,8 +121,8 @@ class PostAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(postsElementResponses.get(0).isBlocked()).isFalse(),
                 () -> assertThat(postsElementResponses.get(1).isBlocked()).isTrue(),
-                () -> assertThat(postsElementResponses.get(1).getTitle()).isEqualTo("블라인드 처리된 글입니다"),
-                () -> assertThat(postsElementResponses.get(1).getContent()).isEqualTo("블라인드 처리된 글입니다")
+                () -> assertThat(postsElementResponses.get(1).getTitle()).isEqualTo("블라인드 처리된 게시글입니다."),
+                () -> assertThat(postsElementResponses.get(1).getContent()).isEqualTo("블라인드 처리된 게시글입니다.")
         );
     }
 
@@ -136,16 +136,16 @@ class PostAcceptanceTest extends AcceptanceTest {
             httpPostWithAuthorization(reportRequest, "/posts/" + blockedPostId + "/report", tokens.get(i));
         }
 
-        ExtractableResponse<Response> response = httpGet(
-                "/posts/" + blockedPostId);
-        PostDetailResponse postDetailResponse = response
-                .jsonPath()
+        ExtractableResponse<Response> response = httpGet("/posts/" + blockedPostId);
+
+        PostDetailResponse postDetailResponse = response.jsonPath()
                 .getObject(".", PostDetailResponse.class);
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(postDetailResponse.isBlocked()).isTrue(),
-                () -> assertThat(postDetailResponse.getTitle()).isEqualTo("블라인드 처리된 글입니다"),
-                () -> assertThat(postDetailResponse.getContent()).isEqualTo("블라인드 처리된 글입니다")
+                () -> assertThat(postDetailResponse.getNickname()).isEqualTo("블라인드 처리된 게시글입니다."),
+                () -> assertThat(postDetailResponse.getTitle()).isEqualTo("블라인드 처리된 게시글입니다."),
+                () -> assertThat(postDetailResponse.getContent()).isEqualTo("블라인드 처리된 게시글입니다.")
         );
     }
 

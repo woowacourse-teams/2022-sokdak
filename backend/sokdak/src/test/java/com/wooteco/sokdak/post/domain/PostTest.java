@@ -97,7 +97,7 @@ class PostTest {
         );
     }
 
-    @DisplayName("신고가 5개 이상이면 isBlocked()가 false를 반환하고 게시글 정보들이 반환된다.")
+    @DisplayName("신고가 5개 미만이면 isBlocked()가 false를 반환하고 게시글 정보들이 반환된다.")
     @Test
     void isBlocked_false() {
         List<Member> members = getMembersForReport();

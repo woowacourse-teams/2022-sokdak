@@ -4,12 +4,15 @@ import static com.wooteco.sokdak.member.domain.RoleType.USER;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
+import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_WRITER_NICKNAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
+import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.report.exception.AlreadyReportPostException;
@@ -48,6 +51,7 @@ class PostReportServiceTest extends ServiceTest {
                 .member(member)
                 .title(VALID_POST_TITLE)
                 .content(VALID_POST_CONTENT)
+                .writerNickname(VALID_POST_WRITER_NICKNAME)
                 .postHashtags(Collections.emptyList())
                 .comments(Collections.emptyList())
                 .likes(Collections.emptyList())
@@ -103,5 +107,27 @@ class PostReportServiceTest extends ServiceTest {
         boolean actual = notificationRepository.existsByMemberIdAndInquiredIsFalse(member.getId());
 
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @DisplayName("게시글 5회 신고시 게시글의 내용이 반환되지 않는다.")
+    @Test
+    void reportPost_block() {
+        int blockCondition = 5;
+        AuthInfo authInfo;
+        for (long i = 1; i <= blockCondition; i++) {
+            authInfo = new AuthInfo(i, "USER", VALID_NICKNAME);
+            postReportService.reportPost(post.getId(), REPORT_REQUEST, authInfo);
+        }
+        String blindPostMessage = "블라인드 처리된 게시글입니다.";
+
+        Post post = postRepository.findById(this.post.getId())
+                .orElseThrow(PostNotFoundException::new);
+
+        assertAll(
+                () -> assertThat(post.isBlocked()).isTrue(),
+                () -> assertThat(post.getNickname()).isEqualTo(blindPostMessage),
+                () -> assertThat(post.getTitle()).isEqualTo(blindPostMessage),
+                () -> assertThat(post.getContent()).isEqualTo(blindPostMessage)
+        );
     }
 }

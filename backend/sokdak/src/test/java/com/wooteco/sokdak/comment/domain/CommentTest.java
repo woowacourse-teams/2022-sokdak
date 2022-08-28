@@ -110,8 +110,8 @@ class CommentTest {
                     .build();
         }
 
-        boolean nicknameActual = comment.getNickname().equals("블라인드 처리되었습니다.");
-        boolean messageActual = comment.getMessage().equals("블라인드 처리되었습니다.");
+        boolean nicknameActual = comment.getNickname().equals("블라인드 처리된 댓글입니다.");
+        boolean messageActual = comment.getMessage().equals("블라인드 처리된 댓글입니다.");
 
         assertAll(
                 () -> assertThat(nicknameActual).isEqualTo(expected),

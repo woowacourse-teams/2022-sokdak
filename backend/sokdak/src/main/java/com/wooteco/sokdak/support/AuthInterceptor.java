@@ -5,6 +5,9 @@ import com.wooteco.sokdak.support.token.TokenManager;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -12,7 +15,10 @@ import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
+@Slf4j
 public class AuthInterceptor implements HandlerInterceptor {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthInterceptor.class);
 
     private final TokenManager tokenManager;
 
@@ -28,17 +34,27 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (CorsUtils.isPreFlightRequest(request)) {
             return true;
         }
+        if (isGetMethod(request)) {
+            LOGGER.info("prometheus" + request.getRequestURI());
+            return true;
+        }
 
         if (notExistHeader(request)) {
+            LOGGER.info("no header" + request.getRequestURI());
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return false;
         }
         String token = AuthorizationExtractor.extractAccessToken(request);
         if (isInvalidToken(token)) {
+            LOGGER.info("no token" + request.getRequestURI());
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return false;
         }
         return true;
+    }
+
+    private boolean isGetMethod(HttpServletRequest request) {
+        return request.getMethod().equalsIgnoreCase("GET");
     }
 
     private boolean isGetMethodWithPostsUri(HttpServletRequest request) {

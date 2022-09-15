@@ -1,4 +1,5 @@
 import { useContext, useEffect, useReducer, useRef, useState } from 'react';
+import { useQueryClient } from 'react-query';
 
 import PostItem from './components/PostItem';
 import Layout from '@/components/@styled/Layout';
@@ -12,6 +13,8 @@ import useSnackbar from '@/hooks/useSnackbar';
 
 import * as Styled from './index.styles';
 
+import QUERY_KEYS from '@/constants/queries';
+
 const SIZE = 3;
 
 const ProfilePage = () => {
@@ -21,13 +24,20 @@ const ProfilePage = () => {
   const [nickname, setNickname] = useState(username);
   const [disabled, handleDisabled] = useReducer(state => !state, true);
   const nicknameRef = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
 
   const { data } = useMyPosts({
     storeCode: [SIZE, page],
     options: {
       keepPreviousData: true,
+      staleTime: Infinity,
     },
   });
+
+  useEffect(() => {
+    queryClient.resetQueries(QUERY_KEYS.MY_POSTS);
+  }, []);
+
   const { mutate, isError } = useUpdateNickname({
     onSuccess: () => {
       handleDisabled();

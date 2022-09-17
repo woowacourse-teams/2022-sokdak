@@ -7,21 +7,27 @@ const style = css`
 
   @font-face {
     font-family: 'BMYEONSUNG';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMYEONSUNG.woff') format('woff');
+    src: url(${require('@/assets/fonts/BMYEONSUNG/BMYEONSUNG.woff2')}) format('woff2'),
+      url(${require('@/assets/fonts/BMYEONSUNG/BMYEONSUNG.woff')}) format('woff'),
+      url(${require('@/assets/fonts/BMYEONSUNG/BMYEONSUNG.ttf')}) format('truetype');
     font-weight: normal;
     font-style: normal;
   }
 
   @font-face {
     font-family: 'BMHANNAPro';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_seven@1.0/BMHANNAPro.woff') format('woff');
+    src: url(${require('@/assets/fonts/BMHANNAPro/BMHANNAPro.woff2')}) format('woff2'),
+      url(${require('@/assets/fonts/BMHANNAPro/BMHANNAPro.woff')}) format('woff'),
+      url(${require('@/assets/fonts/BMHANNAPro/BMHANNAPro.ttf')}) format('truetype');
     font-weight: normal;
     font-style: normal;
   }
 
   @font-face {
     font-family: 'BMHANNAAir';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.0/BMHANNAAir.woff') format('woff');
+    src: url(${require('@/assets/fonts/BMHANNAAir/BMHANNAAir.woff2')}) format('woff2'),
+      url(${require('@/assets/fonts/BMHANNAAir/BMHANNAAir.woff')}) format('woff'),
+      url(${require('@/assets/fonts/BMHANNAAir/BMHANNAAir.ttf')}) format('truetype');
     font-weight: normal;
     font-style: normal;
   }

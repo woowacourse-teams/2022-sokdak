@@ -25,8 +25,15 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(png|jpg|jpeg)$/i,
+        test: /\.(png|jpg|jpeg|woff2)$/i,
         type: 'asset/resource',
+      },
+      {
+        test: /\.(ttf|woff|woff2)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'static/[name][ext][query]',
+        },
       },
       {
         test: /\.(ts|tsx)$/,

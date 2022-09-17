@@ -12,6 +12,7 @@ const style = css`
       url(${require('@/assets/fonts/BMYEONSUNG/BMYEONSUNG.ttf')}) format('truetype');
     font-weight: normal;
     font-style: normal;
+    font-display: optional;
   }
 
   @font-face {
@@ -21,6 +22,7 @@ const style = css`
       url(${require('@/assets/fonts/BMHANNAPro/BMHANNAPro.ttf')}) format('truetype');
     font-weight: normal;
     font-style: normal;
+    font-display: optional;
   }
 
   @font-face {
@@ -30,6 +32,7 @@ const style = css`
       url(${require('@/assets/fonts/BMHANNAAir/BMHANNAAir.ttf')}) format('truetype');
     font-weight: normal;
     font-style: normal;
+    font-display: optional;
   }
 
   html,

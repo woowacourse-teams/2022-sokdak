@@ -1,5 +1,15 @@
 import emotionReset from 'emotion-reset';
 
+import '@/assets/fonts/BMHANNAAir/BMHANNAAir.ttf';
+import '@/assets/fonts/BMHANNAAir/BMHANNAAir.woff';
+import '@/assets/fonts/BMHANNAAir/BMHANNAAir.woff2';
+import '@/assets/fonts/BMHANNAPro/BMHANNAPro.ttf';
+import '@/assets/fonts/BMHANNAPro/BMHANNAPro.woff';
+import '@/assets/fonts/BMHANNAPro/BMHANNAPro.woff2';
+import '@/assets/fonts/BMYEONSUNG/BMYEONSUNG.ttf';
+import '@/assets/fonts/BMYEONSUNG/BMYEONSUNG.woff';
+import '@/assets/fonts/BMYEONSUNG/BMYEONSUNG.woff2';
+
 import { css, Global, keyframes } from '@emotion/react';
 
 const style = css`
@@ -7,23 +17,29 @@ const style = css`
 
   @font-face {
     font-family: 'BMYEONSUNG';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMYEONSUNG.woff') format('woff');
+    src: url('static/BMYEONSUNG.woff2') format('woff2'), url('static/BMYEONSUNG.woff2') format('woff'),
+      url('static/BMYEONSUNG.woff2') format('truetype');
     font-weight: normal;
     font-style: normal;
+    font-display: optional;
   }
 
   @font-face {
     font-family: 'BMHANNAPro';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_seven@1.0/BMHANNAPro.woff') format('woff');
+    src: url('static/BMHANNAPro.woff2') format('woff2'), url('static/BMHANNAPro.woff2') format('woff'),
+      url('static/BMHANNAPro.woff2') format('truetype');
     font-weight: normal;
     font-style: normal;
+    font-display: optional;
   }
 
   @font-face {
     font-family: 'BMHANNAAir';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.0/BMHANNAAir.woff') format('woff');
+    src: url('static/BMHANNAAir.woff2') format('woff2'), url('static/BMHANNAAir.woff2') format('woff'),
+      url('static/BMHANNAAir.woff2') format('truetype');
     font-weight: normal;
     font-style: normal;
+    font-display: optional;
   }
 
   html,

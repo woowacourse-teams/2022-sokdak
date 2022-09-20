@@ -32,6 +32,7 @@ const PostPage = () => {
       onSuccess: data => {
         setLike({ isLiked: data.like, likeCount: data.likeCount });
       },
+      staleTime: 1000 * 20,
     },
   });
 

@@ -39,7 +39,10 @@ const useCreatePost = (
     {
       ...options,
       onSuccess: (data, variables, context) => {
-        queryClient.resetQueries(QUERY_KEYS.POSTS);
+        queryClient.invalidateQueries(QUERY_KEYS.POSTS);
+        queryClient.invalidateQueries(QUERY_KEYS.POSTS_BY_BOARDS);
+        queryClient.invalidateQueries(QUERY_KEYS.MY_POSTS);
+
         showSnackbar(SNACKBAR_MESSAGE.SUCCESS_WRITE_POST);
         if (options && options.onSuccess) {
           options.onSuccess(data, variables, context);

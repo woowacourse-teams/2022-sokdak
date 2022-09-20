@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClientProvider, QueryClient } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import { BrowserRouter } from 'react-router-dom';
 
 import axios from 'axios';
@@ -59,6 +60,7 @@ ReactDOM.createRoot(rootNode).render(
               </PaginationContextProvider>
             </SnackBarContextProvider>
           </ThemeProvider>
+          <ReactQueryDevtools />
         </QueryClientProvider>
       </BrowserRouter>
       <GlobalStyle />

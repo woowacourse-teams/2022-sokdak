@@ -19,7 +19,10 @@ const useDeletePost = (options?: UseMutationOptions<AxiosResponse, AxiosError, s
     {
       ...options,
       onSuccess: (data, variables, context) => {
-        queryClient.resetQueries(QUERY_KEYS.POSTS);
+        queryClient.invalidateQueries(QUERY_KEYS.POSTS);
+        queryClient.invalidateQueries(QUERY_KEYS.POSTS_BY_BOARDS);
+        queryClient.invalidateQueries(QUERY_KEYS.MY_POSTS);
+
         showSnackbar(SNACKBAR_MESSAGE.SUCCESS_DELETE_POST);
 
         if (options && options.onSuccess) {

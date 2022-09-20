@@ -28,10 +28,10 @@ const useUpdatePost = ({
     {
       ...options,
       onSuccess: (data, variables, context) => {
-        queryClient.resetQueries(QUERY_KEYS.POSTS);
-        queryClient.resetQueries(QUERY_KEYS.POSTS_BY_BOARDS);
-        queryClient.resetQueries(QUERY_KEYS.MY_POSTS);
-        queryClient.resetQueries([QUERY_KEYS.POST, String(id)]);
+        queryClient.invalidateQueries(QUERY_KEYS.POSTS);
+        queryClient.invalidateQueries(QUERY_KEYS.POSTS_BY_BOARDS);
+        queryClient.invalidateQueries(QUERY_KEYS.MY_POSTS);
+        queryClient.invalidateQueries([QUERY_KEYS.POST, String(id)]);
 
         showSnackbar(SNACKBAR_MESSAGE.SUCCESS_UPDATE_POST);
 

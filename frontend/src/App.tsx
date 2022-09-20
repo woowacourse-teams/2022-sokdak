@@ -1,21 +1,10 @@
-import { useContext } from 'react';
+import { useContext, lazy, Suspense } from 'react';
 import { useQueryClient } from 'react-query';
 import { Route, Routes } from 'react-router-dom';
 
-import BoardPage from './pages/BoardPage';
-import CreatePostPage from './pages/CreatePostPage';
-import HashTagPage from './pages/HashTagPage';
-import LoginPage from './pages/LoginPage';
-import MainPage from './pages/MainPage';
-import NotFoundPage from './pages/NotFoundPage';
-import NotificationPage from './pages/NotificationPage';
-import PostPage from './pages/PostPage';
-import ProfilePage from './pages/ProfilePage';
-import SignUpPage from './pages/SignUpPage';
-import UpdatePostPage from './pages/UpdatePostPage';
-
-import Snackbar from './components/Snackbar';
 import Header from '@/components/Header';
+import Snackbar from '@/components/Snackbar';
+import Spinner from '@/components/Spinner';
 
 import AuthContext from './context/Auth';
 
@@ -27,6 +16,19 @@ import SNACKBAR_MESSAGE from './constants/snackbar';
 
 import PrivateRoute from './routes/PrivateRoute';
 import PublicRoute from './routes/PublicRoute';
+import styled from '@emotion/styled';
+
+const BoardPage = lazy(() => import('@/pages/BoardPage'));
+const CreatePostPage = lazy(() => import('@/pages/CreatePostPage'));
+const HashTagPage = lazy(() => import('@/pages/HashTagPage'));
+const LoginPage = lazy(() => import('@/pages/LoginPage'));
+const MainPage = lazy(() => import('@/pages/MainPage'));
+const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
+const NotificationPage = lazy(() => import('@/pages/NotificationPage'));
+const PostPage = lazy(() => import('@/pages/PostPage'));
+const ProfilePage = lazy(() => import('@/pages/ProfilePage'));
+const SignUpPage = lazy(() => import('@/pages/SignUpPage'));
+const UpdatePostPage = lazy(() => import('@/pages/UpdatePostPage'));
 
 const App = () => {
   const { isVisible, message, showSnackbar } = useSnackbar();
@@ -50,26 +52,35 @@ const App = () => {
   return (
     <>
       <Header />
-      <Routes>
-        <Route path={PATH.HOME} element={<MainPage />} />
-        <Route path={`${PATH.POST}/:id`} element={<PostPage />} />
-        <Route path={PATH.UPDATE_POST} element={<UpdatePostPage />} />
-        <Route path={`${PATH.BOARD}/:id`} element={<BoardPage />} />
-        <Route path={`${PATH.HASHTAG}/:name`} element={<HashTagPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-        <Route element={<PrivateRoute />}>
-          <Route path={PATH.CREATE_POST} element={<CreatePostPage />} />
-          <Route path={PATH.PROFILE} element={<ProfilePage />} />
-          <Route path={PATH.NOTIFICATION} element={<NotificationPage />} />
-        </Route>
-        <Route element={<PublicRoute />}>
-          <Route path={PATH.LOGIN} element={<LoginPage />} />
-          <Route path={PATH.SIGN_UP} element={<SignUpPage />} />
-        </Route>
-      </Routes>
+      <Suspense fallback={<FallbackSpinner />}>
+        <Routes>
+          <Route path={PATH.HOME} element={<MainPage />} />
+          <Route path={`${PATH.POST}/:id`} element={<PostPage />} />
+          <Route path={PATH.UPDATE_POST} element={<UpdatePostPage />} />
+          <Route path={`${PATH.BOARD}/:id`} element={<BoardPage />} />
+          <Route path={`${PATH.HASHTAG}/:name`} element={<HashTagPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+          <Route element={<PrivateRoute />}>
+            <Route path={PATH.CREATE_POST} element={<CreatePostPage />} />
+            <Route path={PATH.PROFILE} element={<ProfilePage />} />
+            <Route path={PATH.NOTIFICATION} element={<NotificationPage />} />
+          </Route>
+          <Route element={<PublicRoute />}>
+            <Route path={PATH.LOGIN} element={<LoginPage />} />
+            <Route path={PATH.SIGN_UP} element={<SignUpPage />} />
+          </Route>
+        </Routes>
+      </Suspense>
       {isVisible && <Snackbar message={message} />}
     </>
   );
 };
+
+const FallbackSpinner = styled(Spinner)`
+  width: 100%;
+  height: 500px;
+  justify-content: center;
+  align-items: center;
+`;
 
 export default App;

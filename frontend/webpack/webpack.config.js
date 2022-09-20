@@ -60,4 +60,9 @@ module.exports = {
     new InterpolateHtmlPlugin({ PUBLIC_URL: '' }),
   ],
   devtool: 'source-map',
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
 };

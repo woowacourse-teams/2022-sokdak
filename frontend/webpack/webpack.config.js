@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
+const InterpolateHtmlPlugin = require('interpolate-html-plugin');
 require('dotenv').config();
 
 module.exports = {
@@ -25,7 +26,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(png|jpg|jpeg|woff2)$/i,
+        test: /\.(png|jpg|jpeg)$/i,
         type: 'asset/resource',
       },
       {
@@ -56,6 +57,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, '../public/index.html'),
     }),
+    new InterpolateHtmlPlugin({ PUBLIC_URL: '' }),
   ],
   devtool: 'source-map',
 };

@@ -1,14 +1,14 @@
 import emotionReset from 'emotion-reset';
 
-import '@/assets/fonts/BMHANNAAir/BMHANNAAir.ttf';
-import '@/assets/fonts/BMHANNAAir/BMHANNAAir.woff';
-import '@/assets/fonts/BMHANNAAir/BMHANNAAir.woff2';
-import '@/assets/fonts/BMHANNAPro/BMHANNAPro.ttf';
-import '@/assets/fonts/BMHANNAPro/BMHANNAPro.woff';
-import '@/assets/fonts/BMHANNAPro/BMHANNAPro.woff2';
-import '@/assets/fonts/BMYEONSUNG/BMYEONSUNG.ttf';
-import '@/assets/fonts/BMYEONSUNG/BMYEONSUNG.woff';
-import '@/assets/fonts/BMYEONSUNG/BMYEONSUNG.woff2';
+import BMHANNA_AIR_TTF from '@/assets/fonts/BMHANNAAir/BMHANNAAir.ttf';
+import BMHANNA_AIR_WOFF from '@/assets/fonts/BMHANNAAir/BMHANNAAir.woff';
+import BMHANNA_AIR_WOFF2 from '@/assets/fonts/BMHANNAAir/BMHANNAAir.woff2';
+import BMHANNA_PRO_TTF from '@/assets/fonts/BMHANNAPro/BMHANNAPro.ttf';
+import BMHANNA_PRO_WOFF from '@/assets/fonts/BMHANNAPro/BMHANNAPro.woff';
+import BMHANNA_PRO_WOFF2 from '@/assets/fonts/BMHANNAPro/BMHANNAPro.woff2';
+import BMYEONSUNG_TTF from '@/assets/fonts/BMYEONSUNG/BMYEONSUNG.ttf';
+import BMYEONSUNG_WOFF from '@/assets/fonts/BMYEONSUNG/BMYEONSUNG.woff';
+import BMYEONSUNG_WOFF2 from '@/assets/fonts/BMYEONSUNG/BMYEONSUNG.woff2';
 
 import { css, Global, keyframes } from '@emotion/react';
 
@@ -17,8 +17,8 @@ const style = css`
 
   @font-face {
     font-family: 'BMYEONSUNG';
-    src: url('static/BMYEONSUNG.woff2') format('woff2'), url('static/BMYEONSUNG.woff2') format('woff'),
-      url('static/BMYEONSUNG.woff2') format('truetype');
+    src: url('${BMYEONSUNG_WOFF2}') format('woff2'), url('${BMYEONSUNG_WOFF}') format('woff'),
+      url('${BMYEONSUNG_TTF}') format('truetype');
     font-weight: normal;
     font-style: normal;
     font-display: optional;
@@ -26,8 +26,8 @@ const style = css`
 
   @font-face {
     font-family: 'BMHANNAPro';
-    src: url('static/BMHANNAPro.woff2') format('woff2'), url('static/BMHANNAPro.woff2') format('woff'),
-      url('static/BMHANNAPro.woff2') format('truetype');
+    src: url('${BMHANNA_PRO_WOFF2}') format('woff2'), url('${BMHANNA_PRO_WOFF}') format('woff'),
+      url('${BMHANNA_PRO_TTF}') format('truetype');
     font-weight: normal;
     font-style: normal;
     font-display: optional;
@@ -35,8 +35,8 @@ const style = css`
 
   @font-face {
     font-family: 'BMHANNAAir';
-    src: url('static/BMHANNAAir.woff2') format('woff2'), url('static/BMHANNAAir.woff2') format('woff'),
-      url('static/BMHANNAAir.woff2') format('truetype');
+    src: url('${BMHANNA_AIR_WOFF2}') format('woff2'), url('${BMHANNA_AIR_WOFF}') format('woff'),
+      url('${BMHANNA_AIR_TTF}') format('truetype');
     font-weight: normal;
     font-style: normal;
     font-display: optional;

@@ -20,6 +20,7 @@ module.exports = {
     path: path.join(__dirname, '../dist'),
     publicPath: '/',
     filename: '[name].[contenthash].js',
+    chunkFilename: '[name].[contenthash].chunk.js',
     clean: true,
   },
   module: {
@@ -58,6 +59,12 @@ module.exports = {
   optimization: {
     splitChunks: {
       chunks: 'all',
+      cacheGroups: {
+        defaultVendors: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+        },
+      },
     },
   },
 };

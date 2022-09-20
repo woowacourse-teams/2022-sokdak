@@ -18,17 +18,17 @@ import PrivateRoute from './routes/PrivateRoute';
 import PublicRoute from './routes/PublicRoute';
 import styled from '@emotion/styled';
 
-const BoardPage = lazy(() => import('@/pages/BoardPage'));
-const CreatePostPage = lazy(() => import('@/pages/CreatePostPage'));
-const HashTagPage = lazy(() => import('@/pages/HashTagPage'));
-const LoginPage = lazy(() => import('@/pages/LoginPage'));
-const MainPage = lazy(() => import('@/pages/MainPage'));
-const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
-const NotificationPage = lazy(() => import('@/pages/NotificationPage'));
-const PostPage = lazy(() => import('@/pages/PostPage'));
-const ProfilePage = lazy(() => import('@/pages/ProfilePage'));
-const SignUpPage = lazy(() => import('@/pages/SignUpPage'));
-const UpdatePostPage = lazy(() => import('@/pages/UpdatePostPage'));
+const BoardPage = lazy(() => import(/* webpackChunkName: "BoardPage" */ '@/pages/BoardPage'));
+const CreatePostPage = lazy(() => import(/* webpackChunkName: "CreatePostPage" */ '@/pages/CreatePostPage'));
+const HashTagPage = lazy(() => import(/* webpackChunkName: "HashTagPage" */ '@/pages/HashTagPage'));
+const LoginPage = lazy(() => import(/* webpackChunkName: "LoginPage" */ '@/pages/LoginPage'));
+const MainPage = lazy(() => import(/* webpackChunkName: "MainPage" */ '@/pages/MainPage'));
+const NotFoundPage = lazy(() => import(/* webpackChunkName: "NotFoundPage" */ '@/pages/NotFoundPage'));
+const NotificationPage = lazy(() => import(/* webpackChunkName: "NotificationPage" */ '@/pages/NotificationPage'));
+const PostPage = lazy(() => import(/* webpackChunkName: "PostPage" */ '@/pages/PostPage'));
+const ProfilePage = lazy(() => import(/* webpackChunkName: "ProfilePage" */ '@/pages/ProfilePage'));
+const SignUpPage = lazy(() => import(/* webpackChunkName: "SignUpPage" */ '@/pages/SignUpPage'));
+const UpdatePostPage = lazy(() => import(/* webpackChunkName: "UpdatePostPage" */ '@/pages/UpdatePostPage'));
 
 const App = () => {
   const { isVisible, message, showSnackbar } = useSnackbar();

@@ -1,6 +1,5 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const InterpolateHtmlPlugin = require('interpolate-html-plugin');
@@ -21,6 +20,7 @@ module.exports = {
     path: path.join(__dirname, '../dist'),
     publicPath: '/',
     filename: '[name].[contenthash].js',
+    clean: true,
   },
   module: {
     rules: [
@@ -49,7 +49,6 @@ module.exports = {
   plugins: [
     new Dotenv(),
     new TsconfigPathsPlugin(),
-    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, '../public/index.html'),
     }),

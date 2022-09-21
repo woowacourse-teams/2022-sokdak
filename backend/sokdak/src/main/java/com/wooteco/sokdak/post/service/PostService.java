@@ -66,6 +66,7 @@ public class PostService {
                 .content(newPostRequest.getContent())
                 .writerNickname(writerNickname)
                 .member(member)
+                .imageName(newPostRequest.getImageName())
                 .build();
         Post savedPost = postRepository.save(post);
 
@@ -89,7 +90,7 @@ public class PostService {
         Hashtags hashtags = hashtagService.findHashtagsByPostId(postId);
 
         return PostDetailResponse.of(foundPost, postBoards.get(0), liked,
-                foundPost.isAuthorized(authInfo.getId()), hashtags);
+                foundPost.isAuthorized(authInfo.getId()), hashtags, foundPost.getImageName());
     }
 
     public PostsResponse findPostsByBoard(Long boardId, Pageable pageable) {

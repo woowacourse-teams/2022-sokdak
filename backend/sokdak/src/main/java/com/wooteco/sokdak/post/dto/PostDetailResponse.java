@@ -25,6 +25,7 @@ public class PostDetailResponse {
     private boolean like;
     private boolean authorized;
     private boolean modified;
+    private String imageName;
 
     public PostDetailResponse() {
     }
@@ -32,7 +33,7 @@ public class PostDetailResponse {
     @Builder
     private PostDetailResponse(Long id, Long boardId, String nickname, String title, String content, boolean blocked,
                                List<HashtagResponse> hashtagResponses, LocalDateTime createdAt, int likeCount,
-                               boolean like, boolean authorized, boolean modified) {
+                               boolean like, boolean authorized, boolean modified, String imageName) {
         this.id = id;
         this.boardId = boardId;
         this.blocked = blocked;
@@ -45,11 +46,12 @@ public class PostDetailResponse {
         this.like = like;
         this.authorized = authorized;
         this.modified = modified;
+        this.imageName = imageName;
     }
 
 
     public static PostDetailResponse of(Post post, PostBoard postBoard, boolean liked,
-                                        boolean authorized, Hashtags hashtags) {
+                                        boolean authorized, Hashtags hashtags, String imageName) {
         return PostDetailResponse.builder()
                 .id(post.getId())
                 .boardId(postBoard.getBoard().getId())
@@ -63,6 +65,7 @@ public class PostDetailResponse {
                 .authorized(authorized)
                 .hashtagResponses(toResponse(hashtags))
                 .modified(post.isModified())
+                .imageName(imageName)
                 .build();
     }
 

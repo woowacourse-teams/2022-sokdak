@@ -1,6 +1,5 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const InterpolateHtmlPlugin = require('interpolate-html-plugin');
 require('dotenv').config();
@@ -49,7 +48,6 @@ module.exports = {
   },
   plugins: [
     new Dotenv(),
-    new TsconfigPathsPlugin(),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, '../public/index.html'),
     }),

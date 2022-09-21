@@ -1,6 +1,5 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const InterpolateHtmlPlugin = require('interpolate-html-plugin');
 
 module.exports = {
   mode: 'development',
@@ -47,8 +46,10 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, '../public/index.html'),
+      templateParameters: {
+        PUBLIC_URL: '',
+      },
     }),
-    new InterpolateHtmlPlugin({ PUBLIC_URL: '' }),
   ],
   devtool: 'source-map',
   optimization: {

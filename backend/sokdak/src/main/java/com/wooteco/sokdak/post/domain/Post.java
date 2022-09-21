@@ -106,6 +106,11 @@ public class Post {
         this.content = new Content(content);
     }
 
+    public void updateImageName(String imageName, Long accessMemberId) {
+        validateOwner(accessMemberId);
+        this.imageName = imageName;
+    }
+
     public void validateOwner(Long accessMemberId) {
         if (!Objects.equals(accessMemberId, member.getId())) {
             throw new AuthorizationException();

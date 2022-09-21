@@ -111,8 +111,10 @@ public class PostService {
                 .orElseThrow(PostNotFoundException::new);
         Hashtags hashtags = hashtagService.findHashtagsByPostId(post.getId());
 
+        // Todo: validateOwner 메서드 하나만 실행하게 리팩터링하기
         post.updateTitle(postUpdateRequest.getTitle(), authInfo.getId());
         post.updateContent(postUpdateRequest.getContent(), authInfo.getId());
+        post.updateImageName(postUpdateRequest.getImageName(), authInfo.getId());
 
         hashtagService.deleteAllByPostId(hashtags, post.getId());
         hashtagService.saveHashtag(postUpdateRequest.getHashtags(), post);

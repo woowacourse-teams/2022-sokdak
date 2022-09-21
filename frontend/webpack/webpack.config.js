@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { ESBuildMinifyPlugin } = require('esbuild-loader');
 
 module.exports = {
   mode: 'development',
@@ -33,9 +34,16 @@ module.exports = {
         },
       },
       {
-        test: /\.(ts|tsx)$/,
-        exclude: '/node_modules',
+        test: /[sS]tyles?\.tsx?$/,
         loader: 'babel-loader',
+      },
+      {
+        test: /\.tsx?$/,
+        loader: 'esbuild-loader',
+        options: {
+          loader: 'tsx',
+          target: 'esnext',
+        },
       },
       {
         test: /\.svg$/i,
@@ -62,5 +70,10 @@ module.exports = {
         },
       },
     },
+    minimizer: [
+      new ESBuildMinifyPlugin({
+        target: 'esnext',
+      }),
+    ],
   },
 };

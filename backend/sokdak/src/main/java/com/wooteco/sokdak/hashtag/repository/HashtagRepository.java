@@ -7,8 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface HashtagRepository extends JpaRepository<Hashtag, Long> {
 
-    boolean existsByName(String name);
-
     Optional<Hashtag> findByName(String name);
 
     List<Hashtag> findAllByNameContains(String name);

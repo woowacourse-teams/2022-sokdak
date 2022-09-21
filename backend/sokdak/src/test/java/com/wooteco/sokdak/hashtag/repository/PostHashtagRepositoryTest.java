@@ -67,12 +67,6 @@ class PostHashtagRepositoryTest extends RepositoryTest {
     }
 
     @Test
-    void countByHashtagId() {
-        int count = postHashtagRepository.countByHashtagId(tag1.getId());
-        assertThat(count).isEqualTo(3);
-    }
-
-    @Test
     void findAllByHashtagId() {
         Pageable pageable = PageRequest.of(0, 3, DESC, "createdAt");
 

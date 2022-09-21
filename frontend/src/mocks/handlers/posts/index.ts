@@ -3,10 +3,10 @@ import { rest } from 'msw';
 import { hashtagList, postList, boardList, reportList } from '@/dummy';
 
 const postHandlers = [
-  rest.post<Pick<Post, 'title' | 'content'> & { hashtags: string[]; anonymous: boolean }>(
+  rest.post<Pick<Post, 'title' | 'content' | 'imageName'> & { hashtags: string[]; anonymous: boolean }>(
     '/boards/:boardId/posts',
     (req, res, ctx) => {
-      const { title, content, hashtags, anonymous } = req.body;
+      const { title, content, hashtags, anonymous, imageName } = req.body;
       const boardId = Number(req.params.boardId!);
       const id = postList.length + 1;
 
@@ -34,6 +34,7 @@ const postHandlers = [
         title,
         content,
         boardId,
+        imageName,
         createdAt: new Date().toISOString(),
         likeCount: 0,
         commentCount: 0,
@@ -251,6 +252,10 @@ const postHandlers = [
 
   rest.get('/boards', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json({ boards: boardList }));
+  }),
+
+  rest.post('/image', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json({ imageName: 'image.png' }));
   }),
 ];
 

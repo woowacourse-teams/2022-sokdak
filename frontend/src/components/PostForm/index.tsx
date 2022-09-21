@@ -7,6 +7,7 @@ import useSnackbar from '@/hooks/useSnackbar';
 
 import * as Styled from './index.styles';
 
+import authFetcher from '@/apis';
 import { BOARDS } from '@/constants/board';
 
 const SubmitType = {
@@ -15,8 +16,9 @@ const SubmitType = {
 } as const;
 
 interface Image {
-  file: File;
-  src: string;
+  file?: File;
+  src?: string;
+  path: string;
 }
 
 interface PostFormProps {
@@ -26,7 +28,11 @@ interface PostFormProps {
   prevContent?: string;
   prevHashTags?: Omit<Hashtag, 'count'>[];
   handlePost: (
-    post: Pick<Post, 'title' | 'content'> & { hashtags: string[]; anonymous?: boolean; boardId: string | number },
+    post: Pick<Post, 'title' | 'content' | 'imageName'> & {
+      hashtags: string[];
+      anonymous?: boolean;
+      boardId: string | number;
+    },
   ) => void;
 }
 
@@ -44,7 +50,9 @@ const PostForm = ({
   const [content, setContent] = useState(prevContent);
   const [hashtags, setHashtags] = useState(prevHashTags.map(hashtag => hashtag.name));
   const [anonymous, setAnonymous] = useState(true);
-  const [image, setImage] = useState<Image>();
+  const [image, setImage] = useState<Image>({
+    path: '',
+  });
 
   const { boardId } = useLocation().state as Pick<Post, 'boardId'>;
 
@@ -57,20 +65,20 @@ const PostForm = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    handlePost({ title, content, hashtags, anonymous, boardId });
+    handlePost({ title, content, hashtags, anonymous, boardId, imageName: image.path });
   };
 
-  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const formData = new FormData();
-
     const [file] = e.currentTarget.files!;
 
     if (!file) return;
 
-    formData.append('file', file);
+    formData.append('image', file);
 
-    // TODO: 사진을 post한다.
+    const response = await authFetcher.post('/image', formData);
 
+    setImage(image => ({ ...image, path: response.data.imageName }));
     preload(file);
   };
 
@@ -78,10 +86,11 @@ const PostForm = ({
     const reader = new FileReader();
 
     reader.onload = () =>
-      setImage({
+      setImage(image => ({
+        ...image,
         file: file,
         src: typeof reader.result === 'string' ? reader.result : '',
-      });
+      }));
     reader.readAsDataURL(file);
   };
 
@@ -125,7 +134,7 @@ const PostForm = ({
         isAnimationActive={isContentAnimationActive}
         required
       />
-      {image && (
+      {image && image.file && (
         <Styled.ImagePreview>
           <Styled.Image src={image.src} alt="사진 미리보기" />
           <Styled.ImageName>{image.file.name}</Styled.ImageName>

@@ -18,4 +18,5 @@ interface Post {
   boardId: number;
   nickname: string;
   blocked: boolean;
+  imageName: string;
 }

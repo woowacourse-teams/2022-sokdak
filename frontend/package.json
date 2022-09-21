@@ -4,8 +4,8 @@
   "description": "우테코 크루들을 위한 익명게시판 서비스",
   "main": "index.js",
   "scripts": {
-    "start:MSW": "eslint . && env-cmd -f ./env/.env.mocking webpack serve --open --config ./webpack/webpack.local.js",
-    "start": "eslint . && HTTPS=true SSL_CRT_FILE=./localhost.pem SSL_KEY_FILE=./localhost-key.pem env-cmd -f ./env/.env.local webpack serve --open --config ./webpack/webpack.local.js",
+    "start:MSW": "env-cmd -f ./env/.env.mocking webpack serve --open --config ./webpack/webpack.local.js",
+    "start": "HTTPS=true SSL_CRT_FILE=./localhost.pem SSL_KEY_FILE=./localhost-key.pem env-cmd -f ./env/.env.local webpack serve --open --config ./webpack/webpack.local.js",
     "build-dev": "webpack --config ./webpack/webpack.dev.js",
     "build-prod": "webpack --config ./webpack/webpack.prod.js",
     "test": "jest --silent",

@@ -3,8 +3,6 @@ const common = require('./webpack.config.js');
 const { DefinePlugin } = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-require('dotenv').config();
-
 module.exports = merge(common, {
   mode: 'production',
   plugins: [

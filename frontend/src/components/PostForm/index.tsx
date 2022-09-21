@@ -65,6 +65,8 @@ const PostForm = ({
 
     const [file] = e.currentTarget.files!;
 
+    if (!file) return;
+
     formData.append('file', file);
 
     // TODO: 사진을 post한다.

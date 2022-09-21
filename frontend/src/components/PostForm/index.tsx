@@ -14,6 +14,11 @@ const SubmitType = {
   PUT: '글 수정하기',
 } as const;
 
+interface Image {
+  file: File;
+  src: string;
+}
+
 interface PostFormProps {
   heading: string;
   submitType: typeof SubmitType[keyof typeof SubmitType];
@@ -39,6 +44,7 @@ const PostForm = ({
   const [content, setContent] = useState(prevContent);
   const [hashtags, setHashtags] = useState(prevHashTags.map(hashtag => hashtag.name));
   const [anonymous, setAnonymous] = useState(true);
+  const [image, setImage] = useState<Image>();
 
   const { boardId } = useLocation().state as Pick<Post, 'boardId'>;
 
@@ -52,6 +58,29 @@ const PostForm = ({
     e.preventDefault();
 
     handlePost({ title, content, hashtags, anonymous, boardId });
+  };
+
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formData = new FormData();
+
+    const [file] = e.currentTarget.files!;
+
+    formData.append('file', file);
+
+    // TODO: 사진을 post한다.
+
+    preload(file);
+  };
+
+  const preload = (file: File) => {
+    const reader = new FileReader();
+
+    reader.onload = () =>
+      setImage({
+        file: file,
+        src: typeof reader.result === 'string' ? reader.result : '',
+      });
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -94,10 +123,22 @@ const PostForm = ({
         isAnimationActive={isContentAnimationActive}
         required
       />
+      {image && (
+        <Styled.ImagePreview>
+          <Styled.Image src={image.src} alt="사진 미리보기" />
+          <Styled.ImageName>{image.file.name}</Styled.ImageName>
+        </Styled.ImagePreview>
+      )}
       <HashTagInput hashtags={hashtags} setHashtags={setHashtags} />
       <Styled.SubmitButton>{submitType}</Styled.SubmitButton>
       {submitType === SubmitType.POST && (
-        <Styled.CheckBox isChecked={anonymous} setIsChecked={setAnonymous} labelText="익명" />
+        <Styled.PostController>
+          <Styled.CheckBox isChecked={anonymous} setIsChecked={setAnonymous} labelText="익명" />
+          <Styled.ImageUploadButton htmlFor="file-upload">
+            <Styled.CameraIcon />
+          </Styled.ImageUploadButton>
+          <Styled.ImageInput id="file-upload" type="file" accept="image/*" onChange={handleUpload} />
+        </Styled.PostController>
       )}
     </Styled.Container>
   );

@@ -1,5 +1,7 @@
 import CheckBoxComponent from '@/components/CheckBox';
 
+import Camera from '@/assets/images/camera.svg';
+
 import { invalidInputAnimation } from '@/style/GlobalStyle';
 import styled from '@emotion/styled';
 
@@ -72,6 +74,44 @@ export const SubmitButton = styled.button`
   cursor: pointer;
 `;
 
-export const CheckBox = styled(CheckBoxComponent)`
+export const CheckBox = styled(CheckBoxComponent)``;
+
+export const ImagePreview = styled.div`
   width: 100%;
+  height: 100px;
+  display: flex;
+`;
+
+export const Image = styled.img`
+  width: 100px;
+  height: 100px;
+  border-radius: 5px;
+`;
+
+export const ImageName = styled.p`
+  font-size: 14px;
+  color: ${props => props.theme.colors.gray_200};
+  padding-left: 20px;
+  line-height: 20px;
+  user-select: none;
+`;
+
+export const PostController = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const CameraIcon = styled(Camera)``;
+
+export const ImageInput = styled.input`
+  display: none;
+`;
+
+export const ImageUploadButton = styled.label`
+  cursor: pointer;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-right: -10px;
 `;

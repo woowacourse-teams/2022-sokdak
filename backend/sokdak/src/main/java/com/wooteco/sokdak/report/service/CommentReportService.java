@@ -36,7 +36,7 @@ public class CommentReportService {
 
     @Transactional
     public void reportComment(Long commentId, ReportRequest reportRequest, AuthInfo authInfo) {
-        Comment comment = commentRepository.findByCommentQuery(commentId)
+        Comment comment = commentRepository.findByCommentId(commentId)
                 .orElseThrow(CommentNotFoundException::new);
         Member reporter = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);

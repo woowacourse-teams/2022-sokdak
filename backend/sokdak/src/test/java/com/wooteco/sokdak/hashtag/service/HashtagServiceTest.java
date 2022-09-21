@@ -143,8 +143,8 @@ class HashtagServiceTest extends ServiceTest {
 
         assertAll(
                 () -> assertThat(postHashtagRepository.findAllByPostId(postId)).isEmpty(),
-                () -> assertThat(hashtagRepository.existsByName("태그1")).isTrue(),
-                () -> assertThat(!hashtagRepository.existsByName("태그2")).isTrue()
+                () -> assertThat(hashtagRepository.findByName("태그1")).isNotEmpty(),
+                () -> assertThat(hashtagRepository.findByName("태그2")).isEmpty()
         );
     }
 

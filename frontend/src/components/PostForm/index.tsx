@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import HashTagInput from './components/HashTagInput';
+import ImagePreview from './components/ImagePreview';
+import ImageUpload from './components/ImageUpload';
 
 import useUploadImage from '@/hooks/queries/post/useUploadImage';
 import useSnackbar from '@/hooks/useSnackbar';
@@ -9,18 +11,11 @@ import useSnackbar from '@/hooks/useSnackbar';
 import * as Styled from './index.styles';
 
 import { BOARDS } from '@/constants/board';
-import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
 const SubmitType = {
   POST: '글 작성하기',
   PUT: '글 수정하기',
 } as const;
-
-interface Image {
-  file?: File;
-  src?: string;
-  path: string;
-}
 
 interface PostFormProps {
   heading: string;
@@ -58,52 +53,19 @@ const PostForm = ({
   });
 
   const { boardId } = useLocation().state as Pick<Post, 'boardId'>;
-
   const { title: boardTitle } = BOARDS.find(board => board.id === Number(boardId))!;
+
   const [isValidTitle, setIsValidTitle] = useState(true);
   const [isValidContent, setIsValidContent] = useState(true);
   const [isAnimationActive, setIsAnimationActive] = useState(false);
   const [isContentAnimationActive, setIsContentAnimationActive] = useState(false);
-  const { mutate: uploadImage, isLoading } = useUploadImage({
-    onSuccess: ({ data }, variables) => {
-      const image = variables.get('image') as File;
 
-      setImage(image => ({ ...image, path: data.imageName }));
-      preload(image);
-    },
-  });
+  const { mutateAsync: uploadImage, isLoading } = useUploadImage({});
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     handlePost({ title, content, hashtags, anonymous, boardId, imageName: image.path });
-  };
-
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formData = new FormData();
-    const [file] = e.currentTarget.files!;
-
-    if (!file) return;
-
-    if (file.size > 1e7) {
-      showSnackbar(SNACKBAR_MESSAGE.LARGE_IMAGE);
-      return;
-    }
-
-    formData.append('image', file);
-    uploadImage(formData);
-  };
-
-  const preload = (file: File) => {
-    const reader = new FileReader();
-
-    reader.onload = () =>
-      setImage(image => ({
-        ...image,
-        file: file,
-        src: typeof reader.result === 'string' ? reader.result : '',
-      }));
-    reader.readAsDataURL(file);
   };
 
   return (
@@ -146,17 +108,7 @@ const PostForm = ({
         isAnimationActive={isContentAnimationActive}
         required
       />
-      {image.path !== '' && !isLoading && (
-        <Styled.ImagePreview>
-          <Styled.Image src={image.file ? image.src : process.env.IMAGE_API_URL + image.path} alt={image.path} />
-          <Styled.ImageName>{image.file ? image.file.name : image.path}</Styled.ImageName>
-        </Styled.ImagePreview>
-      )}
-      {isLoading && (
-        <Styled.ImageUploadLoading>
-          이미지 업로드 중 . . <Styled.LoadingIcon>😵‍💫</Styled.LoadingIcon>
-        </Styled.ImageUploadLoading>
-      )}
+      <ImagePreview image={image} isLoading={isLoading} />
       <HashTagInput hashtags={hashtags} setHashtags={setHashtags} />
       <Styled.SubmitButton>{submitType}</Styled.SubmitButton>
       <Styled.PostController>
@@ -166,10 +118,7 @@ const PostForm = ({
           labelText="익명"
           visible={submitType === SubmitType.POST}
         />
-        <Styled.ImageUploadButton htmlFor="file-upload">
-          <Styled.CameraIcon />
-        </Styled.ImageUploadButton>
-        <Styled.ImageInput id="file-upload" type="file" accept="image/*" onChange={handleUpload} />
+        <ImageUpload setImage={setImage} uploadImage={uploadImage} />
       </Styled.PostController>
     </Styled.Container>
   );

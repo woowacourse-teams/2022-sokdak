@@ -40,7 +40,7 @@ public class ImageController {
     }
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<ImageResponse> upload(@RequestPart MultipartFile image) throws IOException {
+    public ResponseEntity<ImageResponse> upload(@RequestPart MultipartFile image) {
         ImageResponse imageResponse = imageService.uploadImage(image);
 
         return ResponseEntity.ok(imageResponse);

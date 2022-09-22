@@ -22,7 +22,7 @@ const ImageUpload = ({ setImage, uploadImage }: ImageUploadProps) => {
 
     if (!file) return;
 
-    if (file.size > 1e7) {
+    if (file.size > 2e7) {
       showSnackbar(SNACKBAR_MESSAGE.LARGE_IMAGE);
       return;
     }

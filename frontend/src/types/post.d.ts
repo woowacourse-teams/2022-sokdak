@@ -18,4 +18,11 @@ interface Post {
   boardId: number;
   nickname: string;
   blocked: boolean;
+  imageName: string;
+}
+
+interface Image {
+  file?: File;
+  src?: string;
+  path: string;
 }

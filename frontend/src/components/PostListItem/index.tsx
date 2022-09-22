@@ -7,7 +7,8 @@ import * as Styled from './index.styles';
 import countFormatter from '@/utils/countFormatter';
 import timeConverter from '@/utils/timeConverter';
 
-interface PostListItemProps extends Omit<Post, 'id' | 'like' | 'hashtags' | 'authorized' | 'boardId' | 'nickname'> {
+interface PostListItemProps
+  extends Omit<Post, 'id' | 'like' | 'hashtags' | 'authorized' | 'boardId' | 'nickname' | 'imageName'> {
   handleClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   testid: number;
 }

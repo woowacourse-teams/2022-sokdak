@@ -25,6 +25,7 @@ export const MUTATION_KEY = {
   POST_COMMENT: 'post-comment',
   CREATE_REPLY: 'create-reply',
   DELETE_NOTIFICATION: 'delete-notification',
+  UPLOAD_IMAGE: 'upload-image',
 };
 
 export default QUERY_KEYS;

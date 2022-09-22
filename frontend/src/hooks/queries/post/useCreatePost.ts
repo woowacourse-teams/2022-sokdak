@@ -12,7 +12,11 @@ const useCreatePost = (
   options?: UseMutationOptions<
     AxiosResponse<string, string>,
     AxiosError,
-    Pick<Post, 'title' | 'content'> & { hashtags: string[]; anonymous?: boolean; boardId?: string | number }
+    Pick<Post, 'title' | 'content' | 'imageName'> & {
+      hashtags: string[];
+      anonymous?: boolean;
+      boardId?: string | number;
+    }
   >,
 ) => {
   const queryClient = useQueryClient();
@@ -25,7 +29,8 @@ const useCreatePost = (
       hashtags,
       anonymous,
       boardId,
-    }: Pick<Post, 'title' | 'content'> & {
+      imageName,
+    }: Pick<Post, 'title' | 'content' | 'imageName'> & {
       hashtags: string[];
       anonymous?: boolean;
       boardId?: string | number;
@@ -35,6 +40,7 @@ const useCreatePost = (
         content,
         hashtags,
         anonymous,
+        imageName,
       }),
     {
       ...options,

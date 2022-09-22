@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { ESBuildMinifyPlugin } = require('esbuild-loader');
+const { DefinePlugin } =require('webpack');
 
 module.exports = {
   mode: 'development',
@@ -57,6 +58,9 @@ module.exports = {
       templateParameters: {
         PUBLIC_URL: '',
       },
+    }),
+    new DefinePlugin({
+      'process.env.IMAGE_API_URL': JSON.stringify('http://img.sokdaksokdak.com:8080/images/'),
     }),
   ],
   devtool: 'source-map',

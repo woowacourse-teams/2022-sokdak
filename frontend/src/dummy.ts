@@ -30,6 +30,7 @@ export const postList: Post[] = [
     boardId: 1,
     nickname: '테스트 계정',
     blocked: false,
+    imageName: '7cc22416-4b03-41b8-ab26-477145a5a537.gif',
   },
   {
     id: 2,
@@ -54,6 +55,7 @@ export const postList: Post[] = [
     boardId: 1,
     nickname: '짜증난 파이썬',
     blocked: true,
+    imageName: '',
   },
 
   {
@@ -75,6 +77,7 @@ export const postList: Post[] = [
     boardId: 2,
     nickname: '테스트 계정',
     blocked: false,
+    imageName: '7b81f2dc-37ae-4fca-9109-2e6c03343df6.png',
   },
   {
     id: 4,
@@ -95,6 +98,7 @@ export const postList: Post[] = [
     boardId: 3,
     nickname: '짜증난 파이썬',
     blocked: false,
+    imageName: '',
   },
   {
     id: 5,
@@ -115,6 +119,7 @@ export const postList: Post[] = [
     boardId: 4,
     nickname: '테스트 계정',
     blocked: true,
+    imageName: '',
   },
   {
     id: 6,
@@ -130,6 +135,7 @@ export const postList: Post[] = [
     boardId: 3,
     nickname: '못된 젠킨스',
     blocked: true,
+    imageName: '',
   },
   {
     id: 7,
@@ -145,6 +151,7 @@ export const postList: Post[] = [
     boardId: 3,
     nickname: '행복한 리액트',
     blocked: false,
+    imageName: '',
   },
   {
     id: 8,
@@ -160,6 +167,7 @@ export const postList: Post[] = [
     boardId: 2,
     nickname: '슬픈 자바',
     blocked: false,
+    imageName: '',
   },
   {
     id: 9,
@@ -175,6 +183,7 @@ export const postList: Post[] = [
     boardId: 1,
     nickname: '짜증난 파이썬',
     blocked: false,
+    imageName: '',
   },
   {
     id: 10,
@@ -190,6 +199,7 @@ export const postList: Post[] = [
     boardId: 3,
     nickname: '짜증난 파이썬',
     blocked: false,
+    imageName: '',
   },
   {
     id: 11,
@@ -205,6 +215,7 @@ export const postList: Post[] = [
     boardId: 4,
     nickname: '짜증난 파이썬',
     blocked: false,
+    imageName: '',
   },
   {
     id: 12,
@@ -220,6 +231,7 @@ export const postList: Post[] = [
     boardId: 4,
     nickname: '짜증난 파이썬',
     blocked: false,
+    imageName: '',
   },
   {
     id: 13,
@@ -235,6 +247,7 @@ export const postList: Post[] = [
     boardId: 3,
     nickname: '짜증난 파이썬',
     blocked: false,
+    imageName: '',
   },
   {
     id: 14,
@@ -250,6 +263,7 @@ export const postList: Post[] = [
     boardId: 2,
     nickname: '짜증난 파이썬',
     blocked: false,
+    imageName: '',
   },
   {
     id: 15,
@@ -265,6 +279,7 @@ export const postList: Post[] = [
     boardId: 3,
     nickname: '짜증난 파이썬',
     blocked: false,
+    imageName: '',
   },
   {
     id: 16,
@@ -280,6 +295,7 @@ export const postList: Post[] = [
     boardId: 2,
     nickname: '짜증난 파이썬',
     blocked: false,
+    imageName: '',
   },
   {
     id: 17,
@@ -295,6 +311,7 @@ export const postList: Post[] = [
     boardId: 3,
     nickname: '짜증난 파이썬',
     blocked: false,
+    imageName: '',
   },
   {
     id: 18,
@@ -310,6 +327,7 @@ export const postList: Post[] = [
     boardId: 1,
     nickname: '짜증난 파이썬',
     blocked: false,
+    imageName: '',
   },
   {
     id: 19,
@@ -325,6 +343,7 @@ export const postList: Post[] = [
     boardId: 2,
     nickname: '짜증난 파이썬',
     blocked: false,
+    imageName: '',
   },
   {
     id: 20,
@@ -340,6 +359,7 @@ export const postList: Post[] = [
     boardId: 3,
     nickname: '못된 젠킨스',
     blocked: false,
+    imageName: '',
   },
   {
     id: 21,
@@ -355,6 +375,7 @@ export const postList: Post[] = [
     boardId: 3,
     nickname: '테스트 계정',
     blocked: false,
+    imageName: '',
   },
 ];
 

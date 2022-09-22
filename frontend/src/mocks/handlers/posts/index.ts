@@ -108,10 +108,10 @@ const postHandlers = [
     return res(ctx.status(200), ctx.json(targetPost));
   }),
 
-  rest.put<Pick<Post, 'title' | 'content'> & { hashtags: string[] }>('/posts/:id', (req, res, ctx) => {
+  rest.put<Pick<Post, 'title' | 'content' | 'imageName'> & { hashtags: string[] }>('/posts/:id', (req, res, ctx) => {
     const params = req.params;
     const id = Number(params.id);
-    const { title, content, hashtags } = req.body;
+    const { title, content, hashtags, imageName } = req.body;
 
     const isTargetPostExist = postList.some(post => post.id === id);
 
@@ -127,6 +127,7 @@ const postHandlers = [
 
     targetPost.title = title;
     targetPost.content = content;
+    targetPost.imageName = imageName;
 
     hashtags.forEach(hashtagName => {
       const existedTag = hashtagList.find(hashtag => hashtag.name === hashtagName);
@@ -252,10 +253,6 @@ const postHandlers = [
 
   rest.get('/boards', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json({ boards: boardList }));
-  }),
-
-  rest.post('/image', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json({ imageName: 'image.png' }));
   }),
 ];
 

@@ -19,6 +19,7 @@ const SNACKBAR_MESSAGE = {
   EXIST_TAG: '이미 존재하는 태그입니다.',
   NOT_LOGIN: '로그인이 필요한 서비스입니다.',
   ALREADY_LOGIN: '이미 로그인하였습니다.',
+  LARGE_IMAGE: '이미지 크기가 너무 큽니다.',
 };
 
 export default SNACKBAR_MESSAGE;

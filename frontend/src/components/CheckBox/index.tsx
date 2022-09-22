@@ -5,11 +5,12 @@ interface CheckBoxProps {
   isChecked: boolean;
   setIsChecked: React.Dispatch<React.SetStateAction<boolean>>;
   labelText: string;
+  visible?: boolean;
 }
 
-const CheckBox = ({ className, isChecked, setIsChecked, labelText }: CheckBoxProps) => {
+const CheckBox = ({ className, isChecked, setIsChecked, labelText, visible = true }: CheckBoxProps) => {
   return (
-    <Styled.Container className={className}>
+    <Styled.Container className={className} visible={visible}>
       <Styled.HiddenCheckBox
         type="checkbox"
         checked={isChecked}

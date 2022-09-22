@@ -12,6 +12,7 @@ public class PostUpdateRequest {
     @NotBlank(message = "제목 혹은 본문이 없습니다.")
     private String content;
     private List<String> hashtags;
+    private String imageName;
 
     public PostUpdateRequest() {
     }
@@ -20,5 +21,6 @@ public class PostUpdateRequest {
         this.title = title;
         this.content = content;
         this.hashtags = hashtags;
+        this.imageName = "";
     }
 }

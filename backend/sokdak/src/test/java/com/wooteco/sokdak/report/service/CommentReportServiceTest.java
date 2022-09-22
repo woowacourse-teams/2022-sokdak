@@ -7,9 +7,11 @@ import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.comment.domain.Comment;
+import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
@@ -101,10 +103,30 @@ class CommentReportServiceTest extends ServiceTest {
                 .isInstanceOf(InvalidReportMessageException.class);
     }
 
+    @DisplayName("댓글 신고가 5회 신고시 댓글의 내용이 반환되지 않는다.")
+    @Test
+    void reportComment_Block() {
+        AuthInfo authInfo;
+        for (long i = 1; i <= 5; i++) {
+            authInfo = new AuthInfo(i, "USER", VALID_NICKNAME);
+            commentReportService.reportComment(comment.getId(), REPORT_REQUEST, authInfo);
+        }
+        String blindCommentMessage = "블라인드 처리된 댓글입니다.";
+
+        Comment found = commentRepository.findById(this.comment.getId())
+                .orElseThrow(CommentNotFoundException::new);
+
+        assertAll(
+                () -> assertThat(found.isBlocked()).isTrue(),
+                () -> assertThat(found.getNickname()).isEqualTo(blindCommentMessage),
+                () -> assertThat(found.getMessage()).isEqualTo(blindCommentMessage)
+        );
+    }
+
     @DisplayName("댓글 5회 신고시 알림 등록")
     @ParameterizedTest
     @CsvSource({"4, false", "5, true"})
-    void reportPost_blockNotification(int reportCount, boolean expected) {
+    void reportComment_BlockNotification(int reportCount, boolean expected) {
         AuthInfo authInfo;
         for (long i = 1; i <= reportCount; i++) {
             authInfo = new AuthInfo(i, "USER", VALID_NICKNAME);

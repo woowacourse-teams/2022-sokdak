@@ -13,6 +13,7 @@ public class NewPostRequest {
     private String content;
     private boolean anonymous;
     private List<String> hashtags;
+    private String imageName;
 
     public NewPostRequest() {
     }
@@ -22,5 +23,6 @@ public class NewPostRequest {
         this.content = content;
         this.anonymous = anonymous;
         this.hashtags = hashtags;
+        this.imageName = "";
     }
 }

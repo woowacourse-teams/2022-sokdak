@@ -17,6 +17,7 @@ public class PostFixture {
 
     public static final String VALID_POST_TITLE = "제목";
     public static final String VALID_POST_CONTENT = "본문";
+    public static final String VALID_POST_WRITER_NICKNAME = "작성자 닉네임";
 
     public static final String UPDATED_POST_TITLE = "변경된 제목";
     public static final String UPDATED_POST_CONTENT = "변경된 본문";

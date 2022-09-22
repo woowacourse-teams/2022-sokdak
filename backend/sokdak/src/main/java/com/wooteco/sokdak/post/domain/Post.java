@@ -34,7 +34,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class Post {
 
     private static final int BLOCKED_CONDITION = 5;
-    private static final String BLIND_MESSAGE = "블라인드 처리된 글입니다";
+    private static final String BLIND_POST_MESSAGE = "블라인드 처리된 게시글입니다.";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,6 +52,8 @@ public class Post {
     private Content content;
 
     private String writerNickname;
+
+    private String imageName;
 
     @OneToMany(mappedBy = "post")
     private List<Like> likes = new ArrayList<>();
@@ -79,7 +81,7 @@ public class Post {
 
     @Builder
     private Post(String title, String content, Member member, String writerNickname, List<Like> likes,
-                 List<Comment> comments, List<PostHashtag> postHashtags) {
+                 List<Comment> comments, List<PostHashtag> postHashtags, String imageName) {
         this.title = new Title(title);
         this.content = new Content(content);
         this.member = member;
@@ -87,6 +89,7 @@ public class Post {
         this.writerNickname = writerNickname;
         this.comments = comments;
         this.postHashtags = postHashtags;
+        this.imageName = imageName;
     }
 
     public boolean isModified() {
@@ -101,6 +104,11 @@ public class Post {
     public void updateContent(String content, Long accessMemberId) {
         validateOwner(accessMemberId);
         this.content = new Content(content);
+    }
+
+    public void updateImageName(String imageName, Long accessMemberId) {
+        validateOwner(accessMemberId);
+        this.imageName = imageName;
     }
 
     public void validateOwner(Long accessMemberId) {
@@ -124,7 +132,7 @@ public class Post {
         postReports.stream()
                 .filter(other::isSameReporter)
                 .findAny()
-                 .ifPresent(it -> {
+                .ifPresent(it -> {
                     throw new AlreadyReportPostException();
                 });
         postReports.add(other);
@@ -140,14 +148,14 @@ public class Post {
 
     public String getTitle() {
         if (isBlocked()) {
-            return BLIND_MESSAGE;
+            return BLIND_POST_MESSAGE;
         }
         return title.getValue();
     }
 
     public String getContent() {
         if (isBlocked()) {
-            return BLIND_MESSAGE;
+            return BLIND_POST_MESSAGE;
         }
         return content.getValue();
     }
@@ -187,6 +195,13 @@ public class Post {
     }
 
     public String getNickname() {
+        if (isBlocked()) {
+            return BLIND_POST_MESSAGE;
+        }
         return writerNickname;
+    }
+
+    public String getImageName() {
+        return imageName;
     }
 }

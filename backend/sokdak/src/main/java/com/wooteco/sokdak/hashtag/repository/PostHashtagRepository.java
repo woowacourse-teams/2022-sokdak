@@ -21,8 +21,6 @@ public interface PostHashtagRepository extends JpaRepository<PostHashtag, Long> 
     @Query(value = "SELECT p FROM Post p INNER JOIN PostHashtag ph ON p=ph.post and ph.hashtag.id = :hashtagId")
     Slice<Post> findAllPostByHashtagId(Long hashtagId, Pageable pageable);
 
-    int countByHashtagId(Long hashtagId);
-
     @Query(value = "SELECT ph.hashtag, COUNT(ph.hashtag.id) FROM PostHashtag ph WHERE ph.hashtag IN :hashtags GROUP BY ph.hashtag ORDER BY COUNT(ph.hashtag.id) DESC")
     List<Tuple> findAllByHashtagOrderByCount(List<Hashtag> hashtags, Pageable pageable);
 }

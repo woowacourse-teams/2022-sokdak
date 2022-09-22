@@ -1,12 +1,13 @@
 import styled from '@emotion/styled';
 
-export const Container = styled.label`
+export const Container = styled.label<{ visible: boolean }>`
   display: flex;
   align-items: center;
   width: 50px;
   height: 35px;
   user-select: none;
   gap: 7px;
+  visibility: ${props => (props.visible ? 'visible' : 'hidden')};
 `;
 
 export const CheckBox = styled.div`

@@ -1,5 +1,15 @@
 import emotionReset from 'emotion-reset';
 
+import BMHANNA_AIR_TTF from '@/assets/fonts/BMHANNAAir/BMHANNAAir.ttf';
+import BMHANNA_AIR_WOFF from '@/assets/fonts/BMHANNAAir/BMHANNAAir.woff';
+import BMHANNA_AIR_WOFF2 from '@/assets/fonts/BMHANNAAir/BMHANNAAir.woff2';
+import BMHANNA_PRO_TTF from '@/assets/fonts/BMHANNAPro/BMHANNAPro.ttf';
+import BMHANNA_PRO_WOFF from '@/assets/fonts/BMHANNAPro/BMHANNAPro.woff';
+import BMHANNA_PRO_WOFF2 from '@/assets/fonts/BMHANNAPro/BMHANNAPro.woff2';
+import BMYEONSUNG_TTF from '@/assets/fonts/BMYEONSUNG/BMYEONSUNG.ttf';
+import BMYEONSUNG_WOFF from '@/assets/fonts/BMYEONSUNG/BMYEONSUNG.woff';
+import BMYEONSUNG_WOFF2 from '@/assets/fonts/BMYEONSUNG/BMYEONSUNG.woff2';
+
 import { css, Global, keyframes } from '@emotion/react';
 
 const style = css`
@@ -7,23 +17,29 @@ const style = css`
 
   @font-face {
     font-family: 'BMYEONSUNG';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMYEONSUNG.woff') format('woff');
+    src: url('${BMYEONSUNG_WOFF2}') format('woff2'), url('${BMYEONSUNG_WOFF}') format('woff'),
+      url('${BMYEONSUNG_TTF}') format('truetype');
     font-weight: normal;
     font-style: normal;
+    font-display: optional;
   }
 
   @font-face {
     font-family: 'BMHANNAPro';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_seven@1.0/BMHANNAPro.woff') format('woff');
+    src: url('${BMHANNA_PRO_WOFF2}') format('woff2'), url('${BMHANNA_PRO_WOFF}') format('woff'),
+      url('${BMHANNA_PRO_TTF}') format('truetype');
     font-weight: normal;
     font-style: normal;
+    font-display: optional;
   }
 
   @font-face {
     font-family: 'BMHANNAAir';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.0/BMHANNAAir.woff') format('woff');
+    src: url('${BMHANNA_AIR_WOFF2}') format('woff2'), url('${BMHANNA_AIR_WOFF}') format('woff'),
+      url('${BMHANNA_AIR_TTF}') format('truetype');
     font-weight: normal;
     font-style: normal;
+    font-display: optional;
   }
 
   html,

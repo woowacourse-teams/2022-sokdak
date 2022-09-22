@@ -11,6 +11,7 @@ const config: Config.InitialOptions = {
   testEnvironment: 'jsdom',
   testMatch: ['<rootDir>/**/*.test.(js|jsx|ts|tsx)'],
   moduleNameMapper: {
+    '\\.(ttf|woff|woff2)$': '<rootDir>/__mock__/fileMock.ts',
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],

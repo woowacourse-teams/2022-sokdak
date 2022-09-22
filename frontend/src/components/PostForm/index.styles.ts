@@ -72,6 +72,11 @@ export const SubmitButton = styled.button`
   cursor: pointer;
 `;
 
-export const CheckBox = styled(CheckBoxComponent)`
+export const CheckBox = styled(CheckBoxComponent)``;
+
+export const PostController = styled.div`
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;

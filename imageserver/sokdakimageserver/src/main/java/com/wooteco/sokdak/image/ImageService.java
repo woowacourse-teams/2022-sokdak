@@ -18,7 +18,7 @@ public class ImageService {
         try {
             final File file = new File(IMAGE_DIR + imageName);
             image.transferTo(file);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new FileIOException();
         }
 

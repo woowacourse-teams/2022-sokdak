@@ -3,10 +3,10 @@ import { rest } from 'msw';
 import { hashtagList, postList, boardList, reportList } from '@/dummy';
 
 const postHandlers = [
-  rest.post<Pick<Post, 'title' | 'content'> & { hashtags: string[]; anonymous: boolean }>(
+  rest.post<Pick<Post, 'title' | 'content' | 'imageName'> & { hashtags: string[]; anonymous: boolean }>(
     '/boards/:boardId/posts',
     (req, res, ctx) => {
-      const { title, content, hashtags, anonymous } = req.body;
+      const { title, content, hashtags, anonymous, imageName } = req.body;
       const boardId = Number(req.params.boardId!);
       const id = postList.length + 1;
 
@@ -34,6 +34,7 @@ const postHandlers = [
         title,
         content,
         boardId,
+        imageName,
         createdAt: new Date().toISOString(),
         likeCount: 0,
         commentCount: 0,
@@ -107,10 +108,10 @@ const postHandlers = [
     return res(ctx.status(200), ctx.json(targetPost));
   }),
 
-  rest.put<Pick<Post, 'title' | 'content'> & { hashtags: string[] }>('/posts/:id', (req, res, ctx) => {
+  rest.put<Pick<Post, 'title' | 'content' | 'imageName'> & { hashtags: string[] }>('/posts/:id', (req, res, ctx) => {
     const params = req.params;
     const id = Number(params.id);
-    const { title, content, hashtags } = req.body;
+    const { title, content, hashtags, imageName } = req.body;
 
     const isTargetPostExist = postList.some(post => post.id === id);
 
@@ -126,6 +127,7 @@ const postHandlers = [
 
     targetPost.title = title;
     targetPost.content = content;
+    targetPost.imageName = imageName;
 
     hashtags.forEach(hashtagName => {
       const existedTag = hashtagList.find(hashtag => hashtag.name === hashtagName);

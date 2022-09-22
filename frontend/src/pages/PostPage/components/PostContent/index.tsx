@@ -6,7 +6,7 @@ import * as Styled from './index.styles';
 
 import PATH from '@/constants/path';
 
-const PostContent = ({ content, hashtags }: Pick<Post, 'hashtags' | 'content'>) => {
+const PostContent = ({ content, hashtags, hasImage }: Pick<Post, 'hashtags' | 'content'> & { hasImage: boolean }) => {
   const navigate = useNavigate();
 
   const handleHashtagClick = (name: string) => {
@@ -14,7 +14,7 @@ const PostContent = ({ content, hashtags }: Pick<Post, 'hashtags' | 'content'>) 
   };
 
   return (
-    <Styled.ContentContainer>
+    <Styled.ContentContainer hasImage={hasImage}>
       <Styled.Content>{content}</Styled.Content>
       <Styled.TagContainer>
         {hashtags?.map(({ name }) => (

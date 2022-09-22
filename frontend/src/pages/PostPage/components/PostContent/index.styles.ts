@@ -1,17 +1,21 @@
 import styled from '@emotion/styled';
 
-export const ContentContainer = styled.div`
-  width: 100%;
-  min-height: 420px;
-  border-bottom: 1px solid ${props => props.theme.colors.sub};
-  margin-bottom: 25px;
-`;
-
 export const Content = styled.p`
   min-height: 370px;
   line-height: 25px;
   white-space: pre-wrap;
   line-break: anywhere;
+`;
+
+export const ContentContainer = styled.div<{ hasImage: boolean }>`
+  width: 100%;
+  min-height: ${props => (props.hasImage ? '120px' : '420px')};
+  border-bottom: 1px solid ${props => props.theme.colors.sub};
+  margin-bottom: 25px;
+
+  ${Content} {
+    min-height: ${props => (props.hasImage ? '70px' : '370px')};
+  }
 `;
 
 export const TagContainer = styled.div`

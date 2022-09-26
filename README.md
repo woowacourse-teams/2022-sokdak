@@ -1,11 +1,11 @@
-<p style="text-align:center;" >
+<p align="middle" >
   <img width="200px;" src="https://github.com/woowacourse-teams/2022-sokdak/blob/dev/frontend/src/assets/images/panda_logo.svg?raw=true" alt="로고"/>
 </p>
-<h1 style="text-align:center;">속닥속닥</h1>
-<p style="text-align:center;">우리들만의 비밀 이야기🎋, 속닥속닥</p>
-<p style="text-align:center;"><a href="https://sokdaksokdak.com">https://sokdaksokdak.com</a></p>
-<p style="text-align:center;"><a href="https://sokdak-sokdak.tistory.com/">기술블로그</a></p>
-<p style="text-align:center;"><a href="https://www.instagram.com/sokdak_x2ㅇ">인스타그램</a></p>
+<h1 align="middle">속닥속닥</h1>
+<p align="middle">우리들만의 비밀 이야기🎋, 속닥속닥</p>
+<p align="middle"><a href="https://sokdaksokdak.com">https://sokdaksokdak.com</a></p>
+<p align="middle"><a href="https://sokdak-sokdak.tistory.com/">기술블로그</a></p>
+<p align="middle"><a href="https://www.instagram.com/sokdak_x2ㅇ">인스타그램</a></p>
 
 ## 💬 서비스 소개
 

@@ -49,12 +49,6 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/signup/email/verification")
-    public ResponseEntity<Void> verifyAuthCode(@Valid @RequestBody VerificationRequest verificationRequest) {
-        authService.verifyAuthCode(verificationRequest);
-        return ResponseEntity.noContent().build();
-    }
-
     @GetMapping(value = "/signup/exists", params = "username")
     public ResponseEntity<UniqueResponse> validateUniqueUsername(@RequestParam String username) {
         UniqueResponse uniqueResponse = memberService.checkUniqueUsername(username);

@@ -4,6 +4,7 @@ import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.auth.service.AuthService;
 import com.wooteco.sokdak.auth.service.RefreshTokenService;
+import com.wooteco.sokdak.member.dto.VerificationRequest;
 import com.wooteco.sokdak.support.token.AuthorizationExtractor;
 import com.wooteco.sokdak.support.token.Login;
 import com.wooteco.sokdak.support.token.TokenManager;
@@ -43,6 +44,12 @@ public class AuthController {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .header("Refresh-Token", "Bearer " + refreshToken)
                 .build();
+    }
+
+    @PostMapping("members/signup/email/verification")
+    public ResponseEntity<Void> verifyAuthCode(@Valid @RequestBody VerificationRequest verificationRequest) {
+        authService.verifyAuthCode(verificationRequest);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/refresh")

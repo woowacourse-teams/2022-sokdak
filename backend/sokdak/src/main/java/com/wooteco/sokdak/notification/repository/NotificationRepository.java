@@ -16,6 +16,13 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     void deleteAllByCommentId(Long commentId);
 
+    @Modifying
+    @Query(value = "DELETE from Notification n WHERE n.id in :ids")
+    void deleteAllById(List<Long> ids);
+
+    @Query(value = "SELECT n.id from Notification n where n.comment.id = :commentId")
+    List<Long> findIdsByCommentId(Long commentId);
+
     Slice<Notification> findNotificationsByMemberId(Long memberId, Pageable pageable);
 
     @Modifying

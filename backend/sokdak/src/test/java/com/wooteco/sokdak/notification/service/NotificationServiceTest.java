@@ -26,6 +26,8 @@ import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.util.ServiceTest;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,6 +41,9 @@ import org.springframework.data.domain.Sort;
 class NotificationServiceTest extends ServiceTest {
 
     private static final Pageable PAGEABLE = PageRequest.of(0, 100);
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Autowired
     private NotificationService notificationService;
@@ -256,13 +261,19 @@ class NotificationServiceTest extends ServiceTest {
     @Test
     void deleteCommentNotification() {
         Notification notification1 = Notification.builder()
-                .notificationType(NEW_COMMENT)
+                .notificationType(COMMENT_REPORT)
                 .post(post)
                 .comment(comment)
                 .member(member)
                 .build();
         Notification notification2 = Notification.builder()
-                .notificationType(NEW_COMMENT)
+                .notificationType(COMMENT_REPORT)
+                .post(post)
+                .comment(comment)
+                .member(member)
+                .build();
+        Notification notification3 = Notification.builder()
+                .notificationType(COMMENT_REPORT)
                 .post(post)
                 .comment(comment)
                 .member(member)
@@ -270,6 +281,9 @@ class NotificationServiceTest extends ServiceTest {
 
         notificationRepository.save(notification1);
         notificationRepository.save(notification2);
+        notificationRepository.save(notification3);
+
+        em.clear();
 
         notificationService.deleteCommentNotification(comment.getId());
 

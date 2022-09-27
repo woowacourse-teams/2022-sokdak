@@ -69,7 +69,8 @@ public class NotificationService {
     }
 
     public void deleteCommentNotification(Long commentId) {
-        notificationRepository.deleteAllByCommentId(commentId);
+        List<Long> ids = notificationRepository.findIdsByCommentId(commentId);
+        notificationRepository.deleteAllById(ids);
     }
 
     @Transactional(readOnly = true)

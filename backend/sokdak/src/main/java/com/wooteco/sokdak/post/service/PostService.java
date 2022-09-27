@@ -59,8 +59,7 @@ public class PostService {
 
     @Transactional
     public Long addPost(Long boardId, NewPostRequest newPostRequest, AuthInfo authInfo) {
-        Member member = memberRepository.findById(authInfo.getId())
-                .orElseThrow(MemberNotFoundException::new);
+        Member member = findMember(authInfo);
         String writerNickname = createPostWriterNickname(newPostRequest.isAnonymous(), member);
         Post post = Post.builder()
                 .title(newPostRequest.getTitle())
@@ -100,10 +99,14 @@ public class PostService {
     }
 
     public MyPostsResponse findMyPosts(Pageable pageable, AuthInfo authInfo) {
-        Member member = memberRepository.findById(authInfo.getId())
-                .orElseThrow(MemberNotFoundException::new);
+        Member member = findMember(authInfo);
         Page<Post> posts = postRepository.findPostsByMemberOrderByCreatedAtDesc(pageable, member);
         return MyPostsResponse.of(posts.getContent(), posts.getTotalPages());
+    }
+
+    private Member findMember(AuthInfo authInfo) {
+        return memberRepository.findById(authInfo.getId())
+                .orElseThrow(MemberNotFoundException::new);
     }
 
     @Transactional

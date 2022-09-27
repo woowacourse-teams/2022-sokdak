@@ -2,13 +2,13 @@ package com.wooteco.sokdak.member.controller;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.member.dto.EmailRequest;
+import com.wooteco.sokdak.member.dto.NicknameResponse;
+import com.wooteco.sokdak.member.dto.NicknameUpdateRequest;
 import com.wooteco.sokdak.member.dto.SignupRequest;
 import com.wooteco.sokdak.member.dto.UniqueResponse;
 import com.wooteco.sokdak.member.dto.VerificationRequest;
 import com.wooteco.sokdak.member.service.EmailService;
 import com.wooteco.sokdak.member.service.MemberService;
-import com.wooteco.sokdak.member.dto.NicknameResponse;
-import com.wooteco.sokdak.member.dto.NicknameUpdateRequest;
 import com.wooteco.sokdak.support.token.Login;
 import com.wooteco.sokdak.support.token.TokenManager;
 import javax.validation.Valid;
@@ -78,14 +78,11 @@ public class MemberController {
     public ResponseEntity<Void> editNickname(@RequestBody NicknameUpdateRequest nicknameUpdateRequest,
                                              @Login AuthInfo authInfo) {
         memberService.editNickname(nicknameUpdateRequest, authInfo);
-        String accessToken = getTokenOfNewNickname(nicknameUpdateRequest, authInfo);
         return ResponseEntity.noContent()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .header(HttpHeaders.AUTHORIZATION,
+                        "Bearer " + tokenManager.createNewTokenWithNewNickname(
+                                nicknameUpdateRequest.getNickname(), authInfo)
+                )
                 .build();
-    }
-
-    private String getTokenOfNewNickname(NicknameUpdateRequest nicknameUpdateRequest, AuthInfo authInfo) {
-        AuthInfo newAuthInfo = new AuthInfo(authInfo.getId(), authInfo.getRole(), nicknameUpdateRequest.getNickname());
-        return tokenManager.createAccessToken(newAuthInfo);
     }
 }

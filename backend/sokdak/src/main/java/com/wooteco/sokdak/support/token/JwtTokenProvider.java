@@ -2,6 +2,7 @@ package com.wooteco.sokdak.support.token;
 
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.member.dto.NicknameUpdateRequest;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -100,6 +101,12 @@ public class JwtTokenProvider implements TokenManager {
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
+    }
+
+    @Override
+    public String createNewTokenWithNewNickname(String newNickname, AuthInfo authInfo) {
+        AuthInfo newAuthInfo = new AuthInfo(authInfo.getId(), authInfo.getRole(), newNickname);
+        return this.createAccessToken(newAuthInfo);
     }
 }
 

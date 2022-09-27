@@ -1,9 +1,12 @@
 package com.wooteco.sokdak.support.token;
 
 import static com.wooteco.sokdak.member.domain.RoleType.USER;
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.member.domain.RoleType;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,5 +25,19 @@ class JwtTokenProviderTest {
         assertThat(tokenManager.getParsedClaims(token).getId()).isEqualTo(1);
         assertThat(tokenManager.getParsedClaims(token).getRole()).isEqualTo("USER");
         assertThat(tokenManager.getParsedClaims(token).getNickname()).isEqualTo("nickname");
+    }
+
+    @Test
+    @DisplayName("닉네임이 바뀌었을 때 새로운 토큰을 발급할 수 있다.")
+    void createNewTokenWithNewNickname() {
+        // given
+        AuthInfo authInfo = new AuthInfo(1L, USER.getName(), "oldNickname");
+
+        // when
+        String oldAccessToken = tokenManager.createAccessToken(authInfo);
+        String newToken = tokenManager.createNewTokenWithNewNickname("newNickname", authInfo);
+
+        // then
+        assertThat(oldAccessToken).isNotEqualTo(newToken);
     }
 }

@@ -316,13 +316,13 @@ class NotificationServiceTest extends ServiceTest {
         Notification notification2 = Notification.builder()
                 .notificationType(NEW_COMMENT)
                 .post(post)
-                .comment(comment)
+                .comment(comment3)
                 .member(member)
                 .build();
         Notification notification3 = Notification.builder()
                 .notificationType(NEW_COMMENT)
                 .post(post)
-                .comment(comment)
+                .comment(comment4)
                 .member(member)
                 .build();
 

@@ -70,12 +70,16 @@ public class NotificationService {
 
     public void deleteCommentNotification(Long commentId) {
         List<Long> ids = notificationRepository.findIdsByCommentId(commentId);
-        notificationRepository.deleteAllById(ids);
+        if (!ids.isEmpty()) {
+            notificationRepository.deleteAllById(ids);
+        }
     }
 
     public void deletePostNotification(Long postId) {
         List<Long> ids = notificationRepository.findIdsByPostId(postId);
-        notificationRepository.deleteAllById(ids);
+        if (!ids.isEmpty()) {
+            notificationRepository.deleteAllById(ids);
+        }
     }
 
     @Transactional(readOnly = true)

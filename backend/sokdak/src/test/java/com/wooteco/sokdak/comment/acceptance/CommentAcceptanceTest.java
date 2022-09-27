@@ -1,6 +1,6 @@
 package com.wooteco.sokdak.comment.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_COMMENT_REQUEST;
+import static com.wooteco.sokdak.util.fixture.CommentFixture.NON_ANONYMOUS_COMMENT_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.VALID_COMMENT_MESSAGE;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.addNewCommentInPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
@@ -48,7 +48,7 @@ class CommentAcceptanceTest extends AcceptanceTest {
     void addComment_Nickname() {
         Long postId = addNewPost();
 
-        ExtractableResponse<Response> response = httpPostWithAuthorization(NEW_COMMENT_REQUEST,
+        ExtractableResponse<Response> response = httpPostWithAuthorization(NON_ANONYMOUS_COMMENT_REQUEST,
                 "/posts/" + postId + "/comments",
                 getChrisToken());
 
@@ -75,7 +75,7 @@ class CommentAcceptanceTest extends AcceptanceTest {
         httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST,
                 "/posts/" + postId + "/comments",
                 getChrisToken());
-        httpPostWithAuthorization(NEW_COMMENT_REQUEST,
+        httpPostWithAuthorization(NON_ANONYMOUS_COMMENT_REQUEST,
                 "/posts/" + postId + "/comments",
                 getChrisToken());
         httpPostWithAuthorization(NEW_ANONYMOUS_COMMENT_REQUEST,

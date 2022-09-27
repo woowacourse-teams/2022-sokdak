@@ -72,8 +72,4 @@ public class Notification {
             throw new AuthorizationException();
         }
     }
-
-    public void inquire() {
-        inquired = true;
-    }
 }

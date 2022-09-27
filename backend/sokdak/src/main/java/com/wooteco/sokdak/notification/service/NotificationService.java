@@ -82,25 +82,25 @@ public class NotificationService {
         Slice<Notification> foundNotifications = notificationRepository
                 .findNotificationsByMemberId(authInfo.getId(), pageable);
         List<Notification> notifications = foundNotifications.getContent();
-        inquireNotification(notifications);
+        if (foundNotifications.hasContent()) {
+            inquireNotification(notifications);
+        }
+        return generateNotificationsResponse(notifications, foundNotifications.isLast());
+    }
 
+    private void inquireNotification(List<Notification> notifications) {
+        List<Long> inquiredNotificationIds = notifications.stream()
+                .map(Notification::getId)
+                .collect(Collectors.toUnmodifiableList());
+        notificationRepository.inquireNotificationByIds(inquiredNotificationIds);
+    }
+
+    private NotificationsResponse generateNotificationsResponse(List<Notification> notifications, boolean isLastPage) {
         List<NotificationResponse> notificationResponses = notifications
                 .stream()
                 .map(NotificationResponse::of)
                 .collect(Collectors.toUnmodifiableList());
-        return new NotificationsResponse(notificationResponses, foundNotifications.isLast());
-    }
-
-    private void inquireNotification(List<Notification> notifications) {
-        for (Notification notification : notifications) {
-            inquire(notification);
-        }
-    }
-
-    private void inquire(Notification notification) {
-        if (!notification.isInquired()) {
-            notification.inquire();
-        }
+        return new NotificationsResponse(notificationResponses, isLastPage);
     }
 
     public void deleteNotification(AuthInfo authInfo, Long notificationId) {

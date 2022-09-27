@@ -89,6 +89,7 @@ class NotificationServiceTest extends ServiceTest {
                 .message("내용")
                 .build();
         commentRepository.save(comment);
+        commentRepository.save(comment2);
     }
 
     @DisplayName("새 댓글 알림을 등록한다.")
@@ -286,6 +287,52 @@ class NotificationServiceTest extends ServiceTest {
         em.clear();
 
         notificationService.deleteCommentNotification(comment.getId());
+
+        NotificationsResponse notifications = notificationService.findNotifications(AUTH_INFO, PageRequest.of(0, 10));
+        assertThat(notifications.getNotifications()).isEmpty();
+    }
+
+    @DisplayName("게시글에 해당하는 알림들을 삭제한다.")
+    @Test
+    void deletePostNotification() {
+        Comment comment3 = Comment.builder()
+                .post(post)
+                .member(member2)
+                .nickname("닉네임")
+                .message("내용")
+                .build();
+        Comment comment4 = Comment.builder()
+                .post(post)
+                .member(member2)
+                .nickname("닉네임")
+                .message("내용")
+                .build();
+        Notification notification1 = Notification.builder()
+                .notificationType(NEW_COMMENT)
+                .post(post)
+                .comment(comment)
+                .member(member)
+                .build();
+        Notification notification2 = Notification.builder()
+                .notificationType(NEW_COMMENT)
+                .post(post)
+                .comment(comment)
+                .member(member)
+                .build();
+        Notification notification3 = Notification.builder()
+                .notificationType(NEW_COMMENT)
+                .post(post)
+                .comment(comment)
+                .member(member)
+                .build();
+
+        notificationRepository.save(notification1);
+        notificationRepository.save(notification2);
+        notificationRepository.save(notification3);
+
+        em.clear();
+
+        notificationService.deletePostNotification(post.getId());
 
         NotificationsResponse notifications = notificationService.findNotifications(AUTH_INFO, PageRequest.of(0, 10));
         assertThat(notifications.getNotifications()).isEmpty();

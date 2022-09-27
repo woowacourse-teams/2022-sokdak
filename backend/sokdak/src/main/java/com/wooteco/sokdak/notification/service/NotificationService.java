@@ -73,6 +73,11 @@ public class NotificationService {
         notificationRepository.deleteAllById(ids);
     }
 
+    public void deletePostNotification(Long postId) {
+        List<Long> ids = notificationRepository.findIdsByPostId(postId);
+        notificationRepository.deleteAllById(ids);
+    }
+
     @Transactional(readOnly = true)
     public NewNotificationCheckResponse checkNewNotification(AuthInfo authInfo) {
         return new NewNotificationCheckResponse(

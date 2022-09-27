@@ -83,14 +83,18 @@ public class PostService {
     }
 
     public PostDetailResponse findPost(Long postId, AuthInfo authInfo) {
-        Post foundPost = postRepository.findById(postId)
-                .orElseThrow(PostNotFoundException::new);
+        Post foundPost = findPostEntity(postId);
         List<PostBoard> postBoards = postBoardRepository.findPostBoardsByPostId(foundPost.getId());
         boolean liked = postLikeRepository.existsByMemberIdAndPostId(authInfo.getId(), postId);
         Hashtags hashtags = hashtagService.findHashtagsByPostId(postId);
 
         return PostDetailResponse.of(foundPost, postBoards.get(0), liked,
                 foundPost.isOwner(authInfo.getId()), hashtags, foundPost.getImageName());
+    }
+
+    private Post findPostEntity(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(PostNotFoundException::new);
     }
 
     public PostsResponse findPostsByBoard(Long boardId, Pageable pageable) {
@@ -111,8 +115,7 @@ public class PostService {
 
     @Transactional
     public void updatePost(Long postId, PostUpdateRequest postUpdateRequest, AuthInfo authInfo) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(PostNotFoundException::new);
+        Post post = findPostEntity(postId);
         Hashtags hashtags = hashtagService.findHashtagsByPostId(post.getId());
 
         // Todo: validateOwner 메서드 하나만 실행하게 리팩터링하기
@@ -127,8 +130,7 @@ public class PostService {
 
     @Transactional
     public void deletePost(Long id, AuthInfo authInfo) {
-        Post post = postRepository.findById(id)
-                .orElseThrow(PostNotFoundException::new);
+        Post post = findPostEntity(id);
         validateOwner(authInfo, post);
 
         Hashtags hashtags = hashtagService.findHashtagsByPostId(post.getId());

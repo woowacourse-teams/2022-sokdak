@@ -122,7 +122,7 @@ class PostTest {
     @ParameterizedTest
     @CsvSource({"1, true", "2, false"})
     void isAuthorized(Long accessMemberId, boolean expected) {
-        boolean actual = post.isAuthorized(accessMemberId);
+        boolean actual = post.isOwner(accessMemberId);
 
         assertThat(actual).isEqualTo(expected);
     }

@@ -117,7 +117,7 @@ public class Post {
         }
     }
 
-    public boolean isAuthorized(Long accessMemberId) {
+    public boolean isOwner(Long accessMemberId) {
         if (accessMemberId == null) {
             return false;
         }

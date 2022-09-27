@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.post.service;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.board.service.BoardService;
@@ -90,7 +91,7 @@ public class PostService {
         Hashtags hashtags = hashtagService.findHashtagsByPostId(postId);
 
         return PostDetailResponse.of(foundPost, postBoards.get(0), liked,
-                foundPost.isAuthorized(authInfo.getId()), hashtags, foundPost.getImageName());
+                foundPost.isOwner(authInfo.getId()), hashtags, foundPost.getImageName());
     }
 
     public PostsResponse findPostsByBoard(Long boardId, Pageable pageable) {
@@ -124,7 +125,10 @@ public class PostService {
     public void deletePost(Long id, AuthInfo authInfo) {
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFoundException::new);
-        post.validateOwner(authInfo.getId());
+        if (!post.isOwner(authInfo.getId())) {
+            throw new AuthorizationException();
+        }
+
         Hashtags hashtags = hashtagService.findHashtagsByPostId(post.getId());
 
         commentRepository.deleteAllByPost(post);

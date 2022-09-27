@@ -78,7 +78,7 @@ class MemberServiceTest extends ServiceTest {
                 .isInstanceOf(DuplicateNicknameException.class);
     }
 
-    @DisplayName("숫자와 영문, 한글음절을 포함한 1자 이상 16자가 아닌 잘못된 형식의 닉네임으로 수정할 시 예외 발생")
+    @DisplayName("숫자와 영문, 한글음절을 포함한 1자 이상 16자이하가 아닌 잘못된 형식의 닉네임으로 수정할 시 예외 발생")
     @ParameterizedTest
     @ValueSource(strings = {"", " ", "ㄱㄴㄷ", "abdf123ㅏㅇ", "11112222333344445"})
     void editNickname_Exception_InvalidFormat(String invalidNickname) {

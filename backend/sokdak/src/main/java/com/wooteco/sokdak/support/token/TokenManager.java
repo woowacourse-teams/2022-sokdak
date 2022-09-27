@@ -13,4 +13,6 @@ public interface TokenManager {
     AuthInfo getParsedClaims(String token);
 
     boolean isValid(String token);
+
+    String createNewTokenWithNewNickname(String newNickname, AuthInfo authInfo);
 }

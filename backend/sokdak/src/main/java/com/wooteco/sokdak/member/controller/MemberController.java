@@ -81,14 +81,11 @@ public class MemberController {
     public ResponseEntity<Void> editNickname(@RequestBody NicknameUpdateRequest nicknameUpdateRequest,
                                              @Login AuthInfo authInfo) {
         memberService.editNickname(nicknameUpdateRequest, authInfo);
-        String accessToken = getTokenOfNewNickname(nicknameUpdateRequest, authInfo);
         return ResponseEntity.noContent()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .header(HttpHeaders.AUTHORIZATION,
+                        "Bearer " + tokenManager.createNewTokenWithNewNickname(
+                                nicknameUpdateRequest.getNickname(), authInfo)
+                )
                 .build();
-    }
-
-    private String getTokenOfNewNickname(NicknameUpdateRequest nicknameUpdateRequest, AuthInfo authInfo) {
-        AuthInfo newAuthInfo = new AuthInfo(authInfo.getId(), authInfo.getRole(), nicknameUpdateRequest.getNickname());
-        return tokenManager.createAccessToken(newAuthInfo);
     }
 }

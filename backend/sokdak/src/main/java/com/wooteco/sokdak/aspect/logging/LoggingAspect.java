@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.CodeSignature;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,11 @@ public class LoggingAspect {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Before("execution(public * com.wooteco.sokdak.*.controller.*.*(..))")
+    @Pointcut("execution(public * com.wooteco.sokdak.*.controller.*.*(..)) && !@annotation(com.wooteco.sokdak.aspect.logging.NoLogging)")
+    private void loggingCondition() {
+    }
+
+    @Before("loggingCondition()")
     public void logRequest(JoinPoint joinPoint) throws Throwable {
         final Map<String, Object> parameters = extractParameters(joinPoint);
         final MethodSignature signature = (MethodSignature) joinPoint.getSignature();

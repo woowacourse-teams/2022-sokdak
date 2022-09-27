@@ -8,10 +8,8 @@ import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_WRITER_NICKNAME;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.report.domain.PostReport;
 import java.util.List;
@@ -45,35 +43,17 @@ class PostTest {
     @DisplayName("게시글 제목 수정")
     @Test
     void updateTitle() {
-        post.updateTitle("변경된 제목", 1L);
+        post.updateTitle("변경된 제목");
 
         assertThat(post.getTitle()).isEqualTo("변경된 제목");
-    }
-
-    @DisplayName("권한이 없는 게시글의 제목을 수정하려할 시 예외 발생")
-    @Test
-    void updateTitle_Exception_ForbiddenId() {
-        Long forbiddenMemberId = 2L;
-
-        assertThatThrownBy(() -> post.updateTitle("변경된 제목", forbiddenMemberId))
-                .isInstanceOf(AuthorizationException.class);
     }
 
     @DisplayName("게시글 본문 수정")
     @Test
     void updateContent() {
-        post.updateContent("변경된 본문", 1L);
+        post.updateContent("변경된 본문");
 
         assertThat(post.getContent()).isEqualTo("변경된 본문");
-    }
-
-    @DisplayName("권한이 없는 게시글의 본문을 수정하려할 시 예외 발생")
-    @Test
-    void updateContent_Exception_ForbiddenId() {
-        Long forbiddenMemberId = 2L;
-
-        assertThatThrownBy(() -> post.updateContent("변경된 본문", forbiddenMemberId))
-                .isInstanceOf(AuthorizationException.class);
     }
 
     @DisplayName("신고가 5개 이상이면 isBlocked()가 true를 반환하고, 게시글의 정보는 반환되지 않는다.")

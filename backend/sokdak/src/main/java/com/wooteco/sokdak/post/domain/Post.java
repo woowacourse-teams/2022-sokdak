@@ -96,25 +96,16 @@ public class Post {
         return !createdAt.equals(modifiedAt);
     }
 
-    public void updateTitle(String title, Long accessMemberId) {
-        validateOwner(accessMemberId);
+    public void updateTitle(String title) {
         this.title = new Title(title);
     }
 
-    public void updateContent(String content, Long accessMemberId) {
-        validateOwner(accessMemberId);
+    public void updateContent(String content) {
         this.content = new Content(content);
     }
 
-    public void updateImageName(String imageName, Long accessMemberId) {
-        validateOwner(accessMemberId);
+    public void updateImageName(String imageName) {
         this.imageName = imageName;
-    }
-
-    public void validateOwner(Long accessMemberId) {
-        if (!Objects.equals(accessMemberId, member.getId())) {
-            throw new AuthorizationException();
-        }
     }
 
     public boolean isOwner(Long accessMemberId) {

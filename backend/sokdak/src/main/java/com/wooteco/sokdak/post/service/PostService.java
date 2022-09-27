@@ -113,9 +113,10 @@ public class PostService {
         Hashtags hashtags = hashtagService.findHashtagsByPostId(post.getId());
 
         // Todo: validateOwner 메서드 하나만 실행하게 리팩터링하기
-        post.updateTitle(postUpdateRequest.getTitle(), authInfo.getId());
-        post.updateContent(postUpdateRequest.getContent(), authInfo.getId());
-        post.updateImageName(postUpdateRequest.getImageName(), authInfo.getId());
+        validateOwner(authInfo, post);
+        post.updateTitle(postUpdateRequest.getTitle());
+        post.updateContent(postUpdateRequest.getContent());
+        post.updateImageName(postUpdateRequest.getImageName());
 
         hashtagService.deleteAllByPostId(hashtags, post.getId());
         hashtagService.saveHashtag(postUpdateRequest.getHashtags(), post);
@@ -125,9 +126,7 @@ public class PostService {
     public void deletePost(Long id, AuthInfo authInfo) {
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFoundException::new);
-        if (!post.isOwner(authInfo.getId())) {
-            throw new AuthorizationException();
-        }
+        validateOwner(authInfo, post);
 
         Hashtags hashtags = hashtagService.findHashtagsByPostId(post.getId());
 
@@ -137,5 +136,11 @@ public class PostService {
         notificationService.deletePostNotification(id);
 
         postRepository.delete(post);
+    }
+
+    private void validateOwner(AuthInfo authInfo, Post post) {
+        if (!post.isOwner(authInfo.getId())) {
+            throw new AuthorizationException();
+        }
     }
 }

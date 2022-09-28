@@ -1,15 +1,12 @@
+import { StateAndAction } from 'sokdak-util-types';
+
 import HashTag from '@/components/HashTag';
 
 import * as Styled from './index.styles';
 
 import useHashTagInput from './useHashTagInput';
 
-interface HashTagInputProps {
-  hashtags: string[];
-  setHashtags: React.Dispatch<React.SetStateAction<string[]>>;
-}
-
-const HashTagInput = ({ hashtags, setHashtags }: HashTagInputProps) => {
+const HashTagInput = ({ hashtags, setHashtags }: StateAndAction<string[], 'hashtags'>) => {
   const { tagInputValue, handleTagInputChange, handleTagInputKeyDown, isTagInputFocus, handleTagInputFocus } =
     useHashTagInput({ hashtags, setHashtags });
 

@@ -1,15 +1,13 @@
-import { PropsWithChildrenC } from 'sokdak-util-types';
+import { PropsWithChildrenC, StateAndAction } from 'sokdak-util-types';
 
-import { createContext, SetStateAction, useContext, useState, Dispatch, useRef, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useRef, useEffect, useCallback } from 'react';
 
 import * as Styled from './index.styles';
 
 interface DropdownProps {
   className?: string;
 }
-const DropdownContext = createContext<{ open: boolean; setOpen: Dispatch<SetStateAction<boolean>> } | undefined>(
-  undefined,
-);
+const DropdownContext = createContext<StateAndAction<boolean, 'open'> | undefined>(undefined);
 
 const Dropdown = ({ children }: PropsWithChildrenC<DropdownProps>) => {
   const [open, setOpen] = useState(false);

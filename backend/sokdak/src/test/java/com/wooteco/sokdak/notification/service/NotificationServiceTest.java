@@ -288,7 +288,7 @@ class NotificationServiceTest extends ServiceTest {
 
         notificationService.deleteCommentNotification(comment.getId());
 
-        NotificationsResponse notifications = notificationService.findNotifications(AUTH_INFO, PageRequest.of(0, 10));
+        NotificationsResponse notifications = notificationService.findNotifications(AUTH_INFO, PAGEABLE);
         assertThat(notifications.getNotifications()).isEmpty();
     }
 
@@ -334,7 +334,7 @@ class NotificationServiceTest extends ServiceTest {
 
         notificationService.deletePostNotification(post.getId());
 
-        NotificationsResponse notifications = notificationService.findNotifications(AUTH_INFO, PageRequest.of(0, 10));
+        NotificationsResponse notifications = notificationService.findNotifications(AUTH_INFO, PAGEABLE);
         assertThat(notifications.getNotifications()).isEmpty();
     }
 
@@ -351,7 +351,7 @@ class NotificationServiceTest extends ServiceTest {
         notificationService.deleteNotification(AUTH_INFO, notification.getId());
 
         List<Notification> notifications = notificationRepository
-                .findNotificationsByMemberId(member.getId(), PageRequest.of(0, 10))
+                .findNotificationsByMemberId(member.getId(), PAGEABLE)
                 .getContent();
         assertThat(notifications).isEmpty();
     }

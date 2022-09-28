@@ -116,7 +116,7 @@ public class BoardService {
     }
 
     public PostsResponse findPostsByBoard(Long boardId, Pageable pageable) {
-        Slice<PostBoard> postBoards = postBoardRepository.findPostBoardsByBoardId(boardId, pageable);
-        return PostsResponse.ofPostBoardSlice(postBoards);
+        Slice<Post> posts = postBoardRepository.findPostsByBoardId(boardId, pageable);
+        return PostsResponse.ofPostSlice(posts);
     }
 }

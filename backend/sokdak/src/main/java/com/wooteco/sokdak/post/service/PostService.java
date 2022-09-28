@@ -84,9 +84,9 @@ public class PostService {
 
     public PostDetailResponse findPost(Long postId, AuthInfo authInfo) {
         Post foundPost = findPostEntity(postId);
-        List<PostBoard> postBoards = postBoardRepository.findPostBoardsByPostId(foundPost.getId());
-        boolean liked = postLikeRepository.existsByMemberIdAndPostId(authInfo.getId(), postId);
-        Hashtags hashtags = hashtagService.findHashtagsByPostId(postId);
+        List<PostBoard> postBoards = postBoardRepository.findPostBoardsByPost(foundPost);
+        boolean liked = likeRepository.existsByMemberIdAndPostId(authInfo.getId(), postId);
+        Hashtags hashtags = hashtagService.findHashtagsByPost(foundPost);
 
         return PostDetailResponse.of(foundPost, postBoards.get(0), liked,
                 foundPost.isOwner(authInfo.getId()), hashtags, foundPost.getImageName());
@@ -98,8 +98,8 @@ public class PostService {
     }
 
     public PostsResponse findPostsByBoard(Long boardId, Pageable pageable) {
-        Slice<PostBoard> postBoards = postBoardRepository.findPostBoardsByBoardId(boardId, pageable);
-        return PostsResponse.ofPostBoardSlice(postBoards);
+        Slice<Post> posts = postBoardRepository.findPostsByBoardId(boardId, pageable);
+        return PostsResponse.ofPostSlice(posts);
     }
 
     public MyPostsResponse findMyPosts(Pageable pageable, AuthInfo authInfo) {
@@ -116,7 +116,7 @@ public class PostService {
     @Transactional
     public void updatePost(Long postId, PostUpdateRequest postUpdateRequest, AuthInfo authInfo) {
         Post post = findPostEntity(postId);
-        Hashtags hashtags = hashtagService.findHashtagsByPostId(post.getId());
+        Hashtags hashtags = hashtagService.findHashtagsByPost(post);
 
         // Todo: validateOwner 메서드 하나만 실행하게 리팩터링하기
         validateOwner(authInfo, post);
@@ -124,7 +124,7 @@ public class PostService {
         post.updateContent(postUpdateRequest.getContent());
         post.updateImageName(postUpdateRequest.getImageName());
 
-        hashtagService.deleteAllByPostId(hashtags, post.getId());
+        hashtagService.deleteAllByPost(hashtags, post);
         hashtagService.saveHashtag(postUpdateRequest.getHashtags(), post);
     }
 
@@ -133,11 +133,12 @@ public class PostService {
         Post post = findPostEntity(id);
         validateOwner(authInfo, post);
 
-        Hashtags hashtags = hashtagService.findHashtagsByPostId(post.getId());
+        Hashtags hashtags = hashtagService.findHashtagsByPost(post);
 
         commentRepository.deleteAllByPost(post);
         postLikeRepository.deleteAllByPost(post);
-        hashtagService.deleteAllByPostId(hashtags, id);
+        likeRepository.deleteAllByPost(post);
+        hashtagService.deleteAllByPost(hashtags, post);
         notificationService.deletePostNotification(id);
 
         postRepository.delete(post);

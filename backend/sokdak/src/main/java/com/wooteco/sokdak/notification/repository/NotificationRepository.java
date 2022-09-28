@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
+    @Query(value = "SELECT exists (SELECT * from Notification where member_id = :memberId and inquired = false)",
+            nativeQuery = true)
     boolean existsByMemberIdAndInquiredIsFalse(Long memberId);
 
     @Modifying

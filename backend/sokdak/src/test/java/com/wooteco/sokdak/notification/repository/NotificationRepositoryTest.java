@@ -85,16 +85,6 @@ class NotificationRepositoryTest extends RepositoryTest {
         assertThat(actual).isTrue();
     }
 
-    @DisplayName("댓글 알림을 삭제한다.")
-    @Test
-    void deleteAllByCommentId() {
-        notificationRepository.deleteAllByCommentId(comment.getId());
-
-        boolean actual = notificationRepository.existsByMemberIdAndInquiredIsFalse(member1.getId());
-
-        assertThat(actual).isFalse();
-    }
-
     @DisplayName("회원에 따른 알림을 반환한다.")
     @Test
     void findNotificationsByMemberId() {

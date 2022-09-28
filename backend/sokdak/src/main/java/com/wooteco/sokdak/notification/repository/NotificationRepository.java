@@ -12,8 +12,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     boolean existsByMemberIdAndInquiredIsFalse(Long memberId);
 
-    void deleteAllByCommentId(Long commentId);
-
     @Modifying
     @Query(value = "DELETE from Notification n WHERE n.id in :ids")
     void deleteAllById(List<Long> ids);

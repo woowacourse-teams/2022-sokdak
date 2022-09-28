@@ -22,6 +22,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     @Query(value = "SELECT n.id from Notification n where n.post.id = :postId")
     List<Long> findIdsByPostId(Long postId);
 
+    @Query(value = "SELECT n from Notification n where n.member.id = :memberId")
     Slice<Notification> findNotificationsByMemberId(Long memberId, Pageable pageable);
 
     @Modifying

@@ -68,20 +68,6 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    public void deleteCommentNotification(Long commentId) {
-        List<Long> ids = notificationRepository.findIdsByCommentId(commentId);
-        if (!ids.isEmpty()) {
-            notificationRepository.deleteAllById(ids);
-        }
-    }
-
-    public void deletePostNotification(Long postId) {
-        List<Long> ids = notificationRepository.findIdsByPostId(postId);
-        if (!ids.isEmpty()) {
-            notificationRepository.deleteAllById(ids);
-        }
-    }
-
     @Transactional(readOnly = true)
     public NewNotificationCheckResponse checkNewNotification(AuthInfo authInfo) {
         return new NewNotificationCheckResponse(
@@ -118,5 +104,19 @@ public class NotificationService {
                 .orElseThrow(NotificationNotFoundException::new);
         notification.validateOwner(authInfo.getId());
         notificationRepository.deleteById(notificationId);
+    }
+
+    public void deleteCommentNotification(Long commentId) {
+        List<Long> ids = notificationRepository.findIdsByCommentId(commentId);
+        if (!ids.isEmpty()) {
+            notificationRepository.deleteAllById(ids);
+        }
+    }
+
+    public void deletePostNotification(Long postId) {
+        List<Long> ids = notificationRepository.findIdsByPostId(postId);
+        if (!ids.isEmpty()) {
+            notificationRepository.deleteAllById(ids);
+        }
     }
 }

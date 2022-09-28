@@ -55,6 +55,7 @@ class PostServiceTest extends ServiceTest {
 
     private Post post;
     private Board board;
+    private Board hotBoard;
     private PostBoard postBoard;
 
     @BeforeEach
@@ -68,6 +69,8 @@ class PostServiceTest extends ServiceTest {
                 .comments(new ArrayList<>())
                 .build();
         board = boardRepository.findById(2L)
+                .orElseThrow(BoardNotFoundException::new);
+        hotBoard = boardRepository.findById(1L)
                 .orElseThrow(BoardNotFoundException::new);
     }
 
@@ -160,6 +163,33 @@ class PostServiceTest extends ServiceTest {
                 .board(board)
                 .build();
         postBoardRepository.save(postBoard);
+
+        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(null, USER.getName(), "nickname"));
+
+        assertAll(
+                () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
+                () -> assertThat(response.getContent()).isEqualTo(post.getContent()),
+                () -> assertThat(response.isAuthorized()).isFalse(),
+                () -> assertThat(response.isModified()).isFalse(),
+                () -> assertThat(response.getCreatedAt()).isNotNull(),
+                () -> assertThat(response.getBoardId()).isEqualTo(postBoard.getBoard().getId())
+        );
+    }
+
+    @DisplayName("로그인 없이,게시글 조회 기능")
+    @Test
+    void findPost_No_Hot_Board() {
+        Long savedPostId = postRepository.save(post).getId();
+        postBoard = PostBoard.builder()
+                .post(post)
+                .board(board)
+                .build();
+        PostBoard postHotBoard = PostBoard.builder()
+                .post(post)
+                .board(hotBoard)
+                .build();
+        postBoardRepository.save(postBoard);
+        postBoardRepository.save(postHotBoard);
 
         PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(null, USER.getName(), "nickname"));
 

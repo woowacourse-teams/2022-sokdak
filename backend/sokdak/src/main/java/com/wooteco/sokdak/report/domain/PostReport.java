@@ -32,7 +32,7 @@ public class PostReport {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member reporter;
+    private Member member;
 
     @Embedded
     private ReportMessage reportMessage;
@@ -46,13 +46,13 @@ public class PostReport {
     @Builder
     private PostReport(Post post, Member reporter, String reportMessage) {
         this.post = post;
-        this.reporter = reporter;
+        this.member = reporter;
         this.reportMessage = new ReportMessage(reportMessage);
         addPost();
     }
 
     public boolean isSameReporter(PostReport other) {
-        return this.reporter.equals(other.reporter);
+        return this.member.equals(other.member);
     }
 
     private void addPost() {
@@ -68,7 +68,7 @@ public class PostReport {
     }
 
     public Member getReporter() {
-        return reporter;
+        return member;
     }
 
     public String getReportMessage() {

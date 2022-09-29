@@ -1,17 +1,16 @@
 package com.wooteco.sokdak.post.domain;
 
-import com.wooteco.sokdak.auth.exception.AuthorizationException;
+import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.hashtag.domain.PostHashtag;
 import com.wooteco.sokdak.like.domain.PostLike;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.report.domain.PostReport;
-import com.wooteco.sokdak.report.exception.AlreadyReportPostException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import com.wooteco.sokdak.board.domain.Board;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -165,6 +164,14 @@ public class Post {
             return 0;
         }
         return comments.size();
+    }
+
+    public Board getWritableBoard() {
+        return postBoards.stream()
+                .map(PostBoard::getBoard)
+                .filter(board -> board.isUserWritable("user"))
+                .findFirst()
+                .orElseThrow();
     }
 
     public List<PostLike> getPostLikes() {

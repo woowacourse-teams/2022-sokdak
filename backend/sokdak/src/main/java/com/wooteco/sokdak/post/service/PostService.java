@@ -3,7 +3,6 @@ package com.wooteco.sokdak.post.service;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.board.domain.Board;
-import com.wooteco.sokdak.board.domain.BoardType;
 import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.board.service.BoardService;
@@ -86,21 +85,12 @@ public class PostService {
 
     public PostDetailResponse findPost(Long postId, AuthInfo authInfo) {
         Post foundPost = findPostEntity(postId);
-        List<PostBoard> postBoards = postBoardRepository.findPostBoardsByPost(foundPost);
-        Board writableBoard = getWritableBoard(postBoards);
-        boolean liked = likeRepository.existsByMemberIdAndPostId(authInfo.getId(), postId);
+        Board writableBoard = foundPost.getWritableBoard();
+        boolean liked = postLikeRepository.existsByMemberIdAndPostId(authInfo.getId(), postId);
         Hashtags hashtags = hashtagService.findHashtagsByPost(foundPost);
 
         return PostDetailResponse.of(foundPost, writableBoard, liked,
                 foundPost.isOwner(authInfo.getId()), hashtags, foundPost.getImageName());
-    }
-
-    private Board getWritableBoard(List<PostBoard> postBoards) {
-        return postBoards.stream()
-                .map(PostBoard::getBoard)
-                .filter(board -> board.isUserWritable("user"))
-                .findFirst()
-                .orElseThrow();
     }
 
     private Post findPostEntity(Long postId) {
@@ -148,7 +138,7 @@ public class PostService {
 
         commentRepository.deleteAllByPost(post);
         postLikeRepository.deleteAllByPost(post);
-        likeRepository.deleteAllByPost(post);
+        postLikeRepository.deleteAllByPost(post);
         hashtagService.deleteAllByPost(hashtags, post);
         notificationService.deletePostNotification(id);
 

@@ -115,9 +115,9 @@ class PostServiceTest extends ServiceTest {
     void findPost_Session_MyPost() {
         Long savedPostId = postRepository.save(post).getId();
         postBoard = PostBoard.builder()
-                .post(post)
-                .board(board)
                 .build();
+        postBoard.addPost(post);
+        postBoard.addBoard(board);
         postBoardRepository.save(postBoard);
 
         PostDetailResponse response = postService.findPost(savedPostId, AUTH_INFO);
@@ -136,10 +136,9 @@ class PostServiceTest extends ServiceTest {
     @Test
     void findPost_Session_OtherPost() {
         Long savedPostId = postRepository.save(post).getId();
-        postBoard = PostBoard.builder()
-                .post(post)
-                .board(board)
-                .build();
+        postBoard = PostBoard.builder().build();
+        postBoard.addPost(post);
+        postBoard.addBoard(board);
         postBoardRepository.save(postBoard);
 
         PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(2L, USER.getName(), "nickname"));
@@ -159,9 +158,9 @@ class PostServiceTest extends ServiceTest {
     void findPost_NoSession() {
         Long savedPostId = postRepository.save(post).getId();
         postBoard = PostBoard.builder()
-                .post(post)
-                .board(board)
                 .build();
+        postBoard.addPost(post);
+        postBoard.addBoard(board);
         postBoardRepository.save(postBoard);
 
         PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(null, USER.getName(), "nickname"));
@@ -181,13 +180,13 @@ class PostServiceTest extends ServiceTest {
     void findPost_No_Hot_Board() {
         Long savedPostId = postRepository.save(post).getId();
         postBoard = PostBoard.builder()
-                .post(post)
-                .board(board)
                 .build();
+        postBoard.addPost(post);
+        postBoard.addBoard(board);
         PostBoard postHotBoard = PostBoard.builder()
-                .post(post)
-                .board(hotBoard)
                 .build();
+        postHotBoard.addBoard(hotBoard);
+        postHotBoard.addPost(post);
         postBoardRepository.save(postBoard);
         postBoardRepository.save(postHotBoard);
 

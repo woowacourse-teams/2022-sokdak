@@ -1,5 +1,7 @@
 package com.wooteco.sokdak.post.domain;
 
+import static com.wooteco.sokdak.board.domain.BoardType.NON_WRITABLE;
+import static com.wooteco.sokdak.board.domain.BoardType.WRITABLE;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
@@ -10,6 +12,8 @@ import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_WRITER_NICK
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.wooteco.sokdak.board.domain.Board;
+import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.report.domain.PostReport;
 import java.time.LocalDateTime;
@@ -22,7 +26,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.util.ReflectionTestUtils;
 
 class PostTest {
@@ -88,6 +91,29 @@ class PostTest {
         post.updateImageName("변경된 이미지 이름");
 
         assertThat(post.getImageName()).isEqualTo("변경된 이미지 이름");
+    }
+
+    @DisplayName("게시글이 등록된 보드 찾기")
+    @Test
+    void getWritableBoard() {
+        Board board = Board.builder()
+                .name("자유게시판")
+                .boardType(WRITABLE)
+                .build();
+        Board adminBoard = Board.builder()
+                .name("핫게")
+                .boardType(NON_WRITABLE)
+                .build();
+        PostBoard postBoard = PostBoard.builder().build();
+        postBoard.addPost(post);
+        postBoard.addBoard(board);
+        PostBoard adminPostBoard = PostBoard.builder().build();
+        adminPostBoard.addPost(post);
+        adminPostBoard.addBoard(adminBoard);
+
+        ReflectionTestUtils.setField(post, "postBoards", List.of(postBoard, adminPostBoard));
+
+        assertThat(post.getWritableBoard()).isEqualTo(board);
     }
 
     @DisplayName("신고가 5개 이상이면 isBlocked()가 true를 반환하고, 게시글의 정보는 반환되지 않는다.")

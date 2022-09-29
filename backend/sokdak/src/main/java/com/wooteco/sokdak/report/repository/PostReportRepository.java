@@ -8,4 +8,6 @@ public interface PostReportRepository extends JpaRepository<PostReport, Long> {
     int countByPostId(Long postId);
 
     void deleteAllPostReportByPostId(Long id);
+
+    boolean existsPostReportByPostIdAndMemberId(Long postId, Long memberId);
 }

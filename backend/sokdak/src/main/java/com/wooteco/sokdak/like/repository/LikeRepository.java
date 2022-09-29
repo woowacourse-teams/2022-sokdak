@@ -13,6 +13,7 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
 
     int countByPostId(Long postId);
 
+    @Query(value = "SELECT EXISTS (SELECT 1 FROM likes WHERE member_id = :memberId AND post_id = :postId)", nativeQuery = true)
     boolean existsByMemberIdAndPostId(Long memberId, Long postId);
 
     void deleteAllByPost(Post post);

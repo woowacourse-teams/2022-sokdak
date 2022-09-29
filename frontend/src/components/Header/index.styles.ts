@@ -7,7 +7,8 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 export const Container = styled.header`
-  width: 350px;
+  width: 100%;
+  max-width: 1140px;
   height: 50px;
   display: flex;
   justify-content: space-between;

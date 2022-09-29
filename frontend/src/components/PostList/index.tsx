@@ -1,5 +1,5 @@
 import { InfiniteData, InfiniteQueryObserverResult } from 'react-query';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { AxiosError } from 'axios';
 
@@ -11,6 +11,10 @@ import * as Styled from './index.styles';
 
 import PATH from '@/constants/path';
 
+import FAB from '../FAB';
+
+const HOT_BOARD_ID = '1';
+const BOARD_ID_LIST = ['2', '3', '4', '5'];
 interface PostListProps {
   data: InfiniteData<Post> | undefined;
   fetchNextPage: () => Promise<InfiniteQueryObserverResult<Post, AxiosError>>;
@@ -20,8 +24,14 @@ const PostList = ({ data, fetchNextPage }: PostListProps) => {
   const navigate = useNavigate();
   const { scrollRef } = useInfiniteScroll({ data, proceed: fetchNextPage });
 
+  const { id: boardId } = useParams();
+
   const handleClickPostItem = (id: number) => {
     navigate(`${PATH.POST}/${id}`);
+  };
+
+  const handleClickFAB = () => {
+    navigate(PATH.CREATE_POST, { state: { boardId } });
   };
 
   return (
@@ -41,6 +51,7 @@ const PostList = ({ data, fetchNextPage }: PostListProps) => {
           ref={index === data.pages.length - 1 ? scrollRef : null}
         />
       ))}
+      {BOARD_ID_LIST.includes(boardId!) && <FAB handleClick={handleClickFAB} />}
     </Styled.Container>
   );
 };

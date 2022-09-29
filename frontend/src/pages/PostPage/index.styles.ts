@@ -12,6 +12,7 @@ export const containerStyle = css`
 
 export const Container = styled.div`
   ${containerStyle}
+  padding:1rem 0;
 `;
 
 export const Image = styled.img`

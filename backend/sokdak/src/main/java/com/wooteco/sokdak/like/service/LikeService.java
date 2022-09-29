@@ -34,10 +34,8 @@ public class LikeService {
     private final MemberRepository memberRepository;
 
     public LikeService(BoardService boardService, LikeRepository likeRepository,
-                       PostRepository postRepository,
-                       CommentRepository commentRepository,
-                       CommentLikeRepository commentLikeRepository,
-                       MemberRepository memberRepository) {
+                       PostRepository postRepository, CommentRepository commentRepository,
+                       CommentLikeRepository commentLikeRepository, MemberRepository memberRepository) {
         this.boardService = boardService;
         this.likeRepository = likeRepository;
         this.postRepository = postRepository;

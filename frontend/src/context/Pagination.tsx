@@ -1,13 +1,10 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import { StateAndAction } from 'sokdak-util-types';
 
-interface PaginationContextValue {
-  page: number;
-  setPage: Dispatch<SetStateAction<number>>;
-}
+import React, { PropsWithChildren, useState } from 'react';
 
-const PaginationContext = React.createContext<PaginationContextValue>({} as PaginationContextValue);
+const PaginationContext = React.createContext<StateAndAction<number, 'page'>>({} as StateAndAction<number, 'page'>);
 
-export const PaginationContextProvider = ({ children }: { children: React.ReactNode }) => {
+export const PaginationContextProvider = ({ children }: PropsWithChildren) => {
   const [page, setPage] = useState(1);
 
   return <PaginationContext.Provider value={{ page, setPage }}>{children}</PaginationContext.Provider>;

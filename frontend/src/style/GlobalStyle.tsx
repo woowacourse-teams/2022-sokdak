@@ -96,8 +96,8 @@ export const huduldul = keyframes`
   }
 `;
 
-export const invalidInputAnimation = (props: { isAnimationActive?: boolean }) => css`
-  animation: ${props.isAnimationActive ? huduldul : null} 0.3s;
+export const invalidInputAnimation = ({ isAnimationActive }: { isAnimationActive?: boolean }) => css`
+  animation: ${isAnimationActive ? huduldul : null} 0.3s;
 `;
 
 export default GlobalStyle;

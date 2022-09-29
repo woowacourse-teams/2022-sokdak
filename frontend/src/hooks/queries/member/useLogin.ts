@@ -14,7 +14,7 @@ import { parseJwt } from '@/utils/decodeJwt';
 
 const useLogin = (options?: UseMutationOptions<AxiosResponse<never>, AxiosError<{ message: string }>, Member>) => {
   const { showSnackbar } = useSnackbar();
-  const { setIsLogin, setUserName } = useContext(AuthContext);
+  const { setIsLogin, setUsername } = useContext(AuthContext);
   return useMutation(
     ({ username, password }): Promise<AxiosResponse<never>> =>
       axios.post<never>(
@@ -36,7 +36,7 @@ const useLogin = (options?: UseMutationOptions<AxiosResponse<never>, AxiosError<
         if (accessToken) {
           authFetcher.defaults.headers.common['Authorization'] = accessToken;
           localStorage.setItem(STORAGE_KEY.ACCESS_TOKEN, accessToken);
-          setUserName(parseJwt(accessToken)?.nickname!);
+          setUsername(parseJwt(accessToken)?.nickname!);
         }
         if (refreshToken) {
           authFetcher.defaults.headers.common['Refresh-Token'] = refreshToken;

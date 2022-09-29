@@ -32,7 +32,7 @@ const UpdatePostPage = lazy(() => import(/* webpackChunkName: "UpdatePostPage" *
 
 const App = () => {
   const { isVisible, message, showSnackbar } = useSnackbar();
-  const { setIsLogin, setUserName } = useContext(AuthContext);
+  const { setIsLogin, setUsername } = useContext(AuthContext);
   const queryClient = useQueryClient();
 
   Object.values(MUTATION_KEY).forEach(KEY => {
@@ -41,7 +41,7 @@ const App = () => {
         if (err.response?.status === 401) {
           showSnackbar(SNACKBAR_MESSAGE.NOT_LOGIN);
           setIsLogin(false);
-          setUserName('');
+          setUsername('');
           return;
         }
         showSnackbar(err.response?.data.message!);

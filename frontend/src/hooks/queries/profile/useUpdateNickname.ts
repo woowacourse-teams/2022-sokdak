@@ -18,7 +18,7 @@ interface UseUpdateNicknameProps {
 const useUpdateNickname = (
   options?: UseMutationOptions<AxiosResponse, AxiosError<ErrorResponse>, UseUpdateNicknameProps>,
 ) => {
-  const { setUserName } = useContext(AuthContext);
+  const { setUsername } = useContext(AuthContext);
   const { showSnackbar } = useSnackbar();
 
   return useMutation(
@@ -44,7 +44,7 @@ const useUpdateNickname = (
         if (accessToken) {
           authFetcher.defaults.headers.common['Authorization'] = accessToken;
           localStorage.setItem(STORAGE_KEY.ACCESS_TOKEN, accessToken);
-          setUserName(variables.nickname);
+          setUsername(variables.nickname);
           showSnackbar(SNACKBAR_MESSAGE.SUCCESS_UPDATE_NICKNAME);
         }
       },

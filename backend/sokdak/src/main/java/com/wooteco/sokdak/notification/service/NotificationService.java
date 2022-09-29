@@ -81,7 +81,7 @@ public class NotificationService {
         if (foundNotifications.hasContent()) {
             inquireNotification(notifications);
         }
-        return generateNotificationsResponse(notifications, foundNotifications.isLast());
+        return findNotifications(notifications, foundNotifications.isLast());
     }
 
     private void inquireNotification(List<Notification> notifications) {
@@ -91,7 +91,7 @@ public class NotificationService {
         notificationRepository.inquireNotificationByIds(inquiredNotificationIds);
     }
 
-    private NotificationsResponse generateNotificationsResponse(List<Notification> notifications, boolean isLastPage) {
+    private NotificationsResponse findNotifications(List<Notification> notifications, boolean isLastPage) {
         List<NotificationResponse> notificationResponses = notifications
                 .stream()
                 .map(NotificationResponse::of)

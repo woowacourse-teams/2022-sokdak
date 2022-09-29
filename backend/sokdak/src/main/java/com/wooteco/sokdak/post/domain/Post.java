@@ -53,6 +53,8 @@ public class Post {
 
     private String writerNickname;
 
+    private String imageName;
+
     @OneToMany(mappedBy = "post")
     private List<Like> likes = new ArrayList<>();
 
@@ -79,7 +81,7 @@ public class Post {
 
     @Builder
     private Post(String title, String content, Member member, String writerNickname, List<Like> likes,
-                 List<Comment> comments, List<PostHashtag> postHashtags) {
+                 List<Comment> comments, List<PostHashtag> postHashtags, String imageName) {
         this.title = new Title(title);
         this.content = new Content(content);
         this.member = member;
@@ -87,6 +89,7 @@ public class Post {
         this.writerNickname = writerNickname;
         this.comments = comments;
         this.postHashtags = postHashtags;
+        this.imageName = imageName;
     }
 
     public boolean isModified() {
@@ -101,6 +104,11 @@ public class Post {
     public void updateContent(String content, Long accessMemberId) {
         validateOwner(accessMemberId);
         this.content = new Content(content);
+    }
+
+    public void updateImageName(String imageName, Long accessMemberId) {
+        validateOwner(accessMemberId);
+        this.imageName = imageName;
     }
 
     public void validateOwner(Long accessMemberId) {
@@ -191,5 +199,9 @@ public class Post {
             return BLIND_POST_MESSAGE;
         }
         return writerNickname;
+    }
+
+    public String getImageName() {
+        return imageName;
     }
 }

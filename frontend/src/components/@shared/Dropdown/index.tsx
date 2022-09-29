@@ -1,26 +1,15 @@
-import {
-  createContext,
-  ReactNode,
-  SetStateAction,
-  useContext,
-  useState,
-  Dispatch,
-  useRef,
-  useEffect,
-  useCallback,
-} from 'react';
+import { PropsWithChildrenC, StateAndAction } from 'sokdak-util-types';
+
+import { createContext, useContext, useState, useRef, useEffect, useCallback } from 'react';
 
 import * as Styled from './index.styles';
 
 interface DropdownProps {
   className?: string;
-  children: ReactNode;
 }
-const DropdownContext = createContext<{ open: boolean; setOpen: Dispatch<SetStateAction<boolean>> } | undefined>(
-  undefined,
-);
+const DropdownContext = createContext<StateAndAction<boolean, 'open'> | undefined>(undefined);
 
-const Dropdown = ({ children }: DropdownProps) => {
+const Dropdown = ({ children }: PropsWithChildrenC<DropdownProps>) => {
   const [open, setOpen] = useState(false);
 
   const ref = useRef<HTMLDivElement>(null);
@@ -45,7 +34,7 @@ const Dropdown = ({ children }: DropdownProps) => {
   );
 };
 
-const Trigger = ({ children }: DropdownProps) => {
+const Trigger = ({ children }: PropsWithChildrenC<DropdownProps>) => {
   const dropdown = useContext(DropdownContext);
   if (!dropdown) {
     throw new Error('');
@@ -58,7 +47,7 @@ const Trigger = ({ children }: DropdownProps) => {
   return <Styled.DropdownTrigger onClick={handleTrigger}>{children}</Styled.DropdownTrigger>;
 };
 
-const OptionList = ({ className, children }: DropdownProps) => {
+const OptionList = ({ className, children }: PropsWithChildrenC<DropdownProps>) => {
   const dropdown = useContext(DropdownContext);
   if (!dropdown) {
     throw new Error('');

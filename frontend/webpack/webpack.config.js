@@ -1,10 +1,9 @@
 const path = require('path');
-const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-const Dotenv = require('dotenv-webpack');
-require('dotenv').config();
+const { ESBuildMinifyPlugin } = require('esbuild-loader');
+const { DefinePlugin } = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const WorkboxPlugin = require('workbox-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -20,18 +19,34 @@ module.exports = {
   output: {
     path: path.join(__dirname, '../dist'),
     publicPath: '/',
-    filename: '[name].js',
+    filename: '[name].[contenthash].js',
+    chunkFilename: '[name].[contenthash].chunk.js',
+    clean: true,
   },
   module: {
     rules: [
       {
-        test: /\.(png|jpg|jpeg)$/i,
+        test: /\.(png|jpg|jpeg|woff2)$/i,
         type: 'asset/resource',
       },
       {
-        test: /\.(ts|tsx)$/,
-        exclude: '/node_modules',
+        test: /\.(ttf|woff|woff2)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'static/[name][ext][query]',
+        },
+      },
+      {
+        test: /[sS]tyles?\.tsx?$/,
         loader: 'babel-loader',
+      },
+      {
+        test: /\.tsx?$/,
+        loader: 'esbuild-loader',
+        options: {
+          loader: 'tsx',
+          target: 'esnext',
+        },
       },
       {
         test: /\.svg$/i,
@@ -40,15 +55,38 @@ module.exports = {
     ],
   },
   plugins: [
-    new webpack.DefinePlugin({
-      VERSION: JSON.stringify('v0.1.0'),
-    }),
-    new Dotenv(),
-    new TsconfigPathsPlugin(),
-    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, '../public/index.html'),
+      templateParameters: {
+        PUBLIC_URL: '',
+      },
+    }),
+    new DefinePlugin({
+      'process.env.IMAGE_API_URL': JSON.stringify('https://img.sokdaksokdak.com/images/'),
+    }),
+    new CopyWebpackPlugin({
+      patterns: [{ from: './public/icons', to: './icons' }, './public/manifest.json'],
+    }),
+    new WorkboxPlugin.GenerateSW({
+      clientsClaim: true,
+      skipWaiting: true,
     }),
   ],
   devtool: 'source-map',
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        defaultVendors: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+        },
+      },
+    },
+    minimizer: [
+      new ESBuildMinifyPlugin({
+        target: 'esnext',
+      }),
+    ],
+  },
 };

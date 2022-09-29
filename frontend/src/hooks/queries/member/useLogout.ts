@@ -14,13 +14,13 @@ import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
 const useLogout = (options?: UseQueryOptions<AxiosResponse<never>, AxiosError<{ message: string }>, never, string>) => {
   const { showSnackbar } = useSnackbar();
-  const { setIsLogin, setUserName } = useContext(AuthContext);
+  const { setIsLogin, setUsername } = useContext(AuthContext);
   return useQuery(QUERY_KEYS.LOGOUT, () => authFetcher.get<never>('/logout'), {
     ...options,
     onSuccess(data) {
       showSnackbar(SNACKBAR_MESSAGE.SUCCESS_LOGOUT);
       setIsLogin(false);
-      setUserName('');
+      setUsername('');
       authFetcher.defaults.headers.common = {};
       localStorage.setItem(STORAGE_KEY.ACCESS_TOKEN, '');
       localStorage.setItem(STORAGE_KEY.REFRESH_TOKEN, '');

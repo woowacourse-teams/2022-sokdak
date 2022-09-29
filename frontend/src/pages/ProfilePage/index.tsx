@@ -26,8 +26,10 @@ const ProfilePage = () => {
     storeCode: [SIZE, page],
     options: {
       keepPreviousData: true,
+      staleTime: Infinity,
     },
   });
+
   const { mutate, isError } = useUpdateNickname({
     onSuccess: () => {
       handleDisabled();

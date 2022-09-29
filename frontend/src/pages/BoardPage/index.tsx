@@ -19,7 +19,11 @@ const HOT_BOARD_ID = '1';
 const BoardPage = () => {
   const navigate = useNavigate();
   const { id: boardId } = useParams();
-  const { isLoading: boardIsLoading, data: boards } = useBoards({});
+  const { isLoading: boardIsLoading, data: boards } = useBoards({
+    options: {
+      staleTime: Infinity,
+    },
+  });
   const { isLoading, data, fetchNextPage, refetch } = usePosts({ storeCode: [boardId!, 3] });
 
   useEffect(() => {

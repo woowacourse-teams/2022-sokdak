@@ -32,8 +32,10 @@ const PostPage = () => {
       onSuccess: data => {
         setLike({ isLiked: data.like, likeCount: data.likeCount });
       },
+      staleTime: 1000 * 20,
     },
   });
+  const hasImage = !!(data && data.imageName !== '');
 
   const { mutate: putLike } = useLike({
     onSuccess: data => {
@@ -99,7 +101,8 @@ const PostPage = () => {
           onClickDeleteButton={handleConfirmModal}
           onClickLikeButton={handleLikeButton}
         />
-        <PostContent content={data?.content!} hashtags={data?.hashtags!} />
+        {hasImage && <Styled.Image src={process.env.IMAGE_API_URL + data.imageName} alt={data.imageName} />}
+        <PostContent content={data?.content!} hashtags={data?.hashtags!} hasImage={hasImage} />
         <CommentList id={id!} />
       </Styled.Container>
 

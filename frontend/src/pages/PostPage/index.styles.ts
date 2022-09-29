@@ -14,6 +14,14 @@ export const Container = styled.div`
   ${containerStyle}
 `;
 
+export const Image = styled.img`
+  min-height: 300px;
+  max-width: 100%;
+  border-radius: 5px;
+  margin-bottom: 50px;
+  object-fit: scale-down;
+`;
+
 export const BlockContainer = styled.div`
   ${containerStyle}
   justify-content: center;

@@ -13,22 +13,36 @@ const useUpdatePost = ({
   options,
 }: {
   id: string | number;
-  options?: UseMutationOptions<AxiosResponse, AxiosError, Pick<Post, 'title' | 'content'> & { hashtags: string[] }>;
+  options?: UseMutationOptions<
+    AxiosResponse,
+    AxiosError,
+    Pick<Post, 'title' | 'content' | 'imageName'> & { hashtags: string[] }
+  >;
 }) => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
 
   return useMutation(
-    ({ title, content, hashtags }: Pick<Post, 'title' | 'content'> & { hashtags: string[] }): Promise<AxiosResponse> =>
+    ({
+      title,
+      content,
+      hashtags,
+      imageName,
+    }: Pick<Post, 'title' | 'content' | 'imageName'> & { hashtags: string[] }): Promise<AxiosResponse> =>
       authFetcher.put(`/posts/${id}`, {
         title,
         content,
         hashtags,
+        imageName,
       }),
     {
       ...options,
       onSuccess: (data, variables, context) => {
-        queryClient.resetQueries(QUERY_KEYS.POSTS);
+        queryClient.invalidateQueries(QUERY_KEYS.POSTS);
+        queryClient.invalidateQueries(QUERY_KEYS.POSTS_BY_BOARDS);
+        queryClient.invalidateQueries(QUERY_KEYS.MY_POSTS);
+        queryClient.invalidateQueries([QUERY_KEYS.POST, String(id)]);
+
         showSnackbar(SNACKBAR_MESSAGE.SUCCESS_UPDATE_POST);
 
         if (options && options.onSuccess) {

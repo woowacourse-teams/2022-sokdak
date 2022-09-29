@@ -1,13 +1,11 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import { InputHTMLAttributes } from 'react';
 
 import * as Styled from './index.styles';
 
 import { useInputContext } from '../../useInputContext';
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   hasError?: boolean;
-  isAnimationActive?: boolean;
-  setIsAnimationActive?: Dispatch<SetStateAction<boolean>>;
   handleInvalid: () => void;
 }
 

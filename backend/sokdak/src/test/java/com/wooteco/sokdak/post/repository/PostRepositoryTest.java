@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
 
 @Import(JPAConfig.class)
 class PostRepositoryTest extends RepositoryTest {
@@ -59,28 +58,6 @@ class PostRepositoryTest extends RepositoryTest {
         postRepository.save(post3);
         postRepository.save(post4);
         postRepository.save(post5);
-    }
-
-    @DisplayName("특정 페이지의 게시글들을 가져오는지 확인한다.")
-    @Test
-    void findWithPagination() {
-        Slice<Post> result = postRepository.findSliceBy(PageRequest.of(0, 6));
-
-        assertAll(
-                () -> assertThat(result).containsExactly(post1, post2, post3, post4, post5),
-                () -> assertThat(result.isLast()).isTrue()
-        );
-    }
-
-    @DisplayName("특정 페이지의 게시글들을 가져오는지 확인한다.")
-    @Test
-    void findWithPagination2() {
-        Slice<Post> result = postRepository.findSliceBy(PageRequest.of(1, 2));
-
-        assertAll(
-                () -> assertThat(result).containsExactly(post3, post4),
-                () -> assertThat(result.isLast()).isFalse()
-        );
     }
 
     @DisplayName("게시글, 회원 매핑 확인")

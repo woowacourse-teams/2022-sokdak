@@ -9,7 +9,11 @@ import * as Styled from './index.styles';
 import { BOARDS } from '@/constants/board';
 
 const MainPage = () => {
-  const { isLoading, data } = usePostByBoards({});
+  const { isLoading, data } = usePostByBoards({
+    options: {
+      staleTime: 1000 * 20,
+    },
+  });
 
   if (isLoading) {
     return (

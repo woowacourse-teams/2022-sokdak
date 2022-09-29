@@ -33,9 +33,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 class NotificationServiceTest extends ServiceTest {
+
+    private static final Pageable PAGEABLE = PageRequest.of(0, 100);
 
     @Autowired
     private NotificationService notificationService;
@@ -88,7 +91,8 @@ class NotificationServiceTest extends ServiceTest {
     void notifyNewComment() {
         notificationService.notifyCommentIfNotMine(member, post, comment);
 
-        List<Notification> notifications = notificationRepository.findByMemberId(member.getId());
+        List<Notification> notifications = notificationRepository.findNotificationsByMemberId(member.getId(), PAGEABLE)
+                .getContent();
         Notification notification = notifications.get(0);
 
         assertAll(
@@ -106,7 +110,8 @@ class NotificationServiceTest extends ServiceTest {
     void notifyNewComment_MyPostMyComment() {
         notificationService.notifyCommentIfNotMine(member, post, comment2);
 
-        List<Notification> notifications = notificationRepository.findByMemberId(member.getId());
+        List<Notification> notifications = notificationRepository.findNotificationsByMemberId(member.getId(), PAGEABLE)
+                .getContent();
 
         assertThat(notifications).isEmpty();
     }
@@ -116,7 +121,10 @@ class NotificationServiceTest extends ServiceTest {
     void notifyCommentReport() {
         notificationService.notifyCommentReport(post, comment);
 
-        List<Notification> notifications = notificationRepository.findByMemberId(comment.getMember().getId());
+        Long memberId = comment.getMember()
+                .getId();
+        List<Notification> notifications = notificationRepository.findNotificationsByMemberId(memberId, PAGEABLE)
+                .getContent();
         Notification notification = notifications.get(0);
 
         assertAll(
@@ -134,7 +142,8 @@ class NotificationServiceTest extends ServiceTest {
     void notifyHotBoard() {
         notificationService.notifyHotBoard(post);
 
-        List<Notification> notifications = notificationRepository.findByMemberId(member.getId());
+        List<Notification> notifications = notificationRepository.findNotificationsByMemberId(member.getId(), PAGEABLE)
+                .getContent();
         Notification notification = notifications.get(0);
 
         assertAll(
@@ -152,7 +161,8 @@ class NotificationServiceTest extends ServiceTest {
     void notifyPostReport() {
         notificationService.notifyPostReport(post);
 
-        List<Notification> notifications = notificationRepository.findByMemberId(member.getId());
+        List<Notification> notifications = notificationRepository.findNotificationsByMemberId(member.getId(), PAGEABLE)
+                .getContent();
         Notification notification = notifications.get(0);
 
         assertAll(
@@ -176,10 +186,13 @@ class NotificationServiceTest extends ServiceTest {
                 .nickname("닉네임")
                 .build();
         commentRepository.save(reply);
+        Long memberId = comment.getMember()
+                .getId();
 
         notificationService.notifyReplyIfNotMine(comment.getMember(), post, comment, reply);
 
-        List<Notification> notifications = notificationRepository.findByMemberId(comment.getMember().getId());
+        List<Notification> notifications = notificationRepository.findNotificationsByMemberId(memberId, PAGEABLE)
+                .getContent();
         Notification notification = notifications.get(0);
 
         assertAll(

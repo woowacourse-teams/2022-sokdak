@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClientProvider, QueryClient } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import { BrowserRouter } from 'react-router-dom';
 
 import axios from 'axios';
@@ -24,6 +25,19 @@ runJenniferFront();
 if (process.env.MODE === 'LOCAL:MSW') {
   const { worker } = require('./mocks/worker');
   worker.start();
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/service-worker.js')
+      .then(registration => {
+        console.log('SW registered: ', registration);
+      })
+      .catch(registrationError => {
+        console.log('SW registration failed: ', registrationError);
+      });
+  });
 }
 
 axios.defaults.baseURL = process.env.API_URL;
@@ -59,6 +73,7 @@ ReactDOM.createRoot(rootNode).render(
               </PaginationContextProvider>
             </SnackBarContextProvider>
           </ThemeProvider>
+          <ReactQueryDevtools />
         </QueryClientProvider>
       </BrowserRouter>
       <GlobalStyle />

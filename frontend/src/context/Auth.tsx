@@ -1,14 +1,11 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import { StateAndAction } from 'sokdak-util-types';
+
+import React, { useState } from 'react';
 
 import { STORAGE_KEY } from '@/constants/localStorage';
 import { parseJwt } from '@/utils/decodeJwt';
 
-interface AuthContextValue {
-  isLogin: boolean;
-  setIsLogin: Dispatch<SetStateAction<boolean>>;
-  username: string;
-  setUserName: Dispatch<SetStateAction<string>>;
-}
+interface AuthContextValue extends StateAndAction<boolean, 'isLogin'>, StateAndAction<string, 'username'> {}
 const AuthContext = React.createContext<AuthContextValue>({} as AuthContextValue);
 
 export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
@@ -20,14 +17,14 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     return false;
   });
 
-  const [username, setUserName] = useState(() => {
+  const [username, setUsername] = useState(() => {
     if (accessToken) {
       return parseJwt(accessToken)?.nickname!;
     }
     return '';
   });
 
-  return <AuthContext.Provider value={{ isLogin, setIsLogin, username, setUserName }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ isLogin, setIsLogin, username, setUsername }}>{children}</AuthContext.Provider>;
 };
 
 export default AuthContext;

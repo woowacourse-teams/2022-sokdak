@@ -2,8 +2,6 @@ const { merge } = require('webpack-merge');
 const common = require('./webpack.config.js');
 const { DefinePlugin } = require('webpack');
 
-require('dotenv').config();
-
 module.exports = merge(common, {
   mode: 'production',
   plugins: [

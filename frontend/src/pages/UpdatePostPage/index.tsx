@@ -18,7 +18,7 @@ const UpdatePostPage = () => {
     return <NotFoundPage />;
   }
 
-  const { id, title, content, hashtags } = location.state as Omit<Post, 'createdAt'>;
+  const { id, title, content, hashtags, imageName } = location.state as Omit<Post, 'createdAt'>;
 
   const { mutate: updatePost, isLoading } = useUpdatePost({
     id,
@@ -47,6 +47,7 @@ const UpdatePostPage = () => {
         prevTitle={title}
         prevContent={content}
         prevHashTags={hashtags}
+        prevImagePath={imageName}
         handlePost={updatePost}
       />
     </Layout>

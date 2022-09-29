@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.comment.repository;
 
 import com.wooteco.sokdak.comment.domain.Comment;
+import com.wooteco.sokdak.post.domain.Post;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,11 +16,13 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query(value = "SELECT c.nickname FROM Comment c WHERE c.post.id = :postId")
     List<String> findNicknamesByPostId(@Param("postId") Long postId);
 
-    List<Comment> findAllByPostIdAndParentId(Long postId, Long parentId);
+    @Query(value = "SELECT c FROM Comment c WHERE c.post.id = :postId and "
+            + "(c.parent.id is null or c.parent.id = :parentId)")
+    List<Comment> findAllByPostIdAndParentId(@Param("postId") Long postId, @Param("parentId") Long parentId);
 
-    boolean existsByPostIdAndMemberId(Long postId, Long memberId);
+    boolean existsByPostAndMemberId(Post post, Long memberId);
 
-    void deleteAllByPostId(Long id);
+    void deleteAllByPost(Post post);
 
     @Query(value = "SELECT c FROM Comment c LEFT JOIN FETCH c.commentReports cr LEFT JOIN FETCH cr.reporter WHERE c.id = :commentId")
     Optional<Comment> findByCommentId(@Param("commentId") Long commentId);

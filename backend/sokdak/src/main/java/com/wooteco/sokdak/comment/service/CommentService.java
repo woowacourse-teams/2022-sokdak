@@ -110,7 +110,7 @@ public class CommentService {
         if (post.isAnonymous()) { // 작성자가 기명으로 글 작성
             return post.getNickname();
         }
-        if (commentRepository.existsByPostIdAndMemberId(post.getId(), memberId)) {
+        if (commentRepository.existsByPostAndMemberId(post, memberId)) {
             return commentRepository.findNickNamesByPostIdAndMemberId(post.getId(), memberId)
                     .get(0);
         }

@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class LikeService {
 
-    public static final int SPECIAL_BOARD_THRESHOLD = 5;
+    private static final int SPECIAL_BOARD_THRESHOLD = 5;
 
     private final BoardService boardService;
     private final LikeRepository likeRepository;

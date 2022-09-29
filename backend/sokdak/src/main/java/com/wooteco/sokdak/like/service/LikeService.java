@@ -61,6 +61,25 @@ public class LikeService {
         return new LikeFlipResponse(likeCount, liked);
     }
 
+    private void flipPost(Member member, Post post) {
+        Optional<Like> foundLike = likeRepository.findByMemberAndPost(member, post);
+        if (foundLike.isPresent()) {
+            likeRepository.delete(foundLike.get());
+            return;
+        }
+        Like like = Like.builder()
+                .member(member)
+                .post(post)
+                .build();
+        likeRepository.save(like);
+    }
+
+    private void checkSpecialAndSave(int likeCount, Post post) {
+        if (likeCount >= SPECIAL_BOARD_THRESHOLD) {
+            boardService.checkAndSaveInSpecialBoard(post);
+        }
+    }
+
     @Transactional
     public LikeFlipResponse flipCommentLike(Long commentId, AuthInfo authInfo) {
         Member member = memberRepository.findById(authInfo.getId())
@@ -75,12 +94,6 @@ public class LikeService {
         return new LikeFlipResponse(likeCount, liked);
     }
 
-    private void checkSpecialAndSave(int likeCount, Post post) {
-        if (likeCount >= SPECIAL_BOARD_THRESHOLD) {
-            boardService.checkAndSaveInSpecialBoard(post);
-        }
-    }
-
     private void flipComment(Member member, Comment comment) {
         Optional<CommentLike> foundCommentLike = commentLikeRepository.findByMemberIdAndCommentId(member.getId(),
                 comment.getId());
@@ -93,18 +106,5 @@ public class LikeService {
                 .comment(comment)
                 .build();
         commentLikeRepository.save(commentLike);
-    }
-
-    private void flipPost(Member member, Post post) {
-        Optional<Like> foundLike = likeRepository.findByMemberAndPost(member, post);
-        if (foundLike.isPresent()) {
-            likeRepository.delete(foundLike.get());
-            return;
-        }
-        Like like = Like.builder()
-                .member(member)
-                .post(post)
-                .build();
-        likeRepository.save(like);
     }
 }

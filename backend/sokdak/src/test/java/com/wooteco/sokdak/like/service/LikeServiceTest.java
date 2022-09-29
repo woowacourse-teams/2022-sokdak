@@ -47,12 +47,11 @@ class LikeServiceTest extends ServiceTest {
                 .content(VALID_POST_CONTENT)
                 .member(member)
                 .build();
+        postRepository.save(post);
 
-        Post anonymousPost = postRepository.save(post);
-
-        comment = Comment.parent(member, anonymousPost, "nickname", "댓글내용");
+        comment = Comment.parent(member, post, "nickname", "댓글내용");
         commentRepository.save(comment);
-        reply = Comment.child(member, anonymousPost, "닉네임2", "대댓글", comment);
+        reply = Comment.child(member, post, "닉네임2", "대댓글", comment);
         commentRepository.save(reply);
     }
 

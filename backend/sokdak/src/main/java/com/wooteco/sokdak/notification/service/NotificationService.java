@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
@@ -34,24 +34,29 @@ public class NotificationService {
         this.notificationRepository = notificationRepository;
     }
 
+    @Transactional
     public void notifyCommentIfNotMine(Member member, Post post, Comment comment) {
         if (!comment.isAuthorized(member.getId())) {
             notify(member, post, comment, NEW_COMMENT);
         }
     }
 
+    @Transactional
     public void notifyCommentReport(Post post, Comment comment) {
         notify(comment.getMember(), post, comment, COMMENT_REPORT);
     }
 
+    @Transactional
     public void notifyHotBoard(Post post) {
         notify(post.getMember(), post, null, HOT_BOARD);
     }
 
+    @Transactional
     public void notifyPostReport(Post post) {
         notify(post.getMember(), post, null, POST_REPORT);
     }
 
+    @Transactional
     public void notifyReplyIfNotMine(Member member, Post post, Comment comment, Comment reply) {
         if (!reply.isAuthorized(member.getId())) {
             notify(member, post, comment, NEW_REPLY);
@@ -68,13 +73,11 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    @Transactional(readOnly = true)
     public NewNotificationCheckResponse checkNewNotification(AuthInfo authInfo) {
         return new NewNotificationCheckResponse(
                 notificationRepository.existsByMemberIdAndInquiredIsFalse(authInfo.getId()));
     }
 
-    @Transactional(readOnly = true)
     public NotificationsResponse findNotifications(AuthInfo authInfo, Pageable pageable) {
         Slice<Notification> foundNotifications = notificationRepository
                 .findNotificationsByMemberId(authInfo.getId(), pageable);
@@ -100,6 +103,7 @@ public class NotificationService {
         return new NotificationsResponse(notificationResponses, isLastPage);
     }
 
+    @Transactional
     public void deleteNotification(AuthInfo authInfo, Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(NotificationNotFoundException::new);
@@ -107,6 +111,7 @@ public class NotificationService {
         notificationRepository.deleteById(notificationId);
     }
 
+    @Transactional
     public void deleteCommentNotification(Long commentId) {
         List<Long> ids = notificationRepository.findIdsByCommentId(commentId);
         if (!ids.isEmpty()) {
@@ -114,6 +119,7 @@ public class NotificationService {
         }
     }
 
+    @Transactional
     public void deletePostNotification(Long postId) {
         List<Long> ids = notificationRepository.findIdsByPostId(postId);
         if (!ids.isEmpty()) {

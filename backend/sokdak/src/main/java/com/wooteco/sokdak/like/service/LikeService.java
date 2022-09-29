@@ -54,7 +54,7 @@ public class LikeService {
                 .orElseThrow(PostNotFoundException::new);
 
         flipPost(member, post);
-        int likeCount = likeRepository.countByPostId(post.getId());
+        int likeCount = likeRepository.countByPost(post);
         boolean liked = likeRepository.existsByMemberIdAndPostId(member.getId(), post.getId());
 
         checkSpecialAndSave(likeCount, post);
@@ -96,7 +96,7 @@ public class LikeService {
     }
 
     private void flipPost(Member member, Post post) {
-        Optional<Like> foundLike = likeRepository.findByMemberIdAndPostId(member.getId(), post.getId());
+        Optional<Like> foundLike = likeRepository.findByMemberAndPost(member, post);
         if (foundLike.isPresent()) {
             likeRepository.delete(foundLike.get());
             return;

@@ -128,7 +128,7 @@ public class PostService {
         Hashtags hashtags = hashtagService.findHashtagsByPostId(post.getId());
 
         commentRepository.deleteAllByPost(post);
-        likeRepository.deleteAllByPostId(post.getId());
+        likeRepository.deleteAllByPost(post);
         hashtagService.deleteAllByPostId(hashtags, id);
         notificationService.deletePostNotification(id);
 

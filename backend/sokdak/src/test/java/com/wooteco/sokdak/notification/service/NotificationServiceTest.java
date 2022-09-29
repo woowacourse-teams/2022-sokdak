@@ -273,16 +273,9 @@ class NotificationServiceTest extends ServiceTest {
                 .comment(comment)
                 .member(member)
                 .build();
-        Notification notification3 = Notification.builder()
-                .notificationType(COMMENT_REPORT)
-                .post(post)
-                .comment(comment)
-                .member(member)
-                .build();
 
         notificationRepository.save(notification1);
         notificationRepository.save(notification2);
-        notificationRepository.save(notification3);
 
         em.clear();
 
@@ -301,12 +294,7 @@ class NotificationServiceTest extends ServiceTest {
                 .nickname("닉네임")
                 .message("내용")
                 .build();
-        Comment comment4 = Comment.builder()
-                .post(post)
-                .member(member2)
-                .nickname("닉네임")
-                .message("내용")
-                .build();
+        commentRepository.save(comment3);
         Notification notification1 = Notification.builder()
                 .notificationType(NEW_COMMENT)
                 .post(post)
@@ -319,16 +307,9 @@ class NotificationServiceTest extends ServiceTest {
                 .comment(comment3)
                 .member(member)
                 .build();
-        Notification notification3 = Notification.builder()
-                .notificationType(NEW_COMMENT)
-                .post(post)
-                .comment(comment4)
-                .member(member)
-                .build();
 
         notificationRepository.save(notification1);
         notificationRepository.save(notification2);
-        notificationRepository.save(notification3);
 
         em.clear();
 

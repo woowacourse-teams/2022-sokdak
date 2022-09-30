@@ -103,7 +103,7 @@ class MemberControllerTest extends ControllerTest {
     void verifyAuthCode_Exception_different() {
         VerificationRequest verificationRequest = new VerificationRequest("test@gmail.com", "a1b2c3");
         doThrow(new InvalidAuthCodeException())
-                .when(emailService)
+                .when(authService)
                 .verifyAuthCode(any());
 
         restDocs

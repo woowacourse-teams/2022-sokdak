@@ -2,6 +2,7 @@ package com.wooteco.sokdak.member.controller;
 
 import com.wooteco.sokdak.aspect.logging.NoLogging;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.auth.service.AuthService;
 import com.wooteco.sokdak.member.dto.EmailRequest;
 import com.wooteco.sokdak.member.dto.NicknameResponse;
 import com.wooteco.sokdak.member.dto.NicknameUpdateRequest;
@@ -30,25 +31,27 @@ public class MemberController {
 
     private final EmailService emailService;
     private final MemberService memberService;
+    private final AuthService authService;
     private final TokenManager tokenManager;
 
     public MemberController(EmailService emailService, MemberService memberService,
-                            TokenManager tokenManager) {
+                            AuthService authService, TokenManager tokenManager) {
         this.emailService = emailService;
         this.memberService = memberService;
+        this.authService = authService;
         this.tokenManager = tokenManager;
     }
 
     @PostMapping("/signup/email")
     @NoLogging
-    public ResponseEntity<Void> sendEmail(@RequestBody EmailRequest emailRequest) {
+    public ResponseEntity<Void> sendRegisterEmail(@RequestBody EmailRequest emailRequest) {
         emailService.sendCodeToValidUser(emailRequest);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/signup/email/verification")
     public ResponseEntity<Void> verifyAuthCode(@Valid @RequestBody VerificationRequest verificationRequest) {
-        emailService.verifyAuthCode(verificationRequest);
+        authService.verifyAuthCode(verificationRequest);
         return ResponseEntity.noContent().build();
     }
 

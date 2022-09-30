@@ -43,6 +43,7 @@ public class MemberController {
     }
 
     @PostMapping("/signup/email")
+    public ResponseEntity<Void> sendRegisterEmail(@RequestBody EmailRequest emailRequest) {
     @NoLogging
     public ResponseEntity<Void> sendRegisterEmail(@RequestBody EmailRequest emailRequest) {
         emailService.sendCodeToValidUser(emailRequest);
@@ -62,7 +63,6 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    @NoLogging
     public ResponseEntity<Void> signUp(@Valid @RequestBody SignupRequest signupRequest) {
         memberService.signUp(signupRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();

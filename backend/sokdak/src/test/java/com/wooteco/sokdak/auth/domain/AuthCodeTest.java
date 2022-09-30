@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.wooteco.sokdak.member.exception.InvalidAuthCodeException;
 import com.wooteco.sokdak.member.repository.AuthCodeRepository;
+import com.wooteco.sokdak.ticket.domain.AuthCode;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -3,7 +3,7 @@ package com.wooteco.sokdak.member.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.wooteco.sokdak.auth.domain.AuthCode;
+import com.wooteco.sokdak.ticket.domain.AuthCode;
 import com.wooteco.sokdak.auth.service.Encryptor;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.dto.NicknameUpdateRequest;

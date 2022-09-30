@@ -4,7 +4,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.wooteco.sokdak.auth.domain.Ticket;
+import com.wooteco.sokdak.ticket.domain.Ticket;
 import com.wooteco.sokdak.auth.service.AuthCodeGenerator;
 import com.wooteco.sokdak.auth.service.Encryptor;
 import com.wooteco.sokdak.member.dto.EmailRequest;

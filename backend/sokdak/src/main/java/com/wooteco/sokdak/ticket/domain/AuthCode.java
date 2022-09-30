@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.auth.domain;
+package com.wooteco.sokdak.ticket.domain;
 
 import com.wooteco.sokdak.member.exception.InvalidAuthCodeException;
 import java.time.LocalDateTime;

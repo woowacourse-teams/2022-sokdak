@@ -1,6 +1,6 @@
 package com.wooteco.sokdak.admin.dto;
 
-import com.wooteco.sokdak.auth.domain.Ticket;
+import com.wooteco.sokdak.ticket.domain.Ticket;
 import javax.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;

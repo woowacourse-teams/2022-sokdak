@@ -11,7 +11,7 @@ import com.wooteco.sokdak.admin.dto.PostReportsResponse;
 import com.wooteco.sokdak.admin.dto.TicketRequest;
 import com.wooteco.sokdak.admin.dto.TicketsResponse;
 import com.wooteco.sokdak.admin.exception.NoAdminException;
-import com.wooteco.sokdak.auth.domain.Ticket;
+import com.wooteco.sokdak.ticket.domain.Ticket;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;

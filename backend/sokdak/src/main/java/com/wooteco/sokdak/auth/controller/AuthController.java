@@ -46,12 +46,6 @@ public class AuthController {
                 .build();
     }
 
-    @PostMapping("members/signup/email/verification")
-    public ResponseEntity<Void> verifyAuthCode(@Valid @RequestBody VerificationRequest verificationRequest) {
-        authService.verifyAuthCode(verificationRequest);
-        return ResponseEntity.noContent().build();
-    }
-
     @GetMapping("/refresh")
     public ResponseEntity<Void> refresh(HttpServletRequest request, @Login AuthInfo authInfo) {
         validateExistHeader(request);

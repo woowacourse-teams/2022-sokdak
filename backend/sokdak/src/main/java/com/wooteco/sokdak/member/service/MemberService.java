@@ -15,6 +15,7 @@ import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.dto.NicknameResponse;
 import com.wooteco.sokdak.member.dto.NicknameUpdateRequest;
 import com.wooteco.sokdak.member.exception.DuplicateNicknameException;
+import com.wooteco.sokdak.ticket.service.RegisterService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,12 +26,14 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final EmailService emailService;
     private final AuthService authService;
+    private final RegisterService registerService;
 
     public MemberService(MemberRepository memberRepository, EmailService emailService,
-                         AuthService authService) {
+                         AuthService authService, RegisterService registerService) {
         this.memberRepository = memberRepository;
         this.emailService = emailService;
         this.authService = authService;
+        this.registerService = registerService;
     }
 
     public UniqueResponse checkUniqueUsername(String username) {
@@ -54,7 +57,7 @@ public class MemberService {
                 .nickname(signupRequest.getNickname())
                 .build();
         memberRepository.save(member);
-        authService.useTicket(signupRequest.getEmail());
+        registerService.useTicket(signupRequest.getEmail());
     }
 
     private void validate(SignupRequest signupRequest) {
@@ -84,12 +87,12 @@ public class MemberService {
     private void validateAuthCode(SignupRequest signupRequest) {
         VerificationRequest verificationRequest = new VerificationRequest(
                 signupRequest.getEmail(), signupRequest.getCode());
-        authService.verifyAuthCode(verificationRequest);
+        registerService.verifyAuthCode(verificationRequest);
     }
 
     private void validateSerialNumber(SignupRequest signupRequest) {
         String serialNumber = Encryptor.encrypt(signupRequest.getEmail());
-        authService.validateSignUpMember(serialNumber);
+        registerService.validateSignUpMember(serialNumber);
     }
 
     private void confirmPassword(String password, String passwordConfirmation) {

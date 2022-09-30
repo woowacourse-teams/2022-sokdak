@@ -43,21 +43,4 @@ class CommentReportTest {
                 .message(VALID_COMMENT_MESSAGE)
                 .build();
     }
-
-    @DisplayName("같은 댓글을 같은 신고자가 중복신고하면 예외발생")
-    @Test
-    void addComment_Exception_AlreadyReport() {
-        CommentReport.builder()
-                .comment(comment)
-                .reporter(member)
-                .reportMessage("신고")
-                .build();
-
-        assertThatThrownBy(() -> CommentReport.builder()
-                .comment(comment)
-                .reporter(member)
-                .reportMessage("신고")
-                .build())
-                .isInstanceOf(AlreadyReportCommentException.class);
-    }
 }

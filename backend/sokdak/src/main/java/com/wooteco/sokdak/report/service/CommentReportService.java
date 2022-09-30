@@ -11,6 +11,7 @@ import com.wooteco.sokdak.notification.service.NotificationService;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.report.domain.CommentReport;
 import com.wooteco.sokdak.report.dto.ReportRequest;
+import com.wooteco.sokdak.report.exception.AlreadyReportCommentException;
 import com.wooteco.sokdak.report.repository.CommentReportRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +41,10 @@ public class CommentReportService {
                 .orElseThrow(CommentNotFoundException::new);
         Member reporter = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
+
+        if (commentReportRepository.existsCommentReportByCommentAndReporter(comment, reporter)) {
+            throw new AlreadyReportCommentException();
+        }
 
         CommentReport commentReport = CommentReport.builder()
                 .comment(comment)

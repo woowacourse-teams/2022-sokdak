@@ -113,12 +113,6 @@ public class Comment {
     }
 
     public void addReport(CommentReport other) {
-        commentReports.stream()
-                .filter(it -> it.isSameReporter(other))
-                .findAny()
-                .ifPresent(it -> {
-                    throw new AlreadyReportCommentException();
-                });
         commentReports.add(other);
     }
 

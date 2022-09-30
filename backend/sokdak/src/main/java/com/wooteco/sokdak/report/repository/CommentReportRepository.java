@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CommentReportRepository extends JpaRepository<CommentReport, Long> {
 
-    int countByCommentId(Long commentId);
+    int countByComment(Comment comment);
 
     boolean existsCommentReportByCommentAndReporter(Comment comment, Member reporter);
 }

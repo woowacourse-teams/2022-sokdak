@@ -56,7 +56,7 @@ public class CommentReportService {
     }
 
     private void notifyReportIfOverBlockCondition(Comment comment) {
-        int reportCount = commentReportRepository.countByCommentId(comment.getId());
+        int reportCount = commentReportRepository.countByComment(comment);
         if (reportCount == BLOCKED_CONDITION) {
             Post post = comment.getPost();
             notificationService.notifyCommentReport(post, comment);

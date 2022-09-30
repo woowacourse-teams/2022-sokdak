@@ -4,6 +4,7 @@ export const MainPageContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 3rem;
   padding: 1rem 0 5em 0;
 `;

@@ -13,8 +13,19 @@ import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.board.exception.BoardNotFoundException;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
+import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
+import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.comment.service.CommentService;
+import com.wooteco.sokdak.hashtag.domain.Hashtag;
+import com.wooteco.sokdak.hashtag.domain.PostHashtag;
+import com.wooteco.sokdak.hashtag.repository.HashtagRepository;
+import com.wooteco.sokdak.hashtag.repository.PostHashtagRepository;
+import com.wooteco.sokdak.like.domain.Like;
+import com.wooteco.sokdak.like.repository.LikeRepository;
+import com.wooteco.sokdak.notification.domain.Notification;
+import com.wooteco.sokdak.notification.domain.NotificationType;
+import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
@@ -24,6 +35,8 @@ import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
+import com.wooteco.sokdak.report.domain.PostReport;
+import com.wooteco.sokdak.report.repository.PostReportRepository;
 import com.wooteco.sokdak.util.ServiceTest;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,6 +48,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 class PostServiceTest extends ServiceTest {
 
@@ -53,7 +67,26 @@ class PostServiceTest extends ServiceTest {
     @Autowired
     private CommentService commentService;
 
+    @Autowired
+    private HashtagRepository hashtagRepository;
+
+    @Autowired
+    private PostHashtagRepository postHashtagRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
+    private PostReportRepository postReportRepository;
+
+    @Autowired
+    private LikeRepository likeRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
+
     private Post post;
+    private Post fullSettingPost;
     private Board board;
     private Board hotBoard;
     private PostBoard postBoard;
@@ -77,10 +110,16 @@ class PostServiceTest extends ServiceTest {
     @DisplayName("특정 게시판에 익명으로 글 작성 기능")
     @Test
     void addPost_Anonymous() {
-        NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", true, Collections.emptyList());
+        String tagName = "tag";
+        Hashtag tag = Hashtag.builder()
+                .name(tagName)
+                .build();
+        NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", true, List.of(tagName));
 
         Long postId = postService.addPost(FREE_BOARD_ID, newPostRequest, AUTH_INFO);
         Post actual = postRepository.findById(postId).orElseThrow();
+        List<PostHashtag> postHashtags = postHashtagRepository.findAllByPost(actual);
+        List<Hashtag> hashtags = hashtagRepository.findAllByNameContains(tagName);
 
         assertAll(
                 () -> assertThat(actual.getTitle()).isEqualTo(newPostRequest.getTitle()),
@@ -88,7 +127,9 @@ class PostServiceTest extends ServiceTest {
                 () -> assertThat(actual.getMember().getId()).isEqualTo(member.getId()),
                 () -> assertThat(actual.getNickname()).isNotEqualTo(actual.getMember().getNickname()),
                 () -> assertThat(actual.getCreatedAt()).isNotNull(),
-                () -> assertThat(actual.getPostBoards().get(0).getBoard().getTitle()).isNotNull()
+                () -> assertThat(actual.getWritableBoard().getId()).isEqualTo(FREE_BOARD_ID),
+                () -> assertThat(postHashtags).hasSize(1),
+                () -> assertThat(hashtags).contains(tag)
         );
     }
 
@@ -213,7 +254,7 @@ class PostServiceTest extends ServiceTest {
 
     @DisplayName("특정 게시판 게시글 목록 조회 기능")
     @Test
-    void findPosts() {
+    void findPostsByBoard() {
         postService.addPost(board.getId(), new NewPostRequest("제목1", "본문1", false, new ArrayList<>()),
                 new AuthInfo(1L, USER.getName(), "nickname"));
         postService.addPost(board.getId(), new NewPostRequest("제목2", "본문2", false, new ArrayList<>()),

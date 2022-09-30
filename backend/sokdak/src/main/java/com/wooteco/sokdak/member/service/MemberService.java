@@ -84,7 +84,7 @@ public class MemberService {
     private void validateAuthCode(SignupRequest signupRequest) {
         VerificationRequest verificationRequest = new VerificationRequest(
                 signupRequest.getEmail(), signupRequest.getCode());
-        emailService.verifyAuthCode(verificationRequest);
+        authService.verifyAuthCode(verificationRequest);
     }
 
     private void validateSerialNumber(SignupRequest signupRequest) {

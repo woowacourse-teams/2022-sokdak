@@ -2,6 +2,7 @@ package com.wooteco.sokdak.member.controller;
 
 import com.wooteco.sokdak.aspect.logging.NoLogging;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.auth.service.AuthService;
 import com.wooteco.sokdak.member.dto.EmailRequest;
 import com.wooteco.sokdak.member.dto.NicknameResponse;
 import com.wooteco.sokdak.member.dto.NicknameUpdateRequest;
@@ -30,25 +31,21 @@ public class MemberController {
 
     private final EmailService emailService;
     private final MemberService memberService;
+    private final AuthService authService;
     private final TokenManager tokenManager;
 
     public MemberController(EmailService emailService, MemberService memberService,
-                            TokenManager tokenManager) {
+                            AuthService authService, TokenManager tokenManager) {
         this.emailService = emailService;
         this.memberService = memberService;
+        this.authService = authService;
         this.tokenManager = tokenManager;
     }
 
     @PostMapping("/signup/email")
     @NoLogging
-    public ResponseEntity<Void> sendEmail(@RequestBody EmailRequest emailRequest) {
+    public ResponseEntity<Void> sendRegisterEmail(@RequestBody EmailRequest emailRequest) {
         emailService.sendCodeToValidUser(emailRequest);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/signup/email/verification")
-    public ResponseEntity<Void> verifyAuthCode(@Valid @RequestBody VerificationRequest verificationRequest) {
-        emailService.verifyAuthCode(verificationRequest);
         return ResponseEntity.noContent().build();
     }
 
@@ -65,7 +62,6 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    @NoLogging
     public ResponseEntity<Void> signUp(@Valid @RequestBody SignupRequest signupRequest) {
         memberService.signUp(signupRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -81,14 +77,11 @@ public class MemberController {
     public ResponseEntity<Void> editNickname(@RequestBody NicknameUpdateRequest nicknameUpdateRequest,
                                              @Login AuthInfo authInfo) {
         memberService.editNickname(nicknameUpdateRequest, authInfo);
-        String accessToken = getTokenOfNewNickname(nicknameUpdateRequest, authInfo);
         return ResponseEntity.noContent()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .header(HttpHeaders.AUTHORIZATION,
+                        "Bearer " + tokenManager.createNewTokenWithNewNickname(
+                                nicknameUpdateRequest.getNickname(), authInfo)
+                )
                 .build();
-    }
-
-    private String getTokenOfNewNickname(NicknameUpdateRequest nicknameUpdateRequest, AuthInfo authInfo) {
-        AuthInfo newAuthInfo = new AuthInfo(authInfo.getId(), authInfo.getRole(), nicknameUpdateRequest.getNickname());
-        return tokenManager.createAccessToken(newAuthInfo);
     }
 }

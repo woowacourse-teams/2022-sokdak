@@ -1547,7 +1547,7 @@ Content-Length: 312
   } ],
   "createdAt" : "2022-08-17T16:56:15.040285",
   "likeCount" : 0,
-  "like" : false,
+  "postLike" : false,
   "authorized" : true,
   "modified" : false
 }</code></pre>
@@ -1924,7 +1924,7 @@ Content-Length: 1087
     "postWriter" : false,
     "authorized" : false,
     "likeCount" : 3,
-    "like" : false,
+    "postLike" : false,
     "replies" : [ {
       "id" : 3,
       "nickname" : "이스트1",
@@ -1934,7 +1934,7 @@ Content-Length: 1087
       "postWriter" : false,
       "authorized" : false,
       "likeCount" : 2,
-      "like" : false
+      "postLike" : false
     }, {
       "id" : 4,
       "nickname" : "이스트2",
@@ -1944,7 +1944,7 @@ Content-Length: 1087
       "postWriter" : false,
       "authorized" : false,
       "likeCount" : 3,
-      "like" : true
+      "postLike" : true
     } ]
   }, {
     "id" : 2,
@@ -1955,7 +1955,7 @@ Content-Length: 1087
     "postWriter" : true,
     "authorized" : false,
     "likeCount" : 2,
-    "like" : true,
+    "postLike" : true,
     "replies" : [ ]
   } ],
   "totalCount" : 4
@@ -2004,7 +2004,7 @@ Vary: Access-Control-Request-Headers</code></pre>
             <h5 id="_성공_20_http_request"><a class="link" href="#_성공_20_http_request">HTTP request</a></h5>
             <div class="listingblock">
               <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /posts/1/like HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /posts/1/postLike HTTP/1.1
 Content-Type: application/json
 Content-Type: application/json
 Authorization: any
@@ -2033,7 +2033,7 @@ Vary: Access-Control-Request-Headers</code></pre>
             <h5 id="_성공_21_http_request"><a class="link" href="#_성공_21_http_request">HTTP request</a></h5>
             <div class="listingblock">
               <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /comments/1/like HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /comments/1/postLike HTTP/1.1
 Content-Type: application/json
 Content-Type: application/json
 Authorization: any

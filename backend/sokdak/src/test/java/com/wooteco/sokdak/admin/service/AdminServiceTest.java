@@ -74,7 +74,7 @@ class AdminServiceTest extends ServiceTest {
                 .content("본문")
                 .writerNickname(member.getNickname())
                 .member(member)
-                .likes(new ArrayList<>())
+                .postLikes(new ArrayList<>())
                 .comments(new ArrayList<>())
                 .build();
         board = boardRepository.findById((long) FREE_BOARD_ID)

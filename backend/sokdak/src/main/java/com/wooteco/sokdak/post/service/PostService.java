@@ -7,7 +7,7 @@ import com.wooteco.sokdak.board.service.BoardService;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.hashtag.domain.Hashtags;
 import com.wooteco.sokdak.hashtag.service.HashtagService;
-import com.wooteco.sokdak.like.repository.LikeRepository;
+import com.wooteco.sokdak.like.repository.PostLikeRepository;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
@@ -39,20 +39,20 @@ public class PostService {
     private final PostBoardRepository postBoardRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
-    private final LikeRepository likeRepository;
+    private final PostLikeRepository postLikeRepository;
     private final NotificationService notificationService;
 
     public PostService(HashtagService hashtagService, BoardService boardService,
                        PostRepository postRepository, PostBoardRepository postBoardRepository,
                        MemberRepository memberRepository, CommentRepository commentRepository,
-                       LikeRepository likeRepository, NotificationService notificationService) {
+                       PostLikeRepository postLikeRepository, NotificationService notificationService) {
         this.hashtagService = hashtagService;
         this.boardService = boardService;
         this.postRepository = postRepository;
         this.postBoardRepository = postBoardRepository;
         this.memberRepository = memberRepository;
         this.commentRepository = commentRepository;
-        this.likeRepository = likeRepository;
+        this.postLikeRepository = postLikeRepository;
         this.notificationService = notificationService;
     }
 
@@ -86,7 +86,7 @@ public class PostService {
         Post foundPost = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
         List<PostBoard> postBoards = postBoardRepository.findPostBoardsByPostId(foundPost.getId());
-        boolean liked = likeRepository.existsByMemberIdAndPostId(authInfo.getId(), postId);
+        boolean liked = postLikeRepository.existsByMemberIdAndPostId(authInfo.getId(), postId);
         Hashtags hashtags = hashtagService.findHashtagsByPostId(postId);
 
         return PostDetailResponse.of(foundPost, postBoards.get(0), liked,
@@ -128,7 +128,7 @@ public class PostService {
         Hashtags hashtags = hashtagService.findHashtagsByPostId(post.getId());
 
         commentRepository.deleteAllByPost(post);
-        likeRepository.deleteAllByPost(post);
+        postLikeRepository.deleteAllByPost(post);
         hashtagService.deleteAllByPostId(hashtags, id);
         notificationService.deletePostNotification(id);
 

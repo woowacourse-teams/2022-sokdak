@@ -6,10 +6,10 @@ import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.like.domain.CommentLike;
-import com.wooteco.sokdak.like.domain.Like;
+import com.wooteco.sokdak.like.domain.PostLike;
 import com.wooteco.sokdak.like.dto.LikeFlipResponse;
 import com.wooteco.sokdak.like.repository.CommentLikeRepository;
-import com.wooteco.sokdak.like.repository.LikeRepository;
+import com.wooteco.sokdak.like.repository.PostLikeRepository;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
@@ -27,17 +27,17 @@ public class LikeService {
     private static final int SPECIAL_BOARD_THRESHOLD = 5;
 
     private final BoardService boardService;
-    private final LikeRepository likeRepository;
+    private final PostLikeRepository postLikeRepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final CommentLikeRepository commentLikeRepository;
     private final MemberRepository memberRepository;
 
-    public LikeService(BoardService boardService, LikeRepository likeRepository,
+    public LikeService(BoardService boardService, PostLikeRepository postLikeRepository,
                        PostRepository postRepository, CommentRepository commentRepository,
                        CommentLikeRepository commentLikeRepository, MemberRepository memberRepository) {
         this.boardService = boardService;
-        this.likeRepository = likeRepository;
+        this.postLikeRepository = postLikeRepository;
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
         this.commentLikeRepository = commentLikeRepository;
@@ -52,24 +52,24 @@ public class LikeService {
                 .orElseThrow(PostNotFoundException::new);
 
         flipPost(member, post);
-        int likeCount = likeRepository.countByPost(post);
-        boolean liked = likeRepository.existsByMemberIdAndPostId(member.getId(), post.getId());
+        int likeCount = postLikeRepository.countByPost(post);
+        boolean liked = postLikeRepository.existsByMemberIdAndPostId(member.getId(), post.getId());
 
         checkSpecialAndSave(likeCount, post);
         return new LikeFlipResponse(likeCount, liked);
     }
 
     private void flipPost(Member member, Post post) {
-        Optional<Like> foundLike = likeRepository.findByMemberAndPost(member, post);
+        Optional<PostLike> foundLike = postLikeRepository.findByMemberAndPost(member, post);
         if (foundLike.isPresent()) {
-            likeRepository.delete(foundLike.get());
+            postLikeRepository.delete(foundLike.get());
             return;
         }
-        Like like = Like.builder()
+        PostLike postLike = PostLike.builder()
                 .member(member)
                 .post(post)
                 .build();
-        likeRepository.save(like);
+        postLikeRepository.save(postLike);
     }
 
     private void checkSpecialAndSave(int likeCount, Post post) {

@@ -63,19 +63,19 @@ class HashtagServiceTest extends ServiceTest {
                 .title("제목")
                 .content("본문")
                 .member(member)
-                .likes(new ArrayList<>())
+                .postLikes(new ArrayList<>())
                 .build();
         post2 = Post.builder()
                 .title("제목2")
                 .content("내용")
                 .member(member)
-                .likes(new ArrayList<>())
+                .postLikes(new ArrayList<>())
                 .build();
         post3 = Post.builder()
                 .title("제목3")
                 .content("내용")
                 .member(member)
-                .likes(new ArrayList<>())
+                .postLikes(new ArrayList<>())
                 .build();
         tag1 = Hashtag.builder()
                 .name("태그1")

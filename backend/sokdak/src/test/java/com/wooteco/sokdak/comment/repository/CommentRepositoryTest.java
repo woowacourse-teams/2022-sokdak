@@ -42,7 +42,7 @@ class CommentRepositoryTest extends RepositoryTest {
         commentRepository.save(comment1);
         commentRepository.save(comment2);
 
-        List<Comment> comments = commentRepository.findAllByPostIdAndParentId(post.getId(), null);
+        List<Comment> comments = commentRepository.findCommentsByPostId(post.getId());
 
         assertThat(comments).hasSize(2);
     }

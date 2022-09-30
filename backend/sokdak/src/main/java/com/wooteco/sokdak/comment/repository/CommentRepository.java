@@ -16,9 +16,10 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query(value = "SELECT c.nickname FROM Comment c WHERE c.post.id = :postId")
     List<String> findNicknamesByPostId(@Param("postId") Long postId);
 
-    @Query(value = "SELECT c FROM Comment c WHERE c.post.id = :postId and "
-            + "(c.parent.id is null or c.parent.id = :parentId)")
-    List<Comment> findAllByPostIdAndParentId(@Param("postId") Long postId, @Param("parentId") Long parentId);
+    @Query(value = "SELECT c FROM Comment c WHERE c.post.id = :postId and c.parent.id is null")
+    List<Comment> findCommentsByPostId(@Param("postId") Long postId);
+
+    List<Comment> findRepliesByParent(Comment parent);
 
     boolean existsByPostAndMemberId(Post post, Long memberId);
 

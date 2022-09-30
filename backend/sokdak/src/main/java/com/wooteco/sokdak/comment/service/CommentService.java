@@ -129,9 +129,9 @@ public class CommentService {
     }
 
     public CommentsResponse findComments(Long postId, AuthInfo authInfo) {
-        List<Comment> comments = commentRepository.findAllByPostIdAndParentId(postId, null);
+        final List<Comment> comments = commentRepository.findCommentsByPostId(postId);
         List<CommentResponse> commentResponses = comments.stream()
-                .map(it -> convertToCommentResponse(postId, authInfo, it))
+                .map(it -> convertToCommentResponse(authInfo, it))
                 .collect(Collectors.toList());
         int numOfComment = commentResponses.size();
         int numOfReply = commentResponses.stream()
@@ -140,17 +140,17 @@ public class CommentService {
         return new CommentsResponse(commentResponses, numOfComment + numOfReply);
     }
 
-    private CommentResponse convertToCommentResponse(Long postId, AuthInfo authInfo, Comment comment) {
+    private CommentResponse convertToCommentResponse(AuthInfo authInfo, Comment comment) {
         Long id = authInfo.getId();
         if (comment.isSoftRemoved()) {
-            return CommentResponse.softRemovedOf(comment, convertToReplyResponses(comment, postId, id));
+            return CommentResponse.softRemovedOf(comment, convertToReplyResponses(comment, id));
         }
         boolean liked = commentLikeRepository.existsByMemberIdAndCommentId(id, comment.getId());
-        return CommentResponse.of(comment, id, convertToReplyResponses(comment, postId, id), liked);
+        return CommentResponse.of(comment, id, convertToReplyResponses(comment, id), liked);
     }
 
-    private List<ReplyResponse> convertToReplyResponses(Comment parent, Long postId, Long accessMemberId) {
-        List<Comment> replies = commentRepository.findAllByPostIdAndParentId(postId, parent.getId());
+    private List<ReplyResponse> convertToReplyResponses(Comment parent, Long accessMemberId) {
+        final List<Comment> replies = commentRepository.findRepliesByParent(parent);
         List<ReplyResponse> replyResponses = new ArrayList<>();
         for (Comment reply : replies) {
             boolean liked = commentLikeRepository.existsByMemberIdAndCommentId(accessMemberId, reply.getId());

@@ -2,12 +2,14 @@ import { useContext, lazy, Suspense } from 'react';
 import { useQueryClient } from 'react-query';
 import { Route, Routes } from 'react-router-dom';
 
+import Prompt from './components/Prompt';
 import Header from '@/components/Header';
 import Snackbar from '@/components/Snackbar';
 import Spinner from '@/components/Spinner';
 
 import AuthContext from './context/Auth';
 
+import useInstallApp from './hooks/useInstallApp';
 import useSnackbar from './hooks/useSnackbar';
 
 import PATH from './constants/path';
@@ -32,6 +34,7 @@ const UpdatePostPage = lazy(() => import(/* webpackChunkName: "UpdatePostPage" *
 
 const App = () => {
   const { isVisible, message, showSnackbar } = useSnackbar();
+  const { installable, setInstallable, installApp } = useInstallApp();
   const { setIsLogin, setUsername } = useContext(AuthContext);
   const queryClient = useQueryClient();
 
@@ -72,6 +75,17 @@ const App = () => {
         </Routes>
       </Suspense>
       {isVisible && <Snackbar message={message} />}
+      {installable && (
+        <Prompt
+          message="속닥속닥 앱을 설치하시겠습니까?"
+          confirmText="설치"
+          cancelText="취소"
+          confirm={installApp}
+          cancel={() => setInstallable(false)}
+          visible={installable}
+          setVisible={setInstallable}
+        />
+      )}
     </>
   );
 };

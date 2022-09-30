@@ -2,8 +2,6 @@ import useResponsive from '@/hooks/useResponsive';
 
 import * as Styled from './index.styles';
 
-import Panda from '@/assets/images/panda_logo.svg';
-
 const Banner = () => {
   const isOver = useResponsive(1100);
   const isTabletSizeOver = useResponsive(875);
@@ -13,7 +11,9 @@ const Banner = () => {
       {isTabletSizeOver ? (
         <Styled.BannerContainer>
           <Styled.LeftSide>
-            <Panda width={'200px'} />
+            <Styled.PandaContainer>
+              <Styled.PandaLogo />
+            </Styled.PandaContainer>
             <Styled.BannerText>
               현재 <Styled.HighlightText>속닥속닥</Styled.HighlightText>에서
               <br /> 인기있는 게시물을

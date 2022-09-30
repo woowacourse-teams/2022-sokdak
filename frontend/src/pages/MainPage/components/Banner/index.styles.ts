@@ -1,3 +1,5 @@
+import Panda from '@/assets/images/panda_logo.svg';
+
 import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -6,11 +8,27 @@ export const BannerContainer = styled.div`
   justify-content: space-between;
   width: 100%;
   max-width: 1450px;
+  cursor: default;
 `;
 
 export const LeftSide = styled.div`
   display: flex;
   align-items: center;
+`;
+
+export const PandaContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  height: 150px;
+  border: 1px solid ${props => props.theme.colors.gray_150};
+  border-radius: 50%;
+`;
+
+export const PandaLogo = styled(Panda)`
+  width: 200px;
+  transform: translate3d(-5px, 0, 0);
 `;
 
 export const BannerText = styled.p`

@@ -12,7 +12,7 @@ import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
-import com.wooteco.sokdak.notification.repository.NotificationRepository;
+import com.wooteco.sokdak.notification.service.NotificationService;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
@@ -40,12 +40,12 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
-    private final NotificationRepository notificationRepository;
+    private final NotificationService notificationService;
 
     public PostService(HashtagService hashtagService, BoardService boardService,
                        PostRepository postRepository, PostBoardRepository postBoardRepository,
                        MemberRepository memberRepository, CommentRepository commentRepository,
-                       LikeRepository likeRepository, NotificationRepository notificationRepository) {
+                       LikeRepository likeRepository, NotificationService notificationService) {
         this.hashtagService = hashtagService;
         this.boardService = boardService;
         this.postRepository = postRepository;
@@ -53,7 +53,7 @@ public class PostService {
         this.memberRepository = memberRepository;
         this.commentRepository = commentRepository;
         this.likeRepository = likeRepository;
-        this.notificationRepository = notificationRepository;
+        this.notificationService = notificationService;
     }
 
     @Transactional
@@ -130,7 +130,7 @@ public class PostService {
         commentRepository.deleteAllByPost(post);
         likeRepository.deleteAllByPostId(post.getId());
         hashtagService.deleteAllByPostId(hashtags, id);
-        notificationRepository.deleteAllByPostId(id);
+        notificationService.deletePostNotification(id);
 
         postRepository.delete(post);
     }

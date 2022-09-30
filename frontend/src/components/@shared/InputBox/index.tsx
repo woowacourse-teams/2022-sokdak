@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
+import { PropsWithChildrenC, StateAndAction } from 'sokdak-util-types';
 
 import ErrorMessage from './components/ErrorMessage';
 import Input from './components/Input';
@@ -6,15 +6,10 @@ import SubmitButton from './components/SubmitButton';
 
 import { InputContextProvider } from './useInputContext';
 
-interface InputBoxProps<T = string> {
-  children: React.ReactNode;
-  value: string;
-  setValue: Dispatch<SetStateAction<string>>;
-  error: T;
-  setError: Dispatch<SetStateAction<T>>;
-  isAnimationActive: boolean;
-  setIsAnimationActive: Dispatch<SetStateAction<boolean>>;
-}
+interface InputBoxProps<T = string>
+  extends StateAndAction<string, 'value'>,
+    StateAndAction<boolean, 'isAnimationActive'>,
+    StateAndAction<T, 'error'> {}
 
 const InputBox = ({
   children,
@@ -24,7 +19,7 @@ const InputBox = ({
   setError,
   isAnimationActive,
   setIsAnimationActive,
-}: InputBoxProps) => {
+}: PropsWithChildrenC<InputBoxProps>) => {
   return (
     <InputContextProvider value={{ value, setValue, error, setError, isAnimationActive, setIsAnimationActive }}>
       {children}

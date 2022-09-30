@@ -26,6 +26,8 @@ import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.util.ServiceTest;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,6 +41,9 @@ import org.springframework.data.domain.Sort;
 class NotificationServiceTest extends ServiceTest {
 
     private static final Pageable PAGEABLE = PageRequest.of(0, 100);
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Autowired
     private NotificationService notificationService;
@@ -84,6 +89,7 @@ class NotificationServiceTest extends ServiceTest {
                 .message("내용")
                 .build();
         commentRepository.save(comment);
+        commentRepository.save(comment2);
     }
 
     @DisplayName("새 댓글 알림을 등록한다.")
@@ -252,7 +258,68 @@ class NotificationServiceTest extends ServiceTest {
         );
     }
 
-    @DisplayName("댓글을 삭제한다.")
+    @DisplayName("댓글에 해당하는 알림들을 삭제한다.")
+    @Test
+    void deleteCommentNotification() {
+        Notification notification1 = Notification.builder()
+                .notificationType(COMMENT_REPORT)
+                .post(post)
+                .comment(comment)
+                .member(member)
+                .build();
+        Notification notification2 = Notification.builder()
+                .notificationType(COMMENT_REPORT)
+                .post(post)
+                .comment(comment)
+                .member(member)
+                .build();
+
+        notificationRepository.save(notification1);
+        notificationRepository.save(notification2);
+
+        em.clear();
+
+        notificationService.deleteCommentNotification(comment.getId());
+
+        NotificationsResponse notifications = notificationService.findNotifications(AUTH_INFO, PAGEABLE);
+        assertThat(notifications.getNotifications()).isEmpty();
+    }
+
+    @DisplayName("게시글에 해당하는 알림들을 삭제한다.")
+    @Test
+    void deletePostNotification() {
+        Comment comment3 = Comment.builder()
+                .post(post)
+                .member(member2)
+                .nickname("닉네임")
+                .message("내용")
+                .build();
+        commentRepository.save(comment3);
+        Notification notification1 = Notification.builder()
+                .notificationType(NEW_COMMENT)
+                .post(post)
+                .comment(comment)
+                .member(member)
+                .build();
+        Notification notification2 = Notification.builder()
+                .notificationType(NEW_COMMENT)
+                .post(post)
+                .comment(comment3)
+                .member(member)
+                .build();
+
+        notificationRepository.save(notification1);
+        notificationRepository.save(notification2);
+
+        em.clear();
+
+        notificationService.deletePostNotification(post.getId());
+
+        NotificationsResponse notifications = notificationService.findNotifications(AUTH_INFO, PAGEABLE);
+        assertThat(notifications.getNotifications()).isEmpty();
+    }
+
+    @DisplayName("알림을 삭제한다.")
     @Test
     void deleteNotification() {
         Notification notification = Notification.builder()
@@ -265,7 +332,7 @@ class NotificationServiceTest extends ServiceTest {
         notificationService.deleteNotification(AUTH_INFO, notification.getId());
 
         List<Notification> notifications = notificationRepository
-                .findNotificationsByMemberId(member.getId(), PageRequest.of(0, 10))
+                .findNotificationsByMemberId(member.getId(), PAGEABLE)
                 .getContent();
         assertThat(notifications).isEmpty();
     }

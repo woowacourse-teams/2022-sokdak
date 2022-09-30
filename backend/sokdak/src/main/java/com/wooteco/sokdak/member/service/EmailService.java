@@ -47,8 +47,4 @@ public class EmailService {
     private void sendEmail(EmailRequest emailRequest, String authCode) {
         emailSender.send(emailRequest.getEmail(), authCode);
     }
-
-    public void verifyAuthCode(VerificationRequest verificationRequest) {
-        authService.verifyAuthCode(verificationRequest);
-    }
 }

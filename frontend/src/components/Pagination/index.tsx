@@ -1,3 +1,5 @@
+import { StateAndAction } from 'sokdak-util-types';
+
 import { useEffect, useState } from 'react';
 
 import * as Styled from './index.styles';
@@ -6,12 +8,10 @@ const MAX_PAGE_LOAD = 8;
 const STANDARD = MAX_PAGE_LOAD / 2;
 const DISPLAY_STANDARD = STANDARD + 1;
 
-interface PaginationProps {
+interface PaginationProps extends StateAndAction<number, 'currentPage'> {
   className?: string;
   firstPage?: number;
   lastPage: number;
-  currentPage: number;
-  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const Pagination = ({ className, firstPage = 1, lastPage, currentPage, setCurrentPage }: PaginationProps) => {

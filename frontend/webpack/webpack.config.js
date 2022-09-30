@@ -2,6 +2,8 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { ESBuildMinifyPlugin } = require('esbuild-loader');
 const { DefinePlugin } = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const WorkboxPlugin = require('workbox-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -61,6 +63,13 @@ module.exports = {
     }),
     new DefinePlugin({
       'process.env.IMAGE_API_URL': JSON.stringify('https://img.sokdaksokdak.com/images/'),
+    }),
+    new CopyWebpackPlugin({
+      patterns: [{ from: './public/icons', to: './icons' }, './public/manifest.json'],
+    }),
+    new WorkboxPlugin.GenerateSW({
+      clientsClaim: true,
+      skipWaiting: true,
     }),
   ],
   devtool: 'source-map',

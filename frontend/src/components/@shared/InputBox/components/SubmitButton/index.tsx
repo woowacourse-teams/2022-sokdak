@@ -1,10 +1,14 @@
+import { PropsWithChildrenC } from 'sokdak-util-types';
+
+import React from 'react';
+
 import * as Styled from './index.styles';
 
-interface SubmitButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
-}
-
-const SubmitButton = ({ children, onClick, disabled }: SubmitButtonProps) => {
+const SubmitButton = ({
+  children,
+  onClick,
+  disabled,
+}: PropsWithChildrenC<React.ButtonHTMLAttributes<HTMLButtonElement>>) => {
   return (
     <Styled.Button onClick={onClick} disabled={disabled}>
       {children}

@@ -48,14 +48,6 @@ public class PostReport {
         this.post = post;
         this.member = reporter;
         this.reportMessage = new ReportMessage(reportMessage);
-        addPost();
-    }
-
-    public boolean isSameReporter(PostReport other) {
-        return this.member.equals(other.member);
-    }
-
-    private void addPost() {
         this.post.addReport(this);
     }
 

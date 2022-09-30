@@ -5,6 +5,7 @@ import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.wooteco.sokdak.member.domain.Member;
@@ -36,20 +37,15 @@ class PostReportTest {
                 .build();
     }
 
-    @DisplayName("같은 게시글을 같은 신고자가 중복신고하면 예외발생")
+    @DisplayName("연관관계 편의 메서드")
     @Test
-    void addPost_Exception_AlreadyReport() {
-        PostReport.builder()
+    void constructor() {
+        PostReport postReport = PostReport.builder()
                 .post(post)
                 .reporter(member)
                 .reportMessage("신고")
                 .build();
 
-        assertThatThrownBy(() -> PostReport.builder()
-                .post(post)
-                .reporter(member)
-                .reportMessage("신고")
-                .build())
-                .isInstanceOf(AlreadyReportPostException.class);
+        assertThat(post.getPostReports()).contains(postReport);
     }
 }

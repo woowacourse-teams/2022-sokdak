@@ -37,13 +37,14 @@ public class PostReportService {
 
     @Transactional
     public void reportPost(Long postId, ReportRequest reportRequest, AuthInfo authInfo) {
-        if (postReportRepository.existsPostReportByPostIdAndMemberId(postId, authInfo.getId())) {
-            throw new AlreadyReportPostException();
-        }
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
+
+        if (postReportRepository.existsPostReportByPostAndMember(post, member)) {
+            throw new AlreadyReportPostException();
+        }
 
         PostReport postReport = PostReport.builder()
                 .post(post)
@@ -51,11 +52,11 @@ public class PostReportService {
                 .reportMessage(reportRequest.getMessage())
                 .build();
         postReportRepository.save(postReport);
-        notifyReportIfOverThanBlockCondition(postId, post);
+        notifyReportIfOverThanBlockCondition(post);
     }
 
-    private void notifyReportIfOverThanBlockCondition(Long postId, Post post) {
-        int reportCount = postReportRepository.countByPostId(postId);
+    private void notifyReportIfOverThanBlockCondition(Post post) {
+        int reportCount = postReportRepository.countByPost(post);
         if (reportCount == BLOCKED_CONDITION) {
             notificationService.notifyPostReport(post);
         }

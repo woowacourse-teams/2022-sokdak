@@ -2,6 +2,7 @@ package com.wooteco.sokdak.report.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.report.domain.PostReport;
@@ -46,14 +47,38 @@ class PostReportRepositoryTest extends RepositoryTest {
                 .build();
         postReportRepository.save(postReport);
 
-        assertThat(postReportRepository.existsPostReportByPostIdAndMemberId(post.getId(), member1.getId()))
+        assertThat(postReportRepository.existsPostReportByPostAndMember(post, member1))
                 .isTrue();
     }
 
     @Test
     @DisplayName("특정 postId와 memberId를 가지는 데이터가 없으면 false를 반환한다.")
     void existsPostReportByPostIdAndMemberId_False() {
-        assertThat(postReportRepository.existsPostReportByPostIdAndMemberId(post.getId(), member1.getId()))
+        assertThat(postReportRepository.existsPostReportByPostAndMember(post, member1))
                 .isFalse();
+    }
+
+    @Test
+    @DisplayName("특정 postId를 가지는 데이터 개수를 반환한다.")
+    void countByPostId() {
+        int expected = 3;
+        for (int i = 0; i<expected; ++i) {
+            Member member = Member.builder()
+                    .username("username" + i)
+                    .nickname("nickname" + i)
+                    .password("Abcd123!@")
+                    .build();
+            memberRepository.save(member);
+            PostReport postReport = PostReport.builder()
+                    .post(post)
+                    .reporter(member)
+                    .reportMessage("report")
+                    .build();
+            postReportRepository.save(postReport);
+        }
+
+        int result = postReportRepository.countByPost(post);
+
+        assertThat(expected).isEqualTo(result);
     }
 }

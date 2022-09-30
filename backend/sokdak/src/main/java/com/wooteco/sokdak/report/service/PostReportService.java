@@ -41,7 +41,7 @@ public class PostReportService {
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
 
-        if (postReportRepository.existsPostReportByPostAndMember(post, member)) {
+        if (postReportRepository.existsPostReportByPostAndReporter(post, member)) {
             throw new AlreadyReportPostException();
         }
 

@@ -17,5 +17,5 @@ public interface PostReportRepository extends JpaRepository<PostReport, Long> {
 
     void deleteAllPostReportByPost(Post post);
 
-    boolean existsPostReportByPostAndMember(Post post, Member member);
+    boolean existsPostReportByPostAndReporter(Post post, Member member);
 }

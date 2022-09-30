@@ -47,14 +47,14 @@ class PostReportRepositoryTest extends RepositoryTest {
                 .build();
         postReportRepository.save(postReport);
 
-        assertThat(postReportRepository.existsPostReportByPostAndMember(post, member1))
+        assertThat(postReportRepository.existsPostReportByPostAndReporter(post, member1))
                 .isTrue();
     }
 
     @Test
     @DisplayName("특정 postId와 memberId를 가지는 데이터가 없으면 false를 반환한다.")
     void existsPostReportByPostIdAndMemberId_False() {
-        assertThat(postReportRepository.existsPostReportByPostAndMember(post, member1))
+        assertThat(postReportRepository.existsPostReportByPostAndReporter(post, member1))
                 .isFalse();
     }
 

@@ -6,6 +6,7 @@ import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.wooteco.sokdak.comment.domain.Comment;
@@ -42,5 +43,17 @@ class CommentReportTest {
                 .nickname(VALID_NICKNAME)
                 .message(VALID_COMMENT_MESSAGE)
                 .build();
+    }
+
+    @DisplayName("연관관계 편의 메서드")
+    @Test
+    void constructor() {
+        CommentReport commentReport = CommentReport.builder()
+                .comment(comment)
+                .reporter(member)
+                .reportMessage("report")
+                .build();
+
+        assertThat(comment.getCommentReports()).contains(commentReport);
     }
 }

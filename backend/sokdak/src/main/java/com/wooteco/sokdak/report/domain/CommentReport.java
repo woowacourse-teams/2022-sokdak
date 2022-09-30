@@ -48,15 +48,7 @@ public class CommentReport {
         this.comment = comment;
         this.reporter = reporter;
         this.reportMessage = new ReportMessage(reportMessage);
-        addComment();
-    }
-
-    private void addComment() {
         this.comment.addReport(this);
-    }
-
-    public boolean isSameReporter(CommentReport other) {
-        return this.reporter.equals(other.reporter);
     }
 
     public Long getId() {

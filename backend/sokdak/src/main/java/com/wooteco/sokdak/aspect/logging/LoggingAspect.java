@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.aspect.logging;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,13 +25,17 @@ public class LoggingAspect {
     }
 
     @Before("loggingCondition()")
-    public void logRequest(JoinPoint joinPoint) throws Throwable {
+    public void logRequest(JoinPoint joinPoint)  {
         final Map<String, Object> parameters = extractParameters(joinPoint);
         final MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         final String methodName = signature.getMethod().getName();
 
-        log.info("======= method: {}, body: {} ==========",
-                methodName, objectMapper.writeValueAsString(parameters));
+        try {
+            log.info("======= method: {}, body: {} ==========",
+                    methodName, objectMapper.writeValueAsString(parameters));
+        } catch (JsonProcessingException exception) {
+            log.warn("logging failed!!");
+        }
     }
 
     private Map<String, Object> extractParameters(JoinPoint joinPoint) {

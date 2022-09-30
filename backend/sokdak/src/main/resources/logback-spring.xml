@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration scan="true" scanPeriod="10 seconds">
-    <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <springProfile name="local">
         <include resource="logback/console-logger.xml"/>
-        <logger name="com.wooteco.sokdak" level="DEBUG">
+        <logger name="com.wooteco.sokdak" level="INFO" additivity="false">
             <appender-ref ref="STDOUT"/>
         </logger>
 
-        <logger name="org.springframework" level="INFO">
+        <logger name="org.springframework" level="INFO" additivity="false">
             <appender-ref ref="STDOUT"/>
         </logger>
 
@@ -16,11 +15,11 @@
             <appender-ref ref="STDOUT"/>
         </logger>
 
-        <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE">
+        <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" additivity="false">
             <appender-ref ref="STDOUT"/>
         </logger>
 
-        <logger name="org.hibernate.type.descriptor.sql.BasicExtractor" level="TRACE">
+        <logger name="org.hibernate.type.descriptor.sql.BasicExtractor" level="TRACE" additivity="false">
             <appender-ref ref="STDOUT"/>
         </logger>
 
@@ -35,28 +34,16 @@
         <include resource="logback/console-logger.xml"/>
         <include resource="logback/slack-logger.xml"/>
 
-        <logger name="com.wooteco.sokdak" level="DEBUG">
+        <logger name="com.wooteco.sokdak" level="DEBUG" additivity="false">
             <appender-ref ref="FILE"/>
             <appender-ref ref="ASYNC-SLACK-DEV-WARN"/>
         </logger>
 
-        <logger name="org.springframework" level="INFO">
+        <logger name="org.springframework" level="INFO" additivity="false">
             <appender-ref ref="FILE"/>
         </logger>
 
-        <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
-            <appender-ref ref="FILE-DB"/>
-        </logger>
-
-        <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE">
-            <appender-ref ref="FILE-DB"/>
-        </logger>
-
-        <logger name="org.hibernate.type.descriptor.sql.BasicExtractor" level="TRACE">
-            <appender-ref ref="FILE-DB"/>
-        </logger>
-
-        <root level="WARN">
+        <root level="INFO">
             <appender-ref ref="FILE"/>
             <appender-ref ref="ASYNC-SLACK-DEV-WARN"/>
             <appender-ref ref="ASYNC-SLACK-DEV-ERROR"/>
@@ -67,16 +54,16 @@
         <include resource="logback/file-logger.xml"/>
         <include resource="logback/slack-logger.xml"/>
 
-        <logger name="com.wooteco.sokdak" level="ERROR">
+        <logger name="com.wooteco.sokdak" level="INFO" additivity="false">
             <appender-ref ref="FILE"/>
             <appender-ref ref="ASYNC-SLACK-PROD-ERROR"/>
         </logger>
 
-        <logger name="org.springframework" level="INFO">
+        <logger name="org.springframework" level="INFO" additivity="false">
             <appender-ref ref="FILE"/>
         </logger>
 
-        <root level="ERROR">
+        <root level="INFO">
             <appender-ref ref="FILE"/>
             <appender-ref ref="ASYNC-SLACK-PROD-ERROR"/>
         </root>

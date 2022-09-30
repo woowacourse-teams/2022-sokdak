@@ -8,12 +8,14 @@ import styled from '@emotion/styled';
 
 export const Container = styled.header`
   width: 100%;
-  max-width: 1140px;
   height: 50px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin: 15px auto;
   box-sizing: border-box;
+  gap: 3em;
+  padding: 0 3em;
 `;
 
 export const LeftSide = styled(Link)`
@@ -28,8 +30,9 @@ export const RightSide = styled.div`
 `;
 
 export const Title = styled.p`
+  width: max-content;
   font-size: 1.5rem;
-  font-family: 'BMYEONSUNG';
+  font-family: 'BMHANNAPro';
 `;
 
 export const Avartar = styled.div`
@@ -55,7 +58,6 @@ export const LoginLink = styled(Link)`
   display: flex;
   justify-content: center;
   align-items: center;
-
   width: 50px;
   height: 20px;
   font-family: 'BMHANNAPro', 'Noto Sans KR';
@@ -63,7 +65,12 @@ export const LoginLink = styled(Link)`
   color: ${props => props.theme.colors.gray_900};
   border: 1px solid black;
   border-radius: 8px;
-  margin-left: 4px;
+  @media (min-width: 875px) {
+    width: 70px;
+    height: 30px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+  }
 `;
 
 export const AvatarContainer = styled.div`

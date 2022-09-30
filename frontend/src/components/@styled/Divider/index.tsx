@@ -10,7 +10,7 @@ const Divider = styled.div<{ width?: number; height?: number; horizontal: boolea
   ${DividerStyle}
   width: ${props => (props.horizontal ? '100%' : props.width)};
   height: ${props => (props.horizontal ? props.height : props.height)};
-  background-color: ${props => props.theme.colors.gray_50};
+  box-shadow: 1px 1px 0.7px 0.3px ${props => props.theme.colors.gray_50};
   box-sizing: border-box;
 `;
 

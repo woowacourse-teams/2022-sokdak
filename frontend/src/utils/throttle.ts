@@ -1,4 +1,4 @@
-const throttle = (function () {
+const throttleConstructor = function () {
   let timerID: NodeJS.Timer | null = null;
   return function (callback: () => void, delay: number) {
     return function () {
@@ -11,6 +11,6 @@ const throttle = (function () {
       }, delay);
     };
   };
-})();
+};
 
-export default throttle;
+export default throttleConstructor;

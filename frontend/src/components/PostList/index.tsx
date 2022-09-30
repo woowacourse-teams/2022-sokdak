@@ -13,7 +13,6 @@ import PATH from '@/constants/path';
 
 import FAB from '../FAB';
 
-const HOT_BOARD_ID = '1';
 const BOARD_ID_LIST = ['2', '3', '4', '5'];
 interface PostListProps {
   data: InfiniteData<Post> | undefined;

@@ -9,6 +9,7 @@ import com.wooteco.sokdak.report.exception.AlreadyReportCommentException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -180,5 +181,13 @@ public class Comment {
 
     public void deleteChild(Comment reply) {
         children.remove(reply);
+    }
+
+    public boolean isParent() {
+        return Objects.isNull(parent);
+    }
+
+    public boolean hasNoReply() {
+        return children.isEmpty();
     }
 }

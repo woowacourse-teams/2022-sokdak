@@ -22,7 +22,6 @@ import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -71,7 +70,8 @@ public class CommentService {
                 .orElseThrow(MemberNotFoundException::new);
         Comment parent = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
-        if (!isComment(parent.getParent())) {
+
+        if (!parent.isParent()){
             throw new ReplyDepthException();
         }
         Post post = parent.getPost();
@@ -167,41 +167,33 @@ public class CommentService {
         notificationService.deleteCommentNotification(commentId);
         commentLikeRepository.deleteAllByCommentId(commentId);
 
-        Comment parent = comment.getParent();
-        deleteCommentOrReply(comment, parent);
+        deleteCommentOrReply(comment);
     }
 
-    private void deleteCommentOrReply(Comment comment, Comment parent) {
-        if (isComment(parent)) {
+    private void deleteCommentOrReply(Comment comment) {
+        if (comment.isParent()) {
             deleteParent(comment);
             return;
         }
 
-        deleteChild(comment, parent);
-    }
-
-    private void deleteChild(Comment comment, Comment parent) {
-        parent.deleteChild(comment);
-        commentRepository.delete(comment);
-
-        if (hasNoReply(parent) && parent.isSoftRemoved()) {
-            commentRepository.delete(parent);
-        }
+        deleteChild(comment);
     }
 
     private void deleteParent(Comment comment) {
-        if (hasNoReply(comment)) {
+        if (comment.hasNoReply()) {
             commentRepository.delete(comment);
             return;
         }
         comment.changePretendingToBeRemoved();
     }
 
-    private boolean isComment(Comment parent) {
-        return Objects.isNull(parent);
-    }
+    private void deleteChild(Comment comment) {
+        Comment parent = comment.getParent();
+        parent.deleteChild(comment);
+        commentRepository.delete(comment);
 
-    private boolean hasNoReply(Comment comment) {
-        return comment.getChildren().isEmpty();
+        if (parent.hasNoReply() && parent.isSoftRemoved()) {
+            commentRepository.delete(parent);
+        }
     }
 }

@@ -26,6 +26,7 @@ const useInstallApp = () => {
     }
 
     deferredPrompt.current.prompt();
+    setInstallable(false);
   };
 
   return { installable, setInstallable, installApp };

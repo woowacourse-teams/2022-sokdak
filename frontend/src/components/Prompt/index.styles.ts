@@ -37,18 +37,19 @@ export const Message = styled.div`
   font-size: 17px;
 `;
 
-export const ButtonContainer = styled.div`
+export const ButtonContainer = styled.div``;
+
+export const Controller = styled.div`
   display: flex;
   justify-content: space-between;
 `;
 
 const button = () => css`
-  width: 120px;
+  width: 130px;
   height: 40px;
   border-radius: 4px;
   font-size: 14px;
   background-color: transparent;
-  cursor: pointer;
 `;
 
 export const Confirm = styled.button`
@@ -59,4 +60,14 @@ export const Confirm = styled.button`
 
 export const Cancel = styled.button`
   ${button}
+  color: ${props => props.theme.colors.sub};
+`;
+
+export const Hide = styled.button`
+  background-color: transparent;
+  color: ${props => props.theme.colors.gray_200};
+  width: 100%;
+  text-align: left;
+  margin-top: 2px;
+  font-size: 11px;
 `;

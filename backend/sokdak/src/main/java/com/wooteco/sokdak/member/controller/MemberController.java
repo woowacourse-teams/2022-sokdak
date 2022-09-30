@@ -43,7 +43,6 @@ public class MemberController {
     }
 
     @PostMapping("/signup/email")
-    public ResponseEntity<Void> sendRegisterEmail(@RequestBody EmailRequest emailRequest) {
     @NoLogging
     public ResponseEntity<Void> sendRegisterEmail(@RequestBody EmailRequest emailRequest) {
         emailService.sendCodeToValidUser(emailRequest);

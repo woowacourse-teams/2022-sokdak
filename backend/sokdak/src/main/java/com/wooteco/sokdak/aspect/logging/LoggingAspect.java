@@ -9,11 +9,13 @@ import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.CodeSignature;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,7 +53,7 @@ public class LoggingAspect {
                 .orElse("");
 
         try {
-            log.info("======= url: {}, body: {} ==========",
+            log.info("\n=======\nurl: {}, body: {} \n==========",
                     requestUrl, objectMapper.writeValueAsString(parameters));
         } catch (JsonProcessingException exception) {
             log.warn("logging failed!!");
@@ -100,5 +102,20 @@ public class LoggingAspect {
         }
 
         return parameters;
+    }
+
+    @AfterReturning(value = "loggingCondition()", returning = "responseEntity")
+    public void logResponse(JoinPoint joinPoint, ResponseEntity<?> responseEntity){
+        if(responseEntity.hasBody()) {
+            printResponse(responseEntity);
+        }
+    }
+
+    private void printResponse(ResponseEntity<?> responseEntity) {
+        try {
+            log.info("\n=======\nresponse : {} \n========", objectMapper.writeValueAsString(responseEntity.getBody()));
+        } catch (JsonProcessingException exception) {
+            log.warn("logging failed!!");
+        }
     }
 }

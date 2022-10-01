@@ -4,9 +4,8 @@ import { MouseEventHandler, useEffect, useRef } from 'react';
 
 import * as Styled from './index.styles';
 
-import { STORAGE_KEY } from '@/constants/localStorage';
-
 interface PromptProps extends StateAndAction<boolean, 'visible'> {
+  name?: string;
   message: string;
   confirmText: string;
   cancelText: string;
@@ -16,6 +15,7 @@ interface PromptProps extends StateAndAction<boolean, 'visible'> {
 }
 
 const Prompt = ({
+  name = '',
   message,
   confirmText,
   cancelText,
@@ -32,12 +32,12 @@ const Prompt = ({
   };
 
   const hide = () => {
-    localStorage.setItem(STORAGE_KEY.INSTALL_PROMPT_HIDE, 'hide');
+    localStorage.setItem(`${name}_propmt`, 'hide');
     setVisible(false);
   };
 
   useEffect(() => {
-    if (localStorage.getItem(STORAGE_KEY.INSTALL_PROMPT_HIDE)) {
+    if (localStorage.getItem(`${name}_prompt`)) {
       setVisible(false);
       return;
     }

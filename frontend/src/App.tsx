@@ -77,6 +77,7 @@ const App = () => {
       {isVisible && <Snackbar message={message} />}
       {installable && (
         <Prompt
+          name="install"
           message="속닥속닥 앱을 설치하시겠습니까?"
           confirmText="설치"
           cancelText="취소"

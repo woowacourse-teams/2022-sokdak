@@ -9,13 +9,12 @@ import com.wooteco.sokdak.report.exception.AlreadyReportCommentException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ConstraintMode;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -39,7 +38,7 @@ public class Comment {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "parent_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "parent_id")
     private Comment parent;
 
     @OneToMany(mappedBy = "parent")
@@ -182,5 +181,13 @@ public class Comment {
 
     public void deleteChild(Comment reply) {
         children.remove(reply);
+    }
+
+    public boolean isParent() {
+        return Objects.isNull(parent);
+    }
+
+    public boolean hasNoReply() {
+        return children.isEmpty();
     }
 }

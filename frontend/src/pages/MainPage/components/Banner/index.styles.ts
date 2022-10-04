@@ -24,6 +24,7 @@ export const PandaContainer = styled.div`
   height: 150px;
   border: 1px solid ${props => props.theme.colors.gray_150};
   border-radius: 50%;
+  margin-right: 10px;
 `;
 
 export const PandaLogo = styled(Panda)`

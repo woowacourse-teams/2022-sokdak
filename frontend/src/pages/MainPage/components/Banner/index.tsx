@@ -30,7 +30,7 @@ const Banner = () => {
             <Styled.BannerText>
               현재 <Styled.HighlightText>속닥속닥</Styled.HighlightText>에서
               <br /> 인기있는 게시물을
-              <br /> 만나보세요 !
+              <br /> 만나보세요!
             </Styled.BannerText>
           </Styled.LeftSide>
           <Styled.HashTagsContainer>

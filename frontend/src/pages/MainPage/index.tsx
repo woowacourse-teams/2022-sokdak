@@ -1,5 +1,6 @@
 import Banner from './components/Banner';
 import BoardItem from './components/BoardItem';
+import Carousel from './components/Carousel';
 import Layout from '@/components/@styled/Layout';
 import Spinner from '@/components/Spinner';
 
@@ -31,7 +32,7 @@ const MainPage = () => {
       <>
         <Styled.MainPageContainer>
           <Banner />
-
+          <Carousel />
           {data.boards.map(board => (
             <BoardItem key={board.id} {...board} title={BOARDS[board.id - 1].title} />
           ))}

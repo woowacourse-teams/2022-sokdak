@@ -1,5 +1,7 @@
 <p align="middle" >
-  <img width="200px;" src="https://github.com/woowacourse-teams/2022-sokdak/blob/dev/frontend/src/assets/images/panda_logo.svg?raw=true" alt="로고"/>
+  <a href="https://sokdaksokdak.com/">
+    <img width="200px;" src="https://github.com/woowacourse-teams/2022-sokdak/blob/dev/frontend/src/assets/images/panda_logo.svg?raw=true" alt="로고"/>
+  </a>
 </p>
 <h1 align="middle"><a href="https://sokdaksokdak.com/">속닥속닥</a></h1>
 <p align="middle">우리들만의 비밀 이야기🎋, 속닥속닥</p>

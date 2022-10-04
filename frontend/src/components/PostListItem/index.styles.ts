@@ -22,8 +22,8 @@ export const Container = styled.div`
 
 export const BlockedContainer = styled.div`
   filter: blur(3px);
-  ${containerStyle}
-  cursor:not-allowed;
+  ${containerStyle};
+  cursor: not-allowed;
 `;
 
 export const HeadContainer = styled.div`

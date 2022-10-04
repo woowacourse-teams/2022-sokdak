@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 
-import throttleConstructor from '@/utils/throttle';
+import useThrottle from './useThrottle';
 
 const useResponsive = (size: number) => {
   const [isSizeOver, setIsSizeOver] = useState(() => window.innerWidth > size);
-  const throttle = throttleConstructor();
-  const handleResize = throttle(() => {
+  const handleResize = useThrottle(() => {
     if (size < window.innerWidth) {
       setIsSizeOver(true);
     }

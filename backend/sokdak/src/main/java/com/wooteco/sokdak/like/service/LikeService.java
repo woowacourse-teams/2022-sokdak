@@ -51,7 +51,7 @@ public class LikeService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
-        flipPost(member, post);
+        flipPostLike(member, post);
         int likeCount = postLikeRepository.countByPost(post);
         boolean liked = postLikeRepository.existsByMemberIdAndPostId(member.getId(), post.getId());
 
@@ -59,7 +59,7 @@ public class LikeService {
         return new LikeFlipResponse(likeCount, liked);
     }
 
-    private void flipPost(Member member, Post post) {
+    private void flipPostLike(Member member, Post post) {
         Optional<PostLike> foundLike = postLikeRepository.findByMemberAndPost(member, post);
         if (foundLike.isPresent()) {
             postLikeRepository.delete(foundLike.get());
@@ -85,14 +85,14 @@ public class LikeService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
 
-        flipComment(member, comment);
+        flipCommentLike(member, comment);
         int likeCount = commentLikeRepository.countByCommentId(comment.getId());
         boolean liked = commentLikeRepository.existsByMemberIdAndCommentId(member.getId(), comment.getId());
 
         return new LikeFlipResponse(likeCount, liked);
     }
 
-    private void flipComment(Member member, Comment comment) {
+    private void flipCommentLike(Member member, Comment comment) {
         Optional<CommentLike> foundCommentLike = commentLikeRepository.findByMemberIdAndCommentId(member.getId(),
                 comment.getId());
         if (foundCommentLike.isPresent()) {

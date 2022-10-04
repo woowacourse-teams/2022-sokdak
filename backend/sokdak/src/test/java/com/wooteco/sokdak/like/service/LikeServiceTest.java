@@ -57,7 +57,7 @@ class LikeServiceTest extends ServiceTest {
 
     @DisplayName("게시글 좋아요 등록")
     @Test
-    void flipLike_create() {
+    void flipPostLike_create() {
         LikeFlipResponse putLikeResponse = likeService.flipPostLike(post.getId(), AUTH_INFO);
 
         assertAll(
@@ -68,7 +68,7 @@ class LikeServiceTest extends ServiceTest {
 
     @DisplayName("게시글 좋아요 취소")
     @Test
-    void flipLike_delete() {
+    void flipPostLike_delete() {
         likeService.flipPostLike(post.getId(), AUTH_INFO);
 
         LikeFlipResponse putLikeResponse2 = likeService.flipPostLike(post.getId(), AUTH_INFO);
@@ -81,7 +81,7 @@ class LikeServiceTest extends ServiceTest {
 
     @DisplayName("댓글 좋아요 등록")
     @Test
-    void flipLikeComment_create() {
+    void flipCommentLike_create() {
         LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(comment.getId(), AUTH_INFO);
 
         assertAll(
@@ -92,7 +92,7 @@ class LikeServiceTest extends ServiceTest {
 
     @DisplayName("댓글 좋아요 취소")
     @Test
-    void flipLikeComment_delete() {
+    void flipCommentLike_delete() {
         likeService.flipCommentLike(comment.getId(), AUTH_INFO);
 
         LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(comment.getId(), AUTH_INFO);
@@ -105,7 +105,7 @@ class LikeServiceTest extends ServiceTest {
 
     @DisplayName("대댓글 좋아요 등록")
     @Test
-    void flipLikeReply_create() {
+    void flipCommentLike_ReplyCreate() {
         LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(reply.getId(), AUTH_INFO);
 
         assertAll(
@@ -116,7 +116,7 @@ class LikeServiceTest extends ServiceTest {
 
     @DisplayName("대댓글 좋아요 취소")
     @Test
-    void flipLikeReply_delete() {
+    void flipCommentLike_ReplyDelete() {
         likeService.flipCommentLike(reply.getId(), AUTH_INFO);
 
         LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(reply.getId(), AUTH_INFO);

@@ -4,10 +4,11 @@
 
 <div align="center">
 
-[![Tech Blog](http://img.shields.io/badge/-Tech%20Blog-black?style=flat&logo=tistory&logoColor=white&link=https://sokdak-sokdak.tistory.com/)](https://sokdak-sokdak.tistory.com/)
 [![Discussion](http://img.shields.io/badge/-Discussion-white?style=flat&logo=github&logoColor=black&link=https://github.com/woowacourse-teams/2022-sokdak/discussions)](https://github.com/woowacourse-teams/2022-sokdak/discussions)
 [![WIKI](http://img.shields.io/badge/-GitHub%20WiKi-black?style=flat&logo=github&logoColor=white&link=https://github.com/woowacourse-teams/2022-sokdak/wiki)](https://github.com/woowacourse-teams/2022-sokdak/wiki)
 [![Release](https://img.shields.io/github/v/release/woowacourse-teams/2022-sokdak?color=000000)](https://github.com/woowacourse-teams/2022-sokdak/releases/tag/1.2)
+[![tistory](http://img.shields.io/badge/-Tistory-black?style=flat&logo=tistory&logoColor=white&link=https://sokdak-sokdak.tistory.com/)](https://sokdak-sokdak.tistory.com/)
+[![instagram](http://img.shields.io/badge/-Instagram-E4405F?style=flat&logo=instagram&logoColor=white&link=https://github.com/woowacourse-teams/2022-sokdak/wiki)](https://www.instagram.com/sokdak_x2/)
 
 </div>
 

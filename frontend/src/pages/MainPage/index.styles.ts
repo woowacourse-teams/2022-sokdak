@@ -9,9 +9,14 @@ export const MainPageContainer = styled.div`
   padding: 1rem 0 5em 0;
 `;
 
-export const SpinnerContainer = styled.div`
-  height: 500px;
+export const BoardItemContainer = styled.div`
+  width: 100%;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
+  gap: 50px;
+  @media (max-width: 875px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;

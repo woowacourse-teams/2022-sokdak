@@ -5,6 +5,15 @@ import Heart from '@/assets/images/heart.svg';
 
 import styled from '@emotion/styled';
 
+export const Container = styled.div<{ boardId: number }>`
+  width: 100%;
+  max-width: 340px;
+  min-width: 300px;
+  @media (min-width: 875px) {
+    display: ${props => (props.boardId === 1 ? 'none' : 'block')};
+  }
+`;
+
 export const Title = styled.p`
   font-family: 'BMHANNAPro', 'Noto Sans KR';
   font-size: 1.5rem;

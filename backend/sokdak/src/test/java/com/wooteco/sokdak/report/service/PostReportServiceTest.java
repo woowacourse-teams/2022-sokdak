@@ -54,7 +54,7 @@ class PostReportServiceTest extends ServiceTest {
                 .writerNickname(VALID_POST_WRITER_NICKNAME)
                 .postHashtags(Collections.emptyList())
                 .comments(Collections.emptyList())
-                .likes(Collections.emptyList())
+                .postLikes(Collections.emptyList())
                 .build();
         postRepository.save(post);
     }

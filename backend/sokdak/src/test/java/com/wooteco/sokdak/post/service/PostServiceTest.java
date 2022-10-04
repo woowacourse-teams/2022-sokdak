@@ -64,7 +64,7 @@ class PostServiceTest extends ServiceTest {
                 .content("본문")
                 .writerNickname(member.getNickname())
                 .member(member)
-                .likes(new ArrayList<>())
+                .postLikes(new ArrayList<>())
                 .comments(new ArrayList<>())
                 .build();
         board = boardRepository.findById(2L)
@@ -279,7 +279,7 @@ class PostServiceTest extends ServiceTest {
                 .content("본문")
                 .writerNickname(member.getNickname())
                 .member(member)
-                .likes(new ArrayList<>())
+                .postLikes(new ArrayList<>())
                 .comments(new ArrayList<>())
                 .build();
         postRepository.save(post);

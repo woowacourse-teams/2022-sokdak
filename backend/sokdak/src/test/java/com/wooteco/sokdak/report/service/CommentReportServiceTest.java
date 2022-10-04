@@ -58,7 +58,7 @@ class CommentReportServiceTest extends ServiceTest {
                 .content(VALID_POST_CONTENT)
                 .postHashtags(Collections.emptyList())
                 .comments(Collections.emptyList())
-                .likes(Collections.emptyList())
+                .postLikes(Collections.emptyList())
                 .build();
         postRepository.save(post);
 

@@ -47,18 +47,17 @@ class LikeServiceTest extends ServiceTest {
                 .content(VALID_POST_CONTENT)
                 .member(member)
                 .build();
+        postRepository.save(post);
 
-        Post anonymousPost = postRepository.save(post);
-
-        comment = Comment.parent(member, anonymousPost, "nickname", "댓글내용");
+        comment = Comment.parent(member, post, "nickname", "댓글내용");
         commentRepository.save(comment);
-        reply = Comment.child(member, anonymousPost, "닉네임2", "대댓글", comment);
+        reply = Comment.child(member, post, "닉네임2", "대댓글", comment);
         commentRepository.save(reply);
     }
 
     @DisplayName("게시글 좋아요 등록")
     @Test
-    void flipLike_create() {
+    void flipPostLike_create() {
         LikeFlipResponse putLikeResponse = likeService.flipPostLike(post.getId(), AUTH_INFO);
 
         assertAll(
@@ -69,7 +68,7 @@ class LikeServiceTest extends ServiceTest {
 
     @DisplayName("게시글 좋아요 취소")
     @Test
-    void flipLike_delete() {
+    void flipPostLike_delete() {
         likeService.flipPostLike(post.getId(), AUTH_INFO);
 
         LikeFlipResponse putLikeResponse2 = likeService.flipPostLike(post.getId(), AUTH_INFO);
@@ -82,7 +81,7 @@ class LikeServiceTest extends ServiceTest {
 
     @DisplayName("댓글 좋아요 등록")
     @Test
-    void flipLikeComment_create() {
+    void flipCommentLike_create() {
         LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(comment.getId(), AUTH_INFO);
 
         assertAll(
@@ -93,7 +92,7 @@ class LikeServiceTest extends ServiceTest {
 
     @DisplayName("댓글 좋아요 취소")
     @Test
-    void flipLikeComment_delete() {
+    void flipCommentLike_delete() {
         likeService.flipCommentLike(comment.getId(), AUTH_INFO);
 
         LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(comment.getId(), AUTH_INFO);
@@ -106,7 +105,7 @@ class LikeServiceTest extends ServiceTest {
 
     @DisplayName("대댓글 좋아요 등록")
     @Test
-    void flipLikeReply_create() {
+    void flipCommentLike_ReplyCreate() {
         LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(reply.getId(), AUTH_INFO);
 
         assertAll(
@@ -117,7 +116,7 @@ class LikeServiceTest extends ServiceTest {
 
     @DisplayName("대댓글 좋아요 취소")
     @Test
-    void flipLikeReply_delete() {
+    void flipCommentLike_ReplyDelete() {
         likeService.flipCommentLike(reply.getId(), AUTH_INFO);
 
         LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(reply.getId(), AUTH_INFO);

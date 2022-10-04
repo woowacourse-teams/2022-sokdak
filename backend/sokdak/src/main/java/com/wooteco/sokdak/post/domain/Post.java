@@ -4,7 +4,7 @@ import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.hashtag.domain.PostHashtag;
-import com.wooteco.sokdak.like.domain.Like;
+import com.wooteco.sokdak.like.domain.PostLike;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.report.domain.PostReport;
 import com.wooteco.sokdak.report.exception.AlreadyReportPostException;
@@ -56,7 +56,7 @@ public class Post {
     private String imageName;
 
     @OneToMany(mappedBy = "post")
-    private List<Like> likes = new ArrayList<>();
+    private List<PostLike> postLikes = new ArrayList<>();
 
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
@@ -80,12 +80,12 @@ public class Post {
     }
 
     @Builder
-    private Post(String title, String content, Member member, String writerNickname, List<Like> likes,
+    private Post(String title, String content, Member member, String writerNickname, List<PostLike> postLikes,
                  List<Comment> comments, List<PostHashtag> postHashtags, String imageName) {
         this.title = new Title(title);
         this.content = new Content(content);
         this.member = member;
-        this.likes = likes;
+        this.postLikes = postLikes;
         this.writerNickname = writerNickname;
         this.comments = comments;
         this.postHashtags = postHashtags;
@@ -169,10 +169,10 @@ public class Post {
     }
 
     public int getLikeCount() {
-        if (likes == null) {
+        if (postLikes == null) {
             return 0;
         }
-        return likes.size();
+        return postLikes.size();
     }
 
     public int getCommentCount() {
@@ -182,8 +182,8 @@ public class Post {
         return comments.size();
     }
 
-    public List<Like> getLikes() {
-        return likes;
+    public List<PostLike> getPostLikes() {
+        return postLikes;
     }
 
     public List<PostBoard> getPostBoards() {

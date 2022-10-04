@@ -156,13 +156,13 @@ operation::comment/delete/success[snippets='http-request,http-response']
 
 ==== 성공
 
-operation::like/post/success[snippets='http-request,http-response']
+operation::postLike/post/success[snippets='http-request,http-response']
 
 === 댓글 추천
 
 ==== 성공
 
-operation::like/comment/success[snippets='http-request,http-response']
+operation::postLike/comment/success[snippets='http-request,http-response']
 
 == 해시태그
 

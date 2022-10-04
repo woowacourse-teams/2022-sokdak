@@ -79,7 +79,7 @@ class BoardServiceTest extends ServiceTest {
                 .title("제목")
                 .content("본문")
                 .member(member)
-                .likes(new ArrayList<>())
+                .postLikes(new ArrayList<>())
                 .build();
         postRepository.save(post);
         Board board = Board.builder()
@@ -105,7 +105,7 @@ class BoardServiceTest extends ServiceTest {
                 .title("제목")
                 .content("본문")
                 .member(member)
-                .likes(new ArrayList<>())
+                .postLikes(new ArrayList<>())
                 .build();
         postRepository.save(post);
         Board board = Board.builder()
@@ -125,7 +125,7 @@ class BoardServiceTest extends ServiceTest {
                 .title("제목")
                 .content("본문")
                 .member(member)
-                .likes(new ArrayList<>())
+                .postLikes(new ArrayList<>())
                 .build();
         postRepository.save(post);
         Board board = boardRepository.findByTitle("Hot 게시판").get();
@@ -149,7 +149,7 @@ class BoardServiceTest extends ServiceTest {
                 .title("제목")
                 .content("본문")
                 .member(member)
-                .likes(new ArrayList<>())
+                .postLikes(new ArrayList<>())
                 .build();
         postRepository.save(post);
 

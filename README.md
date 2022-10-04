@@ -39,6 +39,8 @@
 
 ### 🧷 프론트엔드
 
+<div align="middle">
+
 <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"> <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
 <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black">
 <img src="https://img.shields.io/badge/react router-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white">
@@ -51,7 +53,7 @@
 <img src="https://img.shields.io/badge/msw-ff6933?style=for-the-badge&logo=msw&logoColor=black">
 <img src="https://img.shields.io/badge/webpack-8DD6F9?style=for-the-badge&logo=webpack&logoColor=black">
 <img src="https://img.shields.io/badge/babel-F9DC3E?style=for-the-badge&logo=babel&logoColor=black">
-
+  
 **Language |** Javascript, Typescript
 
 **Framework |** React
@@ -61,8 +63,13 @@
 **Test |** Storybook, Jest, Testing Library, MSW
 
 **Build |** Webpack, Babel
+  
+</div>
+
 
 ### 🧷 백엔드
+
+<div align="middle">
 
 <img src="https://img.shields.io/badge/java-3a75b0?style=for-the-badge&logo=java&logoColor=black"> <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
 <img src="https://img.shields.io/badge/spring boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
@@ -73,7 +80,8 @@
 <img src="https://img.shields.io/badge/spring test-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
 <img src="https://img.shields.io/badge/Mockito-C5D9C8?style=for-the-badge&logo=Mockito&logoColor=white">
 <img src="https://img.shields.io/badge/spring rest docs-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
-
+  
+  
 **Language |** Java 11
 
 **Framework |** Spring 5.3.21 (Spring Boot 2.7.1, Spring MVC 5.3.21)
@@ -85,8 +93,13 @@
 **Test |** Junit 5.8.2, Spring Test 5.3.21, Mockito 4.5.1
 
 **Docs |** Spring REST Docs 2.0.6
+  
+</div>
+
 
 ### 🧷 인프라
+
+<div align="middle">
 
 <img src="https://img.shields.io/badge/AWS EC2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white"> <img src="https://img.shields.io/badge/ngnix-009639?style=for-the-badge&logo=nginx&logoColor=white">
 <img src="https://img.shields.io/badge/h2-0000bb?style=for-the-badge&logo=h2&logoColor=white">
@@ -97,7 +110,7 @@
 <img src="https://img.shields.io/badge/SonarQube-D24939?style=for-the-badge&logo=SonarQube&logoColor=white">
 <img src="https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=Grafana&logoColor=white">
 <img src="https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=Prometheus&logoColor=white">
-
+  
 **Infra |** AWS EC2, Nginx
 
 **DB |** H2, MySQL 8
@@ -105,6 +118,10 @@
 **CI/CD |** Git, GitHub Action, Jenkins
 
 **Monitoring |** SonarQube, Grafana, Prometheus
+  
+</div>
+
+
 
 ## 핵심 기능
 

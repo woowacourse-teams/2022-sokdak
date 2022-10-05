@@ -9,6 +9,9 @@ export const BannerContainer = styled.div`
   width: 100%;
   max-width: 1450px;
   cursor: default;
+  @media (max-width: 875px) {
+    display: none;
+  }
 `;
 
 export const LeftSide = styled.div`

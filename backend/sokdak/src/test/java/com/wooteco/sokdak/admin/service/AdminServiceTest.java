@@ -39,7 +39,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @DisplayName("관리자 서비스 테스트")
-@Transactional(propagation = Propagation.NEVER)
+@Transactional
 class AdminServiceTest extends ServiceTest {
 
     private static final AuthInfo AUTH_INFO_ADMIN = new AuthInfo(1L, RoleType.ADMIN.getName(), "adminNickname");

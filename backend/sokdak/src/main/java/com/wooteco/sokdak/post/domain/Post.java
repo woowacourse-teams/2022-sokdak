@@ -198,4 +198,8 @@ public class Post {
     public String getImageName() {
         return imageName;
     }
+
+    public void deleteAllReports() {
+        postReports = new ArrayList<>();
+    }
 }

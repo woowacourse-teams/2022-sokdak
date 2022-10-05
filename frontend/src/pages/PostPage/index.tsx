@@ -1,4 +1,4 @@
-import { useReducer, useState } from 'react';
+import { useReducer } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import CommentList from './components/CommentList';
@@ -19,30 +19,16 @@ import PATH from '@/constants/path';
 const PostPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-
-  const [like, setLike] = useState({
-    isLiked: true,
-    likeCount: 0,
-  });
-
   const [isConfirmModalOpen, handleConfirmModal] = useReducer(state => !state, false);
+
   const { data, isLoading, isError } = usePost({
     storeCode: id!,
     options: {
-      onSuccess: data => {
-        setLike({ isLiked: data.like, likeCount: data.likeCount });
-      },
       staleTime: 1000 * 20,
     },
   });
   const hasImage = !!(data && data.imageName !== '');
-
-  const { mutate: putLike } = useLike({
-    onSuccess: data => {
-      setLike({ isLiked: data.data.like, likeCount: data.data.likeCount });
-    },
-  });
-
+  const { mutate: putLike } = useLike({});
   const { mutate: deletePost } = useDeletePost({
     onSuccess: () => {
       handleConfirmModal();
@@ -95,12 +81,7 @@ const PostPage = () => {
   return (
     <Layout>
       <Styled.Container>
-        <PostHeader
-          post={data!}
-          like={like}
-          onClickDeleteButton={handleConfirmModal}
-          onClickLikeButton={handleLikeButton}
-        />
+        <PostHeader post={data!} onClickDeleteButton={handleConfirmModal} onClickLikeButton={handleLikeButton} />
         {hasImage && <Styled.Image src={process.env.IMAGE_API_URL + data.imageName} alt={data.imageName} />}
         <PostContent content={data?.content!} hashtags={data?.hashtags!} hasImage={hasImage} />
         <CommentList id={id!} />

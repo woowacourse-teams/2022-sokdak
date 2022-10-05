@@ -116,6 +116,11 @@ public class Comment {
         commentReports.add(other);
     }
 
+    public boolean hasReportByMember(Member reporter) {
+        return commentReports.stream()
+                .anyMatch(report -> report.isOwner(reporter));
+    }
+
     public Long getId() {
         return id;
     }

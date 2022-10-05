@@ -42,7 +42,7 @@ public class CommentReportService {
         Member reporter = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
 
-        if (commentReportRepository.existsCommentReportByCommentAndReporter(comment, reporter)) {
+        if (comment.hasReportByMember(reporter)) {
             throw new AlreadyReportCommentException();
         }
 

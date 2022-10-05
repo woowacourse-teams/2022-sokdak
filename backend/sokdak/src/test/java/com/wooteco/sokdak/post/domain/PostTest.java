@@ -137,17 +137,6 @@ class PostTest {
         );
     }
 
-    @DisplayName("리포트 연관관계 편의 메소드")
-    @Test
-    void addReport() {
-        PostReport postReport = PostReport.builder()
-                .post(post)
-                .reporter(member)
-                .reportMessage("gogo")
-                .build();
-        assertThat(post.getPostReports()).contains(postReport);
-    }
-
     @DisplayName("익명여부 확인")
     @ParameterizedTest
     @MethodSource("isAnonymousArgs")

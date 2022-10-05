@@ -25,13 +25,4 @@ public class PostsResponse {
                 .collect(Collectors.toList());
         return new PostsResponse(postsElementResponses, postSlice.isLast());
     }
-
-    public static PostsResponse ofPostBoardSlice(Slice<PostBoard> postBoards) {
-        List<PostsElementResponse> postsElementResponses = postBoards.getContent()
-                .stream()
-                .map(PostBoard::getPost)
-                .map(PostsElementResponse::from)
-                .collect(Collectors.toList());
-        return new PostsResponse(postsElementResponses, postBoards.isLast());
-    }
 }

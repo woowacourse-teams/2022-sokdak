@@ -182,10 +182,6 @@ public class Post {
         return postBoards;
     }
 
-    public List<PostReport> getPostReports() {
-        return postReports;
-    }
-
     public String getNickname() {
         if (isBlocked()) {
             return BLIND_POST_MESSAGE;

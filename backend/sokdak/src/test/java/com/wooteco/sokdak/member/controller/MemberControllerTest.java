@@ -83,21 +83,6 @@ class MemberControllerTest extends ControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("인증코드가 일치하면 204 반환")
-    @Test
-    void verifyAuthCode() {
-        VerificationRequest verificationRequest = new VerificationRequest("test@gmail.com", "a1b2c3");
-
-        restDocs
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(verificationRequest)
-                .when().post("/members/signup/email/verification")
-                .then().log().all()
-                .assertThat()
-                .apply(document("member/verification/success"))
-                .statusCode(HttpStatus.NO_CONTENT.value());
-    }
-
     @DisplayName("아이디가 중복되지 않으면 true 반환")
     @Test
     void validateUniqueUsername_true() {

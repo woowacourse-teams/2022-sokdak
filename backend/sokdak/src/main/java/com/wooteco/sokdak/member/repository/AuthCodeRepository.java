@@ -1,6 +1,6 @@
 package com.wooteco.sokdak.member.repository;
 
-import com.wooteco.sokdak.auth.domain.AuthCode;
+import com.wooteco.sokdak.ticket.domain.AuthCode;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

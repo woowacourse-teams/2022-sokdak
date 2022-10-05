@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.auth.domain;
+package com.wooteco.sokdak.ticket.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

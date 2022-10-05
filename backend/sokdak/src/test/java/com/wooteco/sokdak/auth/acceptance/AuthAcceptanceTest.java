@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-import com.wooteco.sokdak.auth.domain.AuthCode;
+import com.wooteco.sokdak.ticket.domain.AuthCode;
 import com.wooteco.sokdak.auth.service.Encryptor;
 import com.wooteco.sokdak.member.dto.VerificationRequest;
 import com.wooteco.sokdak.member.repository.AuthCodeRepository;

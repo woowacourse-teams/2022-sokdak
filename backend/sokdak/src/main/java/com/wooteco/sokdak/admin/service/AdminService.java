@@ -7,7 +7,7 @@ import com.wooteco.sokdak.admin.dto.TicketElement;
 import com.wooteco.sokdak.admin.dto.TicketRequest;
 import com.wooteco.sokdak.admin.dto.TicketsResponse;
 import com.wooteco.sokdak.admin.exception.NoAdminException;
-import com.wooteco.sokdak.auth.domain.Ticket;
+import com.wooteco.sokdak.ticket.domain.Ticket;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.service.Encryptor;
 import com.wooteco.sokdak.member.domain.Member;

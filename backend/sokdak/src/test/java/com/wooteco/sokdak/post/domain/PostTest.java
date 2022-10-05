@@ -13,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.member.domain.Member;
-import com.wooteco.sokdak.report.domain.CommentReport;
 import com.wooteco.sokdak.report.domain.PostReport;
 import java.util.List;
 import java.util.stream.Stream;

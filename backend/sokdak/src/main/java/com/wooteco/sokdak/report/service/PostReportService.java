@@ -19,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class PostReportService {
 
-    private static final int BLOCKED_CONDITION = 5;
-
     private final PostReportRepository postReportRepository;
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;

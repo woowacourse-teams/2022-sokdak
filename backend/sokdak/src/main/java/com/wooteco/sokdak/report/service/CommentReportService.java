@@ -20,8 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class CommentReportService {
 
-    private static final int BLOCKED_CONDITION = 5;
-
     private final CommentReportRepository commentReportRepository;
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;

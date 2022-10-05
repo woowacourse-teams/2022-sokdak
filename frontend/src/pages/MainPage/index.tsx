@@ -1,6 +1,7 @@
 import Banner from './components/Banner';
 import BoardItem from './components/BoardItem';
 import Carousel from './components/Carousel';
+import Footer from './components/Footer';
 
 import usePostByBoards from '@/hooks/queries/post/usePostsByBoard';
 
@@ -27,6 +28,7 @@ const MainPage = () => {
             ))}
           </Styled.BoardItemContainer>
         </Styled.MainPageContainer>
+        <Footer />
       </>
     );
 

@@ -161,7 +161,7 @@ class PostTest {
         assertThat(anonymousPost.isAnonymous()).isEqualTo(result);
     }
 
-    static Stream<Arguments> isAnonymousArgs() {
+    private static Stream<Arguments> isAnonymousArgs() {
         return Stream.of(
                 Arguments.arguments("익명", true),
                 Arguments.arguments(VALID_NICKNAME, false)

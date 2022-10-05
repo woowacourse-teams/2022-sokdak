@@ -74,10 +74,10 @@ class CommentReportServiceTest extends ServiceTest {
     @DisplayName("댓글 신고 기능")
     @Test
     void reportComment() {
-        int commentCountBeforeReport = commentReportRepository.countByComment(comment);
+        int commentCountBeforeReport = comment.getCommentReports().size();
 
         commentReportService.reportComment(comment.getId(), REPORT_REQUEST, AUTH_INFO);
-        int commentCountAfterReport = commentReportRepository.countByComment(comment);
+        int commentCountAfterReport = comment.getCommentReports().size();
 
         assertThat(commentCountBeforeReport + 1).isEqualTo(commentCountAfterReport);
     }

@@ -10,8 +10,6 @@ public interface PostReportRepository extends JpaRepository<PostReport, Long> {
     @Deprecated
     int countByPostId(Long postId);
 
-    int countByPost(Post post);
-
     @Deprecated
     void deleteAllPostReportByPostId(Long id);
 

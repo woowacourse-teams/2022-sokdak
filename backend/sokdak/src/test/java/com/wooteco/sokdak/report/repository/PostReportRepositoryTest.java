@@ -77,7 +77,7 @@ class PostReportRepositoryTest extends RepositoryTest {
             postReportRepository.save(postReport);
         }
 
-        int result = postReportRepository.countByPost(post);
+        int result = post.getPostReports().size();
 
         assertThat(expected).isEqualTo(result);
     }

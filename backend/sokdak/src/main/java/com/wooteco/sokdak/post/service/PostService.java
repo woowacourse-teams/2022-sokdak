@@ -62,18 +62,22 @@ public class PostService {
     public Long addPost(Long boardId, NewPostRequest newPostRequest, AuthInfo authInfo) {
         Member member = findMember(authInfo);
         String writerNickname = createPostWriterNickname(newPostRequest.isAnonymous(), member);
-        Post post = Post.builder()
+        Post post = createPost(newPostRequest, writerNickname, member);
+        Post savedPost = postRepository.save(post);
+
+        hashtagService.saveHashtag(newPostRequest.getHashtags(), savedPost);
+        boardService.savePostBoard(savedPost, boardId, authInfo.getRole());
+        return savedPost.getId();
+    }
+
+    private Post createPost(NewPostRequest newPostRequest, String writerNickname, Member member) {
+        return Post.builder()
                 .title(newPostRequest.getTitle())
                 .content(newPostRequest.getContent())
                 .writerNickname(writerNickname)
                 .member(member)
                 .imageName(newPostRequest.getImageName())
                 .build();
-        Post savedPost = postRepository.save(post);
-
-        hashtagService.saveHashtag(newPostRequest.getHashtags(), savedPost);
-        boardService.savePostBoard(savedPost, boardId, authInfo.getRole());
-        return savedPost.getId();
     }
 
     private String createPostWriterNickname(boolean anonymous, Member member) {

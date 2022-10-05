@@ -27,7 +27,7 @@ if (process.env.MODE === 'LOCAL:MSW') {
   worker.start();
 }
 
-if ('serviceWorker' in navigator) {
+if (process.env.MODE !== 'LOCAL:MSW' && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
       .register('/service-worker.js')

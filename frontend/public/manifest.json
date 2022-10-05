@@ -1,6 +1,6 @@
 {
   "short_name": "속닥속닥",
-  "name": "우리들만의 비밀 이야기, 속닥속닥",
+  "name": "속닥속닥",
   "icons": [
     {
       "src": "./icons/apple-touch-icon-57x57.png",
@@ -51,6 +51,6 @@
   ],
   "start_url": "/",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#000000"
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff"
 }

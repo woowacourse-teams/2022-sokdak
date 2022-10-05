@@ -7,12 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostReportRepository extends JpaRepository<PostReport, Long> {
 
-    @Deprecated
-    int countByPostId(Long postId);
-
-    @Deprecated
-    void deleteAllPostReportByPostId(Long id);
-
     void deleteAllPostReportByPost(Post post);
 
     boolean existsPostReportByPostAndReporter(Post post, Member member);

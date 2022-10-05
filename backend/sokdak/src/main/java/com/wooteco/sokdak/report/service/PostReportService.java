@@ -40,18 +40,24 @@ public class PostReportService {
                 .orElseThrow(PostNotFoundException::new);
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
+        checkMemberAlreadyReport(post, member);
+        PostReport postReport = createPostReport(post, member, reportRequest.getMessage());
+        postReportRepository.save(postReport);
+        notifyReportIfOverThanBlockCondition(post);
+    }
 
+    private PostReport createPostReport(Post post, Member member, String message) {
+        return PostReport.builder()
+                .post(post)
+                .reporter(member)
+                .reportMessage(message)
+                .build();
+    }
+
+    private void checkMemberAlreadyReport(Post post, Member member) {
         if (post.hasReportByMember(member)) {
             throw new AlreadyReportPostException();
         }
-
-        PostReport postReport = PostReport.builder()
-                .post(post)
-                .reporter(member)
-                .reportMessage(reportRequest.getMessage())
-                .build();
-        postReportRepository.save(postReport);
-        notifyReportIfOverThanBlockCondition(post);
     }
 
     private void notifyReportIfOverThanBlockCondition(Post post) {

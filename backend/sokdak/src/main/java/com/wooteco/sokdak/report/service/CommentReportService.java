@@ -41,18 +41,24 @@ public class CommentReportService {
                 .orElseThrow(CommentNotFoundException::new);
         Member reporter = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
-
-        if (comment.hasReportByMember(reporter)) {
-            throw new AlreadyReportCommentException();
-        }
-
-        CommentReport commentReport = CommentReport.builder()
-                .comment(comment)
-                .reporter(reporter)
-                .reportMessage(reportRequest.getMessage())
-                .build();
+        checkMemberAlreadyReport(comment, reporter);
+        CommentReport commentReport = createCommentReport(comment, reporter, reportRequest.getMessage());
         commentReportRepository.save(commentReport);
         notifyReportIfOverBlockCondition(comment);
+    }
+
+    private CommentReport createCommentReport(Comment comment, Member reporter, String message) {
+        return CommentReport.builder()
+                .comment(comment)
+                .reporter(reporter)
+                .reportMessage(message)
+                .build();
+    }
+
+    private void checkMemberAlreadyReport(Comment comment, Member member) {
+        if (comment.hasReportByMember(member)) {
+            throw new AlreadyReportCommentException();
+        }
     }
 
     private void notifyReportIfOverBlockCondition(Comment comment) {

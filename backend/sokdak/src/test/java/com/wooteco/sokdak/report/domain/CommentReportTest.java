@@ -12,9 +12,13 @@ import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.post.domain.Post;
 import java.util.Collections;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class CommentReportTest {
 
@@ -53,5 +57,36 @@ class CommentReportTest {
                 .build();
 
         assertThat(comment.getCommentReports()).contains(commentReport);
+    }
+
+    @DisplayName("신고자가 맞으면 true, 아니면 false를 반환한다.")
+    @ParameterizedTest
+    @MethodSource("isOwnerArguments")
+    void isOwner(Member reporter, Member member, boolean expected) {
+        CommentReport commentReport = CommentReport.builder()
+                .comment(comment)
+                .reporter(reporter)
+                .reportMessage("message")
+                .build();
+
+        assertThat(commentReport.isOwner(member)).isEqualTo(expected);
+    }
+
+    static Stream<Arguments> isOwnerArguments() {
+        Member reporter = Member.builder()
+                .username("reporter")
+                .nickname("reporterNickname")
+                .password("Abcd123!@")
+                .build();
+        Member member = Member.builder()
+                .username("member")
+                .nickname("memberNickname")
+                .password("Abcd123!@")
+                .build();
+
+        return Stream.of(
+                Arguments.of(reporter, reporter, true),
+                Arguments.of(reporter, member, false)
+        );
     }
 }

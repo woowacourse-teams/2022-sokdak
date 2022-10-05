@@ -70,4 +70,9 @@ public class CommentReport {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
+    public boolean isOwner(Member other) {
+        // TODO: Member의 equals, hashCode에서 id가 아닌 username을 이용하도록 수정해야 됨.
+        return this.reporter.getUsername().equals(other.getUsername());
+    }
 }

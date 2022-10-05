@@ -1,26 +1,23 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import PostListItem from '@/components/PostListItem';
 
+import useHotPosts from '@/hooks/queries/post/useHotPosts';
 import useThrottle from '@/hooks/useThrottle';
 
 import * as Styled from './index.styles';
 
+import PATH from '@/constants/path';
+
 import useCarousel from './useCarousel';
 
-const dummy: Omit<Post, 'id' | 'like' | 'hashtags' | 'authorized' | 'boardId' | 'nickname' | 'imageName'> = {
-  blocked: false,
-  commentCount: 3,
-  content: '아무내용',
-  createdAt: '2022-07-19T19:55:31.016376300',
-  likeCount: 4,
-  modified: false,
-  title: '오늘 날씨 ㅁ맑네요',
-};
 const Carousel = () => {
   const [page, setPage] = useState(0);
-  const { ref, isEnd, setIsEnd } = useCarousel();
+  const { data } = useHotPosts({ storeCode: [10], options: { suspense: true } });
+  const navigate = useNavigate();
 
+  const { ref, isEnd, setIsEnd } = useCarousel();
   const handleClickLastPage = useThrottle(() => {
     if (isEnd) {
       setIsEnd(false);
@@ -31,6 +28,10 @@ const Carousel = () => {
   const handleClickNextPage = useThrottle(() => {
     setPage(prev => prev + 1);
   }, 500);
+
+  const handleClickPostItem = (id: number) => {
+    navigate(`${PATH.POST}/${id}`);
+  };
 
   return (
     <Styled.Container>
@@ -43,9 +44,15 @@ const Carousel = () => {
         )}
         <Styled.PostContainer>
           <Styled.PostListContainer page={page}>
-            {Array.from({ length: 10 }).map((item, idx) => (
-              <Styled.ItemContainer key={idx} ref={idx === 9 ? ref : null}>
-                <PostListItem {...dummy} handleClick={() => {}} testid={1} />
+            {data?.posts.map((item, idx) => (
+              <Styled.ItemContainer key={item.id} ref={idx === data.posts.length - 1 ? ref : null}>
+                <PostListItem
+                  {...item}
+                  handleClick={() => {
+                    handleClickPostItem(item.id);
+                  }}
+                  testid={item.id}
+                />
               </Styled.ItemContainer>
             ))}
           </Styled.PostListContainer>

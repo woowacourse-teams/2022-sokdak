@@ -16,10 +16,6 @@ const useCarousel = () => {
 
   useEffect(() => {
     observer.observe(ref.current!);
-
-    return () => {
-      observer.unobserve(ref.current!);
-    };
   }, []);
 
   return { ref, isEnd, setIsEnd };

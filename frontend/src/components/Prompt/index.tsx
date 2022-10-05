@@ -32,7 +32,7 @@ const Prompt = ({
   };
 
   const hide = () => {
-    localStorage.setItem(`${name}_propmt`, 'hide');
+    localStorage.setItem(`${name}_prompt`, 'hide');
     setVisible(false);
   };
 

@@ -55,8 +55,7 @@ public class PostReportService {
     }
 
     private void notifyReportIfOverThanBlockCondition(Post post) {
-        int reportCount = postReportRepository.countByPost(post);
-        if (reportCount == BLOCKED_CONDITION) {
+        if (post.isBlocked()) {
             notificationService.notifyPostReport(post);
         }
     }

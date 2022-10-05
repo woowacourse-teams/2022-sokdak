@@ -123,7 +123,6 @@ public class PostService {
         Post post = findPostEntity(postId);
         Hashtags hashtags = hashtagService.findHashtagsByPost(post);
 
-        // Todo: validateOwner 메서드 하나만 실행하게 리팩터링하기
         validateOwner(authInfo, post);
         post.updateTitle(postUpdateRequest.getTitle());
         post.updateContent(postUpdateRequest.getContent());

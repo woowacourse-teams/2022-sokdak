@@ -13,13 +13,17 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.report.domain.CommentReport;
 import com.wooteco.sokdak.report.domain.PostReport;
 import java.util.List;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class PostTest {
 
@@ -125,5 +129,36 @@ class PostTest {
         boolean actual = post.isAuthorized(accessMemberId);
 
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @DisplayName("특정 멤버가 신고를 이미 했으면 true를, 안했으면 false를 반환한다.")
+    @ParameterizedTest
+    @MethodSource("hasReportByMemberArguments")
+    void hasReportByMember(Member reporter, Member member, boolean expected) {
+        PostReport postReport = PostReport.builder()
+                .post(post)
+                .reporter(reporter)
+                .reportMessage("report")
+                .build();
+        post.addReport(postReport);
+
+        assertThat(post.hasReportByMember(member)).isEqualTo(expected);
+    }
+
+    static Stream<Arguments> hasReportByMemberArguments() {
+        Member reporter = Member.builder()
+                .username("reporter")
+                .nickname("reporterNickname")
+                .password("Abcd123!@")
+                .build();
+        Member member = Member.builder()
+                .username("member")
+                .nickname("memberNickname")
+                .password("Abcd123!@")
+                .build();
+        return Stream.of(
+                Arguments.of(reporter, reporter, true),
+                Arguments.of(reporter, member, false)
+        );
     }
 }

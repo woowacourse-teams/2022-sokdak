@@ -136,6 +136,11 @@ public class Post {
         return !getNickname().equals(member.getNickname());
     }
 
+    public boolean hasReportByMember(Member reporter) {
+        return postReports.stream()
+                .anyMatch(report -> report.isOwner(reporter));
+    }
+
     public Long getId() {
         return id;
     }

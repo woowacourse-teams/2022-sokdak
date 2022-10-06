@@ -18,7 +18,11 @@ test('등록되지 않은 URL에 접속시 NotFoundPage가 렌더링 된다.', (
         </MemoryRouter>
       </ThemeProvider>
     </QueryClientProvider>,
-  );
+  ); // Change the viewport to 500px.
+  global.innerWidth = 500;
+
+  // Trigger the window resize event.
+  global.dispatchEvent(new Event('resize'));
 
   waitFor(() => {
     expect(screen.getByText('페이지를 찾을 수 없습니다.')).toBeInTheDocument();

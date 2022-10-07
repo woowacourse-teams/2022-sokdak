@@ -11,7 +11,6 @@ import com.wooteco.sokdak.admin.dto.PostReportsResponse;
 import com.wooteco.sokdak.admin.dto.TicketRequest;
 import com.wooteco.sokdak.admin.dto.TicketsResponse;
 import com.wooteco.sokdak.admin.exception.NoAdminException;
-import com.wooteco.sokdak.ticket.domain.Ticket;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;
@@ -28,6 +27,7 @@ import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.post.service.PostService;
 import com.wooteco.sokdak.report.repository.PostReportRepository;
+import com.wooteco.sokdak.ticket.domain.Ticket;
 import com.wooteco.sokdak.util.ServiceTest;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @DisplayName("관리자 서비스 테스트")
@@ -281,7 +280,12 @@ class AdminServiceTest extends ServiceTest {
 
     private Post savePost() {
         Post post = postRepository.save(this.post);
-        postBoardRepository.save(PostBoard.builder().post(post).board(board).build());
+        PostBoard postBoard = PostBoard.builder()
+                .post(post)
+                .board(board)
+                .build();
+        postBoard.addPost(post);
+        postBoardRepository.save(postBoard);
         return post;
     }
 }

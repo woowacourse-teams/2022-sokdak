@@ -60,9 +60,27 @@ public class MemberService {
         registerService.useTicket(signupRequest.getEmail());
     }
 
+    @Transactional
+    public void signUpAsApplicant(SignupRequest signupRequest) {
+        validateForApplicant(signupRequest);
+
+        Member member = Member.builder()
+                .username(signupRequest.getUsername())
+                .password(signupRequest.getPassword())
+                .nickname(signupRequest.getNickname())
+                .build();
+        memberRepository.save(member);
+    }
+
     private void validate(SignupRequest signupRequest) {
         validateSerialNumber(signupRequest);
         validateAuthCode(signupRequest);
+        confirmPassword(signupRequest.getPassword(), signupRequest.getPasswordConfirmation());
+        validateUniqueNickname(signupRequest);
+        validateUniqueUsername(signupRequest);
+    }
+
+    private void validateForApplicant(SignupRequest signupRequest) {
         confirmPassword(signupRequest.getPassword(), signupRequest.getPasswordConfirmation());
         validateUniqueNickname(signupRequest);
         validateUniqueUsername(signupRequest);

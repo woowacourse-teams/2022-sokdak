@@ -58,6 +58,17 @@ class MemberServiceTest extends ServiceTest {
                 Encryptor.encrypt("Abcd123!@"))).isPresent();
     }
 
+    @DisplayName("지원자로 회원가입 조건을 모두 만족하면 회원가입에 성공한다.")
+    @Test
+    void signUpAsApplicant() {
+        SignupRequest signupRequest = new SignupRequest("", "testJosh",
+                "testJoshNickname", "ABCDEF", "Abcd123!@", "Abcd123!@");
+        memberService.signUpAsApplicant(signupRequest);
+
+        assertThat(memberRepository.findByUsernameValueAndPasswordValue(Encryptor.encrypt("josh"),
+                Encryptor.encrypt("Abcd123!@"))).isPresent();
+    }
+
     @DisplayName("닉네임 수정 기능")
     @Test
     void editNickname() {

@@ -15,7 +15,6 @@ import com.wooteco.sokdak.member.dto.NicknameResponse;
 import com.wooteco.sokdak.member.dto.NicknameUpdateRequest;
 import com.wooteco.sokdak.member.dto.SignupRequest;
 import com.wooteco.sokdak.member.dto.UniqueResponse;
-import com.wooteco.sokdak.member.dto.VerificationRequest;
 import com.wooteco.sokdak.member.exception.DuplicateNicknameException;
 import com.wooteco.sokdak.member.exception.InvalidAuthCodeException;
 import com.wooteco.sokdak.member.exception.InvalidNicknameException;
@@ -147,6 +146,22 @@ class MemberControllerTest extends ControllerTest {
     @Test
     void signUp() {
         SignupRequest signupRequest = new SignupRequest("test@gmail.com", "username", "nickname", "a1b1c1",
+                "password1!", "password1!");
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(signupRequest)
+                .when().post("/members/signup")
+                .then().log().all()
+                .assertThat()
+                .apply(document("member/signup/success"))
+                .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @DisplayName("지원자로 회원가입하면 201 반환")
+    @Test
+    void signUp_Applicant() {
+        SignupRequest signupRequest = new SignupRequest("", "username", "nickname", "a1b1c1",
                 "password1!", "password1!");
 
         restDocs

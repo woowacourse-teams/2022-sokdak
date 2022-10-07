@@ -1,6 +1,6 @@
 package com.wooteco.sokdak.post.domain;
 
-import com.wooteco.sokdak.auth.exception.AuthorizationException;
+import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.hashtag.domain.PostHashtag;
@@ -10,7 +10,7 @@ import com.wooteco.sokdak.report.domain.PostReport;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import com.wooteco.sokdak.board.domain.Board;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -95,28 +95,19 @@ public class Post {
         return !createdAt.equals(modifiedAt);
     }
 
-    public void updateTitle(String title, Long accessMemberId) {
-        validateOwner(accessMemberId);
+    public void updateTitle(String title) {
         this.title = new Title(title);
     }
 
-    public void updateContent(String content, Long accessMemberId) {
-        validateOwner(accessMemberId);
+    public void updateContent(String content) {
         this.content = new Content(content);
     }
 
-    public void updateImageName(String imageName, Long accessMemberId) {
-        validateOwner(accessMemberId);
+    public void updateImageName(String imageName) {
         this.imageName = imageName;
     }
 
-    public void validateOwner(Long accessMemberId) {
-        if (!Objects.equals(accessMemberId, member.getId())) {
-            throw new AuthorizationException();
-        }
-    }
-
-    public boolean isAuthorized(Long accessMemberId) {
+    public boolean isOwner(Long accessMemberId) {
         if (accessMemberId == null) {
             return false;
         }
@@ -180,16 +171,20 @@ public class Post {
         return comments.size();
     }
 
+    public Board getWritableBoard() {
+        return postBoards.stream()
+                .map(PostBoard::getBoard)
+                .filter(board -> board.isUserWritable("user"))
+                .findFirst()
+                .orElseThrow();
+    }
+
     public List<PostLike> getPostLikes() {
         return postLikes;
     }
 
     public List<PostBoard> getPostBoards() {
         return postBoards;
-    }
-
-    public List<PostReport> getPostReports() {
-        return postReports;
     }
 
     public String getNickname() {
@@ -201,6 +196,10 @@ public class Post {
 
     public String getImageName() {
         return imageName;
+    }
+
+    public List<PostReport> getPostReports() {
+        return postReports;
     }
 
     public void deleteAllReports() {

@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.notification.repository;
 
 import com.wooteco.sokdak.notification.domain.Notification;
+import com.wooteco.sokdak.post.domain.Post;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -18,6 +19,10 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     @Query(value = "SELECT n.id FROM Notification n WHERE n.comment.id = :commentId")
     List<Long> findIdsByCommentId(Long commentId);
+
+    void deleteAllByPost(Post post);
+
+    void deleteAllByCommentId(Long commentId);
 
     @Query(value = "SELECT n.id FROM Notification n WHERE n.post.id = :postId")
     List<Long> findIdsByPostId(Long postId);

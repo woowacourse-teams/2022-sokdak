@@ -1,5 +1,7 @@
 package com.wooteco.sokdak.post.domain;
 
+import static com.wooteco.sokdak.board.domain.BoardType.NON_WRITABLE;
+import static com.wooteco.sokdak.board.domain.BoardType.WRITABLE;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
@@ -8,12 +10,13 @@ import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_WRITER_NICKNAME;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.wooteco.sokdak.auth.exception.AuthorizationException;
+import com.wooteco.sokdak.board.domain.Board;
+import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.report.domain.PostReport;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +26,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.test.util.ReflectionTestUtils;
+
 
 class PostTest {
 
@@ -45,38 +50,71 @@ class PostTest {
                 .build();
     }
 
+    @DisplayName("게시글 변경되지 않았으면 False 반환")
+    @Test
+    void isModified_False() {
+        LocalDateTime now = LocalDateTime.now();
+        ReflectionTestUtils.setField(post, "createdAt", now);
+        ReflectionTestUtils.setField(post, "modifiedAt", now);
+
+        assertThat(post.isModified()).isFalse();
+    }
+
+    @DisplayName("게시글 변경되었으면 true 반환")
+    @Test
+    void isModified_True() {
+        LocalDateTime futureTime = LocalDateTime.of(3333, 1, 10, 3, 3);
+        ReflectionTestUtils.setField(post, "createdAt", LocalDateTime.now());
+        ReflectionTestUtils.setField(post, "modifiedAt", futureTime);
+
+        assertThat(post.isModified()).isTrue();
+    }
+
     @DisplayName("게시글 제목 수정")
     @Test
     void updateTitle() {
-        post.updateTitle("변경된 제목", 1L);
+        post.updateTitle("변경된 제목");
 
         assertThat(post.getTitle()).isEqualTo("변경된 제목");
-    }
-
-    @DisplayName("권한이 없는 게시글의 제목을 수정하려할 시 예외 발생")
-    @Test
-    void updateTitle_Exception_ForbiddenId() {
-        Long forbiddenMemberId = 2L;
-
-        assertThatThrownBy(() -> post.updateTitle("변경된 제목", forbiddenMemberId))
-                .isInstanceOf(AuthorizationException.class);
     }
 
     @DisplayName("게시글 본문 수정")
     @Test
     void updateContent() {
-        post.updateContent("변경된 본문", 1L);
+        post.updateContent("변경된 본문");
 
         assertThat(post.getContent()).isEqualTo("변경된 본문");
     }
 
-    @DisplayName("권한이 없는 게시글의 본문을 수정하려할 시 예외 발생")
+    @DisplayName("게시글 이미지 이름 수정")
     @Test
-    void updateContent_Exception_ForbiddenId() {
-        Long forbiddenMemberId = 2L;
+    void updateImageName() {
+        post.updateImageName("변경된 이미지 이름");
 
-        assertThatThrownBy(() -> post.updateContent("변경된 본문", forbiddenMemberId))
-                .isInstanceOf(AuthorizationException.class);
+        assertThat(post.getImageName()).isEqualTo("변경된 이미지 이름");
+    }
+
+    @DisplayName("게시글이 등록된 보드 찾기")
+    @Test
+    void getWritableBoard() {
+        Board board = Board.builder()
+                .name("자유게시판")
+                .boardType(WRITABLE)
+                .build();
+        Board adminBoard = Board.builder()
+                .name("핫게")
+                .boardType(NON_WRITABLE)
+                .build();
+        PostBoard postBoard = PostBoard.builder().build();
+        postBoard.addPost(post);
+        postBoard.addBoard(board);
+        PostBoard adminPostBoard = PostBoard.builder().build();
+        adminPostBoard.addPost(post);
+        adminPostBoard.addBoard(adminBoard);
+
+        ReflectionTestUtils.setField(post, "postBoards", List.of(postBoard, adminPostBoard));
+
+        assertThat(post.getWritableBoard()).isEqualTo(board);
     }
 
     @DisplayName("신고가 5개 이상이면 isBlocked()가 true를 반환하고, 게시글의 정보는 반환되지 않는다.")
@@ -97,6 +135,26 @@ class PostTest {
                 () -> assertThat(post.getNickname()).isEqualTo("블라인드 처리된 게시글입니다."),
                 () -> assertThat(post.getTitle()).isEqualTo("블라인드 처리된 게시글입니다."),
                 () -> assertThat(post.getContent()).isEqualTo("블라인드 처리된 게시글입니다.")
+        );
+    }
+
+    @DisplayName("익명여부 확인")
+    @ParameterizedTest
+    @MethodSource("isAnonymousArgs")
+    void isAnonymous(String writerNickname, boolean result) {
+        Post anonymousPost = Post.builder()
+                .title(VALID_POST_TITLE)
+                .content(VALID_POST_CONTENT)
+                .writerNickname(writerNickname)
+                .member(member)
+                .build();
+        assertThat(anonymousPost.isAnonymous()).isEqualTo(result);
+    }
+
+    private static Stream<Arguments> isAnonymousArgs() {
+        return Stream.of(
+                Arguments.arguments("익명", true),
+                Arguments.arguments(VALID_NICKNAME, false)
         );
     }
 
@@ -124,8 +182,8 @@ class PostTest {
     @DisplayName("게시글의 회원 정보가 일치하는지 반환")
     @ParameterizedTest
     @CsvSource({"1, true", "2, false"})
-    void isAuthorized(Long accessMemberId, boolean expected) {
-        boolean actual = post.isAuthorized(accessMemberId);
+    void isOwner(Long accessMemberId, boolean expected) {
+        boolean actual = post.isOwner(accessMemberId);
 
         assertThat(actual).isEqualTo(expected);
     }

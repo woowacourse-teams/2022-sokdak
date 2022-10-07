@@ -23,8 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class HashtagService {
-
     private final HashtagRepository hashtagRepository;
+
     private final PostHashtagRepository postHashtagRepository;
 
     public HashtagService(HashtagRepository hashtagRepository,
@@ -47,13 +47,13 @@ public class HashtagService {
                 .orElseGet(() -> hashtagRepository.save(Hashtag.builder().name(name).build()));
     }
 
-    public Hashtags findHashtagsByPostId(Long postId) {
-        return Hashtags.of(postHashtagRepository.findAllByPostId(postId));
+    public Hashtags findHashtagsByPost(Post post) {
+        return Hashtags.of(postHashtagRepository.findAllByPost(post));
     }
 
     @Transactional
-    public void deleteAllByPostId(Hashtags hashtags, Long id) {
-        postHashtagRepository.deleteAllByPostId(id);
+    public void deleteAllByPost(Hashtags hashtags, Post post) {
+        postHashtagRepository.deleteAllByPost(post);
         deleteNoUsedHashtags(hashtags);
     }
 
@@ -86,4 +86,5 @@ public class HashtagService {
                 .collect(Collectors.toList());
         return new HashtagsSearchResponse(hashtagSearchElementResponses);
     }
+
 }

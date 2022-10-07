@@ -91,7 +91,7 @@ public class CommentService {
         if (!anonymous) { // 기명이면 member table에서 memberId로 닉네임 가져옴.
             return memberNickname;
         }
-        if (post.isAuthorized(authInfo.getId())) { // 댓글 작성하는 사람과 게시글 작성자 일치
+        if (post.isOwner(authInfo.getId())) { // 댓글 작성하는 사람과 게시글 작성자 일치
             return getPostWriterNickname(post, authInfo.getId());
         }
 

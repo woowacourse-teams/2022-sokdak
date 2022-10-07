@@ -36,7 +36,7 @@ class CommentReportRepositoryTest extends RepositoryTest {
                 .content("content")
                 .writerNickname("nickName")
                 .postHashtags(new ArrayList<>())
-                .likes(new ArrayList<>())
+                .postLikes(new ArrayList<>())
                 .comments(new ArrayList<>())
                 .build();
         postRepository.save(post);

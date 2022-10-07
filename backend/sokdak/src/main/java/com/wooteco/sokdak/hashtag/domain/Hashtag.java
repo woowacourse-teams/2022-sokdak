@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.hashtag.domain;
 
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,5 +26,22 @@ public class Hashtag {
     @Builder
     public Hashtag(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || !(o instanceof Hashtag)) {
+            return false;
+        }
+        Hashtag hashtag = (Hashtag) o;
+        return Objects.equals(getName(), hashtag.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName());
     }
 }

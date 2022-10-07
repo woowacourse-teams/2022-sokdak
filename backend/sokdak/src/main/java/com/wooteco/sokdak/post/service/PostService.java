@@ -88,7 +88,7 @@ public class PostService {
     }
 
     public PostDetailResponse findPost(Long postId, AuthInfo authInfo) {
-        Post foundPost = findPostEntity(postId);
+        Post foundPost = findPostObject(postId);
         Board writableBoard = foundPost.getWritableBoard();
         boolean liked = postLikeRepository.existsByMemberIdAndPostId(authInfo.getId(), postId);
         Hashtags hashtags = hashtagService.findHashtagsByPost(foundPost);
@@ -97,7 +97,7 @@ public class PostService {
                 foundPost.isOwner(authInfo.getId()), hashtags, foundPost.getImageName());
     }
 
-    private Post findPostEntity(Long postId) {
+    private Post findPostObject(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
     }
@@ -120,7 +120,7 @@ public class PostService {
 
     @Transactional
     public void updatePost(Long postId, PostUpdateRequest postUpdateRequest, AuthInfo authInfo) {
-        Post post = findPostEntity(postId);
+        Post post = findPostObject(postId);
         Hashtags hashtags = hashtagService.findHashtagsByPost(post);
 
         validateOwner(authInfo, post);
@@ -134,7 +134,7 @@ public class PostService {
 
     @Transactional
     public void deletePost(Long id, AuthInfo authInfo) {
-        Post post = findPostEntity(id);
+        Post post = findPostObject(id);
         validateOwner(authInfo, post);
 
         Hashtags hashtags = hashtagService.findHashtagsByPost(post);

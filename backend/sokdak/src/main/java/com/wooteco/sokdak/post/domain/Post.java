@@ -198,6 +198,10 @@ public class Post {
         return imageName;
     }
 
+    public List<PostReport> getPostReports() {
+        return postReports;
+    }
+
     public void deleteAllReports() {
         postReports = new ArrayList<>();
     }

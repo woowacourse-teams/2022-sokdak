@@ -13,19 +13,12 @@ import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.board.exception.BoardNotFoundException;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
-import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
-import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.comment.service.CommentService;
 import com.wooteco.sokdak.hashtag.domain.Hashtag;
 import com.wooteco.sokdak.hashtag.domain.PostHashtag;
 import com.wooteco.sokdak.hashtag.repository.HashtagRepository;
 import com.wooteco.sokdak.hashtag.repository.PostHashtagRepository;
-import com.wooteco.sokdak.like.domain.Like;
-import com.wooteco.sokdak.like.repository.LikeRepository;
-import com.wooteco.sokdak.notification.domain.Notification;
-import com.wooteco.sokdak.notification.domain.NotificationType;
-import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
@@ -35,8 +28,6 @@ import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
-import com.wooteco.sokdak.report.domain.PostReport;
-import com.wooteco.sokdak.report.repository.PostReportRepository;
 import com.wooteco.sokdak.util.ServiceTest;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,7 +39,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 
 class PostServiceTest extends ServiceTest {
 
@@ -73,20 +63,7 @@ class PostServiceTest extends ServiceTest {
     @Autowired
     private PostHashtagRepository postHashtagRepository;
 
-    @Autowired
-    private CommentRepository commentRepository;
-
-    @Autowired
-    private PostReportRepository postReportRepository;
-
-    @Autowired
-    private LikeRepository likeRepository;
-
-    @Autowired
-    private NotificationRepository notificationRepository;
-
     private Post post;
-    private Post fullSettingPost;
     private Board board;
     private Board hotBoard;
     private PostBoard postBoard;

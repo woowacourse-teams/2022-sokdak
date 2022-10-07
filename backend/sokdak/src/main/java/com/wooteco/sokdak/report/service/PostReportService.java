@@ -10,6 +10,7 @@ import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.report.domain.PostReport;
 import com.wooteco.sokdak.report.dto.ReportRequest;
+import com.wooteco.sokdak.report.exception.AlreadyReportPostException;
 import com.wooteco.sokdak.report.repository.PostReportRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class PostReportService {
-
-    private static final int BLOCKED_CONDITION = 5;
 
     private final PostReportRepository postReportRepository;
     private final PostRepository postRepository;
@@ -39,19 +38,28 @@ public class PostReportService {
                 .orElseThrow(PostNotFoundException::new);
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
-
-        PostReport postReport = PostReport.builder()
-                .post(post)
-                .reporter(member)
-                .reportMessage(reportRequest.getMessage())
-                .build();
+        checkMemberAlreadyReport(post, member);
+        PostReport postReport = createPostReport(post, member, reportRequest.getMessage());
         postReportRepository.save(postReport);
-        notifyReportIfOverThanBlockCondition(postId, post);
+        notifyReportIfOverThanBlockCondition(post);
     }
 
-    private void notifyReportIfOverThanBlockCondition(Long postId, Post post) {
-        int reportCount = postReportRepository.countByPostId(postId);
-        if (reportCount == BLOCKED_CONDITION) {
+    private PostReport createPostReport(Post post, Member member, String message) {
+        return PostReport.builder()
+                .post(post)
+                .reporter(member)
+                .reportMessage(message)
+                .build();
+    }
+
+    private void checkMemberAlreadyReport(Post post, Member member) {
+        if (post.hasReportByMember(member)) {
+            throw new AlreadyReportPostException();
+        }
+    }
+
+    private void notifyReportIfOverThanBlockCondition(Post post) {
+        if (post.isBlocked()) {
             notificationService.notifyPostReport(post);
         }
     }

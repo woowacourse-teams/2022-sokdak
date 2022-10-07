@@ -39,7 +39,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @DisplayName("관리자 서비스 테스트")
-@Transactional
+@Transactional(propagation = Propagation.NEVER)
 class AdminServiceTest extends ServiceTest {
 
     private static final AuthInfo AUTH_INFO_ADMIN = new AuthInfo(1L, RoleType.ADMIN.getName(), "adminNickname");
@@ -115,7 +115,7 @@ class AdminServiceTest extends ServiceTest {
         adminService.blockPost(post.getId(), BLOCKED_COUNT, AUTH_INFO_ADMIN);
 
         assertAll(
-                () -> assertThat(post.getPostReports().size())
+                () -> assertThat(postReportRepository.countByPostId(post.getId()))
                         .isEqualTo(Math.toIntExact(BLOCKED_COUNT)),
                 () -> assertThat(postService.findPost(post.getId(), AUTH_INFO_ADMIN).isBlocked()).isTrue()
         );
@@ -129,7 +129,7 @@ class AdminServiceTest extends ServiceTest {
         assertAll(
                 () -> assertThatThrownBy(() -> adminService.blockPost(post.getId(), BLOCKED_COUNT, AUTH_INFO))
                         .isInstanceOf(NoAdminException.class),
-                () -> assertThat(post.getPostReports().size()).isZero(),
+                () -> assertThat(postReportRepository.countByPostId(post.getId())).isZero(),
                 () -> assertThat(postService.findPost(post.getId(), AUTH_INFO_ADMIN).isBlocked()).isFalse()
         );
     }
@@ -144,7 +144,7 @@ class AdminServiceTest extends ServiceTest {
 
         assertAll(
                 () -> assertThat(blocked).isTrue(),
-                () -> assertThat(post.getPostReports().size()).isZero(),
+                () -> assertThat(postReportRepository.countByPostId(post.getId())).isZero(),
                 () -> assertThat(postService.findPost(post.getId(), AUTH_INFO_ADMIN).isBlocked()).isFalse()
         );
     }
@@ -158,7 +158,7 @@ class AdminServiceTest extends ServiceTest {
         assertAll(
                 () -> assertThatThrownBy(() -> adminService.unblockPost(post.getId(), AUTH_INFO))
                         .isInstanceOf(NoAdminException.class),
-                () -> assertThat(post.getPostReports().size())
+                () -> assertThat(postReportRepository.countByPostId(post.getId()))
                         .isEqualTo(Math.toIntExact(BLOCKED_COUNT)),
                 () -> assertThat(postService.findPost(post.getId(), AUTH_INFO_ADMIN).isBlocked()).isTrue()
         );

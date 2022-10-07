@@ -5,18 +5,15 @@ import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.post.domain.Post;
+import com.wooteco.sokdak.report.exception.AlreadyReportPostException;
 import java.util.Collections;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 
 
 class PostReportTest {
@@ -39,46 +36,20 @@ class PostReportTest {
                 .build();
     }
 
-    @DisplayName("연관관계 편의 메서드")
+    @DisplayName("같은 게시글을 같은 신고자가 중복신고하면 예외발생")
     @Test
-    void constructor() {
-        PostReport postReport = PostReport.builder()
+    void addPost_Exception_AlreadyReport() {
+        PostReport.builder()
                 .post(post)
                 .reporter(member)
                 .reportMessage("신고")
                 .build();
 
-        assertThat(post.getPostReports()).contains(postReport);
-    }
-
-    @DisplayName("신고자가 맞으면 true, 아니면 false를 반환한다.")
-    @ParameterizedTest
-    @MethodSource("isOwnerArguments")
-    void isOwner(Member reporter, Member member, boolean expected) {
-        PostReport postReport = PostReport.builder()
+        assertThatThrownBy(() -> PostReport.builder()
                 .post(post)
-                .reporter(reporter)
-                .reportMessage("message")
-                .build();
-
-        assertThat(postReport.isOwner(member)).isEqualTo(expected);
-    }
-
-    static Stream<Arguments> isOwnerArguments() {
-        Member reporter = Member.builder()
-                .username("reporter")
-                .nickname("reporterNickname")
-                .password("Abcd123!@")
-                .build();
-        Member member = Member.builder()
-                .username("member")
-                .nickname("memberNickname")
-                .password("Abcd123!@")
-                .build();
-
-        return Stream.of(
-                Arguments.of(reporter, reporter, true),
-                Arguments.of(reporter, member, false)
-        );
+                .reporter(member)
+                .reportMessage("신고")
+                .build())
+                .isInstanceOf(AlreadyReportPostException.class);
     }
 }

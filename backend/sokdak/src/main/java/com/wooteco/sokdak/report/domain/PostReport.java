@@ -48,6 +48,14 @@ public class PostReport {
         this.post = post;
         this.reporter = reporter;
         this.reportMessage = new ReportMessage(reportMessage);
+        addPost();
+    }
+
+    public boolean isSameReporter(PostReport other) {
+        return this.reporter.equals(other.reporter);
+    }
+
+    private void addPost() {
         this.post.addReport(this);
     }
 
@@ -69,10 +77,5 @@ public class PostReport {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    public boolean isOwner(Member other) {
-        // TODO: Member의 equals, hashCode에서 id가 아닌 username을 이용하도록 수정해야 됨.
-        return this.reporter.getUsername().equals(other.getUsername());
     }
 }

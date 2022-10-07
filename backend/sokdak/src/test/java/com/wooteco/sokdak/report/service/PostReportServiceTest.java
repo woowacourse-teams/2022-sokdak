@@ -62,11 +62,11 @@ class PostReportServiceTest extends ServiceTest {
     @DisplayName("글 신고 기능")
     @Test
     void reportPost() {
-        int reportCountBeforeReport = post.getPostReports().size();
+        int reportCountBeforeReport = postReportRepository.countByPostId(post.getId());
 
         postReportService
                 .reportPost(post.getId(), REPORT_REQUEST, new AuthInfo(member.getId(), USER.getName(), "nickname"));
-        int reportCountAfterReport = post.getPostReports().size();
+        int reportCountAfterReport = postReportRepository.countByPostId(post.getId());
 
         assertThat(reportCountBeforeReport + 1).isEqualTo(reportCountAfterReport);
     }

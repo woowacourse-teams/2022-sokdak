@@ -11,7 +11,6 @@ import com.wooteco.sokdak.notification.service.NotificationService;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.report.domain.CommentReport;
 import com.wooteco.sokdak.report.dto.ReportRequest;
-import com.wooteco.sokdak.report.exception.AlreadyReportCommentException;
 import com.wooteco.sokdak.report.repository.CommentReportRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class CommentReportService {
+
+    private static final int BLOCKED_CONDITION = 5;
 
     private final CommentReportRepository commentReportRepository;
     private final CommentRepository commentRepository;
@@ -39,28 +40,19 @@ public class CommentReportService {
                 .orElseThrow(CommentNotFoundException::new);
         Member reporter = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
-        checkMemberAlreadyReport(comment, reporter);
-        CommentReport commentReport = createCommentReport(comment, reporter, reportRequest.getMessage());
+
+        CommentReport commentReport = CommentReport.builder()
+                .comment(comment)
+                .reporter(reporter)
+                .reportMessage(reportRequest.getMessage())
+                .build();
         commentReportRepository.save(commentReport);
         notifyReportIfOverBlockCondition(comment);
     }
 
-    private CommentReport createCommentReport(Comment comment, Member reporter, String message) {
-        return CommentReport.builder()
-                .comment(comment)
-                .reporter(reporter)
-                .reportMessage(message)
-                .build();
-    }
-
-    private void checkMemberAlreadyReport(Comment comment, Member member) {
-        if (comment.hasReportByMember(member)) {
-            throw new AlreadyReportCommentException();
-        }
-    }
-
     private void notifyReportIfOverBlockCondition(Comment comment) {
-        if (comment.isBlocked()) {
+        int reportCount = commentReportRepository.countByCommentId(comment.getId());
+        if (reportCount == BLOCKED_CONDITION) {
             Post post = comment.getPost();
             notificationService.notifyCommentReport(post, comment);
         }

@@ -7,6 +7,7 @@ import com.wooteco.sokdak.hashtag.domain.PostHashtag;
 import com.wooteco.sokdak.like.domain.PostLike;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.report.domain.PostReport;
+import com.wooteco.sokdak.report.exception.AlreadyReportPostException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -128,16 +129,17 @@ public class Post {
     }
 
     public void addReport(PostReport other) {
+        postReports.stream()
+                .filter(other::isSameReporter)
+                .findAny()
+                .ifPresent(it -> {
+                    throw new AlreadyReportPostException();
+                });
         postReports.add(other);
     }
 
     public boolean isAnonymous() {
         return !getNickname().equals(member.getNickname());
-    }
-
-    public boolean hasReportByMember(Member reporter) {
-        return postReports.stream()
-                .anyMatch(report -> report.isOwner(reporter));
     }
 
     public Long getId() {
@@ -201,9 +203,5 @@ public class Post {
 
     public String getImageName() {
         return imageName;
-    }
-
-    public void deleteAllReports() {
-        postReports = new ArrayList<>();
     }
 }

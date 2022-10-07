@@ -137,35 +137,4 @@ class CommentTest {
                 Arguments.of(member2, false)
         );
     }
-
-    @DisplayName("특정 멤버가 신고를 이미 했으면 true를, 안했으면 false를 반환한다.")
-    @ParameterizedTest
-    @MethodSource("hasReportByMemberArguments")
-    void hasReportByMember(Member reporter, Member member, boolean expected) {
-        CommentReport commentReport = CommentReport.builder()
-                .comment(comment)
-                .reporter(reporter)
-                .reportMessage("report")
-                .build();
-        comment.addReport(commentReport);
-
-        assertThat(comment.hasReportByMember(member)).isEqualTo(expected);
-    }
-
-    static Stream<Arguments> hasReportByMemberArguments() {
-        Member reporter = Member.builder()
-                .username("reporter")
-                .nickname("reporterNickname")
-                .password("Abcd123!@")
-                .build();
-        Member member = Member.builder()
-                .username("member")
-                .nickname("memberNickname")
-                .password("Abcd123!@")
-                .build();
-        return Stream.of(
-                Arguments.of(reporter, reporter, true),
-                Arguments.of(reporter, member, false)
-        );
-    }
 }

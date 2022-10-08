@@ -74,6 +74,9 @@ public class DatabaseCleaner implements InitializingBean {
         entityManager.createNativeQuery(
                 "insert into member (username, nickname, password, role_type) values ('cc74da4ce54e8fb6d80c7768c0268090f537838a5535d0ceef9d2ff3fd4f5978', 'dongkeyNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'USER');")
                 .executeUpdate();
+        entityManager.createNativeQuery(
+                        "insert into member (username, nickname, password, role_type) values ('42aef2f386567bd5a6a3c753ad0b0debc280a3b6231c084618992fc4c91b7644', 'applicantNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'APPLICANT');")
+                .executeUpdate();
 
         //티켓 추가
         entityManager.createNativeQuery(

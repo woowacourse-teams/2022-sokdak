@@ -43,6 +43,10 @@ public class MemberFixture {
         return getToken("chris");
     }
 
+    public static String getApplicantToken() {
+        return getToken("applicant");
+    }
+
     public static String getToken(String username) {
         LoginRequest loginRequest = new LoginRequest(username, "Abcd123!@");
         return httpPost(loginRequest, "/login").header(AUTHORIZATION);

@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.auth.service;
 
+import static com.wooteco.sokdak.util.fixture.MemberFixture.APPLICANT_LOGIN_REQUEST;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.INVALID_LOGIN_REQUEST;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_LOGIN_REQUEST;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -7,6 +8,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.doReturn;
 
+import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.ticket.domain.AuthCode;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.exception.LoginFailedException;
@@ -34,6 +36,14 @@ class AuthServiceTest extends ServiceTest {
         AuthInfo authInfo = authService.login(VALID_LOGIN_REQUEST);
 
         assertThat(authInfo.getId()).isNotNull();
+    }
+
+    @DisplayName("지원자 아이디로 로그인")
+    @Test
+    void login_Applicant() {
+        AuthInfo authInfo = authService.login(APPLICANT_LOGIN_REQUEST);
+
+        assertThat(authInfo.getRole()).isEqualTo(RoleType.APPLICANT.getName());
     }
 
     @DisplayName("존재하지 않는 회원정보로 로그인 시 예외 발생")

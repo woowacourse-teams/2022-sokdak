@@ -64,11 +64,8 @@ public class MemberService {
     public void signUpAsApplicant(SignupRequest signupRequest) {
         validateForApplicant(signupRequest);
 
-        Member member = Member.builder()
-                .username(signupRequest.getUsername())
-                .password(signupRequest.getPassword())
-                .nickname(signupRequest.getNickname())
-                .build();
+        Member member = Member.applicant(signupRequest.getUsername(), signupRequest.getPassword(),
+                signupRequest.getNickname());
         memberRepository.save(member);
     }
 

@@ -42,6 +42,12 @@ public class Member {
         this.nickname = new Nickname(nickname);
     }
 
+    public static Member applicant(String username, String password, String nickname) {
+        Member member = new Member(null, username, password, nickname);
+        member.roleType = RoleType.APPLICANT;
+        return member;
+    }
+
     public void updateNickname(Nickname nickname) {
         this.nickname = nickname;
     }

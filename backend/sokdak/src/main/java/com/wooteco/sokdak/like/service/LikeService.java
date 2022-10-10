@@ -18,7 +18,6 @@ import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -90,25 +89,27 @@ public class LikeService {
     @Transactional
     public LikeFlipResponse flipCommentLike(Long commentId, AuthInfo authInfo, LikeFlipRequest likeFlipRequest) {
         authService.checkAuthority(authInfo, likeFlipRequest.getBoardId());
-        Member member = memberRepository.findById(authInfo.getId())
-                .orElseThrow(MemberNotFoundException::new);
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
 
-        flipCommentLike(member, comment);
-        int likeCount = commentLikeRepository.countByCommentId(comment.getId());
-        boolean liked = commentLikeRepository.existsByMemberIdAndCommentId(member.getId(), comment.getId());
+        flipCommentLike(authInfo.getId(), comment);
+        int likeCount = comment.getCommentLikesCount();
+        boolean liked = comment.hasLikeOfMember(authInfo.getId());
 
         return new LikeFlipResponse(likeCount, liked);
     }
 
-    private void flipCommentLike(Member member, Comment comment) {
-        Optional<CommentLike> foundCommentLike = commentLikeRepository.findByMemberIdAndCommentId(member.getId(),
-                comment.getId());
-        if (foundCommentLike.isPresent()) {
-            commentLikeRepository.delete(foundCommentLike.get());
+    private void flipCommentLike(Long memberId, Comment comment) {
+        if (comment.hasLikeOfMember(memberId)) {
+            comment.deleteLikeOfMember(memberId);
             return;
         }
+        addNewCommentLike(memberId, comment);
+    }
+
+    private void addNewCommentLike(Long memberId, Comment comment) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
         CommentLike commentLike = CommentLike.builder()
                 .member(member)
                 .comment(comment)

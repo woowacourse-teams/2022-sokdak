@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
+import com.wooteco.sokdak.like.domain.CommentLike;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.report.domain.CommentReport;
@@ -167,5 +168,19 @@ class CommentTest {
                 Arguments.of(reporter, reporter, true),
                 Arguments.of(reporter, member, false)
         );
+    }
+
+    @DisplayName("특정 멤버가 누른 좋아요가 있는지 반환한다.")
+    @ParameterizedTest
+    @CsvSource({"1, true", "2, false"})
+    void hasLikeOfMember(Long memberId, boolean expected) {
+        CommentLike.builder()
+                .member(member)
+                .comment(comment)
+                .build();
+
+        boolean actual = comment.hasLikeOfMember(memberId);
+
+        assertThat(actual).isEqualTo(expected);
     }
 }

@@ -2,10 +2,10 @@ package com.wooteco.sokdak.comment.domain;
 
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.like.domain.CommentLike;
+import com.wooteco.sokdak.like.exception.CommentLikeNotFoundException;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.report.domain.CommentReport;
-import com.wooteco.sokdak.report.exception.AlreadyReportCommentException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -162,10 +162,6 @@ public class Comment {
         return commentReports;
     }
 
-    public List<CommentLike> getCommentLikes() {
-        return commentLikes;
-    }
-
     public int getCommentLikesCount() {
         return commentLikes.size();
     }
@@ -188,5 +184,22 @@ public class Comment {
 
     public boolean hasNoReply() {
         return children.isEmpty();
+    }
+
+    public boolean hasLikeOfMember(Long memberId) {
+        return commentLikes.stream()
+                .anyMatch(commentLike -> commentLike.isLikeOf(memberId));
+    }
+
+    public void addCommentLike(CommentLike commentLike) {
+        commentLikes.add(commentLike);
+    }
+
+    public void deleteLikeOfMember(Long memberId) {
+        CommentLike commentLike = commentLikes.stream()
+                .filter(it -> it.isLikeOf(memberId))
+                .findAny()
+                .orElseThrow(CommentLikeNotFoundException::new);
+        commentLikes.remove(commentLike);
     }
 }

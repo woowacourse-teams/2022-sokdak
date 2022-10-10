@@ -20,6 +20,8 @@ import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.util.ServiceTest;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +32,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 class LikeServiceTest extends ServiceTest {
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     private LikeService likeService;
@@ -60,6 +65,7 @@ class LikeServiceTest extends ServiceTest {
         commentRepository.save(comment);
         reply = Comment.child(member, post, "닉네임2", "대댓글", comment);
         commentRepository.save(reply);
+        entityManager.clear();
     }
 
     @DisplayName("게시글 좋아요 등록")

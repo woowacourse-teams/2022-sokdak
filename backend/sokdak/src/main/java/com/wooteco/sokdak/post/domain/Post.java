@@ -5,12 +5,12 @@ import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.hashtag.domain.PostHashtag;
 import com.wooteco.sokdak.like.domain.PostLike;
+import com.wooteco.sokdak.like.exception.PostLikeNotFoundException;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.report.domain.PostReport;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import com.wooteco.sokdak.board.domain.Board;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -149,6 +149,11 @@ public class Post {
         return content.getValue();
     }
 
+    public boolean hasLikeOfMember(Long memberId) {
+        return postLikes.stream()
+                .anyMatch(postLike -> postLike.isLikeOf(memberId));
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -204,5 +209,17 @@ public class Post {
 
     public void deleteAllReports() {
         postReports = new ArrayList<>();
+    }
+
+    public void addPostLike(PostLike postLike) {
+        postLikes.add(postLike);
+    }
+
+    public void deleteLikeOfMember(Long memberId) {
+        PostLike postLike = postLikes.stream()
+                .filter(it -> it.isLikeOf(memberId))
+                .findAny()
+                .orElseThrow(PostLikeNotFoundException::new);
+        postLikes.remove(postLike);
     }
 }

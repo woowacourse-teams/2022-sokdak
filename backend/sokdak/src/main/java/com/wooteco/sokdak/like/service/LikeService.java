@@ -52,25 +52,28 @@ public class LikeService {
     @Transactional
     public LikeFlipResponse flipPostLike(Long postId, AuthInfo authInfo, LikeFlipRequest likeFlipRequest) {
         authService.checkAuthority(authInfo, likeFlipRequest.getBoardId());
-        Member member = memberRepository.findById(authInfo.getId())
-                .orElseThrow(MemberNotFoundException::new);
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
-        flipPostLike(member, post);
-        int likeCount = postLikeRepository.countByPost(post);
-        boolean liked = postLikeRepository.existsByMemberIdAndPostId(member.getId(), post.getId());
+        flipPostLike(authInfo.getId(), post);
+        int likeCount = post.getLikeCount();
+        boolean liked = post.hasLikeOfMember(authInfo.getId());
 
         checkSpecialAndSave(likeCount, post);
         return new LikeFlipResponse(likeCount, liked);
     }
 
-    private void flipPostLike(Member member, Post post) {
-        Optional<PostLike> foundLike = postLikeRepository.findByMemberAndPost(member, post);
-        if (foundLike.isPresent()) {
-            postLikeRepository.delete(foundLike.get());
+    private void flipPostLike(Long memberId, Post post) {
+        if (post.hasLikeOfMember(memberId)) {
+            post.deleteLikeOfMember(memberId);
             return;
         }
+        addNewPostLike(memberId, post);
+    }
+
+    private void addNewPostLike(Long memberId, Post post) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
         PostLike postLike = PostLike.builder()
                 .member(member)
                 .post(post)

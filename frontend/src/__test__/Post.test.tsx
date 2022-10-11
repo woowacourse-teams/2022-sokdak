@@ -86,8 +86,8 @@ describe('게시글 확인 테스트', () => {
   });
 
   test('메인 페이지에서 특정 글을 클릭하면 해당 글 정보를 볼 수 있다.', async () => {
-    const targetElement = await screen.findAllByTestId(postId);
-    fireEvent.click(targetElement[1]);
+    const targetElement = await screen.findByTestId(postId);
+    fireEvent.click(targetElement);
 
     const targetPost = postList.find(post => postId === post.id)!;
 

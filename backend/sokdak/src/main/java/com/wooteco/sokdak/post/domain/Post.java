@@ -54,7 +54,7 @@ public class Post {
 
     private String imageName;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<PostLike> postLikes = new ArrayList<>();
 
     @OneToMany(mappedBy = "post")

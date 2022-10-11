@@ -25,7 +25,9 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     void deleteAllByPost(Post post);
 
-    @Query(value = "SELECT c FROM Comment c LEFT JOIN FETCH c.commentReports cr LEFT JOIN FETCH cr.reporter "
-            + "LEFT JOIN FETCH c.commentLikes WHERE c.id = :commentId")
+    @Query(value = "SELECT c FROM Comment c LEFT JOIN FETCH c.commentReports cr LEFT JOIN FETCH cr.reporter WHERE c.id = :commentId")
     Optional<Comment> findByCommentId(@Param("commentId") Long commentId);
+
+    @Query(value = "SELECT c FROM Comment c LEFT JOIN FETCH c.commentLikes cl LEFT JOIN FETCH cl.member WHERE c.id = :id")
+    Optional<Comment> findByIdForCommentLike(Long id);
 }

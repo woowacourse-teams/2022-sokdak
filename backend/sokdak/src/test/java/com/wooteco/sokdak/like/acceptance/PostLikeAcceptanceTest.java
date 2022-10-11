@@ -2,6 +2,7 @@ package com.wooteco.sokdak.like.acceptance;
 
 import static com.wooteco.sokdak.util.fixture.BoardFixture.*;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.addNewCommentInPost;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getToken;
@@ -9,12 +10,15 @@ import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.wooteco.sokdak.comment.dto.CommentResponse;
+import com.wooteco.sokdak.comment.dto.CommentsResponse;
 import com.wooteco.sokdak.like.dto.LikeFlipRequest;
 import com.wooteco.sokdak.like.dto.LikeFlipResponse;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import com.wooteco.sokdak.util.fixture.BoardFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -89,16 +93,32 @@ class PostLikeAcceptanceTest extends AcceptanceTest {
         Long commentId = addNewCommentInPost(postId);
         String joshToken = getToken("josh");
         httpPutWithAuthorization(new LikeFlipRequest(FREE_BOARD_ID), "/comments/" + commentId + "/like", joshToken);
+        httpPutWithAuthorization("/comments/" + commentId + "/like", joshToken);
+        String hunchToken = getToken("hunch");
+        httpPutWithAuthorization("/comments/" + commentId + "/like", hunchToken);
+        String thorToken = getToken("thor");
+        httpPutWithAuthorization("/comments/" + commentId + "/like", thorToken);
+        String eastToken = getToken("east");
+        httpPutWithAuthorization("/comments/" + commentId + "/like", eastToken);
 
         ExtractableResponse<Response> response =
                 httpPutWithAuthorization(new LikeFlipRequest(FREE_BOARD_ID), "/comments/" + commentId + "/like", joshToken);
         LikeFlipResponse likeFlipResponse = response.jsonPath()
                 .getObject(".", LikeFlipResponse.class);
 
+        ExtractableResponse<Response> response1 = httpGetWithAuthorization("/posts/" + postId + "/comments", joshToken);
+        List<CommentResponse> comments = response1.jsonPath()
+                .getObject(".", CommentsResponse.class)
+                .getComments();
+
+        boolean like = comments.stream()
+                .anyMatch(CommentResponse::isLike);
+
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(likeFlipResponse.isLike()).isFalse(),
-                () -> assertThat(likeFlipResponse.getLikeCount()).isZero()
+                () -> assertThat(likeFlipResponse.getLikeCount()).isEqualTo(3),
+                () -> assertThat(like).isFalse()
         );
     }
 

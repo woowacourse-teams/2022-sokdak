@@ -17,9 +17,9 @@ public class CommentFixture {
     public static final NewCommentRequest ANONYMOUS_COMMENT_REQUEST
             = new NewCommentRequest(FREE_BOARD_ID, VALID_COMMENT_MESSAGE, true);
     public static final NewReplyRequest NON_ANONYMOUS_REPLY_REQUEST =
-            new NewReplyRequest(VALID_REPLY_COMMENT, false);
+            new NewReplyRequest(FREE_BOARD_ID, VALID_REPLY_COMMENT, false);
     public static final NewReplyRequest ANONYMOUS_REPLY_REQUEST =
-            new NewReplyRequest(VALID_REPLY_COMMENT, true);
+            new NewReplyRequest(FREE_BOARD_ID, VALID_REPLY_COMMENT, true);
 
     public static Long addNewCommentInPost(Long postId) {
         return Long.parseLong(

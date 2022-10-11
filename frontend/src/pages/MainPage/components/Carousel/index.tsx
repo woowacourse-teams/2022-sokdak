@@ -14,7 +14,7 @@ import useCarousel from './useCarousel';
 
 const Carousel = () => {
   const [page, setPage] = useState(0);
-  const { data } = useHotPosts({ storeCode: [10], options: { suspense: true } });
+  const { data } = useHotPosts({ storeCode: [10], options: { suspense: true, staleTime: 1000 * 40 } });
   const navigate = useNavigate();
 
   const { ref, isEnd, setIsEnd } = useCarousel();

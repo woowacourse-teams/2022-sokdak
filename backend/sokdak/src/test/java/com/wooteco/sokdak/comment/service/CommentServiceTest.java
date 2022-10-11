@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.comment.service;
 
 import static com.wooteco.sokdak.member.domain.RoleType.USER;
+import static com.wooteco.sokdak.util.fixture.BoardFixture.*;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.ANONYMOUS_COMMENT_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.ANONYMOUS_REPLY_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NON_ANONYMOUS_COMMENT_REQUEST;
@@ -26,6 +27,7 @@ import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.util.ServiceTest;
+import com.wooteco.sokdak.util.fixture.BoardFixture;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -234,7 +236,7 @@ class CommentServiceTest extends ServiceTest {
                 .content("본문")
                 .build();
         postRepository.save(otherPost);
-        NewCommentRequest newCommentRequestToOtherPost = new NewCommentRequest("다른 게시글의 댓글", true);
+        NewCommentRequest newCommentRequestToOtherPost = new NewCommentRequest(FREE_BOARD_ID, "다른 게시글의 댓글", true);
         commentService.addComment(anonymousPost.getId(), ANONYMOUS_COMMENT_REQUEST, AUTH_INFO);
         commentService.addComment(otherPost.getId(), newCommentRequestToOtherPost, AUTH_INFO);
 

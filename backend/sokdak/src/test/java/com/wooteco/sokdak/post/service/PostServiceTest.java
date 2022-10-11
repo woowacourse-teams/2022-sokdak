@@ -283,7 +283,7 @@ class PostServiceTest extends ServiceTest {
     @Test
     void deletePostWithComment() {
         postRepository.save(post);
-        NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
+        NewCommentRequest newCommentRequest = new NewCommentRequest(FREE_BOARD_ID, "댓글", true);
         commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
 
         postService.deletePost(post.getId(), AUTH_INFO);

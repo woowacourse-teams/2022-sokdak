@@ -91,7 +91,7 @@ class PostServiceTest extends ServiceTest {
         Hashtag tag = Hashtag.builder()
                 .name(tagName)
                 .build();
-        NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", true, List.of(tagName));
+        NewPostRequest newPostRequest = new NewPostRequest(FREE_BOARD_ID, "제목", "본문", true, List.of(tagName));
 
         Long postId = postService.addPost(FREE_BOARD_ID, newPostRequest, AUTH_INFO);
         Post actual = postRepository.findById(postId).orElseThrow();
@@ -113,7 +113,7 @@ class PostServiceTest extends ServiceTest {
     @DisplayName("특정 게시판에 기명으로 글 작성 기능")
     @Test
     void addPost_Identified() {
-        NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", false, Collections.emptyList());
+        NewPostRequest newPostRequest = new NewPostRequest(FREE_BOARD_ID, "제목", "본문", false, Collections.emptyList());
 
         Long postId = postService.addPost(FREE_BOARD_ID, newPostRequest, AUTH_INFO);
         Post actual = postRepository.findById(postId).orElseThrow();
@@ -232,11 +232,11 @@ class PostServiceTest extends ServiceTest {
     @DisplayName("특정 게시판 게시글 목록 조회 기능")
     @Test
     void findPostsByBoard() {
-        postService.addPost(board.getId(), new NewPostRequest("제목1", "본문1", false, new ArrayList<>()),
+        postService.addPost(board.getId(), new NewPostRequest(FREE_BOARD_ID, "제목1", "본문1", false, new ArrayList<>()),
                 new AuthInfo(1L, USER.getName(), "nickname"));
-        postService.addPost(board.getId(), new NewPostRequest("제목2", "본문2", false, new ArrayList<>()),
+        postService.addPost(board.getId(), new NewPostRequest(FREE_BOARD_ID, "제목2", "본문2", false, new ArrayList<>()),
                 new AuthInfo(1L, USER.getName(), "nickname"));
-        postService.addPost(board.getId(), new NewPostRequest("제목3", "본문3", false, new ArrayList<>()),
+        postService.addPost(board.getId(), new NewPostRequest(FREE_BOARD_ID, "제목3", "본문3", false, new ArrayList<>()),
                 new AuthInfo(1L, USER.getName(), "nickname"));
 
         Pageable pageable = PageRequest.of(0, 2, DESC, "createdAt");

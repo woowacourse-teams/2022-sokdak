@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.post.acceptance;
 
+import static com.wooteco.sokdak.util.fixture.BoardFixture.*;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getExceptionMessage;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
@@ -28,6 +29,7 @@ import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
+import com.wooteco.sokdak.util.fixture.BoardFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Collections;
@@ -64,8 +66,8 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void findPosts() {
         String token = getChrisToken();
-        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", false, Collections.emptyList());
-        NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", false, Collections.emptyList());
+        NewPostRequest postRequest2 = new NewPostRequest(FREE_BOARD_ID, "제목2", "본문2", false, Collections.emptyList());
+        NewPostRequest postRequest3 = new NewPostRequest(FREE_BOARD_ID, "제목3", "본문3", false, Collections.emptyList());
         httpPostWithAuthorization(NEW_POST_REQUEST, FREE_BOARD_POST_URI, token);
         httpPostWithAuthorization(postRequest2, FREE_BOARD_POST_URI, token);
         httpPostWithAuthorization(postRequest3, FREE_BOARD_POST_URI, token);
@@ -84,9 +86,9 @@ class PostAcceptanceTest extends AcceptanceTest {
     @Test
     void findPostsInBoard() {
         String token = getChrisToken();
-        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", false, Collections.emptyList());
-        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", false, Collections.emptyList());
-        NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", false, Collections.emptyList());
+        NewPostRequest postRequest1 = new NewPostRequest(FREE_BOARD_ID, "제목1", "본문1", false, Collections.emptyList());
+        NewPostRequest postRequest2 = new NewPostRequest(FREE_BOARD_ID, "제목2", "본문2", false, Collections.emptyList());
+        NewPostRequest postRequest3 = new NewPostRequest(FREE_BOARD_ID, "제목3", "본문3", false, Collections.emptyList());
         httpPostWithAuthorization(postRequest1, FREE_BOARD_POST_URI, token);
         httpPostWithAuthorization(postRequest2, FREE_BOARD_POST_URI, token);
         httpPostWithAuthorization(postRequest3, "/boards/3/posts", token);
@@ -182,7 +184,7 @@ class PostAcceptanceTest extends AcceptanceTest {
     @DisplayName("익명으로 작성된 게시글 조회할 수 있다.")
     @Test
     void findPost_Anonymous() {
-        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT, true,
+        NewPostRequest newPostRequest = new NewPostRequest(FREE_BOARD_ID, VALID_POST_TITLE, VALID_POST_CONTENT, true,
                 Collections.emptyList());
         String postId = parsePostId(
                 httpPostWithAuthorization(newPostRequest, FREE_BOARD_POST_URI, getChrisToken()));
@@ -202,7 +204,7 @@ class PostAcceptanceTest extends AcceptanceTest {
     @DisplayName("게시글 제목이 없는 경우 글 작성을 할 수 없다.")
     @Test
     void addPost_Exception_NoTitle() {
-        NewPostRequest newPostRequestWithoutTitle = new NewPostRequest(null, VALID_POST_CONTENT,
+        NewPostRequest newPostRequestWithoutTitle = new NewPostRequest(FREE_BOARD_ID, null, VALID_POST_CONTENT,
                 false, Collections.emptyList());
         ExtractableResponse<Response> response =
                 httpPostWithAuthorization(newPostRequestWithoutTitle, FREE_BOARD_POST_URI, getChrisToken());

@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.hashtag.service;
 
+import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -22,6 +23,7 @@ import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.post.service.PostService;
 import com.wooteco.sokdak.util.ServiceTest;
+import com.wooteco.sokdak.util.fixture.BoardFixture;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -88,7 +90,7 @@ class HashtagServiceTest extends ServiceTest {
     @DisplayName("해시태그가 포함된 게시글 작성 기능")
     @Test
     void addPostWithHashtag() {
-        NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", false, List.of("태그1", "태그2"));
+        NewPostRequest newPostRequest = new NewPostRequest(FREE_BOARD_ID, "제목", "본문", false, List.of("태그1", "태그2"));
 
         Long postId = postService.addPost(WRITABLE_BOARD_ID, newPostRequest, AUTH_INFO);
 
@@ -233,7 +235,7 @@ class HashtagServiceTest extends ServiceTest {
     }
 
     private Long savePostWithHashtags(Post post, List<Hashtag> tags) {
-        NewPostRequest newPostRequest = new NewPostRequest(
+        NewPostRequest newPostRequest = new NewPostRequest(FREE_BOARD_ID,
                 post.getTitle(), post.getContent(), false, new Hashtags(tags).getNames());
         return postService.addPost(WRITABLE_BOARD_ID, newPostRequest, AUTH_INFO);
     }

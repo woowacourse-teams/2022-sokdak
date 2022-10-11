@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.post.controller;
 
+import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.PostFixture.UPDATED_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.UPDATED_POST_TITLE;
 import static org.mockito.ArgumentMatchers.any;
@@ -35,7 +36,7 @@ import org.springframework.restdocs.RestDocumentationExtension;
 class PostControllerTest extends ControllerTest {
 
     private static final NewPostRequest NEW_POST_REQUEST =
-            new NewPostRequest("제목", "본문", false, List.of("태그1", "태그2"));
+            new NewPostRequest(FREE_BOARD_ID, "제목", "본문", false, List.of("태그1", "태그2"));
     private static final int WRONG_PAGE = 99;
     private static final PostsElementResponse POSTS_ELEMENT_RESPONSE_1 = PostsElementResponse.builder()
             .id(1L)
@@ -72,7 +73,7 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("게시글 제목이 없는 경우 400을 반환한다.")
     @Test
     void addPost_Exception_NoTitle() {
-        NewPostRequest postRequest = new NewPostRequest(null, "본문", false, Collections.emptyList());
+        NewPostRequest postRequest = new NewPostRequest(FREE_BOARD_ID, null, "본문", false, Collections.emptyList());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -87,7 +88,7 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("게시글 내용이 없는 경우 400을 반환한다.")
     @Test
     void addPost_Exception_NoContent() {
-        NewPostRequest postRequest = new NewPostRequest("제목", null, false, Collections.emptyList());
+        NewPostRequest postRequest = new NewPostRequest(FREE_BOARD_ID, "제목", null, false, Collections.emptyList());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

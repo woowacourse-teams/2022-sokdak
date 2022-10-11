@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.report.acceptance;
 
+import static com.wooteco.sokdak.util.fixture.BoardFixture.*;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
@@ -7,6 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
+import com.wooteco.sokdak.util.fixture.BoardFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +18,7 @@ import org.springframework.http.HttpStatus;
 @DisplayName("게시글 신고 관련 인수테스트")
 class PostReportAcceptanceTest extends AcceptanceTest {
 
-    private static final ReportRequest REPORT_REQUEST = new ReportRequest("나쁜글");
+    private static final ReportRequest REPORT_REQUEST = new ReportRequest(FREE_BOARD_ID, "나쁜글");
 
     @DisplayName("게시글을 신고할 수 있다.")
     @Test

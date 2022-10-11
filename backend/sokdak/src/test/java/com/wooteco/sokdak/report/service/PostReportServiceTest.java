@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.report.service;
 
 import static com.wooteco.sokdak.member.domain.RoleType.USER;
+import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
@@ -19,6 +20,7 @@ import com.wooteco.sokdak.report.exception.AlreadyReportPostException;
 import com.wooteco.sokdak.report.exception.InvalidReportMessageException;
 import com.wooteco.sokdak.report.repository.PostReportRepository;
 import com.wooteco.sokdak.util.ServiceTest;
+import com.wooteco.sokdak.util.fixture.BoardFixture;
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 class PostReportServiceTest extends ServiceTest {
 
-    private static final ReportRequest REPORT_REQUEST = new ReportRequest("나쁜글");
+    private static final ReportRequest REPORT_REQUEST = new ReportRequest(FREE_BOARD_ID, "나쁜글");
 
     @Autowired
     private PostRepository postRepository;
@@ -86,7 +88,7 @@ class PostReportServiceTest extends ServiceTest {
     @DisplayName("신고내용 없이 신고하면 예외발생")
     @Test
     void reportPost_Exception_No_Content() {
-        ReportRequest invalidReportRequest = new ReportRequest("  ");
+        ReportRequest invalidReportRequest = new ReportRequest(FREE_BOARD_ID, "  ");
 
         assertThatThrownBy(
                 () -> postReportService.reportPost(post.getId(), invalidReportRequest,

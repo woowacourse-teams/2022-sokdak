@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.notification.acceptance;
 
+import static com.wooteco.sokdak.util.fixture.BoardFixture.*;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NON_ANONYMOUS_COMMENT_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NON_ANONYMOUS_REPLY_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.addNewCommentInPost;
@@ -23,6 +24,7 @@ import com.wooteco.sokdak.notification.dto.NotificationResponse;
 import com.wooteco.sokdak.notification.dto.NotificationsResponse;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
+import com.wooteco.sokdak.util.fixture.BoardFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -112,7 +114,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         Long postId = addNewPost();
         List<String> reporterTokens = getTokens();
         for (int i = 0; i < 5; ++i) {
-            ReportRequest reportRequest = new ReportRequest("신고");
+            ReportRequest reportRequest = new ReportRequest(FREE_BOARD_ID, "신고");
             httpPostWithAuthorization(reportRequest, "/posts/" + postId + "/report", reporterTokens.get(i));
         }
 
@@ -135,7 +137,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         Long commentId = addNewCommentInPost(postId);
         List<String> reporterTokens = getTokens();
         for (int i = 0; i < 5; ++i) {
-            ReportRequest reportRequest = new ReportRequest("댓글신고");
+            ReportRequest reportRequest = new ReportRequest(FREE_BOARD_ID, "댓글신고");
             httpPostWithAuthorization(reportRequest, "/comments/" + commentId + "/report", reporterTokens.get(i));
         }
 

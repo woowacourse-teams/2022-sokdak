@@ -20,7 +20,7 @@ import org.springframework.http.HttpStatus;
 @DisplayName("댓글 신고 관련 인수테스트")
 class CommentReportAcceptanceTest extends AcceptanceTest {
 
-    private static final ReportRequest REPORT_REQUEST = new ReportRequest("나쁜댓글");
+    private static final ReportRequest REPORT_REQUEST = new ReportRequest(FREE_BOARD_ID, "나쁜댓글");
 
     @DisplayName("댓글을 신고할 수 있다.")
     @Test

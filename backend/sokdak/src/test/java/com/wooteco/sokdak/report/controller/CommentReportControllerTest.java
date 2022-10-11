@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.report.controller;
 
+import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -8,6 +9,7 @@ import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.report.exception.AlreadyReportCommentException;
 import com.wooteco.sokdak.report.exception.InvalidReportMessageException;
 import com.wooteco.sokdak.util.ControllerTest;
+import com.wooteco.sokdak.util.fixture.BoardFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +23,7 @@ class CommentReportControllerTest extends ControllerTest {
     @DisplayName("댓글을 신고한다")
     @Test
     void reportComment() {
-        ReportRequest reportRequest = new ReportRequest("나쁜댓글");
+        ReportRequest reportRequest = new ReportRequest(FREE_BOARD_ID, "나쁜댓글");
         doNothing()
                 .when(commentReportService)
                 .reportComment(any(), any(), any());
@@ -38,7 +40,7 @@ class CommentReportControllerTest extends ControllerTest {
     @DisplayName("이미 신고한 댓글을 다시 신고하면 400을 반환한다.")
     @Test
     void reportComment_Exception_AlreadyReport() {
-        ReportRequest reportRequest = new ReportRequest("나쁜댓글");
+        ReportRequest reportRequest = new ReportRequest(FREE_BOARD_ID, "나쁜댓글");
         doThrow(new AlreadyReportCommentException())
                 .when(commentReportService)
                 .reportComment(any(), any(), any());
@@ -55,7 +57,7 @@ class CommentReportControllerTest extends ControllerTest {
     @DisplayName("신고 내용 없이 댓글을 신고하면 400을 반환한다")
     @Test
     void reportPost_Exception_NoContent() {
-        ReportRequest reportRequest = new ReportRequest("  ");
+        ReportRequest reportRequest = new ReportRequest(FREE_BOARD_ID, "  ");
         doThrow(new InvalidReportMessageException())
                 .when(commentReportService)
                 .reportComment(any(), any(), any());

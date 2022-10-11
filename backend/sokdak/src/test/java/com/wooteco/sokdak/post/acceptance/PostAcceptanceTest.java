@@ -109,7 +109,7 @@ class PostAcceptanceTest extends AcceptanceTest {
         addNewPost();
         List<String> tokens = getTokens();
         for (int i = 0; i < 5; ++i) {
-            ReportRequest reportRequest = new ReportRequest("신고");
+            ReportRequest reportRequest = new ReportRequest(FREE_BOARD_ID, "신고");
             httpPostWithAuthorization(reportRequest, "/posts/" + blockedPostId + "/report", tokens.get(i));
         }
 
@@ -134,7 +134,7 @@ class PostAcceptanceTest extends AcceptanceTest {
         Long blockedPostId = addNewPost();
         List<String> tokens = getTokens();
         for (int i = 0; i < 5; ++i) {
-            ReportRequest reportRequest = new ReportRequest("신고");
+            ReportRequest reportRequest = new ReportRequest(FREE_BOARD_ID, "신고");
             httpPostWithAuthorization(reportRequest, "/posts/" + blockedPostId + "/report", tokens.get(i));
         }
 

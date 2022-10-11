@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.config;
 
-import com.wooteco.sokdak.support.ApplicantInterceptor;
 import com.wooteco.sokdak.support.AuthInterceptor;
 import com.wooteco.sokdak.support.token.AuthenticationPrincipalArgumentResolver;
 import com.wooteco.sokdak.support.token.TokenManager;
@@ -19,13 +18,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private static final String ALLOWED_METHOD_NAMES = "GET,HEAD,POST,DELETE,TRACE,OPTIONS,PATCH,PUT";
 
     private final AuthInterceptor authInterceptor;
-    private final ApplicantInterceptor applicantInterceptor;
     private final TokenManager tokenManager;
 
-    public WebMvcConfig(AuthInterceptor authInterceptor,
-                        ApplicantInterceptor applicantInterceptor, TokenManager tokenManager) {
+    public WebMvcConfig(AuthInterceptor authInterceptor, TokenManager tokenManager) {
         this.authInterceptor = authInterceptor;
-        this.applicantInterceptor = applicantInterceptor;
         this.tokenManager = tokenManager;
     }
 
@@ -53,14 +49,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/refresh")
                 .excludePathPatterns("/members/signup/**")
                 .excludePathPatterns("/hashtags/**");
-
-        registry.addInterceptor(applicantInterceptor)
-                .addPathPatterns("/**")
-                .excludePathPatterns("/login")
-                .excludePathPatterns("/refresh")
-                .excludePathPatterns("/logout")
-                .excludePathPatterns("/members/**")
-                .excludePathPatterns("/notifications/**");
     }
 
     @Override

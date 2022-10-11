@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.support;
 
+import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPatchWithAuthorization;
@@ -17,6 +18,7 @@ import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
+import com.wooteco.sokdak.util.fixture.BoardFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.ArrayList;
@@ -107,9 +109,9 @@ class ApplicantInterceptorTest extends AcceptanceTest {
     static Stream<Arguments> makeRequestBody_Post() {
         return Stream.of(
                 Arguments.of(new NewBoardRequest("name"), "/boards"),
-                Arguments.of(new NewCommentRequest("content", true), "/posts/1/comments"),
+                Arguments.of(new NewCommentRequest(FREE_BOARD_ID, "content", true), "/posts/1/comments"),
                 Arguments.of(new NewReplyRequest("content", true), "/comments/1/reply"),
-                Arguments.of(new NewPostRequest("title", "content", true, new ArrayList<>()), "/boards/1/posts"),
+                Arguments.of(new NewPostRequest(FREE_BOARD_ID, "title", "content", true, new ArrayList<>()), "/boards/1/posts"),
                 Arguments.of(new ReportRequest("message"), "/comments/1/report"),
                 Arguments.of(new ReportRequest("message"), "/posts/1/report")
         );

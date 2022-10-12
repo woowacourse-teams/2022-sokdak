@@ -6,24 +6,17 @@ import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_LOGIN_REQUEST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.mockito.Mockito.doReturn;
 
-import com.wooteco.sokdak.member.domain.RoleType;
-import com.wooteco.sokdak.ticket.domain.AuthCode;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.auth.exception.LoginFailedException;
-import com.wooteco.sokdak.member.dto.VerificationRequest;
-import com.wooteco.sokdak.member.exception.InvalidAuthCodeException;
-import com.wooteco.sokdak.member.exception.SerialNumberNotFoundException;
-import com.wooteco.sokdak.member.repository.AuthCodeRepository;
+import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.util.ServiceTest;
-import java.time.Clock;
-import java.time.Instant;
-import java.time.ZoneOffset;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 
 class AuthServiceTest extends ServiceTest {
 
@@ -51,5 +44,22 @@ class AuthServiceTest extends ServiceTest {
     void login_Exception() {
         assertThatThrownBy(() -> authService.login(INVALID_LOGIN_REQUEST))
                 .isInstanceOf(LoginFailedException.class);
+    }
+
+    @DisplayName("지원자 권한으로 사용할 수 없는 기능이면 예외가 발생한다.")
+    @Test
+    void checkAllowedApiToApplicantUser_Exception() {
+        assertThatThrownBy(
+                () -> authService.checkAllowedApiToApplicantUser(
+                        new AuthInfo(1L, RoleType.APPLICANT.getName(), "applicant"), 1L))
+                .isInstanceOf(AuthorizationException.class);
+    }
+
+    @DisplayName("사용할 수 있는 기능이면 예외가 발생하지 않는다.")
+    @ParameterizedTest
+    @CsvSource({"APPLICANT, 5", "USER, 5", "ADMIN, 5"})
+    void checkAllowedApiToApplicantUser(String role, Long boardId) {
+        assertDoesNotThrow(
+                () -> authService.checkAllowedApiToApplicantUser(new AuthInfo(1L, role, "applicant"), boardId));
     }
 }

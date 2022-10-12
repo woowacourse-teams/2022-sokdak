@@ -20,7 +20,7 @@ const useLike = (
     {
       ...options,
       onSuccess: (data, variables, context) => {
-        queryClient.refetchQueries(QUERY_KEYS.POSTS);
+        queryClient.invalidateQueries(QUERY_KEYS.POST);
 
         if (options && options.onSuccess) {
           options.onSuccess(data, variables, context);

@@ -36,12 +36,12 @@ const Carousel = () => {
   return (
     <Styled.Container>
       <Styled.Title>🔥 핫 게시판 🔥</Styled.Title>
+      {page !== 0 ? (
+        <Styled.ArrowLeft width={'30px'} height={'30px'} onClick={handleClickLastPage} />
+      ) : (
+        <Styled.EmptyContainer />
+      )}
       <Styled.CarouselContainer>
-        {page !== 0 ? (
-          <Styled.ArrowLeft width={'30px'} height={'30px'} onClick={handleClickLastPage} />
-        ) : (
-          <Styled.EmptyContainer />
-        )}
         <Styled.PostContainer>
           <Styled.PostListContainer page={page}>
             {data?.posts.map((item, idx) => (
@@ -57,9 +57,8 @@ const Carousel = () => {
             ))}
           </Styled.PostListContainer>
         </Styled.PostContainer>
-
-        {!isEnd && <Styled.ArrowRight width={'30px'} height={'30px'} onClick={handleClickNextPage} />}
       </Styled.CarouselContainer>
+      {!isEnd && <Styled.ArrowRight width={'30px'} height={'30px'} onClick={handleClickNextPage} />}
     </Styled.Container>
   );
 };

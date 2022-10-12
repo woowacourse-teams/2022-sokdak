@@ -60,14 +60,14 @@ export const LoginLink = styled(Link)`
   align-items: center;
   width: 50px;
   height: 20px;
-  font-family: 'BMHANNAPro', 'Noto Sans KR';
+  font-family: 'BMHANNAAir', 'Noto Sans KR';
   font-size: 12px;
-  color: ${props => props.theme.colors.gray_900};
-  border: 1px solid black;
+  color: black;
+  border: 1px solid ${props => props.theme.colors.gray_400};
   border-radius: 8px;
   @media (min-width: 875px) {
     width: 70px;
-    height: 30px;
+    height: 2.2rem;
     border-radius: 20px;
     font-size: 0.9rem;
   }

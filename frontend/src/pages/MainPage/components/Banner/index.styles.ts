@@ -23,10 +23,7 @@ export const PandaContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 150px;
-  height: 150px;
-  border: 1px solid ${props => props.theme.colors.gray_150};
-  border-radius: 50%;
+  width: 115px;
   margin-right: 10px;
 `;
 

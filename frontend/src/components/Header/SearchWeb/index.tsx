@@ -7,8 +7,8 @@ interface SearchWebProps {
 const SearchWeb = ({ onClickSearchIcon }: SearchWebProps) => {
   return (
     <Styled.Search onClick={onClickSearchIcon}>
-      <Styled.SearchImg />
-      검색어를 입력해주세요.
+      <Styled.SearchIcon />
+      <Styled.Placeholder>검색어를 입력해주세요.</Styled.Placeholder>
     </Styled.Search>
   );
 };

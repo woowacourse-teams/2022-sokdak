@@ -1,4 +1,4 @@
-import SearchIcon from '@/assets/images/search.svg';
+import SearchImage from '@/assets/images/search.svg';
 
 import styled from '@emotion/styled';
 
@@ -15,8 +15,14 @@ export const Search = styled.div`
   max-width: 700px;
 `;
 
-export const SearchImg = styled(SearchIcon)`
+export const SearchIcon = styled(SearchImage)`
   cursor: pointer;
-  margin: 8px;
+  margin: 10px 15px;
   overflow: visible;
+`;
+
+export const Placeholder = styled.p`
+  font-size: 0.8rem;
+  color: ${props => props.theme.colors.gray_200};
+  padding-top: 2px;
 `;

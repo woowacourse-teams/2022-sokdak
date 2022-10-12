@@ -60,7 +60,7 @@ export const Input = styled.input`
   padding: 0;
 
   ::placeholder {
-    font-size: 12px;
+    font-size: 0.8rem;
   }
 `;
 

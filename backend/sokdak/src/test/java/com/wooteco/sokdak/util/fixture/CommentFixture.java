@@ -16,6 +16,9 @@ public class CommentFixture {
             = new NewCommentRequest(FREE_BOARD_ID, VALID_COMMENT_MESSAGE, false);
     public static final NewCommentRequest ANONYMOUS_COMMENT_REQUEST
             = new NewCommentRequest(FREE_BOARD_ID, VALID_COMMENT_MESSAGE, true);
+    public static final NewCommentRequest APPLICANT_COMMENT_REQUEST
+            = new NewCommentRequest(APPLICANT_BOARD_ID, VALID_COMMENT_MESSAGE, false);
+
     public static final NewReplyRequest NON_ANONYMOUS_REPLY_REQUEST =
             new NewReplyRequest(FREE_BOARD_ID, VALID_REPLY_COMMENT, false);
     public static final NewReplyRequest ANONYMOUS_REPLY_REQUEST =

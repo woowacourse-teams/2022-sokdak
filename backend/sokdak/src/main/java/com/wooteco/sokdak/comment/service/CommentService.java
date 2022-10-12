@@ -71,6 +71,7 @@ public class CommentService {
 
     @Transactional
     public Long addReply(Long commentId, NewReplyRequest newReplyRequest, AuthInfo authInfo) {
+        authService.checkAllowedApiToApplicantUser(authInfo, newReplyRequest.getBoardId());
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
         Comment parent = commentRepository.findById(commentId)

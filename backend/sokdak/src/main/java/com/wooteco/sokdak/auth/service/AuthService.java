@@ -1,5 +1,7 @@
 package com.wooteco.sokdak.auth.service;
 
+import com.wooteco.sokdak.auth.exception.AuthorizationException;
+import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.ticket.domain.AuthCode;
 import com.wooteco.sokdak.ticket.domain.Ticket;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuthService {
 
+    private static final Long APPLICANT_BOARD_ID = 5L;
     private final MemberRepository memberRepository;
 
     public AuthService(AuthCodeRepository authCodeRepository,
@@ -35,5 +38,15 @@ public class AuthService {
         Member member = memberRepository.findByUsernameValueAndPasswordValue(username, password)
                 .orElseThrow(LoginFailedException::new);
         return new AuthInfo(member.getId(), member.getRoleType().getName(), member.getNickname());
+    }
+
+    public void checkAllowedApiToApplicantUser(AuthInfo authInfo, Long boardId) {
+        if (!RoleType.APPLICANT.getName().equals(authInfo.getRole())) {
+            return;
+        }
+        if (boardId == APPLICANT_BOARD_ID) {
+            return;
+        }
+        throw new AuthorizationException();
     }
 }

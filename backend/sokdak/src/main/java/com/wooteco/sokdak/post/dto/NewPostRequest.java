@@ -7,7 +7,6 @@ import lombok.Getter;
 @Getter
 public class NewPostRequest {
 
-    private Long boardId;
     @NotBlank(message = "제목은 1자 이상 50자 이하여야 합니다.")
     private String title;
     @NotBlank(message = "본문은 1자 이상 5000자 이하여야 합니다.")
@@ -19,8 +18,7 @@ public class NewPostRequest {
     public NewPostRequest() {
     }
 
-    public NewPostRequest(Long boardId, String title, String content, boolean anonymous, List<String> hashtags) {
-        this.boardId = boardId;
+    public NewPostRequest(String title, String content, boolean anonymous, List<String> hashtags) {
         this.title = title;
         this.content = content;
         this.anonymous = anonymous;

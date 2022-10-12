@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.hashtag.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.BoardFixture.*;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getExceptionMessage;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
@@ -21,7 +20,6 @@ import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.util.AcceptanceTest;
-import com.wooteco.sokdak.util.fixture.BoardFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -85,9 +83,9 @@ class HashtagAcceptanceTest extends AcceptanceTest {
     @DisplayName("해시태그로 검색하면 해당 해시태그가 포함된 게시물들을 조회한다.")
     @Test
     void searchWithHashtag() {
-        NewPostRequest postRequest1 = new NewPostRequest(FREE_BOARD_ID, "제목1", "본문1", false, List.of("태그1"));
-        NewPostRequest postRequest2 = new NewPostRequest(FREE_BOARD_ID, "제목2", "본문2", false, List.of("태그2"));
-        NewPostRequest postRequest3 = new NewPostRequest(FREE_BOARD_ID, "제목3", "본문3", false, List.of("태그1", "태그2"));
+        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", false, List.of("태그1"));
+        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", false, List.of("태그2"));
+        NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", false, List.of("태그1", "태그2"));
         httpPostWithAuthorization(postRequest1, FREE_BOARD_POST_URI, getChrisToken());
         httpPostWithAuthorization(postRequest2, FREE_BOARD_POST_URI, getChrisToken());
         httpPostWithAuthorization(postRequest3, FREE_BOARD_POST_URI, getChrisToken());
@@ -105,7 +103,7 @@ class HashtagAcceptanceTest extends AcceptanceTest {
     @DisplayName("없는 해시태그로 조회할 수 없다.")
     @Test
     void searchWithHashtag_Exception_NoHashtag() {
-        NewPostRequest postRequest1 = new NewPostRequest(FREE_BOARD_ID, "제목1", "본문1", false, List.of("태그1"));
+        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", false, List.of("태그1"));
         httpPostWithAuthorization(postRequest1, "/posts", getChrisToken());
 
         ExtractableResponse<Response> response = httpGet("/posts?hashtag=없는태그&size=3&page=0");
@@ -119,8 +117,8 @@ class HashtagAcceptanceTest extends AcceptanceTest {
     @DisplayName("특정 키워드로 검색하면 이름에 해당 키워드가 포함된 해시태그들을 조회한다.")
     @Test
     void searchHashtagsWithName() {
-        NewPostRequest postRequest1 = new NewPostRequest(FREE_BOARD_ID, "제목1", "본문1", false, List.of("태그1", "태그2"));
-        NewPostRequest postRequest2 = new NewPostRequest(FREE_BOARD_ID, "제목2", "본문2", false, List.of("태그2"));
+        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", false, List.of("태그1", "태그2"));
+        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", false, List.of("태그2"));
         httpPostWithAuthorization(postRequest1, FREE_BOARD_POST_URI, getChrisToken());
         httpPostWithAuthorization(postRequest2, FREE_BOARD_POST_URI, getChrisToken());
 
@@ -144,8 +142,8 @@ class HashtagAcceptanceTest extends AcceptanceTest {
     @DisplayName("빈 키워드로 검색하면 모든 해시태그들을 조회한다.")
     @Test
     void searchHashtagsWithName_NoKeyword() {
-        NewPostRequest postRequest1 = new NewPostRequest(FREE_BOARD_ID, "제목1", "본문1", false, List.of("태그1", "태그2"));
-        NewPostRequest postRequest2 = new NewPostRequest(FREE_BOARD_ID, "제목2", "본문2", false, List.of("태그2"));
+        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", false, List.of("태그1", "태그2"));
+        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", false, List.of("태그2"));
         httpPostWithAuthorization(postRequest1, FREE_BOARD_POST_URI, getChrisToken());
         httpPostWithAuthorization(postRequest2, FREE_BOARD_POST_URI, getChrisToken());
 
@@ -169,8 +167,8 @@ class HashtagAcceptanceTest extends AcceptanceTest {
     @DisplayName("없는 해시태그 키워드로 검색하면 빈 검색결과를 조회한다.")
     @Test
     void searchHashtagsWithName_NoResult() {
-        NewPostRequest postRequest1 = new NewPostRequest(FREE_BOARD_ID, "제목1", "본문1", false, List.of("태그1", "태그2"));
-        NewPostRequest postRequest2 = new NewPostRequest(FREE_BOARD_ID, "제목2", "본문2", false, List.of("태그2"));
+        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", false, List.of("태그1", "태그2"));
+        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", false, List.of("태그2"));
         httpPostWithAuthorization(postRequest1, "/posts", getChrisToken());
         httpPostWithAuthorization(postRequest2, "/posts", getChrisToken());
 

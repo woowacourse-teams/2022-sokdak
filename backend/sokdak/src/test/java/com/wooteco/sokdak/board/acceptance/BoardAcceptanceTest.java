@@ -24,7 +24,6 @@ import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.util.AcceptanceTest;
-import com.wooteco.sokdak.util.fixture.BoardFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.Collections;
@@ -66,10 +65,10 @@ class BoardAcceptanceTest extends AcceptanceTest {
     void findBoardsContent() {
         // given
         String token = getChrisToken();
-        NewPostRequest postRequest1 = new NewPostRequest(FREE_BOARD_ID, "제목1", "본문1", false, Collections.emptyList());
-        NewPostRequest postRequest2 = new NewPostRequest(FREE_BOARD_ID, "제목2", "본문2", false, Collections.emptyList());
-        NewPostRequest postRequest3 = new NewPostRequest(FREE_BOARD_ID, "제목3", "본문3", false, Collections.emptyList());
-        NewPostRequest postRequest4 = new NewPostRequest(FREE_BOARD_ID, "제목4", "본문4", false, Collections.emptyList());
+        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", false, Collections.emptyList());
+        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", false, Collections.emptyList());
+        NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", false, Collections.emptyList());
+        NewPostRequest postRequest4 = new NewPostRequest("제목4", "본문4", false, Collections.emptyList());
 
         httpPostWithAuthorization(postRequest1, "/boards/" + FREE_BOARD_ID + "/posts", token);
         httpPostWithAuthorization(postRequest2, "/boards/" + FREE_BOARD_ID + "/posts", token);

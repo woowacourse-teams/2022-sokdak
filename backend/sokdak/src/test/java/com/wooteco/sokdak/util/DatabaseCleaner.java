@@ -118,5 +118,8 @@ public class DatabaseCleaner implements InitializingBean {
         entityManager.createNativeQuery(
                 "insert into board (title, board_type) values ('감동크루', 'WRITABLE');")
                 .executeUpdate();
+        entityManager.createNativeQuery(
+                        "insert into board (title, board_type) values ('5기 게시판', 'WRITABLE');")
+                .executeUpdate();
     }
 }

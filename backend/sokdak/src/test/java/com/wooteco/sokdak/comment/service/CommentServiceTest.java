@@ -1,7 +1,8 @@
 package com.wooteco.sokdak.comment.service;
 
 import static com.wooteco.sokdak.member.domain.RoleType.USER;
-import static com.wooteco.sokdak.util.fixture.BoardFixture.*;
+import static com.wooteco.sokdak.util.fixture.BoardFixture.APPLICANT_BOARD_ID;
+import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.ANONYMOUS_COMMENT_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.ANONYMOUS_REPLY_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NON_ANONYMOUS_COMMENT_REQUEST;
@@ -27,13 +28,14 @@ import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.util.ServiceTest;
-import com.wooteco.sokdak.util.fixture.BoardFixture;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 class CommentServiceTest extends ServiceTest {
@@ -85,6 +87,28 @@ class CommentServiceTest extends ServiceTest {
                 () -> assertThat(foundComment.getMessage()).isEqualTo(NON_ANONYMOUS_COMMENT_REQUEST.getContent()),
                 () -> assertThat(foundComment.getMember()).isEqualTo(member),
                 () -> assertThat(foundComment.getNickname()).isEqualTo(member.getNickname())
+        );
+    }
+
+    @DisplayName("지원자는 권한이 없는 게시판에 글을 작성할 수 없다.")
+    @ParameterizedTest
+    @CsvSource({"1", "2", "3", "4"})
+    void addComment_Applicant_Exception(Long boardId) {
+        NewCommentRequest newCommentRequest = new NewCommentRequest(boardId, "content", true);
+        assertThatThrownBy(() -> commentService.addComment(anonymousPost.getId(), newCommentRequest, APPLICANT_AUTH_INFO))
+                .isInstanceOf(AuthorizationException.class);
+    }
+
+    @DisplayName("지원자는 권한이 있는 게시판에 글을 작성할 수 있다.")
+    @Test
+    void addComment_Applicant() {
+        NewCommentRequest newCommentRequest = new NewCommentRequest(APPLICANT_BOARD_ID, "content", true);
+
+        Long commentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, APPLICANT_AUTH_INFO);
+        Comment foundComment = commentRepository.findById(commentId).orElseThrow();
+        assertAll(
+                () -> assertThat(foundComment.getMessage()).isEqualTo(newCommentRequest.getContent()),
+                () -> assertThat(foundComment.getMember().getId()).isEqualTo(APPLICANT_AUTH_INFO.getId())
         );
     }
 

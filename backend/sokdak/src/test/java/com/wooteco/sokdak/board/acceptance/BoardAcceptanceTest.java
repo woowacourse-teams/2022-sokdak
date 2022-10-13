@@ -92,7 +92,8 @@ class BoardAcceptanceTest extends AcceptanceTest {
                                 tuple(1L, "Hot 게시판"),
                                 tuple(2L, "자유게시판"),
                                 tuple(3L, "포수타"),
-                                tuple(4L, "감동크루")
+                                tuple(4L, "감동크루"),
+                                tuple(5L, "5기 게시판")
                         ),
                 () -> assertThat(posts1)
                         .hasSize(3)

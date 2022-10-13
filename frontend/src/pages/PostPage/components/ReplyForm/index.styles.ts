@@ -6,14 +6,14 @@ export const Form = styled.form`
   background-color: ${props => props.theme.colors.gray_5};
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
   box-sizing: border-box;
   margin-bottom: -0.5px;
   z-index: 5;
 `;
 
 export const Input = styled.textarea`
-  width: 288px;
+  width: 90%;
   height: 80px;
   border: 0.5px solid ${props => props.theme.colors.gray_400};
   padding: 10px;
@@ -25,7 +25,7 @@ export const Input = styled.textarea`
 `;
 
 export const Controller = styled.div`
-  width: 288px;
+  width: 90%;
   height: 40px;
   display: flex;
   justify-content: space-between;

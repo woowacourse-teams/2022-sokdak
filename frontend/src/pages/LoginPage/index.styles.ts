@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 export const LoginForm = styled.form`
   display: flex;
   width: 100%;
+  max-width: 450px;
   flex-direction: column;
   align-items: center;
 `;

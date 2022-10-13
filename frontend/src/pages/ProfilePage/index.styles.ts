@@ -7,7 +7,9 @@ import styled from '@emotion/styled';
 
 export const Container = styled.div`
   display: flex;
+  width: 100%;
   flex-direction: column;
+  padding: 1em 0;
 `;
 
 export const Avatar = styled.div`
@@ -111,7 +113,7 @@ export const PostListHeader = styled.p`
 export const PostList = styled.div`
   display: flex;
   flex-direction: column;
-  height: 363px;
+  height: 360px;
 `;
 
 export const Pagination = styled(PaginationComponent)`
@@ -121,7 +123,7 @@ export const Pagination = styled(PaginationComponent)`
 
 export const EmptyPostList = styled.div`
   font-family: 'BMHANNAPro', 'Noto Sans KR';
-  height: 363px;
+  height: 360px;
   display: flex;
   justify-content: center;
   align-items: center;

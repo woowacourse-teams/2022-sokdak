@@ -7,8 +7,8 @@ export const Container = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  padding: 0 13px;
+  width: calc(100% - 2em);
+  padding: 1em;
   box-sizing: border-box;
 `;
 
@@ -44,7 +44,7 @@ export const TitleInput = styled.input<InputProps>`
 
 export const ContentInput = styled.textarea<InputProps>`
   width: 100%;
-  height: 290px;
+  height: 50vh;
   padding: 10px;
   font-size: 14px;
   margin: 20px 0;

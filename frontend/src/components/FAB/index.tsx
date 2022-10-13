@@ -5,7 +5,11 @@ interface FABProps {
 }
 
 const FAB = ({ handleClick }: FABProps) => {
-  return <Styled.Container onClick={handleClick}>+</Styled.Container>;
+  return (
+    <Styled.ButtonContainer>
+      <Styled.Container onClick={handleClick}>+</Styled.Container>
+    </Styled.ButtonContainer>
+  );
 };
 
 export default FAB;

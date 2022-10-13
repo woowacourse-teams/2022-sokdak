@@ -5,7 +5,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 export const containerStyle = css`
-  width: 320px;
+  width: 100%;
   height: 200px;
   display: flex;
   flex-direction: column;
@@ -22,8 +22,8 @@ export const Container = styled.div`
 
 export const BlockedContainer = styled.div`
   filter: blur(3px);
-  ${containerStyle}
-  cursor:not-allowed;
+  ${containerStyle};
+  cursor: not-allowed;
 `;
 
 export const HeadContainer = styled.div`

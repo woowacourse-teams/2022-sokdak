@@ -15,6 +15,7 @@ export const InputForm = styled.form`
 export const SignUpForm = styled.div`
   display: flex;
   width: 100%;
+  max-width: 450px;
   flex-direction: column;
   align-items: center;
 `;

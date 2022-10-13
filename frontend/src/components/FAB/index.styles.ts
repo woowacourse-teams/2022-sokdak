@@ -16,7 +16,14 @@ export const Container = styled.div`
   font-size: 30px;
   user-select: none;
   cursor: pointer;
-  position: fixed;
-  bottom: 20px;
-  right: calc((100% - 325px) / 2);
+  position: absolute;
+  /* transform-origin: bottom right;*/
+  /* transform: translateX(300%); */
+  right: 0px;
+`;
+
+export const ButtonContainer = styled.div`
+  position: sticky;
+  width: 100%;
+  bottom: 100px;
 `;

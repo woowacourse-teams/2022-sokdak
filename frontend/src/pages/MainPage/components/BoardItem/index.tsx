@@ -8,11 +8,12 @@ interface BoardItemProps {
   id: number;
   title: string;
   posts: Pick<Post, 'likeCount' | 'commentCount' | 'title' | 'id'>[];
+  boardId: number;
 }
 
-const BoardItem = ({ id, title, posts }: BoardItemProps) => {
+const BoardItem = ({ id, title, posts, boardId }: BoardItemProps) => {
   return (
-    <div>
+    <Styled.Container boardId={boardId}>
       <Styled.Title>{title}</Styled.Title>
       <Styled.ItemContainer>
         {posts.map(post => (
@@ -23,7 +24,7 @@ const BoardItem = ({ id, title, posts }: BoardItemProps) => {
         ))}
       </Styled.ItemContainer>
       <Styled.LoadMoreButton to={`${PATH.BOARD}/${id}`}>더보기</Styled.LoadMoreButton>
-    </div>
+    </Styled.Container>
   );
 };
 

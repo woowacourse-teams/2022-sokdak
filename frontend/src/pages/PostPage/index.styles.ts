@@ -8,11 +8,11 @@ export const containerStyle = css`
   display: flex;
   flex-direction: column;
   align-items: center;
-`;
 
-export const Container = styled.div`
-  ${containerStyle}
-  padding:1rem 0;
+  @media (min-width: 875px) {
+    padding-top: 3rem;
+    max-width: 790px;
+  }
 `;
 
 export const Image = styled.img`
@@ -24,7 +24,7 @@ export const Image = styled.img`
 `;
 
 export const BlockContainer = styled.div`
-  ${containerStyle}
+  ${containerStyle};
   justify-content: center;
   height: calc(100vh - 166px);
   overflow: hidden;
@@ -76,4 +76,30 @@ export const ErrorContainer = styled.div`
   justify-content: center;
   align-items: center;
   gap: 3em;
+`;
+
+export const Container = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+
+  @media (min-width: 875px) {
+    padding-top: 3rem;
+  }
+`;
+
+export const PostContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  @media (min-width: 875px) {
+    width: 55%;
+  }
+`;
+
+export const SideContainer = styled.aside`
+  width: 30%;
+  background-color: red;
 `;

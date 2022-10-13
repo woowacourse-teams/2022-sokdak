@@ -11,6 +11,7 @@ import Spinner from '@/components/Spinner';
 import useLike from '@/hooks/queries/likes/useLike';
 import useDeletePost from '@/hooks/queries/post/useDeletePost';
 import usePost from '@/hooks/queries/post/usePost';
+import useResponsive from '@/hooks/useResponsive';
 
 import * as Styled from './index.styles';
 
@@ -35,6 +36,7 @@ const PostPage = () => {
       navigate(-1);
     },
   });
+  const isTabletSizeOver = useResponsive(875);
 
   const handleLikeButton = () => {
     putLike({ id: id! });
@@ -81,20 +83,24 @@ const PostPage = () => {
   return (
     <Layout>
       <Styled.Container>
-        <PostHeader post={data!} onClickDeleteButton={handleConfirmModal} onClickLikeButton={handleLikeButton} />
-        {hasImage && <Styled.Image src={process.env.IMAGE_API_URL + data.imageName} alt={data.imageName} />}
-        <PostContent content={data?.content!} hashtags={data?.hashtags!} hasImage={hasImage} />
-        <CommentList id={id!} />
-      </Styled.Container>
+        <Styled.PostContainer>
+          <PostHeader post={data!} onClickDeleteButton={handleConfirmModal} onClickLikeButton={handleLikeButton} />
+          {hasImage && <Styled.Image src={process.env.IMAGE_API_URL + data.imageName} alt={data.imageName} />}
+          <PostContent content={data?.content!} hashtags={data?.hashtags!} hasImage={hasImage} />
+          <CommentList id={id!} />
+        </Styled.PostContainer>
 
-      {isConfirmModalOpen && (
-        <ConfirmModal
-          title="삭제"
-          notice="해당 글을 삭제하시겠습니까?"
-          handleCancel={handleConfirmModal}
-          handleConfirm={() => deletePost(id!)}
-        />
-      )}
+        {isTabletSizeOver && <Styled.SideContainer></Styled.SideContainer>}
+
+        {isConfirmModalOpen && (
+          <ConfirmModal
+            title="삭제"
+            notice="해당 글을 삭제하시겠습니까?"
+            handleCancel={handleConfirmModal}
+            handleConfirm={() => deletePost(id!)}
+          />
+        )}
+      </Styled.Container>
     </Layout>
   );
 };

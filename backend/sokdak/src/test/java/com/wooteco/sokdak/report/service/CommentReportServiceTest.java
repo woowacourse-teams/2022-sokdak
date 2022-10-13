@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.report.service;
 
 import static com.wooteco.sokdak.member.domain.RoleType.USER;
+import static com.wooteco.sokdak.util.fixture.BoardFixture.APPLICANT_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.VALID_COMMENT_MESSAGE;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
@@ -11,11 +12,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
+import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.report.exception.AlreadyReportCommentException;
@@ -138,5 +141,31 @@ class CommentReportServiceTest extends ServiceTest {
         boolean actual = notificationRepository.existsByMemberIdAndInquiredIsFalse(member.getId());
 
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @DisplayName("지원자는 권한이 없는 게시판 게시글의 댓글, 대댓글을 신고할 수 없다.")
+    @ParameterizedTest
+    @CsvSource({"1", "2", "3", "4"})
+    void flipPostLike_Applicant_Exception(Long boardId) {
+        ReportRequest reportRequest = new ReportRequest(boardId, "message");
+
+        assertThatThrownBy(() -> commentReportService.reportComment(comment.getId(), reportRequest, APPLICANT_AUTH_INFO))
+                .isInstanceOf(AuthorizationException.class);
+    }
+
+    @DisplayName("지원자는 권한이 있는 게시판 게시글의 댓글 대댓글을 신고할 수 있다.")
+    @Test
+    void flipPostLike_Applicant() {
+        ReportRequest reportRequest = new ReportRequest(APPLICANT_BOARD_ID, "message");
+        int reportCountBeforeReport = comment.getCommentReports().size();
+
+        commentReportService.reportComment(comment.getId(), reportRequest, APPLICANT_AUTH_INFO);
+
+        Post post = postRepository.findById(this.comment.getId())
+                .orElseThrow(PostNotFoundException::new);
+
+        int reportCountAfterReport = comment.getCommentReports().size();
+
+        assertThat(reportCountBeforeReport + 1).isEqualTo(reportCountAfterReport);
     }
 }

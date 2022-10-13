@@ -1,11 +1,10 @@
 import styled from '@emotion/styled';
 
 const Layout = styled.section`
-  width: calc(100% - 36px);
-  max-width: 1140px;
+  width: calc(100% - 3rem);
   display: flex;
   justify-content: center;
-  padding: 0 18px;
+  padding: 0 3rem;
   box-sizing: border-box;
   margin: auto;
 `;

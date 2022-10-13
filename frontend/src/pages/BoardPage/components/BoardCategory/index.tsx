@@ -1,3 +1,5 @@
+import { NavLink } from 'react-router-dom';
+
 import Dropdown from '@/components/@shared/Dropdown';
 
 import * as Styled from './index.styles';
@@ -14,7 +16,20 @@ const BoardCategory = ({ id, boards }: BoardCategoryProps) => {
 
   return (
     <Styled.BoardCategoryContainer>
-      <div>
+      <Styled.DesktopCategoryContainer>
+        {boards.map(({ id }) => (
+          <NavLink key={id} to={`/board/${id}`}>
+            {({ isActive }) =>
+              isActive ? (
+                <Styled.ActiveDesktopCategory>{BOARDS[id - 1].title}</Styled.ActiveDesktopCategory>
+              ) : (
+                <Styled.DesktopCategory>{BOARDS[id - 1].title}</Styled.DesktopCategory>
+              )
+            }
+          </NavLink>
+        ))}
+      </Styled.DesktopCategoryContainer>
+      <Styled.DropdownContainer>
         <Dropdown>
           <Dropdown.Trigger>
             <Styled.TitleContainer>
@@ -32,7 +47,7 @@ const BoardCategory = ({ id, boards }: BoardCategoryProps) => {
             </Styled.BoardList>
           </Styled.OptionList>
         </Dropdown>
-      </div>
+      </Styled.DropdownContainer>
     </Styled.BoardCategoryContainer>
   );
 };

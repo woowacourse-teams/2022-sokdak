@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.report.service;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.auth.service.AuthService;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
@@ -23,17 +24,21 @@ public class PostReportService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final NotificationService notificationService;
+    private final AuthService authService;
 
     public PostReportService(PostReportRepository postReportRepository, PostRepository postRepository,
-                             MemberRepository memberRepository, NotificationService notificationService) {
+                             MemberRepository memberRepository, NotificationService notificationService,
+                             AuthService authService) {
         this.postReportRepository = postReportRepository;
         this.postRepository = postRepository;
         this.memberRepository = memberRepository;
         this.notificationService = notificationService;
+        this.authService = authService;
     }
 
     @Transactional
     public void reportPost(Long postId, ReportRequest reportRequest, AuthInfo authInfo) {
+        authService.checkAllowedApiToApplicantUser(authInfo, reportRequest.getBoardId());
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
         Member member = memberRepository.findById(authInfo.getId())

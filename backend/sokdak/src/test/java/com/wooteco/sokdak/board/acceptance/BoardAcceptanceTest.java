@@ -20,6 +20,7 @@ import com.wooteco.sokdak.board.dto.BoardContentElement;
 import com.wooteco.sokdak.board.dto.BoardContentPostElement;
 import com.wooteco.sokdak.board.dto.BoardResponse;
 import com.wooteco.sokdak.board.dto.NewBoardRequest;
+import com.wooteco.sokdak.like.dto.LikeFlipRequest;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
@@ -127,7 +128,7 @@ class BoardAcceptanceTest extends AcceptanceTest {
 
         // when
         for (String token : tokens) {
-            httpPutWithAuthorization("/posts/1/like", token);
+            httpPutWithAuthorization(new LikeFlipRequest(FREE_BOARD_ID), "/posts/1/like", token);
         }
         ExtractableResponse<Response> hotBoardResponse = httpGet("/boards/" + HOT_BOARD_ID + "/posts?size=2&page=0");
         List<String> hotBoardPostNames = parsePostTitles(hotBoardResponse);
@@ -159,7 +160,7 @@ class BoardAcceptanceTest extends AcceptanceTest {
 
         // when
         for (String token : tokens) {
-            httpPutWithAuthorization("/posts/1/like", token);
+            httpPutWithAuthorization(new LikeFlipRequest(FREE_BOARD_ID), "/posts/1/like", token);
         }
         ExtractableResponse<Response> hotBoardResponse = httpGet("/boards/" + HOT_BOARD_ID + "/posts?size=2&page=0");
         List<String> hotBoardPostNames = parsePostTitles(hotBoardResponse);
@@ -189,11 +190,11 @@ class BoardAcceptanceTest extends AcceptanceTest {
         addNewPost();
 
         for (String token : tokens) {
-            httpPutWithAuthorization("/posts/1/like", token);
+            httpPutWithAuthorization(new LikeFlipRequest(FREE_BOARD_ID), "/posts/1/like", token);
         }
 
         // when
-        httpPutWithAuthorization("/posts/1/like", token1);
+        httpPutWithAuthorization(new LikeFlipRequest(FREE_BOARD_ID), "/posts/1/like", token1);
 
         ExtractableResponse<Response> hotBoardResponse = httpGet("/boards/" + HOT_BOARD_ID + "/posts?size=2&page=0");
         List<String> hotBoardPostNames = parsePostTitles(hotBoardResponse);

@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.auth.dto.LoginRequest;
+import com.wooteco.sokdak.like.dto.LikeFlipRequest;
 import com.wooteco.sokdak.notification.dto.NewNotificationCheckResponse;
 import com.wooteco.sokdak.notification.dto.NotificationResponse;
 import com.wooteco.sokdak.notification.dto.NotificationsResponse;
@@ -95,7 +96,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         addNewPost();
         List<String> otherTokens = getTokens();
         for (String token : otherTokens) {
-            httpPutWithAuthorization("/posts/1/like", token);
+            httpPutWithAuthorization(new LikeFlipRequest(FREE_BOARD_ID), "/posts/1/like", token);
         }
 
         ExtractableResponse<Response> response = httpGetWithAuthorization("/notifications/check", getChrisToken());
@@ -162,7 +163,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
 
         List<String> otherTokens = getTokens();
         for (String other : otherTokens) {
-            httpPutWithAuthorization("/posts/1/like", other);
+            httpPutWithAuthorization(new LikeFlipRequest(FREE_BOARD_ID), "/posts/1/like", other);
         }
 
         ExtractableResponse<Response> response =

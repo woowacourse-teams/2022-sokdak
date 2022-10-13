@@ -1,12 +1,14 @@
 package com.wooteco.sokdak.like.service;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.auth.service.AuthService;
 import com.wooteco.sokdak.board.service.BoardService;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.like.domain.CommentLike;
 import com.wooteco.sokdak.like.domain.PostLike;
+import com.wooteco.sokdak.like.dto.LikeFlipRequest;
 import com.wooteco.sokdak.like.dto.LikeFlipResponse;
 import com.wooteco.sokdak.like.repository.CommentLikeRepository;
 import com.wooteco.sokdak.like.repository.PostLikeRepository;
@@ -32,20 +34,24 @@ public class LikeService {
     private final CommentRepository commentRepository;
     private final CommentLikeRepository commentLikeRepository;
     private final MemberRepository memberRepository;
+    private final AuthService authService;
 
     public LikeService(BoardService boardService, PostLikeRepository postLikeRepository,
                        PostRepository postRepository, CommentRepository commentRepository,
-                       CommentLikeRepository commentLikeRepository, MemberRepository memberRepository) {
+                       CommentLikeRepository commentLikeRepository, MemberRepository memberRepository,
+                       AuthService authService) {
         this.boardService = boardService;
         this.postLikeRepository = postLikeRepository;
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
         this.commentLikeRepository = commentLikeRepository;
         this.memberRepository = memberRepository;
+        this.authService = authService;
     }
 
     @Transactional
-    public LikeFlipResponse flipPostLike(Long postId, AuthInfo authInfo) {
+    public LikeFlipResponse flipPostLike(Long postId, AuthInfo authInfo, LikeFlipRequest likeFlipRequest) {
+        authService.checkAllowedApiToApplicantUser(authInfo, likeFlipRequest.getBoardId());
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
         Post post = postRepository.findById(postId)
@@ -79,7 +85,8 @@ public class LikeService {
     }
 
     @Transactional
-    public LikeFlipResponse flipCommentLike(Long commentId, AuthInfo authInfo) {
+    public LikeFlipResponse flipCommentLike(Long commentId, AuthInfo authInfo, LikeFlipRequest likeFlipRequest) {
+        authService.checkAllowedApiToApplicantUser(authInfo, likeFlipRequest.getBoardId());
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
         Comment comment = commentRepository.findById(commentId)

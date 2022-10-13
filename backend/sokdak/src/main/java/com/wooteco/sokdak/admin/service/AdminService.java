@@ -9,7 +9,7 @@ import com.wooteco.sokdak.admin.dto.TicketsResponse;
 import com.wooteco.sokdak.admin.exception.NoAdminException;
 import com.wooteco.sokdak.ticket.domain.Ticket;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
-import com.wooteco.sokdak.auth.service.Encryptor;
+import com.wooteco.sokdak.auth.domain.encryptor.Encryptor;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.member.exception.SerialNumberNotFoundException;
@@ -37,16 +37,18 @@ public class AdminService {
     private final PostReportService postReportService;
     private final PostRepository postRepository;
     private final PostReportRepository postReportRepository;
+    private final Encryptor encryptor;
 
     public AdminService(TicketRepository ticketRepository, PostService postService,
                         PostReportService postReportService,
                         PostRepository postRepository,
-                        PostReportRepository postReportRepository) {
+                        PostReportRepository postReportRepository, Encryptor encryptor) {
         this.ticketRepository = ticketRepository;
         this.postService = postService;
         this.postReportService = postReportService;
         this.postRepository = postRepository;
         this.postReportRepository = postReportRepository;
+        this.encryptor = encryptor;
     }
 
     @Transactional
@@ -56,7 +58,7 @@ public class AdminService {
         List<String> emails = emailsAddRequest.getEmails();
 
         for (String email : emails) {
-            String serialNumber = Encryptor.encrypt(email);
+            String serialNumber = encryptor.encode(email);
             Optional<Ticket> foundSerialNumber = ticketRepository.findBySerialNumber(serialNumber);
             if (foundSerialNumber.isEmpty()) {
                 Ticket ticket = Ticket.builder()

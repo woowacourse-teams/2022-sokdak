@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.doReturn;
 
-import com.wooteco.sokdak.auth.service.Encryptor;
+import com.wooteco.sokdak.auth.domain.encryptor.Encryptor;
 import com.wooteco.sokdak.member.dto.VerificationRequest;
 import com.wooteco.sokdak.member.exception.InvalidAuthCodeException;
 import com.wooteco.sokdak.member.exception.SerialNumberNotFoundException;

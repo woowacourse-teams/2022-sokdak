@@ -2,7 +2,7 @@ package com.wooteco.sokdak.member.service;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.service.AuthService;
-import com.wooteco.sokdak.auth.service.Encryptor;
+import com.wooteco.sokdak.auth.domain.encryptor.Encryptor;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.domain.Nickname;
 import com.wooteco.sokdak.member.dto.SignupRequest;
@@ -27,17 +27,20 @@ public class MemberService {
     private final EmailService emailService;
     private final AuthService authService;
     private final RegisterService registerService;
+    private final Encryptor encryptor;
 
     public MemberService(MemberRepository memberRepository, EmailService emailService,
-                         AuthService authService, RegisterService registerService) {
+                         AuthService authService, RegisterService registerService,
+                         Encryptor encryptor) {
         this.memberRepository = memberRepository;
         this.emailService = emailService;
         this.authService = authService;
         this.registerService = registerService;
+        this.encryptor = encryptor;
     }
 
     public UniqueResponse checkUniqueUsername(String username) {
-        String hashedUsername = Encryptor.encrypt(username);
+        String hashedUsername = encryptor.encode(username);
         boolean unique = !memberRepository.existsMemberByUsernameValue(hashedUsername);
         return new UniqueResponse(unique);
     }
@@ -85,7 +88,7 @@ public class MemberService {
 
     private void validateUniqueUsername(SignupRequest signupRequest) {
         boolean isDuplicatedUsername = memberRepository
-                .existsMemberByUsernameValue(Encryptor.encrypt(signupRequest.getUsername()));
+                .existsMemberByUsernameValue(encryptor.encode(signupRequest.getUsername()));
         if (isDuplicatedUsername) {
             throw new InvalidSignupFlowException();
         }
@@ -106,7 +109,7 @@ public class MemberService {
     }
 
     private void validateSerialNumber(SignupRequest signupRequest) {
-        String serialNumber = Encryptor.encrypt(signupRequest.getEmail());
+        String serialNumber = encryptor.encode(signupRequest.getEmail());
         registerService.validateSignUpMember(serialNumber);
     }
 

@@ -2,6 +2,7 @@ package com.wooteco.sokdak.member.domain;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.wooteco.sokdak.auth.domain.encryptor.EncryptorFactory;
 import com.wooteco.sokdak.member.exception.InvalidUsernameException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,7 +14,7 @@ class UsernameTest {
     @ParameterizedTest
     @ValueSource(strings = {"sok", "sokdaksokdaksokkk", "가sokdak", "sokdak!", "", " "})
     void create_Exception_Format(String invalidUsername) {
-        assertThatThrownBy(() -> new Username(invalidUsername))
+        assertThatThrownBy(() -> new Username(EncryptorFactory.encryptor(), invalidUsername))
                 .isInstanceOf(InvalidUsernameException.class);
     }
 }

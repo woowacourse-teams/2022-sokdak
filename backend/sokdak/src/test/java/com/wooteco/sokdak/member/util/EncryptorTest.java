@@ -2,7 +2,7 @@ package com.wooteco.sokdak.member.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.wooteco.sokdak.auth.service.Encryptor;
+import com.wooteco.sokdak.auth.domain.encryptor.Encryptor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

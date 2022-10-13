@@ -6,7 +6,7 @@ import static org.mockito.Mockito.verify;
 
 import com.wooteco.sokdak.ticket.domain.Ticket;
 import com.wooteco.sokdak.auth.service.AuthCodeGenerator;
-import com.wooteco.sokdak.auth.service.Encryptor;
+import com.wooteco.sokdak.auth.domain.encryptor.Encryptor;
 import com.wooteco.sokdak.member.dto.EmailRequest;
 import com.wooteco.sokdak.member.repository.TicketRepository;
 import com.wooteco.sokdak.util.ServiceTest;

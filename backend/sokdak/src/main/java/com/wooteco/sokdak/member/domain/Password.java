@@ -1,6 +1,6 @@
 package com.wooteco.sokdak.member.domain;
 
-import com.wooteco.sokdak.auth.service.Encryptor;
+import com.wooteco.sokdak.auth.domain.encryptor.Encryptor;
 import com.wooteco.sokdak.member.exception.InvalidPasswordFormatException;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -21,9 +21,9 @@ public class Password {
     protected Password() {
     }
 
-    public Password(String value) {
+    public Password(Encryptor encryptor, String value) {
         validate(value);
-        this.value = Encryptor.encrypt(value);
+        this.value = encryptor.encode(value);
     }
 
     private void validate(String value) {

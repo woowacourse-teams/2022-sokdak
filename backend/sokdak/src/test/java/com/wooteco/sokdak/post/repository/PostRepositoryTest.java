@@ -2,6 +2,7 @@ package com.wooteco.sokdak.post.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import com.wooteco.sokdak.config.JPAConfig;
 import com.wooteco.sokdak.post.domain.Post;
@@ -72,7 +73,7 @@ class PostRepositoryTest extends RepositoryTest {
     @DisplayName("특점 멤버의 글을 시간순으로 가져오는지 확인")
     @Test
     void findPostsByMember() {
-        Page<Post> result = postRepository.findPostsByMemberOrderByCreatedAtDesc(PageRequest.of(0, 2), member1);
+        Page<Post> result = postRepository.findPostsByMemberOrderByCreatedAtDesc(PageRequest.of(0, 2, DESC, "createdAt"), member1);
 
         assertAll(
                 () -> assertThat(result.getContent()).containsExactly(post5, post4),

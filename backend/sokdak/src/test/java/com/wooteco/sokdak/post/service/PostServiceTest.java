@@ -343,7 +343,7 @@ class PostServiceTest extends ServiceTest {
                 .build();
         postRepository.save(post2);
 
-        MyPostsResponse myPosts = postService.findMyPosts(PageRequest.of(0, 1), AUTH_INFO);
+        MyPostsResponse myPosts = postService.findMyPosts(PageRequest.of(0, 1, DESC, "createdAt"), AUTH_INFO);
 
         assertAll(
                 () -> assertThat(myPosts.getPosts()).usingRecursiveComparison()

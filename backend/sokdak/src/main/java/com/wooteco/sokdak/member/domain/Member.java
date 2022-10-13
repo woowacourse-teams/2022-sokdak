@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.member.domain;
 
+import com.wooteco.sokdak.auth.domain.encryptor.EncryptorFactory;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -37,8 +38,8 @@ public class Member {
     @Builder
     public Member(Long id, String username, String password, String nickname) {
         this.id = id;
-        this.username = new Username(username);
-        this.password = new Password(password);
+        this.username = new Username(EncryptorFactory.encryptor(), username);
+        this.password = new Password(EncryptorFactory.encryptor(), password);
         this.nickname = new Nickname(nickname);
     }
 

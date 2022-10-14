@@ -36,19 +36,21 @@ const PostList = ({ data, fetchNextPage }: PostListProps) => {
   return (
     <Styled.Container>
       {data?.pages.map(({ id, title, content, createdAt, likeCount, commentCount, modified, blocked }, index) => (
-        <PostListItem
-          testid={id}
-          blocked={blocked}
-          title={title}
-          content={content}
-          createdAt={createdAt}
-          likeCount={likeCount}
-          commentCount={commentCount}
-          modified={modified}
-          key={id}
-          handleClick={() => handleClickPostItem(id)}
-          ref={index === data.pages.length - 1 ? scrollRef : null}
-        />
+        <Styled.PostItemContainer key={id}>
+          <PostListItem
+            testid={id}
+            blocked={blocked}
+            title={title}
+            content={content}
+            createdAt={createdAt}
+            likeCount={likeCount}
+            commentCount={commentCount}
+            modified={modified}
+            key={id}
+            handleClick={() => handleClickPostItem(id)}
+            ref={index === data.pages.length - 1 ? scrollRef : null}
+          />
+        </Styled.PostItemContainer>
       ))}
       {BOARD_ID_LIST.includes(boardId!) && <FAB handleClick={handleClickFAB} />}
     </Styled.Container>

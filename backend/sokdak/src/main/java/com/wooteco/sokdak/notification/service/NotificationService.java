@@ -78,6 +78,7 @@ public class NotificationService {
                 notificationRepository.existsByMemberIdAndInquiredIsFalse(authInfo.getId()));
     }
 
+    @Transactional
     public NotificationsResponse findNotifications(AuthInfo authInfo, Pageable pageable) {
         Slice<Notification> foundNotifications = notificationRepository
                 .findNotificationsByMemberId(authInfo.getId(), pageable);

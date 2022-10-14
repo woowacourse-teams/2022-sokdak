@@ -59,39 +59,38 @@ const PostPage = () => {
 
   if (isLoading) {
     return (
-      <Layout>
-        <Styled.SpinnerContainer>
-          <Spinner />
-        </Styled.SpinnerContainer>
-      </Layout>
+      <Styled.SpinnerContainer>
+        <Spinner />
+      </Styled.SpinnerContainer>
     );
   }
 
-  if (isError) {
+  if (isError || !data) {
     return (
-      <Layout>
-        <Styled.ErrorContainer>
-          <Spinner />
-          존재하지 않거나 삭제된 글입니다. <Styled.ListButton to={PATH.HOME}>메인 페이지로</Styled.ListButton>
-        </Styled.ErrorContainer>
-      </Layout>
+      <Styled.NotFound>
+        <Spinner />
+        <Styled.ErrorMessage>존재하지 않거나 삭제된 글입니다. </Styled.ErrorMessage>
+        <Styled.HandlingButtonContainer>
+          <Styled.MainButton onClick={() => navigate(PATH.HOME)}>메인으로</Styled.MainButton>
+          <Styled.BackButton onClick={() => navigate(-1)}>이전 페이지</Styled.BackButton>
+        </Styled.HandlingButtonContainer>
+      </Styled.NotFound>
     );
   }
-  if (data?.blocked) {
+
+  if (data.blocked) {
     return (
-      <Layout>
-        <Styled.BlockContainer>
-          <p>다량의 신고로 인해</p>
-          <p> 블라인드 처리 된 게시물 입니다.</p>
-          <Styled.BackButton
-            onClick={() => {
-              navigate(-1);
-            }}
-          >
-            이전 페이지로 돌아가기
-          </Styled.BackButton>
-        </Styled.BlockContainer>
-      </Layout>
+      <Styled.Block>
+        <Styled.ErrorMessage>
+          다량의 신고로 인해
+          <br />
+          블라인드 처리 된 게시물 입니다.
+        </Styled.ErrorMessage>
+        <Styled.HandlingButtonContainer>
+          <Styled.MainButton onClick={() => navigate(PATH.HOME)}>메인으로</Styled.MainButton>
+          <Styled.BackButton onClick={() => navigate(-1)}>이전 페이지</Styled.BackButton>
+        </Styled.HandlingButtonContainer>
+      </Styled.Block>
     );
   }
 
@@ -99,9 +98,9 @@ const PostPage = () => {
     <Layout>
       <Styled.Container>
         <Styled.PostContainer>
-          <PostHeader post={data!} onClickDeleteButton={handleConfirmModal} onClickLikeButton={handleLikeButton} />
+          <PostHeader post={data} onClickDeleteButton={handleConfirmModal} onClickLikeButton={handleLikeButton} />
           {hasImage && <Styled.Image src={process.env.IMAGE_API_URL + data.imageName} alt={data.imageName} />}
-          <PostContent content={data?.content!} hashtags={data?.hashtags!} hasImage={hasImage} />
+          <PostContent content={data.content} hashtags={data.hashtags} hasImage={hasImage} />
           <CommentList id={id!} />
         </Styled.PostContainer>
 

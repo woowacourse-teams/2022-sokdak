@@ -3,21 +3,16 @@ import styled from '@emotion/styled';
 export const Container = styled.div`
   display: grid;
   width: 100%;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(min(525px, 100%), 1fr));
   align-items: center;
   gap: 2em;
   position: relative;
-
-  @media (max-width: 875px) {
-    display: flex;
-    flex-direction: column;
-  }
+  justify-items: center;
 `;
 
 export const PostItemContainer = styled.div`
-  width: 95%;
+  width: 100%;
   box-sizing: border-box;
-  @media (max-width: 875px) {
-    width: 100%;
-  }
+  max-width: 900px;
+  min-width: 320px;
 `;

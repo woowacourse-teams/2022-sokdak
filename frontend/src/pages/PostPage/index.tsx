@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import CommentList from './components/CommentList';
 import PostContent from './components/PostContent';
 import PostHeader from './components/PostHeader';
+import Sidebar from './components/Sidebar';
 import Layout from '@/components/@styled/Layout';
 import ConfirmModal from '@/components/ConfirmModal';
 import Spinner from '@/components/Spinner';
@@ -11,11 +12,17 @@ import Spinner from '@/components/Spinner';
 import useLike from '@/hooks/queries/likes/useLike';
 import useDeletePost from '@/hooks/queries/post/useDeletePost';
 import usePost from '@/hooks/queries/post/usePost';
+import usePosts from '@/hooks/queries/post/usePosts';
 import useResponsive from '@/hooks/useResponsive';
 
 import * as Styled from './index.styles';
 
 import PATH from '@/constants/path';
+
+import { AD } from '@/dummy';
+
+const HOT_BORAD_ID = 1;
+const POST_COUNT = 5;
 
 const PostPage = () => {
   const navigate = useNavigate();
@@ -36,7 +43,15 @@ const PostPage = () => {
       navigate(-1);
     },
   });
-  const isTabletSizeOver = useResponsive(875);
+
+  const isDesktop = useResponsive(875);
+  const { data: hotPosts } = usePosts({
+    storeCode: [HOT_BORAD_ID, POST_COUNT],
+    options: {
+      enabled: isDesktop,
+      staleTime: 1000 * 20,
+    },
+  });
 
   const handleLikeButton = () => {
     putLike({ id: id! });
@@ -90,7 +105,15 @@ const PostPage = () => {
           <CommentList id={id!} />
         </Styled.PostContainer>
 
-        {isTabletSizeOver && <Styled.SideContainer></Styled.SideContainer>}
+        {isDesktop && hotPosts && (
+          <Styled.SideContainer>
+            <Sidebar
+              title="실시간 인기글"
+              items={hotPosts.pages.map(item => ({ name: item.title, url: `${PATH.POST}/${item.id}` }))!}
+            />
+            <Styled.ADSidebar title="AD" items={AD} domain="external" />
+          </Styled.SideContainer>
+        )}
 
         {isConfirmModalOpen && (
           <ConfirmModal

@@ -17,7 +17,8 @@ public class Image {
         this.extension = extension;
     }
 
-    public static Image of(String path, Extension extension) {
+    public static Image of(String path, String extensionValue) {
+        final Extension extension = Extension.from(extensionValue);
         final String imageName = UUID.randomUUID() + "." + extension.getValue();
         return new Image(path, imageName, extension);
     }
@@ -40,6 +41,10 @@ public class Image {
         ImageCompressor.compress(originalFile, compressedFile, extension.getValue());
 
         return compressedImageName;
+    }
+
+    public boolean canNotCompress() {
+        return extension == Extension.GIF;
     }
 
     public String getName() {

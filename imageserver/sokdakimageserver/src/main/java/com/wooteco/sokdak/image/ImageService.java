@@ -11,10 +11,9 @@ public class ImageService {
     private String imageDir;
 
     public ImageResponse uploadImage(MultipartFile multipartFile) {
-        final Extension extension = Extension.from(extractExtension(multipartFile));
-        final Image image = Image.of(imageDir, extension);
+        final Image image = Image.of(imageDir, extractExtension(multipartFile));
         image.save(multipartFile);
-        if (extension.canNotCompress()) {
+        if (image.canNotCompress()) {
             return new ImageResponse(image.getName());
         }
 

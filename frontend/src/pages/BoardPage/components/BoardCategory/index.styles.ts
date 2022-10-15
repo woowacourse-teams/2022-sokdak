@@ -85,7 +85,7 @@ export const DesktopNavContainer = styled.nav`
 
 export const DesktopCategoryStyle = css`
   font-family: 'BMHANNAAir', 'Noto Sans KR';
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   padding: 0.2em;
 `;
 

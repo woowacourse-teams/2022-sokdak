@@ -22,6 +22,11 @@ const ImageUpload = ({ setImage, uploadImage }: ImageUploadProps) => {
 
     if (!file) return;
 
+    if (!/(.*?)\.(jpg|jpeg|gif|png)$/.test(file.name)) {
+      showSnackbar(SNACKBAR_MESSAGE.UNSUPPORTED_EXTENSION);
+      return;
+    }
+
     if (file.size > 2e7) {
       showSnackbar(SNACKBAR_MESSAGE.LARGE_IMAGE);
       return;

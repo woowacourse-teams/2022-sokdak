@@ -21,6 +21,7 @@ const SNACKBAR_MESSAGE = {
   ALREADY_LOGIN: '이미 로그인하였습니다.',
   LARGE_IMAGE: '이미지 크기가 너무 큽니다.',
   FAIL_INSTALL: '이미 설치했거나, 다운로드가 불가능한 환경입니다.',
+  UNSUPPORTED_EXTENSION: '지원되지 않는 파일 형식입니다.',
 };
 
 export default SNACKBAR_MESSAGE;

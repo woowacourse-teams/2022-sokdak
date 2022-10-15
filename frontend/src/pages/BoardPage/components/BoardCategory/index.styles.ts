@@ -54,7 +54,7 @@ export const BoardList = styled.div`
   }
 `;
 
-export const DropdownContainer = styled.div`
+export const MobileNavContainer = styled.nav`
   @media (min-width: 875px) {
     display: none;
   }
@@ -71,7 +71,7 @@ export const OptionList = styled(Dropdown.OptionList)`
   left: 46%;
 `;
 
-export const DesktopCategoryContainer = styled.div`
+export const DesktopNavContainer = styled.nav`
   width: 100%;
   display: flex;
   overflow: auto;

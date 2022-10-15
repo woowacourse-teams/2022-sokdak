@@ -16,7 +16,7 @@ const BoardCategory = ({ id, boards }: BoardCategoryProps) => {
 
   return (
     <Styled.BoardCategoryContainer>
-      <Styled.DesktopCategoryContainer>
+      <Styled.DesktopNavContainer>
         {boards.map(({ id }) => (
           <NavLink key={id} to={`/board/${id}`}>
             {({ isActive }) =>
@@ -28,8 +28,8 @@ const BoardCategory = ({ id, boards }: BoardCategoryProps) => {
             }
           </NavLink>
         ))}
-      </Styled.DesktopCategoryContainer>
-      <Styled.DropdownContainer>
+      </Styled.DesktopNavContainer>
+      <Styled.MobileNavContainer>
         <Dropdown>
           <Dropdown.Trigger>
             <Styled.TitleContainer>
@@ -47,7 +47,7 @@ const BoardCategory = ({ id, boards }: BoardCategoryProps) => {
             </Styled.BoardList>
           </Styled.OptionList>
         </Dropdown>
-      </Styled.DropdownContainer>
+      </Styled.MobileNavContainer>
     </Styled.BoardCategoryContainer>
   );
 };

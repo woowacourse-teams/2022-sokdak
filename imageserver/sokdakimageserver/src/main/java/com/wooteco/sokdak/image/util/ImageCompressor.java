@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.image;
+package com.wooteco.sokdak.image.util;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

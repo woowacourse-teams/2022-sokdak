@@ -128,9 +128,11 @@
 [API 명세](https://woowacourse-teams.github.io/2022-sokdak/backend/sokdak/src/main/resources/static/index.html)
 
 ## 🏬 프로젝트 아키텍쳐
+### Infrastructure
+![Infra](https://user-images.githubusercontent.com/64204666/196035329-33a09c04-8168-4562-936c-b0e64828762e.png)
 
-// 채워주세요
-
+### CI/CD
+![CICD](https://user-images.githubusercontent.com/64204666/196035345-24e44fa2-57c8-4178-99c8-5955445c0a17.png)
 ## 📂 업데이트 내역
 
 // 채워주세요

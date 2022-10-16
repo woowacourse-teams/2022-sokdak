@@ -3,6 +3,7 @@ package com.wooteco.sokdak.member.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.ticket.domain.AuthCode;
 import com.wooteco.sokdak.auth.service.Encryptor;
 import com.wooteco.sokdak.member.domain.Member;
@@ -14,6 +15,7 @@ import com.wooteco.sokdak.member.exception.InvalidNicknameException;
 import com.wooteco.sokdak.member.repository.AuthCodeRepository;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.util.ServiceTest;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -56,6 +58,18 @@ class MemberServiceTest extends ServiceTest {
 
         assertThat(memberRepository.findByUsernameValueAndPasswordValue(Encryptor.encrypt("josh"),
                 Encryptor.encrypt("Abcd123!@"))).isPresent();
+    }
+
+    @DisplayName("지원자로 회원가입 조건을 모두 만족하면 회원가입에 성공한다.")
+    @Test
+    void signUpAsApplicant() {
+        SignupRequest signupRequest = new SignupRequest("", "testJosh",
+                "testJoshNickname", "ABCDEF", "Abcd123!@", "Abcd123!@");
+        memberService.signUpAsApplicant(signupRequest);
+
+        Member member = memberRepository.findByUsernameValueAndPasswordValue(Encryptor.encrypt(signupRequest.getUsername()),
+                Encryptor.encrypt(signupRequest.getPassword())).get();
+        assertThat(member.getRoleType()).isEqualTo(RoleType.APPLICANT);
     }
 
     @DisplayName("닉네임 수정 기능")

@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.post.service;
 
 import static com.wooteco.sokdak.member.domain.RoleType.USER;
+import static com.wooteco.sokdak.util.fixture.BoardFixture.APPLICANT_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -8,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.board.exception.BoardNotFoundException;
@@ -36,6 +38,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -122,6 +126,34 @@ class PostServiceTest extends ServiceTest {
                 () -> assertThat(actual.getTitle()).isEqualTo(newPostRequest.getTitle()),
                 () -> assertThat(actual.getContent()).isEqualTo(newPostRequest.getContent()),
                 () -> assertThat(actual.getMember().getId()).isEqualTo(member.getId()),
+                () -> assertThat(actual.getNickname()).isEqualTo(actual.getMember().getNickname()),
+                () -> assertThat(actual.getCreatedAt()).isNotNull(),
+                () -> assertThat(actual.getPostBoards().get(0).getBoard().getTitle()).isNotNull()
+        );
+    }
+
+    @DisplayName("지원자는 권한이 없는 게시판에 글을 작성할 수 없다.")
+    @ParameterizedTest
+    @CsvSource({"1", "2", "3", "4"})
+    void addPost_Applicant_Exception(Long boardId) {
+        NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", false, Collections.emptyList());
+
+        assertThatThrownBy(() -> postService.addPost(boardId, newPostRequest, APPLICANT_AUTH_INFO))
+                .isInstanceOf(AuthorizationException.class);
+    }
+
+    @DisplayName("지원자는 권한이 있는 게시판에 글을 작성할 수 있다.")
+    @Test
+    void addPost_Applicant() {
+        NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", false, Collections.emptyList());
+
+        Long postId = postService.addPost(APPLICANT_BOARD_ID, newPostRequest, APPLICANT_AUTH_INFO);
+        Post actual = postRepository.findById(postId).orElseThrow();
+
+        assertAll(
+                () -> assertThat(actual.getTitle()).isEqualTo(newPostRequest.getTitle()),
+                () -> assertThat(actual.getContent()).isEqualTo(newPostRequest.getContent()),
+                () -> assertThat(actual.getMember().getId()).isEqualTo(APPLICANT_AUTH_INFO.getId()),
                 () -> assertThat(actual.getNickname()).isEqualTo(actual.getMember().getNickname()),
                 () -> assertThat(actual.getCreatedAt()).isNotNull(),
                 () -> assertThat(actual.getPostBoards().get(0).getBoard().getTitle()).isNotNull()
@@ -283,7 +315,7 @@ class PostServiceTest extends ServiceTest {
     @Test
     void deletePostWithComment() {
         postRepository.save(post);
-        NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
+        NewCommentRequest newCommentRequest = new NewCommentRequest(FREE_BOARD_ID, "댓글", true);
         commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
 
         postService.deletePost(post.getId(), AUTH_INFO);

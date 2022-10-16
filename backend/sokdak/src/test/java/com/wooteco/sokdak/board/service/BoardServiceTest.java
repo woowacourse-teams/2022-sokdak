@@ -6,6 +6,7 @@ import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_1;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_2;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_3;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_4;
+import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_5;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -66,10 +67,10 @@ class BoardServiceTest extends ServiceTest {
     void findBoards() {
         BoardsResponse boards = boardService.findBoards();
 
-        assertThat(boards.getBoards()).hasSize(4)
+        assertThat(boards.getBoards()).hasSize(5)
                 .extracting("title")
                 .containsExactly(BOARD_REQUEST_1.getName(), BOARD_REQUEST_2.getName(), BOARD_REQUEST_3.getName(),
-                        BOARD_REQUEST_4.getName());
+                        BOARD_REQUEST_4.getName(), BOARD_REQUEST_5.getName());
     }
 
     @DisplayName("작성 가능 게시판에서 허용된 사용자가 게시글을 쓸 수 있다.")

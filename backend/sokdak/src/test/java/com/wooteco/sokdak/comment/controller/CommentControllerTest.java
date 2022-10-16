@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.comment.controller;
 
+import static com.wooteco.sokdak.util.fixture.BoardFixture.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -11,6 +12,7 @@ import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.dto.NewReplyRequest;
 import com.wooteco.sokdak.comment.dto.ReplyResponse;
 import com.wooteco.sokdak.util.ControllerTest;
+import com.wooteco.sokdak.util.fixture.BoardFixture;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -24,7 +26,7 @@ class CommentControllerTest extends ControllerTest {
     @DisplayName("댓글 작성 요청이 오면 새로운 댓글을 작성한다.")
     @Test
     void addComment() {
-        NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
+        NewCommentRequest newCommentRequest = new NewCommentRequest(FREE_BOARD_ID, "댓글", true);
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -40,7 +42,7 @@ class CommentControllerTest extends ControllerTest {
     @DisplayName("대댓글 작성 요청이 오면 댓글애 새로운 대댓글을 작성한다.")
     @Test
     void addReply() {
-        NewReplyRequest newReplyRequest = new NewReplyRequest("대댓글", true);
+        NewReplyRequest newReplyRequest = new NewReplyRequest(FREE_BOARD_ID, "대댓글", true);
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -56,7 +58,7 @@ class CommentControllerTest extends ControllerTest {
     @DisplayName("댓글 작성 요청에 댓글 내용이 없는 경우 400을 반환한다")
     @Test
     void addComment_Exception_NoMessage() {
-        NewCommentRequest newCommentRequest = new NewCommentRequest(null, true);
+        NewCommentRequest newCommentRequest = new NewCommentRequest(FREE_BOARD_ID, null, true);
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

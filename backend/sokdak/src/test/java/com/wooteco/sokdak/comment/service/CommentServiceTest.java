@@ -1,8 +1,11 @@
 package com.wooteco.sokdak.comment.service;
 
 import static com.wooteco.sokdak.member.domain.RoleType.USER;
+import static com.wooteco.sokdak.util.fixture.BoardFixture.APPLICANT_BOARD_ID;
+import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.ANONYMOUS_COMMENT_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.ANONYMOUS_REPLY_REQUEST;
+import static com.wooteco.sokdak.util.fixture.CommentFixture.APPLICANT_COMMENT_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NON_ANONYMOUS_COMMENT_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NON_ANONYMOUS_REPLY_REQUEST;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
@@ -32,6 +35,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 class CommentServiceTest extends ServiceTest {
@@ -86,6 +91,28 @@ class CommentServiceTest extends ServiceTest {
         );
     }
 
+    @DisplayName("지원자는 권한이 없는 게시판에 작성된 게시글에 댓글 작성할 수 없다.")
+    @ParameterizedTest
+    @CsvSource({"1", "2", "3", "4"})
+    void addComment_Applicant_Exception(Long boardId) {
+        NewCommentRequest newCommentRequest = new NewCommentRequest(boardId, "content", true);
+        assertThatThrownBy(() -> commentService.addComment(anonymousPost.getId(), newCommentRequest, APPLICANT_AUTH_INFO))
+                .isInstanceOf(AuthorizationException.class);
+    }
+
+    @DisplayName("지원자는 권한이 있는 게시판에 작성된 게시글에 댓글을 작성할 수 있다.")
+    @Test
+    void addComment_Applicant() {
+        NewCommentRequest newCommentRequest = new NewCommentRequest(APPLICANT_BOARD_ID, "content", true);
+
+        Long commentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, APPLICANT_AUTH_INFO);
+        Comment foundComment = commentRepository.findById(commentId).orElseThrow();
+        assertAll(
+                () -> assertThat(foundComment.getMessage()).isEqualTo(newCommentRequest.getContent()),
+                () -> assertThat(foundComment.getMember().getId()).isEqualTo(APPLICANT_AUTH_INFO.getId())
+        );
+    }
+
     @DisplayName("대댓글 등록")
     @Test
     void addReply() {
@@ -109,6 +136,30 @@ class CommentServiceTest extends ServiceTest {
 
         assertThatThrownBy(() -> commentService.addReply(replyId, ANONYMOUS_REPLY_REQUEST, AUTH_INFO))
                 .isInstanceOf(ReplyDepthException.class);
+    }
+
+    @DisplayName("지원자는 권한이 없는 게시판에 작성된 게시글에 달린 댓글에 대댓글을 작성할 수 없다.")
+    @ParameterizedTest
+    @CsvSource({"1", "2", "3", "4"})
+    void addReply_Applicant_Exception(Long boardId) {
+        Long commentId = commentService.addComment(anonymousPost.getId(), APPLICANT_COMMENT_REQUEST, AUTH_INFO);
+        NewReplyRequest newReplyRequest = new NewReplyRequest(boardId, "content", true);
+        assertThatThrownBy(() -> commentService.addReply(commentId, newReplyRequest, APPLICANT_AUTH_INFO))
+                .isInstanceOf(AuthorizationException.class);
+    }
+
+    @DisplayName("지원자는 권한이 있는 게시판에 작성된 게시글에 달린 댓글에 대댓글을 작성할 수 있다.")
+    @Test
+    void addReply_Applicant() {
+        Long commentId = commentService.addComment(anonymousPost.getId(), APPLICANT_COMMENT_REQUEST, AUTH_INFO);
+        NewReplyRequest newReplyRequest = new NewReplyRequest(APPLICANT_BOARD_ID, "content", true);
+
+        Long replyId = commentService.addReply(commentId, newReplyRequest, APPLICANT_AUTH_INFO);
+        Comment foundReply = commentRepository.findById(replyId).orElseThrow();
+        assertAll(
+                () -> assertThat(foundReply.getMessage()).isEqualTo(newReplyRequest.getContent()),
+                () -> assertThat(foundReply.getMember().getId()).isEqualTo(APPLICANT_AUTH_INFO.getId())
+        );
     }
 
     @DisplayName("익명 게시글에서 게시글 작성자가 기명으로 댓글 등록")
@@ -234,7 +285,7 @@ class CommentServiceTest extends ServiceTest {
                 .content("본문")
                 .build();
         postRepository.save(otherPost);
-        NewCommentRequest newCommentRequestToOtherPost = new NewCommentRequest("다른 게시글의 댓글", true);
+        NewCommentRequest newCommentRequestToOtherPost = new NewCommentRequest(FREE_BOARD_ID, "다른 게시글의 댓글", true);
         commentService.addComment(anonymousPost.getId(), ANONYMOUS_COMMENT_REQUEST, AUTH_INFO);
         commentService.addComment(otherPost.getId(), newCommentRequestToOtherPost, AUTH_INFO);
 
@@ -275,7 +326,7 @@ class CommentServiceTest extends ServiceTest {
     @DisplayName("댓글, 대댓글을 등록하고 해당 게시물의 댓글을 조회하면 댓글과 대댓글이 같이 조회된다.")
     @Test
     void findComments_Having_Reply() {
-        NewReplyRequest newReplyRequest2 = new NewReplyRequest("대댓글2", false);
+        NewReplyRequest newReplyRequest2 = new NewReplyRequest(FREE_BOARD_ID, "대댓글2", false);
         Long commentId = commentService.addComment(anonymousPost.getId(), NON_ANONYMOUS_COMMENT_REQUEST, AUTH_INFO);
         commentService.addReply(commentId, NON_ANONYMOUS_REPLY_REQUEST, AUTH_INFO);
         commentService.addReply(commentId, newReplyRequest2, AUTH_INFO);

@@ -1,7 +1,7 @@
 package com.wooteco.sokdak.member.domain;
 
 public enum RoleType {
-    USER("USER"), ADMIN("ADMIN");
+    APPLICANT("APPLICANT"), USER("USER"), ADMIN("ADMIN");
 
     private String name;
 

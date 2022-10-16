@@ -2,8 +2,8 @@ package com.wooteco.sokdak.post.service;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
+import com.wooteco.sokdak.auth.service.AuthService;
 import com.wooteco.sokdak.board.domain.Board;
-import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.board.service.BoardService;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
@@ -24,7 +24,6 @@ import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.Collections;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -43,11 +42,13 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final PostLikeRepository postLikeRepository;
     private final NotificationService notificationService;
+    private final AuthService authService;
 
     public PostService(HashtagService hashtagService, BoardService boardService,
                        PostRepository postRepository, PostBoardRepository postBoardRepository,
                        MemberRepository memberRepository, CommentRepository commentRepository,
-                       PostLikeRepository postLikeRepository, NotificationService notificationService) {
+                       PostLikeRepository postLikeRepository, NotificationService notificationService,
+                       AuthService authService) {
         this.hashtagService = hashtagService;
         this.boardService = boardService;
         this.postRepository = postRepository;
@@ -56,10 +57,12 @@ public class PostService {
         this.commentRepository = commentRepository;
         this.postLikeRepository = postLikeRepository;
         this.notificationService = notificationService;
+        this.authService = authService;
     }
 
     @Transactional
     public Long addPost(Long boardId, NewPostRequest newPostRequest, AuthInfo authInfo) {
+        authService.checkAuthority(authInfo, boardId);
         Member member = findMember(authInfo);
         String writerNickname = createPostWriterNickname(newPostRequest.isAnonymous(), member);
         Post post = createPost(newPostRequest, writerNickname, member);

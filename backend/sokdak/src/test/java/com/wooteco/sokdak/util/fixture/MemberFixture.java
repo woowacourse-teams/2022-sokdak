@@ -12,8 +12,10 @@ public class MemberFixture {
     public static final String VALID_USERNAME = "chris";
     public static final String VALID_PASSWORD = "Abcd123!@";
     public static final String VALID_NICKNAME = "testNickname";
+    public static final String APPLICANT_USERNAME = "applicant";
 
     public static final LoginRequest VALID_LOGIN_REQUEST = new LoginRequest(VALID_USERNAME, VALID_PASSWORD);
+    public static final LoginRequest APPLICANT_LOGIN_REQUEST = new LoginRequest(APPLICANT_USERNAME, VALID_PASSWORD);
     public static final LoginRequest INVALID_LOGIN_REQUEST = new LoginRequest("invalidUsername", "invalidPassword1!");
 
     public static final Long CHRIS_ID = 3L;
@@ -39,6 +41,10 @@ public class MemberFixture {
 
     public static String getChrisToken() {
         return getToken("chris");
+    }
+
+    public static String getApplicantToken() {
+        return getToken("applicant");
     }
 
     public static String getToken(String username) {

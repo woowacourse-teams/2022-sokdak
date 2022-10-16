@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.comment.service;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.auth.service.AuthService;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.CommentsResponse;
@@ -36,19 +37,23 @@ public class CommentService {
     private final PostRepository postRepository;
     private final NotificationService notificationService;
     private final CommentLikeRepository commentLikeRepository;
+    private final AuthService authService;
 
     public CommentService(CommentRepository commentRepository, MemberRepository memberRepository,
                           PostRepository postRepository, NotificationService notificationService,
-                          CommentLikeRepository commentLikeRepository) {
+                          CommentLikeRepository commentLikeRepository,
+                          AuthService authService) {
         this.commentRepository = commentRepository;
         this.memberRepository = memberRepository;
         this.postRepository = postRepository;
         this.notificationService = notificationService;
         this.commentLikeRepository = commentLikeRepository;
+        this.authService = authService;
     }
 
     @Transactional
     public Long addComment(Long postId, NewCommentRequest newCommentRequest, AuthInfo authInfo) {
+        authService.checkAuthority(authInfo, newCommentRequest.getBoardId());
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
         Post post = postRepository.findById(postId)
@@ -66,6 +71,7 @@ public class CommentService {
 
     @Transactional
     public Long addReply(Long commentId, NewReplyRequest newReplyRequest, AuthInfo authInfo) {
+        authService.checkAuthority(authInfo, newReplyRequest.getBoardId());
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
         Comment parent = commentRepository.findById(commentId)

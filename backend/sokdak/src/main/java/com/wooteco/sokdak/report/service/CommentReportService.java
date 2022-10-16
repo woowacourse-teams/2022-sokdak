@@ -39,7 +39,7 @@ public class CommentReportService {
 
     @Transactional
     public void reportComment(Long commentId, ReportRequest reportRequest, AuthInfo authInfo) {
-        authService.checkAllowedApiToApplicantUser(authInfo, reportRequest.getBoardId());
+        authService.checkAuthority(authInfo, reportRequest.getBoardId());
         Comment comment = commentRepository.findByCommentId(commentId)
                 .orElseThrow(CommentNotFoundException::new);
         Member reporter = memberRepository.findById(authInfo.getId())

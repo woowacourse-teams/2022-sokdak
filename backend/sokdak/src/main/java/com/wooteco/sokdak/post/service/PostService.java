@@ -62,7 +62,7 @@ public class PostService {
 
     @Transactional
     public Long addPost(Long boardId, NewPostRequest newPostRequest, AuthInfo authInfo) {
-        authService.checkAllowedApiToApplicantUser(authInfo, boardId);
+        authService.checkAuthority(authInfo, boardId);
         Member member = findMember(authInfo);
         String writerNickname = createPostWriterNickname(newPostRequest.isAnonymous(), member);
         Post post = createPost(newPostRequest, writerNickname, member);

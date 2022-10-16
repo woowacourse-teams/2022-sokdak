@@ -53,7 +53,7 @@ public class CommentService {
 
     @Transactional
     public Long addComment(Long postId, NewCommentRequest newCommentRequest, AuthInfo authInfo) {
-        authService.checkAllowedApiToApplicantUser(authInfo, newCommentRequest.getBoardId());
+        authService.checkAuthority(authInfo, newCommentRequest.getBoardId());
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
         Post post = postRepository.findById(postId)
@@ -71,7 +71,7 @@ public class CommentService {
 
     @Transactional
     public Long addReply(Long commentId, NewReplyRequest newReplyRequest, AuthInfo authInfo) {
-        authService.checkAllowedApiToApplicantUser(authInfo, newReplyRequest.getBoardId());
+        authService.checkAuthority(authInfo, newReplyRequest.getBoardId());
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
         Comment parent = commentRepository.findById(commentId)

@@ -40,7 +40,7 @@ public class AuthService {
         return new AuthInfo(member.getId(), member.getRoleType().getName(), member.getNickname());
     }
 
-    public void checkAllowedApiToApplicantUser(AuthInfo authInfo, Long boardId) {
+    public void checkAuthority(AuthInfo authInfo, Long boardId) {
         if (!RoleType.APPLICANT.getName().equals(authInfo.getRole())) {
             return;
         }

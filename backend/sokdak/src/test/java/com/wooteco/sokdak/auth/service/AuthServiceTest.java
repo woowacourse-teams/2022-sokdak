@@ -50,7 +50,7 @@ class AuthServiceTest extends ServiceTest {
     @Test
     void checkAllowedApiToApplicantUser_Exception() {
         assertThatThrownBy(
-                () -> authService.checkAllowedApiToApplicantUser(
+                () -> authService.checkAuthority(
                         new AuthInfo(1L, RoleType.APPLICANT.getName(), "applicant"), 1L))
                 .isInstanceOf(AuthorizationException.class);
     }
@@ -60,6 +60,6 @@ class AuthServiceTest extends ServiceTest {
     @CsvSource({"APPLICANT, 5", "USER, 5", "ADMIN, 5"})
     void checkAllowedApiToApplicantUser(String role, Long boardId) {
         assertDoesNotThrow(
-                () -> authService.checkAllowedApiToApplicantUser(new AuthInfo(1L, role, "applicant"), boardId));
+                () -> authService.checkAuthority(new AuthInfo(1L, role, "applicant"), boardId));
     }
 }

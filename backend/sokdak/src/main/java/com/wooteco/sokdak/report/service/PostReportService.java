@@ -38,7 +38,7 @@ public class PostReportService {
 
     @Transactional
     public void reportPost(Long postId, ReportRequest reportRequest, AuthInfo authInfo) {
-        authService.checkAllowedApiToApplicantUser(authInfo, reportRequest.getBoardId());
+        authService.checkAuthority(authInfo, reportRequest.getBoardId());
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
         Member member = memberRepository.findById(authInfo.getId())

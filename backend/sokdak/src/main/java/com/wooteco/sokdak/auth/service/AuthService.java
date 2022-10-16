@@ -41,12 +41,20 @@ public class AuthService {
     }
 
     public void checkAuthority(AuthInfo authInfo, Long boardId) {
-        if (!RoleType.APPLICANT.getName().equals(authInfo.getRole())) {
+        if (isWootecoUser(authInfo)) {
             return;
         }
-        if (boardId == APPLICANT_BOARD_ID) {
+        if (isEditableBoardToApplicant(boardId)) {
             return;
         }
         throw new AuthorizationException();
+    }
+
+    private boolean isWootecoUser(AuthInfo authInfo) {
+        return RoleType.APPLICANT.getName() != authInfo.getRole();
+    }
+
+    private boolean isEditableBoardToApplicant(Long boardId) {
+        return boardId == APPLICANT_BOARD_ID;
     }
 }

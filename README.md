@@ -90,7 +90,7 @@
 
 **Build Tool |** Gradle 7.4.1
 
-**Test |** Junit 5.8.2, Spring Test 5.3.21, Mockito 4.5.1
+**Test |** Junit 5.8.2, Mockito 4.5.1
 
 **Docs |** Spring REST Docs 2.0.6
   

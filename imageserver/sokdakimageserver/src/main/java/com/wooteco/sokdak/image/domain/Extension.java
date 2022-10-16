@@ -23,10 +23,6 @@ public enum Extension {
                 .orElseThrow(NotSupportedExtensionException::new);
     }
 
-    public boolean canNotCompress() {
-        return this == GIF;
-    }
-
     public String getValue() {
         return value;
     }

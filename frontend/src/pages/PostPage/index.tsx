@@ -5,6 +5,7 @@ import CommentList from './components/CommentList';
 import PostContent from './components/PostContent';
 import PostHeader from './components/PostHeader';
 import Sidebar from './components/Sidebar';
+import SidebarContainer from './components/Sidebar/components/SidebarContainer';
 import Layout from '@/components/@styled/Layout';
 import ConfirmModal from '@/components/ConfirmModal';
 import Spinner from '@/components/Spinner';
@@ -105,13 +106,13 @@ const PostPage = () => {
         </Styled.PostContainer>
 
         {isDesktop && hotPosts && (
-          <Styled.SideContainer>
+          <SidebarContainer>
             <Sidebar
               title="실시간 인기글"
               items={hotPosts.pages.map(item => ({ name: item.title, url: `${PATH.POST}/${item.id}` }))!}
             />
-            <Styled.ADSidebar title="AD" items={AD} domain="external" />
-          </Styled.SideContainer>
+            <Sidebar title="AD" items={AD} domain="external" />
+          </SidebarContainer>
         )}
 
         {isConfirmModalOpen && (

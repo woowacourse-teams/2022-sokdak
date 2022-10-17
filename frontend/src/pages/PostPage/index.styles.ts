@@ -1,7 +1,5 @@
 import { Link } from 'react-router-dom';
 
-import Sidebar from './components/Sidebar';
-
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -115,6 +113,7 @@ export const Container = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
+  position: relative;
 
   @media (min-width: 875px) {
     padding: 4rem 1rem;
@@ -130,14 +129,4 @@ export const PostContainer = styled.div`
   @media (min-width: 875px) {
     width: 55%;
   }
-`;
-
-export const SideContainer = styled.aside`
-  width: 35%;
-  height: 100%;
-  position: relative;
-`;
-
-export const ADSidebar = styled(Sidebar)`
-  top: 360px;
 `;

@@ -3,17 +3,14 @@ import { Link } from 'react-router-dom';
 import { css, Theme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-export const Container = styled.div<{ position: number }>`
+export const Container = styled.div`
   display: flex;
+  flex-direction: column;
   width: 100%;
   height: 300px;
   border: 1px solid ${props => props.theme.colors.gray_400};
   padding: 30px;
-  flex-direction: column;
   box-sizing: border-box;
-  position: absolute;
-  transform: ${({ position }) => `translateY(${position}px);`};
-  transition: all 0.2s ease;
   background-color: white;
 `;
 

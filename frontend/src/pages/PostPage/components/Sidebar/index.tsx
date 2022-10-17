@@ -1,6 +1,4 @@
-import { HTMLAttributes, useEffect, useState } from 'react';
-
-import useThrottle from '@/hooks/useThrottle';
+import { HTMLAttributes } from 'react';
 
 import * as Styled from './index.styles';
 
@@ -16,17 +14,8 @@ interface Item {
 }
 
 const Sidebar = ({ title, items, className, domain = 'internal' }: SidebarProps) => {
-  const [position, setPosition] = useState(document.documentElement.scrollTop);
-  const moveSidebar = useThrottle(() => setPosition(document.documentElement.scrollTop), 50);
-
-  useEffect(() => {
-    window.addEventListener('scroll', moveSidebar);
-
-    return () => window.removeEventListener('scroll', moveSidebar);
-  }, []);
-
   return (
-    <Styled.Container position={position} className={className}>
+    <Styled.Container className={className}>
       <Styled.Title>{title}</Styled.Title>
       <Styled.Items>
         {items.map(({ name, url }) => (

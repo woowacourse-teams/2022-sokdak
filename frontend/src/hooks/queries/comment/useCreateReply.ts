@@ -9,18 +9,16 @@ interface RequestProps {
   commentId: number | string;
   content: string;
   anonymous: boolean;
-  boardId: number;
 }
 
 const useCreateReply = (options?: UseMutationOptions<AxiosResponse, AxiosError<ErrorResponse>, RequestProps>) => {
   const queryClient = useQueryClient();
 
   return useMutation(
-    ({ commentId, content, anonymous, boardId }): Promise<AxiosResponse> =>
+    ({ commentId, content, anonymous }): Promise<AxiosResponse> =>
       authFetcher.post(`comments/${commentId}/reply`, {
         content,
         anonymous,
-        boardId,
       }),
     {
       ...options,

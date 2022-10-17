@@ -28,7 +28,6 @@ interface CommentBoxProps extends CommentType {
   className?: string;
   openedFormId?: undefined | number;
   setOpenedFormId?: React.Dispatch<React.SetStateAction<undefined | number>>;
-  boardId: number;
 }
 
 const CommentBox = ({
@@ -45,7 +44,6 @@ const CommentBox = ({
   like,
   openedFormId,
   setOpenedFormId,
-  boardId,
 }: CommentBoxProps) => {
   const [isReportModalOpen, handleReportModal] = useReducer(state => !state, false);
   const [isDeleteModalOpen, handleDeleteModal] = useReducer(state => !state, false);
@@ -76,11 +74,11 @@ const CommentBox = ({
   };
 
   const submitReportComment = (message: string) => {
-    reportComment({ id, message, boardId });
+    reportComment({ id, message });
   };
 
   const handleLikeButton = () => {
-    likeComment({ id, boardId });
+    likeComment({ id });
   };
   if (isLoading) {
     return <></>;
@@ -126,7 +124,7 @@ const CommentBox = ({
         </Styled.Footer>
       </Styled.Container>
 
-      {isReplyFormOpen && <ReplyForm commentId={id} setIsReplyFormOpen={setIsReplyFormOpen} boardId={boardId} />}
+      {isReplyFormOpen && <ReplyForm commentId={id} setIsReplyFormOpen={setIsReplyFormOpen} />}
       {isDeleteModalOpen && (
         <ConfirmModal
           title="삭제"

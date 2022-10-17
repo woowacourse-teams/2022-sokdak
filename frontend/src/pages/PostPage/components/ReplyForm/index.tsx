@@ -13,10 +13,9 @@ import scrollToCurrent from '@/utils/scrollToCurrent';
 interface ReplyFormProps {
   commentId: string | number;
   setIsReplyFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  boardId: number;
 }
 
-const ReplyForm = ({ commentId, setIsReplyFormOpen, boardId }: ReplyFormProps) => {
+const ReplyForm = ({ commentId, setIsReplyFormOpen }: ReplyFormProps) => {
   const { showSnackbar } = useSnackbar();
 
   const [content, setContent] = useState('');
@@ -33,7 +32,7 @@ const ReplyForm = ({ commentId, setIsReplyFormOpen, boardId }: ReplyFormProps) =
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    postReply({ commentId, content, anonymous, boardId });
+    postReply({ commentId, content, anonymous });
   };
 
   const handleClickCancel = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

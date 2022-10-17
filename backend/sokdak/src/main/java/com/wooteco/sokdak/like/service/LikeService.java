@@ -50,9 +50,9 @@ public class LikeService {
 
     @Transactional
     public LikeFlipResponse flipPostLike(Long postId, AuthInfo authInfo, LikeFlipRequest likeFlipRequest) {
-        authService.checkAuthority(authInfo, likeFlipRequest.getBoardId());
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
+        authService.checkAuthority(authInfo, post.getBoardId());
 
         flipPostLike(authInfo.getId(), post);
         int likeCount = post.getLikeCount();

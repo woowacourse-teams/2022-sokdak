@@ -9,6 +9,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
+import com.wooteco.sokdak.board.domain.Board;
+import com.wooteco.sokdak.board.domain.PostBoard;
+import com.wooteco.sokdak.board.repository.BoardRepository;
+import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.ReplyResponse;
@@ -30,8 +34,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 class LikeServiceTest extends ServiceTest {
 
@@ -50,18 +52,44 @@ class LikeServiceTest extends ServiceTest {
     @Autowired
     private CommentRepository commentRepository;
 
+    @Autowired
+    private BoardRepository boardRepository;
+
+    @Autowired
+    private PostBoardRepository postBoardRepository;
+
     private Post post;
+    private Post applicantPost;
     private Comment comment;
     private Comment reply;
 
     @BeforeEach
     void setUp() {
+        Board freeBoard = boardRepository.findById(FREE_BOARD_ID).get();
+
         post = Post.builder()
                 .title(VALID_POST_TITLE)
                 .content(VALID_POST_CONTENT)
                 .member(member)
+                .writerNickname(member.getNickname())
+                .build();
+        applicantPost = Post.builder()
+                .title(VALID_POST_TITLE)
+                .content(VALID_POST_CONTENT)
+                .member(member)
+                .writerNickname(member.getNickname())
                 .build();
         postRepository.save(post);
+        postRepository.save(applicantPost);
+
+        PostBoard postBoard = PostBoard.builder().build();
+        postBoard.addPost(post);
+        postBoard.addBoard(freeBoard);
+        PostBoard applicantPostBoard = PostBoard.builder().build();
+        applicantPostBoard.addPost(applicantPost);
+        applicantPostBoard.addBoard(boardRepository.findById(APPLICANT_BOARD_ID).get());
+        postBoardRepository.save(postBoard);
+        postBoardRepository.save(applicantPostBoard);
 
         comment = Comment.parent(member, post, "nickname", "댓글내용");
         commentRepository.save(comment);
@@ -111,7 +139,8 @@ class LikeServiceTest extends ServiceTest {
     @DisplayName("댓글 좋아요 등록")
     @Test
     void flipCommentLike_create() {
-        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(comment.getId(), AUTH_INFO, new LikeFlipRequest(FREE_BOARD_ID));
+        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(comment.getId(), AUTH_INFO,
+                new LikeFlipRequest(FREE_BOARD_ID));
 
         entityManager.flush();
         entityManager.clear();
@@ -160,7 +189,8 @@ class LikeServiceTest extends ServiceTest {
     void flipPostLike_Applicant() {
         LikeFlipRequest likeFlipRequest = new LikeFlipRequest(APPLICANT_BOARD_ID);
 
-        LikeFlipResponse likeFlipResponse = likeService.flipPostLike(post.getId(), APPLICANT_AUTH_INFO, likeFlipRequest);
+        LikeFlipResponse likeFlipResponse = likeService.flipPostLike(applicantPost.getId(), APPLICANT_AUTH_INFO,
+                likeFlipRequest);
 
         assertAll(
                 () -> assertThat(likeFlipResponse.isLike()).isTrue(),
@@ -171,7 +201,8 @@ class LikeServiceTest extends ServiceTest {
     @DisplayName("대댓글 좋아요 등록")
     @Test
     void flipCommentLike_ReplyCreate() {
-        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(reply.getId(), AUTH_INFO, new LikeFlipRequest(FREE_BOARD_ID));
+        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(reply.getId(), AUTH_INFO,
+                new LikeFlipRequest(FREE_BOARD_ID));
 
         entityManager.flush();
         entityManager.clear();
@@ -216,7 +247,8 @@ class LikeServiceTest extends ServiceTest {
     void flipCommentLike_Applicant() {
         LikeFlipRequest likeFlipRequest = new LikeFlipRequest(APPLICANT_BOARD_ID);
 
-        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(comment.getId(), APPLICANT_AUTH_INFO, likeFlipRequest);
+        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(comment.getId(), APPLICANT_AUTH_INFO,
+                likeFlipRequest);
 
         assertAll(
                 () -> assertThat(likeFlipResponse.isLike()).isTrue(),
@@ -226,7 +258,6 @@ class LikeServiceTest extends ServiceTest {
 
     @DisplayName("댓글 목록 조회 시 좋아요 개수를 알 수 있고 내가 좋아요를 눌렀음을 알 수 있다.")
     @Test
-    @Transactional(propagation = Propagation.NEVER)
     void getCommentsLikes() {
         likeService.flipCommentLike(comment.getId(), AUTH_INFO, new LikeFlipRequest(FREE_BOARD_ID));
 
@@ -240,7 +271,6 @@ class LikeServiceTest extends ServiceTest {
 
     @DisplayName("댓글 목록 조회 시 좋아요 개수와 내가 좋아요를 누르지 않았음을 알 수 있다.")
     @Test
-    @Transactional(propagation = Propagation.NEVER)
     void getCommentsLikesOfOther() {
         likeService.flipCommentLike(comment.getId(), AUTH_INFO, new LikeFlipRequest(FREE_BOARD_ID));
 
@@ -255,7 +285,6 @@ class LikeServiceTest extends ServiceTest {
 
     @DisplayName("대댓글 목록 조회 시 좋아요 개수를 알 수 있고 내가 좋아요를 눌렀음을 알 수 있다.")
     @Test
-    @Transactional(propagation = Propagation.NEVER)
     void getCommentsLikesReply() {
         likeService.flipCommentLike(reply.getId(), AUTH_INFO, new LikeFlipRequest(FREE_BOARD_ID));
 
@@ -272,7 +301,6 @@ class LikeServiceTest extends ServiceTest {
 
     @DisplayName("대댓글 목록 조회 시 좋아요 개수와 내가 좋아요를 누르지 않았음을 알 수 있다.")
     @Test
-    @Transactional(propagation = Propagation.NEVER)
     void getCommentsLikesReplyOfOther() {
         likeService.flipCommentLike(reply.getId(), AUTH_INFO, new LikeFlipRequest(FREE_BOARD_ID));
 

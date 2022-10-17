@@ -203,4 +203,8 @@ public class Comment {
                 .orElseThrow(CommentLikeNotFoundException::new);
         commentLikes.remove(commentLike);
     }
+
+    public Long getBoardId() {
+        return post.getBoardId();
+    }
 }

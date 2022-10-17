@@ -21,12 +21,12 @@ const useLikeComment = (
   options?: UseMutationOptions<
     AxiosResponse<{ like: boolean; likeCount: number }>,
     AxiosResponse<Error>,
-    { id: number }
+    { id: number; boardId: number }
   >,
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation(({ id }) => authFetcher.put(`/comments/${id}/like`), {
+  return useMutation(({ id, boardId }) => authFetcher.put(`/comments/${id}/like`, { boardId }), {
     ...options,
     onSuccess: (_, variables) => {
       queryClient.setQueriesData<AxiosResponse<CommentResponse>>(QUERY_KEYS.COMMENTS, comment => {

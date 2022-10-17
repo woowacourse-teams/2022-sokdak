@@ -30,7 +30,7 @@ const PostPage = () => {
   const { id } = useParams();
   const [isConfirmModalOpen, handleConfirmModal] = useReducer(state => !state, false);
 
-  const { data, isLoading, isError } = usePost({
+  const { data, isError } = usePost({
     storeCode: id!,
     options: {
       staleTime: 1000 * 20,
@@ -55,16 +55,8 @@ const PostPage = () => {
   });
 
   const handleLikeButton = () => {
-    putLike({ id: id! });
+    if (data?.boardId) putLike({ id: id!, boardId: data?.boardId });
   };
-
-  if (isLoading) {
-    return (
-      <Styled.SpinnerContainer>
-        <Spinner />
-      </Styled.SpinnerContainer>
-    );
-  }
 
   if (isError || !data) {
     return (

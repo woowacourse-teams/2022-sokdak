@@ -3,9 +3,9 @@ import { useMutation, UseMutationOptions } from 'react-query';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
 interface SignUpProps extends Member {
-  email: string;
+  email: string | null;
   nickname: string;
-  code: string;
+  code: string | null;
   passwordConfirmation: string;
 }
 

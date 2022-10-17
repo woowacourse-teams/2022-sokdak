@@ -14,6 +14,7 @@ const usePost = ({
 }) =>
   useQuery([QUERY_KEYS.POST, storeCode], ({ queryKey: [, id] }) => authFetcher.get(`/posts/${id}`), {
     select: data => data.data,
+    suspense: true,
     ...options,
   });
 

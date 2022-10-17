@@ -15,7 +15,7 @@ export const DividerContainer = styled.div`
 `;
 
 export const FooterItemContainer = styled.div`
-  padding: 1em;
+  padding: 1em 0;
   color: ${props => props.theme.colors.gray_300};
 `;
 

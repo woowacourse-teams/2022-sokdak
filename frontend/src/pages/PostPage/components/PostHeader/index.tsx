@@ -28,6 +28,7 @@ interface PostHeaderProps {
     nickname: string;
     like: boolean;
     likeCount: number;
+    boardId: number;
   };
   onClickDeleteButton: () => void;
   onClickLikeButton: () => void;
@@ -60,7 +61,7 @@ const PostHeader = ({ post, onClickDeleteButton, onClickLikeButton }: PostHeader
   };
 
   const handleSubmitReport = (message: string) => {
-    submitReport({ id: post.id, message });
+    submitReport({ id: post.id, message, boardId: post.boardId });
   };
 
   return (

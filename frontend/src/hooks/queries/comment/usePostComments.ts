@@ -9,6 +9,7 @@ interface PostCommentsProps {
   content: string;
   anonymous: boolean;
   id: string;
+  boardId: number;
 }
 
 const usePostComments = (
@@ -17,8 +18,9 @@ const usePostComments = (
   const queryClient = useQueryClient();
 
   return useMutation(
-    ({ content, anonymous, id }): Promise<AxiosResponse<string, string>> =>
+    ({ content, anonymous, id, boardId }): Promise<AxiosResponse<string, string>> =>
       authFetcher.post(`posts/${id}/comments`, {
+        boardId,
         content,
         anonymous,
       }),

@@ -13,9 +13,10 @@ import scrollToCurrent from '@/utils/scrollToCurrent';
 interface CommentInputProps {
   amount: number;
   id: string;
+  boardId: number;
 }
 
-const CommentInput = ({ amount = 0, id }: CommentInputProps) => {
+const CommentInput = ({ amount = 0, id, boardId }: CommentInputProps) => {
   const contentElement = useRef<HTMLTextAreaElement>(null);
   const formElement = useRef<HTMLFormElement>(null);
   const [anonymous, setAnonymous] = useState(true);
@@ -34,7 +35,7 @@ const CommentInput = ({ amount = 0, id }: CommentInputProps) => {
       contentElement.current?.focus();
       return showSnackbar(SNACKBAR_MESSAGE.FAIL_COMMENT);
     }
-    mutate({ id, content: contentElement.current?.value, anonymous });
+    mutate({ id, content: contentElement.current?.value, anonymous, boardId });
   };
 
   return (

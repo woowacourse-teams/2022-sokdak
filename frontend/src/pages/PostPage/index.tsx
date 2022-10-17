@@ -21,7 +21,7 @@ const PostPage = () => {
   const { id } = useParams();
   const [isConfirmModalOpen, handleConfirmModal] = useReducer(state => !state, false);
 
-  const { data, isLoading, isError } = usePost({
+  const { data, isError } = usePost({
     storeCode: id!,
     options: {
       staleTime: 1000 * 20,
@@ -37,18 +37,8 @@ const PostPage = () => {
   });
 
   const handleLikeButton = () => {
-    putLike({ id: id! });
+    if (data?.boardId) putLike({ id: id!, boardId: data?.boardId });
   };
-
-  if (isLoading) {
-    return (
-      <Layout>
-        <Styled.SpinnerContainer>
-          <Spinner />
-        </Styled.SpinnerContainer>
-      </Layout>
-    );
-  }
 
   if (isError) {
     return (
@@ -84,7 +74,7 @@ const PostPage = () => {
         <PostHeader post={data!} onClickDeleteButton={handleConfirmModal} onClickLikeButton={handleLikeButton} />
         {hasImage && <Styled.Image src={process.env.IMAGE_API_URL + data.imageName} alt={data.imageName} />}
         <PostContent content={data?.content!} hashtags={data?.hashtags!} hasImage={hasImage} />
-        <CommentList id={id!} />
+        <CommentList id={id!} boardId={data?.boardId!} />
       </Styled.Container>
 
       {isConfirmModalOpen && (

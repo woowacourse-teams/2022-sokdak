@@ -9,7 +9,7 @@ const useLike = (
   options?: UseMutationOptions<
     AxiosResponse<{ like: boolean; likeCount: number }, string>,
     AxiosError<{ message: string }>,
-    { id: string }
+    { id: string; boardId: number }
   >,
 ) => {
   const queryClient = useQueryClient();

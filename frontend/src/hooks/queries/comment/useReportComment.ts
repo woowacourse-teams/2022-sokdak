@@ -12,6 +12,7 @@ import SNACKBAR_MESSAGE from '@/constants/snackbar';
 interface PostReportProps {
   id: number;
   message: string;
+  boardId: number;
 }
 
 const useReportComment = (
@@ -20,8 +21,8 @@ const useReportComment = (
   const { showSnackbar } = useContext(SnackbarContext);
 
   return useMutation(
-    ({ id, message }) => {
-      return authFetcher.post(`/comments/${id}/report`, { message });
+    ({ id, message, boardId }) => {
+      return authFetcher.post(`/comments/${id}/report`, { message, boardId });
     },
     {
       onSuccess: () => {

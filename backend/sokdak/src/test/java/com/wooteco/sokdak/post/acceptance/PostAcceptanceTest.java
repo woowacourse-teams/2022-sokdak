@@ -20,7 +20,7 @@ import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.wooteco.sokdak.post.dto.MyPostsResponse;
+import com.wooteco.sokdak.post.dto.PagePostsResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
@@ -288,7 +288,7 @@ class PostAcceptanceTest extends AcceptanceTest {
         long wrongPage = 5L;
 
         ExtractableResponse<Response> response = httpGetWithAuthorization("/posts/me?size=3&page=" + wrongPage, token);
-        MyPostsResponse postsResponse = toMyPostsResponse(response);
+        PagePostsResponse postsResponse = toMyPostsResponse(response);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
@@ -311,9 +311,9 @@ class PostAcceptanceTest extends AcceptanceTest {
                 .collect(Collectors.toList());
     }
 
-    private MyPostsResponse toMyPostsResponse(ExtractableResponse<Response> response) {
+    private PagePostsResponse toMyPostsResponse(ExtractableResponse<Response> response) {
         return response.body()
                 .jsonPath()
-                .getObject(".", MyPostsResponse.class);
+                .getObject(".", PagePostsResponse.class);
     }
 }

@@ -6,23 +6,25 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 
 @Getter
-public class MyPostsResponse {
+public class PagePostsResponse {
 
     private List<PostsElementResponse> posts;
     private int totalPageCount;
+    private int totalPostCount;
 
-    public MyPostsResponse() {
+    public PagePostsResponse() {
     }
 
-    public MyPostsResponse(List<PostsElementResponse> posts, int totalPageCount) {
+    public PagePostsResponse(List<PostsElementResponse> posts, int totalPageCount, int totalPostCount) {
         this.posts = posts;
         this.totalPageCount = totalPageCount;
+        this.totalPostCount = totalPostCount;
     }
 
-    public static MyPostsResponse of(List<Post> posts, int totalPageCount) {
+    public static PagePostsResponse of(List<Post> posts, int totalPageCount, int totalPostCount) {
         List<PostsElementResponse> postsElementResponses = posts.stream()
                 .map(PostsElementResponse::from)
                 .collect(Collectors.toList());
-        return new MyPostsResponse(postsElementResponses, totalPageCount);
+        return new PagePostsResponse(postsElementResponses, totalPageCount, totalPostCount);
     }
 }

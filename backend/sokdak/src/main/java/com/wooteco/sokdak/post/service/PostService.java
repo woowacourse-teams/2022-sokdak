@@ -16,14 +16,18 @@ import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
 import com.wooteco.sokdak.notification.service.NotificationService;
 import com.wooteco.sokdak.post.domain.Post;
-import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
+import com.wooteco.sokdak.post.dto.PagePostsResponse;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.Collections;
+import java.util.Locale;
+import java.util.regex.Pattern;
+import javax.annotation.Nullable;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -32,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
+@Slf4j
 public class PostService {
 
     private final HashtagService hashtagService;
@@ -110,10 +115,34 @@ public class PostService {
         return PostsResponse.ofPostSlice(posts);
     }
 
-    public MyPostsResponse findMyPosts(Pageable pageable, AuthInfo authInfo) {
+    public PagePostsResponse findMyPosts(Pageable pageable, AuthInfo authInfo) {
         Member member = findMember(authInfo);
         Page<Post> posts = postRepository.findPostsByMemberOrderByCreatedAtDesc(pageable, member);
-        return MyPostsResponse.of(posts.getContent(), posts.getTotalPages());
+        return PagePostsResponse.of(posts.getContent(), posts.getTotalPages(), (int) posts.getTotalElements());
+    }
+
+    public PagePostsResponse searchWithQuery(@Nullable String query,
+                                             Pageable pageable) {
+        if (query != null) {
+            query = query.toLowerCase(Locale.ROOT);
+            query = changeNoSqlInjection(query);
+        }
+        log.info("query: {}", query);
+        Page<Post> posts = postRepository.findPostPagesByQuery(
+                pageable, query);
+        return PagePostsResponse.of(posts.getContent(), posts.getTotalPages(), (int) posts.getTotalElements());
+    }
+
+    private String changeNoSqlInjection(String query) {
+        final Pattern specialChars = Pattern.compile("\\[‘”-#@;=*/+]");
+        query = specialChars.matcher(query).replaceAll("");
+        String[] reserve = new String[]{"update", "select", "delete", "insert"};
+        for (String s : reserve) {
+            if (query.contains(s)) {
+                return "";
+            }
+        }
+        return query;
     }
 
     private Member findMember(AuthInfo authInfo) {

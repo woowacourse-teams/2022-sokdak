@@ -12,7 +12,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.hashtag.dto.HashtagResponse;
-import com.wooteco.sokdak.post.dto.MyPostsResponse;
+import com.wooteco.sokdak.post.dto.PagePostsResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
@@ -248,10 +248,11 @@ class PostControllerTest extends ControllerTest {
     @Test
     void findMyPosts() {
         PageRequest pageRequest = PageRequest.of(0, 2);
-        MyPostsResponse myPostsResponse = new MyPostsResponse(
+        PagePostsResponse pagePostsResponse = new PagePostsResponse(
                 List.of(POSTS_ELEMENT_RESPONSE_2, POSTS_ELEMENT_RESPONSE_1),
-                5);
-        doReturn(myPostsResponse)
+                5,
+                10);
+        doReturn(pagePostsResponse)
                 .when(postService)
                 .findMyPosts(refEq(pageRequest), any());
 
@@ -265,11 +266,33 @@ class PostControllerTest extends ControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
+    @DisplayName("게시글 검색 시 200 반환")
+    @Test
+    void searchPosts() {
+        PageRequest pageRequest = PageRequest.of(0, 2);
+        PagePostsResponse pagePostsResponse = new PagePostsResponse(
+                List.of(POSTS_ELEMENT_RESPONSE_2, POSTS_ELEMENT_RESPONSE_1),
+                5,
+                10);
+        doReturn(pagePostsResponse)
+                .when(postService)
+                .findMyPosts(refEq(pageRequest), any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(AUTHORIZATION, "Bearer any")
+                .when().get("/posts?query=제목&size=2&page=0")
+                .then().log().all()
+                .assertThat()
+                .apply(document("search/posts/success"))
+                .statusCode(HttpStatus.OK.value());
+    }
+
     @DisplayName("내가 쓴 글의 없는 페이지 조회 시 200 반환")
     @Test
     void findMyPosts_Exception_NoPage() {
         PageRequest pageRequest = PageRequest.of(WRONG_PAGE, 2);
-        doReturn(new MyPostsResponse(Collections.emptyList(), 5))
+        doReturn(new PagePostsResponse(Collections.emptyList(), 1, 0))
                 .when(postService)
                 .findMyPosts(refEq(pageRequest), any());
 

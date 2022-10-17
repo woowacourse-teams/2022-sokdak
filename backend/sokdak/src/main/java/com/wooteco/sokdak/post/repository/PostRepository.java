@@ -14,6 +14,15 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findPostsByMemberOrderByCreatedAtDesc(Pageable pageable, Member member);
 
+    @Query(value = "SELECT p.* from post p where "
+            + "(:query is null) "
+            + "or "
+            + "(p.title regexp :query) "
+            + "or "
+            + "(p.content regexp :query) "
+            , nativeQuery = true)
+    Page<Post> findPostPagesByQuery(Pageable pageable, String query);
+
     @Query(value = "SELECT p FROM Post p LEFT JOIN FETCH p.postLikes WHERE p.id = :id")
     Optional<Post> findById(Long id);
 }

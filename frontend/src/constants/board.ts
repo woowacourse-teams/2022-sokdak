@@ -15,4 +15,8 @@ export const BOARDS = [
     id: 4,
     title: '️💌 감동 크루',
   },
+  {
+    id: 5,
+    title: '️5️⃣ 5기 게시판',
+  },
 ];

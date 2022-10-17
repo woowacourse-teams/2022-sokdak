@@ -16,6 +16,7 @@ interface EmailInputProps extends ReturnType<typeof useInput> {
   isSet: boolean;
   setIsSet: Dispatch<SetStateAction<boolean>>;
   isVerified: boolean;
+  isCourseCrew: boolean;
 }
 
 const EmailInput = ({
@@ -28,6 +29,7 @@ const EmailInput = ({
   isSet,
   setIsSet,
   isVerified,
+  isCourseCrew,
 }: EmailInputProps) => {
   const { isLoading, mutate } = useEmailCheck({
     onSuccess: () => {
@@ -38,7 +40,9 @@ const EmailInput = ({
       setIsAnimationActive(true);
     },
   });
+
   useLayoutEffect(() => {
+    setIsAnimationActive(false);
     if (!value) {
       return;
     }
@@ -62,7 +66,7 @@ const EmailInput = ({
       setValue={setValue}
       error={error}
       setError={setError}
-      isAnimationActive={isAnimationActive}
+      isAnimationActive={isCourseCrew && isAnimationActive}
       setIsAnimationActive={setIsAnimationActive}
     >
       <Styled.InputForm onSubmit={handleEmailFormSubmit}>

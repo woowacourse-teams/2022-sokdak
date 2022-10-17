@@ -54,7 +54,7 @@ const CommentBox = ({
   const strokeColor = like ? theme.colors.pink_300 : theme.colors.gray_300;
   const fillColor = like ? theme.colors.pink_300 : 'white';
 
-  const { mutate: deleteComment } = useDeleteComment();
+  const { isLoading, mutate: deleteComment } = useDeleteComment();
   const { mutate: reportComment } = useReportComment({
     onSettled: () => {
       handleReportModal();
@@ -82,6 +82,9 @@ const CommentBox = ({
   const handleLikeButton = () => {
     likeComment({ id, boardId });
   };
+  if (isLoading) {
+    return <></>;
+  }
 
   if (!content) {
     return <Styled.EmptyComment>작성자에 의해 삭제된 댓글 입니다.</Styled.EmptyComment>;

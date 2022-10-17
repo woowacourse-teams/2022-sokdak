@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 export const Container = styled.label<{ visible: boolean }>`
   display: flex;
   align-items: center;
-  width: 50px;
+  width: fit-content;
   height: 35px;
   user-select: none;
   gap: 7px;

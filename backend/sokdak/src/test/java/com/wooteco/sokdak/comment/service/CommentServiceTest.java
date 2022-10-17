@@ -68,6 +68,7 @@ class CommentServiceTest extends ServiceTest {
     private Member member2;
     private String randomNickname;
     private Board freeBoard;
+    private Post applicantPost;
 
     @BeforeEach
     void setUp() {
@@ -97,6 +98,18 @@ class CommentServiceTest extends ServiceTest {
         identifiedPostBoard.addPost(identifiedPost);
         postBoardRepository.save(anonymousPostBoard);
         postBoardRepository.save(identifiedPostBoard);
+
+        applicantPost = Post.builder()
+                .member(member)
+                .title(VALID_POST_TITLE)
+                .content(VALID_POST_CONTENT)
+                .writerNickname(randomNickname)
+                .build();
+        postRepository.save(applicantPost);
+        PostBoard postBoard = PostBoard.builder().build();
+        postBoard.addPost(applicantPost);
+        postBoard.addBoard(boardRepository.findById(APPLICANT_BOARD_ID).get());
+        postBoardRepository.save(postBoard);
     }
 
     @DisplayName("자신이 작성한 글에 기명으로 댓글을 등록")
@@ -184,7 +197,7 @@ class CommentServiceTest extends ServiceTest {
     @DisplayName("지원자는 권한이 있는 게시판에 작성된 게시글에 달린 댓글에 대댓글을 작성할 수 있다.")
     @Test
     void addReply_Applicant() {
-        Long commentId = commentService.addComment(anonymousPost.getId(), APPLICANT_COMMENT_REQUEST, AUTH_INFO);
+        Long commentId = commentService.addComment(applicantPost.getId(), APPLICANT_COMMENT_REQUEST, AUTH_INFO);
         NewReplyRequest newReplyRequest = new NewReplyRequest(APPLICANT_BOARD_ID, "content", true);
 
         Long replyId = commentService.addReply(commentId, newReplyRequest, APPLICANT_AUTH_INFO);

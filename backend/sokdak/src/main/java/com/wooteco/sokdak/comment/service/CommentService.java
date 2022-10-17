@@ -71,11 +71,11 @@ public class CommentService {
 
     @Transactional
     public Long addReply(Long commentId, NewReplyRequest newReplyRequest, AuthInfo authInfo) {
-        authService.checkAuthority(authInfo, newReplyRequest.getBoardId());
-        Member member = memberRepository.findById(authInfo.getId())
-                .orElseThrow(MemberNotFoundException::new);
         Comment parent = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
+        authService.checkAuthority(authInfo, parent.getBoardId());
+        Member member = memberRepository.findById(authInfo.getId())
+                .orElseThrow(MemberNotFoundException::new);
 
         if (!parent.isParent()){
             throw new ReplyDepthException();

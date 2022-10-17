@@ -12,7 +12,6 @@ import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.dto.NewReplyRequest;
 import com.wooteco.sokdak.comment.dto.ReplyResponse;
 import com.wooteco.sokdak.util.ControllerTest;
-import com.wooteco.sokdak.util.fixture.BoardFixture;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +25,7 @@ class CommentControllerTest extends ControllerTest {
     @DisplayName("댓글 작성 요청이 오면 새로운 댓글을 작성한다.")
     @Test
     void addComment() {
-        NewCommentRequest newCommentRequest = new NewCommentRequest(FREE_BOARD_ID, "댓글", true);
+        NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -58,7 +57,7 @@ class CommentControllerTest extends ControllerTest {
     @DisplayName("댓글 작성 요청에 댓글 내용이 없는 경우 400을 반환한다")
     @Test
     void addComment_Exception_NoMessage() {
-        NewCommentRequest newCommentRequest = new NewCommentRequest(FREE_BOARD_ID, null, true);
+        NewCommentRequest newCommentRequest = new NewCommentRequest(null, true);
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

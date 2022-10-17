@@ -53,11 +53,11 @@ public class CommentService {
 
     @Transactional
     public Long addComment(Long postId, NewCommentRequest newCommentRequest, AuthInfo authInfo) {
-        authService.checkAuthority(authInfo, newCommentRequest.getBoardId());
-        Member member = memberRepository.findById(authInfo.getId())
-                .orElseThrow(MemberNotFoundException::new);
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
+        authService.checkAuthority(authInfo, post.getBoardId());
+        Member member = memberRepository.findById(authInfo.getId())
+                .orElseThrow(MemberNotFoundException::new);
 
         String nickname = getCommentNickname(newCommentRequest.isAnonymous(), authInfo, post);
 

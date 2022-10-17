@@ -10,7 +10,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
-import com.wooteco.sokdak.util.fixture.BoardFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -63,7 +62,7 @@ class CommentReportAcceptanceTest extends AcceptanceTest {
         String token = getChrisToken();
         Long postId = addNewPost();
 
-        NewCommentRequest newCommentRequest = new NewCommentRequest(FREE_BOARD_ID, VALID_COMMENT_MESSAGE, true);
+        NewCommentRequest newCommentRequest = new NewCommentRequest(VALID_COMMENT_MESSAGE, true);
         Long commentId = Long.parseLong(
                 httpPostWithAuthorization(newCommentRequest, "/posts/" + postId + "/comments", token)
                         .header("Location").split("/comments/")[1]);

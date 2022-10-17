@@ -8,7 +8,6 @@ import com.wooteco.sokdak.member.dto.NicknameResponse;
 import com.wooteco.sokdak.member.dto.NicknameUpdateRequest;
 import com.wooteco.sokdak.member.dto.SignupRequest;
 import com.wooteco.sokdak.member.dto.UniqueResponse;
-import com.wooteco.sokdak.member.dto.VerificationRequest;
 import com.wooteco.sokdak.member.service.EmailService;
 import com.wooteco.sokdak.member.service.MemberService;
 import com.wooteco.sokdak.support.token.Login;

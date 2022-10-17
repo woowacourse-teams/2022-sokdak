@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-export const Container = styled.div`
+export const Container = styled.button`
   width: 65px;
   height: 65px;
   border-radius: 100%;
@@ -16,12 +16,12 @@ export const Container = styled.div`
   font-size: 30px;
   user-select: none;
   cursor: pointer;
-  position: absolute;
-  right: 0px;
+  position: fixed;
+  bottom: 50px;
 `;
 
 export const ButtonContainer = styled.div`
-  position: sticky;
-  width: 100%;
-  bottom: 100px;
+  position: absolute;
+  width: fit-content;
+  right: 65px;
 `;

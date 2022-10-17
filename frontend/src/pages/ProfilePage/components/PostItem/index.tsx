@@ -24,7 +24,7 @@ const PostItem = ({ id, title, content, createdAt, likeCount, commentCount }: Po
       <Styled.Content>{content}</Styled.Content>
       <Styled.Information>
         <Styled.CreatedAt>{timeConverter(createdAt)}</Styled.CreatedAt>
-        <PostCountInfo likeCount={likeCount} commentCount={commentCount} />
+        <PostCountInfo likeCount={likeCount} commentCount={commentCount} ariaHidden={false} />
       </Styled.Information>
     </Styled.Container>
   );

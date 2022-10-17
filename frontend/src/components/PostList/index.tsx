@@ -35,6 +35,7 @@ const PostList = ({ data, fetchNextPage }: PostListProps) => {
 
   return (
     <>
+      {BOARD_ID_LIST.includes(boardId!) && <FAB handleClick={handleClickFAB} />}
       <Styled.Container>
         {data?.pages.map(({ id, title, content, createdAt, likeCount, commentCount, modified, blocked }, index) => (
           <Styled.PostItemContainer key={id}>
@@ -54,7 +55,6 @@ const PostList = ({ data, fetchNextPage }: PostListProps) => {
           </Styled.PostItemContainer>
         ))}
       </Styled.Container>
-      {BOARD_ID_LIST.includes(boardId!) && <FAB handleClick={handleClickFAB} />}
     </>
   );
 };

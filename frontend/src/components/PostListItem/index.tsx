@@ -29,12 +29,12 @@ const PostListItem = forwardRef<HTMLDivElement, PostListItemProps>(
           <Styled.ContentContainer>
             <Styled.Content>블라인드 처리된 글입니다.</Styled.Content>
           </Styled.ContentContainer>
-          <PostCountInfo likeCount={likeCount} commentCount={commentCount} />
+          <PostCountInfo likeCount={likeCount} commentCount={commentCount} ariaHidden={true} />
         </Styled.BlockedContainer>
       );
     }
     return (
-      <Styled.Container onClick={handleClick} ref={ref} data-testid={testid}>
+      <Styled.Container onClick={handleClick} ref={ref} data-testid={testid} tabIndex={0}>
         <Styled.HeadContainer>
           <Styled.TitleContainer>
             <Styled.Title isModified={modified}>{title}</Styled.Title>

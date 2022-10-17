@@ -113,3 +113,13 @@ export const Panda = styled(PandaIcon)`
 export const DropdownContainer = styled.div`
   width: fit-content;
 `;
+
+export const SearchButton = styled.button`
+  width: fit-content;
+  background-color: transparent;
+  height: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+`;

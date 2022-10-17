@@ -94,17 +94,16 @@ class LikeServiceTest extends ServiceTest {
         likeService.flipPostLike(post.getId(), AUTH_INFO, likeFlipRequest);
         entityManager.flush();
         entityManager.clear();
-        likeService.flipPostLike(post.getId(), AUTH_INFO, likeFlipRequest);
 
-        LikeFlipResponse putLikeResponse2 = likeService.flipPostLike(post.getId(), AUTH_INFO, likeFlipRequest);
+        LikeFlipResponse putLikeResponse = likeService.flipPostLike(post.getId(), AUTH_INFO, likeFlipRequest);
 
         entityManager.flush();
         entityManager.clear();
         Post foundPost = postRepository.findById(post.getId())
                 .orElseThrow(PostNotFoundException::new);
         assertAll(
-                () -> assertThat(putLikeResponse2.isLike()).isFalse(),
-                () -> assertThat(putLikeResponse2.getLikeCount()).isZero(),
+                () -> assertThat(putLikeResponse.isLike()).isFalse(),
+                () -> assertThat(putLikeResponse.getLikeCount()).isZero(),
                 () -> assertThat(foundPost.hasLikeOfMember(member.getId())).isFalse()
         );
     }
@@ -130,6 +129,8 @@ class LikeServiceTest extends ServiceTest {
     void flipCommentLike_delete() {
         LikeFlipRequest likeFlipRequest = new LikeFlipRequest(FREE_BOARD_ID);
         likeService.flipCommentLike(comment.getId(), AUTH_INFO, likeFlipRequest);
+        entityManager.flush();
+        entityManager.clear();
 
         LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(comment.getId(), AUTH_INFO, likeFlipRequest);
 

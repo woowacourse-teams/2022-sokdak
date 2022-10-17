@@ -189,7 +189,7 @@ class CommentServiceTest extends ServiceTest {
     @CsvSource({"1", "2", "3", "4"})
     void addReply_Applicant_Exception(Long boardId) {
         Long commentId = commentService.addComment(anonymousPost.getId(), APPLICANT_COMMENT_REQUEST, AUTH_INFO);
-        NewReplyRequest newReplyRequest = new NewReplyRequest(boardId, "content", true);
+        NewReplyRequest newReplyRequest = new NewReplyRequest("content", true);
         assertThatThrownBy(() -> commentService.addReply(commentId, newReplyRequest, APPLICANT_AUTH_INFO))
                 .isInstanceOf(AuthorizationException.class);
     }
@@ -198,7 +198,7 @@ class CommentServiceTest extends ServiceTest {
     @Test
     void addReply_Applicant() {
         Long commentId = commentService.addComment(applicantPost.getId(), APPLICANT_COMMENT_REQUEST, AUTH_INFO);
-        NewReplyRequest newReplyRequest = new NewReplyRequest(APPLICANT_BOARD_ID, "content", true);
+        NewReplyRequest newReplyRequest = new NewReplyRequest("content", true);
 
         Long replyId = commentService.addReply(commentId, newReplyRequest, APPLICANT_AUTH_INFO);
         Comment foundReply = commentRepository.findById(replyId).orElseThrow();
@@ -376,7 +376,7 @@ class CommentServiceTest extends ServiceTest {
     @DisplayName("댓글, 대댓글을 등록하고 해당 게시물의 댓글을 조회하면 댓글과 대댓글이 같이 조회된다.")
     @Test
     void findComments_Having_Reply() {
-        NewReplyRequest newReplyRequest2 = new NewReplyRequest(FREE_BOARD_ID, "대댓글2", false);
+        NewReplyRequest newReplyRequest2 = new NewReplyRequest("대댓글2", false);
         Long commentId = commentService.addComment(anonymousPost.getId(), NON_ANONYMOUS_COMMENT_REQUEST, AUTH_INFO);
         commentService.addReply(commentId, NON_ANONYMOUS_REPLY_REQUEST, AUTH_INFO);
         commentService.addReply(commentId, newReplyRequest2, AUTH_INFO);

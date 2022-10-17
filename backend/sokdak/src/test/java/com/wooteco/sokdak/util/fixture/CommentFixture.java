@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.util.fixture;
 
-import static com.wooteco.sokdak.util.fixture.BoardFixture.*;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
 
@@ -20,9 +19,9 @@ public class CommentFixture {
             = new NewCommentRequest(VALID_COMMENT_MESSAGE, false);
 
     public static final NewReplyRequest NON_ANONYMOUS_REPLY_REQUEST =
-            new NewReplyRequest(FREE_BOARD_ID, VALID_REPLY_COMMENT, false);
+            new NewReplyRequest(VALID_REPLY_COMMENT, false);
     public static final NewReplyRequest ANONYMOUS_REPLY_REQUEST =
-            new NewReplyRequest(FREE_BOARD_ID, VALID_REPLY_COMMENT, true);
+            new NewReplyRequest(VALID_REPLY_COMMENT, true);
 
     public static Long addNewCommentInPost(Long postId) {
         return Long.parseLong(

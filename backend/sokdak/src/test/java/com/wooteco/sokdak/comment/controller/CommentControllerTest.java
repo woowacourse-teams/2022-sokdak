@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.comment.controller;
 
-import static com.wooteco.sokdak.util.fixture.BoardFixture.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -41,7 +40,7 @@ class CommentControllerTest extends ControllerTest {
     @DisplayName("대댓글 작성 요청이 오면 댓글애 새로운 대댓글을 작성한다.")
     @Test
     void addReply() {
-        NewReplyRequest newReplyRequest = new NewReplyRequest(FREE_BOARD_ID, "대댓글", true);
+        NewReplyRequest newReplyRequest = new NewReplyRequest("대댓글", true);
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

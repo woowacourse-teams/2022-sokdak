@@ -46,8 +46,8 @@ export const EmptyContainer = styled.div`
 `;
 
 export const ItemContainer = styled.div`
-  width: 340px;
-  padding: 1em;
+  width: 360px;
+  padding: 0.5em;
   flex-shrink: 0;
 `;
 
@@ -56,7 +56,7 @@ export const PostListContainer = styled.div<{ page: number }>`
   width: 100%;
   align-items: center;
   gap: 1em;
-  margin-left: ${props => `calc(-${props.page * 380}px - ${props.page * 0.5}em - 0.8em)`};
+  margin-left: ${props => `calc(-${props.page * 380}px - ${props.page * 0.5}em - 0.3em)`};
   transition: 1s;
 `;
 

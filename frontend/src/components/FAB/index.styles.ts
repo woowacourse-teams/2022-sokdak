@@ -17,8 +17,6 @@ export const Container = styled.div`
   user-select: none;
   cursor: pointer;
   position: absolute;
-  /* transform-origin: bottom right;*/
-  /* transform: translateX(300%); */
   right: 0px;
 `;
 

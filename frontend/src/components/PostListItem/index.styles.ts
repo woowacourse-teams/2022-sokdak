@@ -5,7 +5,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 export const containerStyle = css`
-  width: 100%;
+  width: calc(100% - 32px);
   height: 200px;
   display: flex;
   flex-direction: column;

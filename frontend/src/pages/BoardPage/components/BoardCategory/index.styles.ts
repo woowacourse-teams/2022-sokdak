@@ -4,6 +4,7 @@ import Dropdown from '@/components/@shared/Dropdown';
 
 import ChevronDown from '@/assets/images/chevron-down.svg';
 
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 export const BoardCategoryContainer = styled.div`
@@ -53,6 +54,12 @@ export const BoardList = styled.div`
   }
 `;
 
+export const MobileNavContainer = styled.nav`
+  @media (min-width: 875px) {
+    display: none;
+  }
+`;
+
 export const DropdownIcon = styled(ChevronDown)`
   fill: ${props => props.theme.colors.gray_300};
   width: 30px;
@@ -62,4 +69,33 @@ export const DropdownIcon = styled(ChevronDown)`
 
 export const OptionList = styled(Dropdown.OptionList)`
   left: 46%;
+`;
+
+export const DesktopNavContainer = styled.nav`
+  width: 100%;
+  display: flex;
+  overflow: auto;
+  border-bottom: 1px solid ${props => props.theme.colors.gray_400};
+  gap: 20px;
+  margin-top: 2em;
+  @media (max-width: 875px) {
+    display: none;
+  }
+`;
+
+export const DesktopCategoryStyle = css`
+  font-family: 'BMHANNAAir', 'Noto Sans KR';
+  font-size: 1.3rem;
+  padding: 0.2em;
+`;
+
+export const DesktopCategory = styled.p`
+  ${DesktopCategoryStyle}
+  opacity: 0.5;
+`;
+
+export const ActiveDesktopCategory = styled.p`
+  ${DesktopCategoryStyle}
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
+  border-bottom: 3px solid black;
 `;

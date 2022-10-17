@@ -15,10 +15,14 @@ export const TitleContainer = styled.div`
 `;
 
 export const Title = styled.p`
-  font-size: 24px;
+  font-size: 1.3rem;
+  line-height: 1.6em;
   font-family: 'BMHANNAPro', 'Noto Sans KR';
   word-break: keep-all;
-  line-height: 30px;
+
+  @media (min-width: 875px) {
+    font-size: 2rem;
+  }
 `;
 
 export const PostController = styled.div`
@@ -28,11 +32,15 @@ export const PostController = styled.div`
 `;
 
 const controllerButton = (props: { theme: Theme }) => css`
-  font-size: 10px;
+  font-size: 0.7rem;
   background-color: transparent;
   color: ${props.theme.colors.gray_200};
   width: fit-content;
   padding: 5px;
+
+  @media (min-width: 875px) {
+    font-size: 0.8rem;
+  }
 `;
 
 export const UpdateButton = styled.button`
@@ -46,6 +54,7 @@ export const DeleteButton = styled.button`
 `;
 
 export const ReportButton = styled.button`
+  ${controllerButton};
   background-color: inherit;
 `;
 
@@ -59,13 +68,21 @@ export const PostInfo = styled.div`
 export const Author = styled.span`
   font-size: 14px;
   font-family: 'BMHANNAPro', 'Noto Sans KR';
+
+  @media (min-width: 875px) {
+    font-size: 1.1rem;
+  }
 `;
 
 export const Date = styled.span`
-  min-width: 80px;
+  width: fit-content;
   text-align: right;
-  font-size: 10px;
+  font-size: 0.6rem;
   color: ${props => props.theme.colors.gray_200};
+
+  @media (min-width: 875px) {
+    font-size: 0.8rem;
+  }
 `;
 
 export const LikeButtonContainer = styled.div`

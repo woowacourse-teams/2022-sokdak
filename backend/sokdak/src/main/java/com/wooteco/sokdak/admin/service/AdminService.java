@@ -84,7 +84,7 @@ public class AdminService {
 
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFoundException::new);
-        ReportRequest reportRequest = new ReportRequest("adminBlocked");
+        ReportRequest reportRequest = new ReportRequest(null, "adminBlocked");
         for (long i = 1; i <= postReportCount; i++) {
             AuthInfo dummyAuthInfo = new AuthInfo(i, RoleType.ADMIN.getName(), "관리자");
             postReportService.reportPost(post.getId(), reportRequest, dummyAuthInfo);

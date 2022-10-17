@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.notification.acceptance;
 
+import static com.wooteco.sokdak.util.fixture.BoardFixture.*;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NON_ANONYMOUS_COMMENT_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NON_ANONYMOUS_REPLY_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.addNewCommentInPost;
@@ -18,11 +19,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.auth.dto.LoginRequest;
+import com.wooteco.sokdak.like.dto.LikeFlipRequest;
 import com.wooteco.sokdak.notification.dto.NewNotificationCheckResponse;
 import com.wooteco.sokdak.notification.dto.NotificationResponse;
 import com.wooteco.sokdak.notification.dto.NotificationsResponse;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
+import com.wooteco.sokdak.util.fixture.BoardFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -93,7 +96,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         addNewPost();
         List<String> otherTokens = getTokens();
         for (String token : otherTokens) {
-            httpPutWithAuthorization("/posts/1/like", token);
+            httpPutWithAuthorization(new LikeFlipRequest(FREE_BOARD_ID), "/posts/1/like", token);
         }
 
         ExtractableResponse<Response> response = httpGetWithAuthorization("/notifications/check", getChrisToken());
@@ -112,7 +115,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         Long postId = addNewPost();
         List<String> reporterTokens = getTokens();
         for (int i = 0; i < 5; ++i) {
-            ReportRequest reportRequest = new ReportRequest("신고");
+            ReportRequest reportRequest = new ReportRequest(FREE_BOARD_ID, "신고");
             httpPostWithAuthorization(reportRequest, "/posts/" + postId + "/report", reporterTokens.get(i));
         }
 
@@ -135,7 +138,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         Long commentId = addNewCommentInPost(postId);
         List<String> reporterTokens = getTokens();
         for (int i = 0; i < 5; ++i) {
-            ReportRequest reportRequest = new ReportRequest("댓글신고");
+            ReportRequest reportRequest = new ReportRequest(FREE_BOARD_ID, "댓글신고");
             httpPostWithAuthorization(reportRequest, "/comments/" + commentId + "/report", reporterTokens.get(i));
         }
 
@@ -160,7 +163,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
 
         List<String> otherTokens = getTokens();
         for (String other : otherTokens) {
-            httpPutWithAuthorization("/posts/1/like", other);
+            httpPutWithAuthorization(new LikeFlipRequest(FREE_BOARD_ID), "/posts/1/like", other);
         }
 
         ExtractableResponse<Response> response =

@@ -18,6 +18,7 @@ public class ServiceTest {
 
     protected static final AuthInfo AUTH_INFO = new AuthInfo(CHRIS_ID, RoleType.USER.getName(), "chrisNickname");
     protected static final AuthInfo AUTH_INFO2 = new AuthInfo(4L, RoleType.USER.getName(), "joshNickname");
+    protected static final AuthInfo APPLICANT_AUTH_INFO = new AuthInfo(10L, RoleType.APPLICANT.getName(), "applicantNickname");
 
     @Autowired
     private DatabaseCleaner databaseCleaner;

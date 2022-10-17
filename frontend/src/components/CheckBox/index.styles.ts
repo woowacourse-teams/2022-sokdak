@@ -22,7 +22,7 @@ export const HiddenCheckBox = styled.input`
 
   :checked + ${CheckBox}::after {
     content: '✔';
-    font-size: 11px;
+    font-size: 0.68rem;
     color: ${props => props.theme.colors.sub};
     position: absolute;
     top: 50%;
@@ -33,6 +33,10 @@ export const HiddenCheckBox = styled.input`
 
 export const Label = styled.span`
   display: block;
-  font-size: 12px;
+  font-size: 0.75rem;
   color: ${props => props.theme.colors.gray_200};
+
+  @media (min-width: 875px) {
+    font-size: 0.8rem;
+  }
 `;

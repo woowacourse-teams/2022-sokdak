@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.report.service;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.auth.service.AuthService;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
@@ -24,17 +25,21 @@ public class CommentReportService {
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final NotificationService notificationService;
+    private final AuthService authService;
 
     public CommentReportService(CommentReportRepository commentReportRepository, CommentRepository commentRepository,
-                                MemberRepository memberRepository, NotificationService notificationService) {
+                                MemberRepository memberRepository, NotificationService notificationService,
+                                AuthService authService) {
         this.commentReportRepository = commentReportRepository;
         this.commentRepository = commentRepository;
         this.memberRepository = memberRepository;
         this.notificationService = notificationService;
+        this.authService = authService;
     }
 
     @Transactional
     public void reportComment(Long commentId, ReportRequest reportRequest, AuthInfo authInfo) {
+        authService.checkAuthority(authInfo, reportRequest.getBoardId());
         Comment comment = commentRepository.findByCommentId(commentId)
                 .orElseThrow(CommentNotFoundException::new);
         Member reporter = memberRepository.findById(authInfo.getId())

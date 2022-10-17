@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 public class NewCommentRequest {
 
+    private Long boardId;
     @NotBlank(message = "댓글은 1자 이상 50자 이하여야 합니다.")
     private String content;
     private boolean anonymous;
@@ -13,7 +14,8 @@ public class NewCommentRequest {
     public NewCommentRequest() {
     }
 
-    public NewCommentRequest(String content, boolean anonymous) {
+    public NewCommentRequest(Long boardId, String content, boolean anonymous) {
+        this.boardId = boardId;
         this.content = content;
         this.anonymous = anonymous;
     }

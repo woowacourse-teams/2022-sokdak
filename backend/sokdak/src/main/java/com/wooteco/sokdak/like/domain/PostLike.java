@@ -36,10 +36,10 @@ public class PostLike {
     private PostLike(Post post, Member member) {
         this.post = post;
         this.member = member;
+        post.addPostLike(this);
     }
 
-    public void addPost(Post post) {
-        this.post = post;
-        post.getPostLikes().add(this);
+    public boolean isLikeOf(Long memberId) {
+        return member.hasId(memberId);
     }
 }

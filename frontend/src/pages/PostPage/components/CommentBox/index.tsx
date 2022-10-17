@@ -86,6 +86,12 @@ const CommentBox = ({
     return <></>;
   }
 
+  useEffect(() => {
+    if (openedFormId !== id) {
+      setIsReplyFormOpen(false);
+    }
+  }, [openedFormId]);
+
   if (!content) {
     return <Styled.EmptyComment>작성자에 의해 삭제된 댓글 입니다.</Styled.EmptyComment>;
   }
@@ -93,12 +99,6 @@ const CommentBox = ({
   if (blocked) {
     return <Styled.EmptyComment>신고에 의해 블라인드 처리되었습니다.</Styled.EmptyComment>;
   }
-
-  useEffect(() => {
-    if (openedFormId !== id) {
-      setIsReplyFormOpen(false);
-    }
-  }, [openedFormId]);
 
   return (
     <>

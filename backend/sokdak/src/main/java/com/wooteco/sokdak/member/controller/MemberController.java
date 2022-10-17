@@ -63,6 +63,10 @@ public class MemberController {
 
     @PostMapping("/signup")
     public ResponseEntity<Void> signUp(@Valid @RequestBody SignupRequest signupRequest) {
+        if (signupRequest.getEmail().isEmpty()) {
+            memberService.signUpAsApplicant(signupRequest);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }
         memberService.signUp(signupRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

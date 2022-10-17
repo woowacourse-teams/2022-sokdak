@@ -12,9 +12,32 @@ export const BannerContainer = styled.div`
   }
 `;
 
+const leftAppear = keyframes`
+  0% {
+    transform: translateX(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+`;
+
+const rightAppear = keyframes`
+  0% {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+`;
+
 export const LeftSide = styled.div`
   display: flex;
   align-items: center;
+  animation: ${leftAppear} 1s;
 `;
 
 export const RightSide = styled.div`
@@ -26,6 +49,7 @@ export const RightSide = styled.div`
   height: 300px;
   border-radius: 30px;
   background-image: linear-gradient(120deg, #e0c6d2 0%, #f6ecdc 100%);
+  animation: ${rightAppear} 2s;
 `;
 
 export const BannerText = styled.p`

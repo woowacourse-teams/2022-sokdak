@@ -161,7 +161,7 @@ class MemberControllerTest extends ControllerTest {
     @DisplayName("지원자로 회원가입하면 201 반환")
     @Test
     void signUp_Applicant() {
-        SignupRequest signupRequest = new SignupRequest("", "username", "nickname", "a1b1c1",
+        SignupRequest signupRequest = new SignupRequest(null, "username", "nickname", "a1b1c1",
                 "password1!", "password1!");
 
         restDocs

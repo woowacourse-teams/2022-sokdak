@@ -13,6 +13,7 @@ import com.wooteco.sokdak.member.service.EmailService;
 import com.wooteco.sokdak.member.service.MemberService;
 import com.wooteco.sokdak.support.token.Login;
 import com.wooteco.sokdak.support.token.TokenManager;
+import java.util.Objects;
 import javax.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -63,7 +64,7 @@ public class MemberController {
 
     @PostMapping("/signup")
     public ResponseEntity<Void> signUp(@Valid @RequestBody SignupRequest signupRequest) {
-        if (signupRequest.getEmail().isEmpty()) {
+        if (Objects.isNull(signupRequest.getEmail())) {
             memberService.signUpAsApplicant(signupRequest);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }

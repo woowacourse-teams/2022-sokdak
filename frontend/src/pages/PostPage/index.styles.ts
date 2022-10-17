@@ -8,11 +8,11 @@ export const containerStyle = css`
   display: flex;
   flex-direction: column;
   align-items: center;
-`;
 
-export const Container = styled.div`
-  ${containerStyle}
-  padding:1rem 0;
+  @media (min-width: 875px) {
+    padding-top: 3rem;
+    max-width: 790px;
+  }
 `;
 
 export const Image = styled.img`
@@ -23,21 +23,52 @@ export const Image = styled.img`
   object-fit: scale-down;
 `;
 
-export const BlockContainer = styled.div`
-  ${containerStyle}
+export const Block = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   height: calc(100vh - 166px);
   overflow: hidden;
-  font-family: 'BMHANNAPro', 'Noto Sans KR';
   gap: 2em;
 `;
 
+export const ErrorMessage = styled.p`
+  font-family: 'BMHANNAAir', 'Noto Sans KR';
+  text-align: center;
+  line-height: 1.5rem;
+  font-size: 1rem;
+
+  @media (min-width: 875px) {
+    font-size: 1.5rem;
+    line-height: 3rem;
+  }
+`;
+
+export const HandlingButtonContainer = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+
+export const MainButton = styled.button`
+  font-family: 'BMHANNAAir', 'Noto Sans KR';
+  background-color: transparent;
+  color: ${props => props.theme.colors.sub};
+  padding: 0.8rem;
+  border-radius: 3px;
+  font-size: 1rem;
+  letter-spacing: 1px;
+`;
+
 export const BackButton = styled.button`
-  font-family: 'BMHANNAPro', 'Noto Sans KR';
+  font-family: 'BMHANNAAir', 'Noto Sans KR';
   background-color: ${props => props.theme.colors.sub};
   color: white;
-  padding: 1em;
-  border-radius: 0.5em;
+  padding: 0.8rem;
+  border-radius: 3px;
+  font-size: 1rem;
+  letter-spacing: 1px;
 `;
 
 export const ListButtonContainer = styled.div`
@@ -61,19 +92,41 @@ export const ListButton = styled(Link)`
 
 export const SpinnerContainer = styled.div`
   width: 100%;
-  height: 500px;
+  height: calc(100vh - 100px);
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
-export const ErrorContainer = styled.div`
+export const NotFound = styled.div`
   width: 100%;
-  height: 500px;
-  font-family: 'BMHANNAPro', 'Noto Sans KR';
+  height: calc(100vh - 100px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 3em;
+  margin: auto;
+`;
+
+export const Container = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+
+  @media (min-width: 875px) {
+    padding: 4rem 1rem;
+  }
+`;
+
+export const PostContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  @media (min-width: 875px) {
+    width: 55%;
+  }
 `;

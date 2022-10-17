@@ -1,18 +1,18 @@
-import { useState } from 'react';
+import { useRef } from 'react';
 
 const useThrottle = (callback: (...input: unknown[]) => unknown, delay: number) => {
-  const [timerID, setTimerID] = useState<NodeJS.Timer | null>(null);
+  const timerID = useRef<NodeJS.Timeout | null>();
 
   return function () {
-    if (timerID) {
+    if (timerID.current) {
       return;
     }
+
     callback();
-    setTimerID(
-      setTimeout(() => {
-        setTimerID(null);
-      }, delay),
-    );
+
+    timerID.current = setTimeout(() => {
+      timerID.current = null;
+    }, delay);
   };
 };
 

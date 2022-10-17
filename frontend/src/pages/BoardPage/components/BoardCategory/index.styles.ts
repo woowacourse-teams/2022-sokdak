@@ -11,7 +11,7 @@ export const BoardCategoryContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-bottom: 3rem;
+  margin: calc(1.5rem - 15px) 0 1.5rem 0;
   text-align: center;
 `;
 

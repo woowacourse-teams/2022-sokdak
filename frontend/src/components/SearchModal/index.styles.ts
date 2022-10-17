@@ -19,7 +19,7 @@ export const Container = styled.div`
   height: 100vh;
 
   position: fixed;
-  z-index: 10;
+  z-index: 100;
   background-color: white;
 
   top: 0;

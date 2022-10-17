@@ -12,14 +12,18 @@ import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.ReplyResponse;
+import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.comment.service.CommentService;
 import com.wooteco.sokdak.like.dto.LikeFlipRequest;
 import com.wooteco.sokdak.like.dto.LikeFlipResponse;
 import com.wooteco.sokdak.post.domain.Post;
+import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.util.ServiceTest;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +34,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 class LikeServiceTest extends ServiceTest {
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     private LikeService likeService;
@@ -60,6 +67,7 @@ class LikeServiceTest extends ServiceTest {
         commentRepository.save(comment);
         reply = Comment.child(member, post, "닉네임2", "대댓글", comment);
         commentRepository.save(reply);
+        entityManager.clear();
     }
 
     @DisplayName("게시글 좋아요 등록")
@@ -68,9 +76,14 @@ class LikeServiceTest extends ServiceTest {
         LikeFlipResponse putLikeResponse = likeService.flipPostLike(post.getId(), AUTH_INFO, new LikeFlipRequest(
                 FREE_BOARD_ID));
 
+        entityManager.flush();
+        entityManager.clear();
+        Post foundPost = postRepository.findById(post.getId())
+                .orElseThrow(PostNotFoundException::new);
         assertAll(
                 () -> assertThat(putLikeResponse.isLike()).isTrue(),
-                () -> assertThat(putLikeResponse.getLikeCount()).isEqualTo(1)
+                () -> assertThat(putLikeResponse.getLikeCount()).isEqualTo(1),
+                () -> assertThat(foundPost.hasLikeOfMember(member.getId())).isTrue()
         );
     }
 
@@ -79,12 +92,19 @@ class LikeServiceTest extends ServiceTest {
     void flipPostLike_delete() {
         LikeFlipRequest likeFlipRequest = new LikeFlipRequest(FREE_BOARD_ID);
         likeService.flipPostLike(post.getId(), AUTH_INFO, likeFlipRequest);
+        entityManager.flush();
+        entityManager.clear();
 
-        LikeFlipResponse putLikeResponse2 = likeService.flipPostLike(post.getId(), AUTH_INFO, likeFlipRequest);
+        LikeFlipResponse putLikeResponse = likeService.flipPostLike(post.getId(), AUTH_INFO, likeFlipRequest);
 
+        entityManager.flush();
+        entityManager.clear();
+        Post foundPost = postRepository.findById(post.getId())
+                .orElseThrow(PostNotFoundException::new);
         assertAll(
-                () -> assertThat(putLikeResponse2.isLike()).isFalse(),
-                () -> assertThat(putLikeResponse2.getLikeCount()).isZero()
+                () -> assertThat(putLikeResponse.isLike()).isFalse(),
+                () -> assertThat(putLikeResponse.getLikeCount()).isZero(),
+                () -> assertThat(foundPost.hasLikeOfMember(member.getId())).isFalse()
         );
     }
 
@@ -93,9 +113,14 @@ class LikeServiceTest extends ServiceTest {
     void flipCommentLike_create() {
         LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(comment.getId(), AUTH_INFO, new LikeFlipRequest(FREE_BOARD_ID));
 
+        entityManager.flush();
+        entityManager.clear();
+        Comment foundComment = commentRepository.findById(comment.getId())
+                .orElseThrow(CommentNotFoundException::new);
         assertAll(
                 () -> assertThat(likeFlipResponse.isLike()).isTrue(),
-                () -> assertThat(likeFlipResponse.getLikeCount()).isEqualTo(1)
+                () -> assertThat(likeFlipResponse.getLikeCount()).isEqualTo(1),
+                () -> assertThat(foundComment.hasLikeOfMember(member.getId())).isTrue()
         );
     }
 
@@ -104,12 +129,19 @@ class LikeServiceTest extends ServiceTest {
     void flipCommentLike_delete() {
         LikeFlipRequest likeFlipRequest = new LikeFlipRequest(FREE_BOARD_ID);
         likeService.flipCommentLike(comment.getId(), AUTH_INFO, likeFlipRequest);
+        entityManager.flush();
+        entityManager.clear();
 
         LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(comment.getId(), AUTH_INFO, likeFlipRequest);
 
+        entityManager.flush();
+        entityManager.clear();
+        Comment foundComment = commentRepository.findById(comment.getId())
+                .orElseThrow(CommentNotFoundException::new);
         assertAll(
                 () -> assertThat(likeFlipResponse.isLike()).isFalse(),
-                () -> assertThat(likeFlipResponse.getLikeCount()).isZero()
+                () -> assertThat(likeFlipResponse.getLikeCount()).isZero(),
+                () -> assertThat(foundComment.hasLikeOfMember(member.getId())).isFalse()
         );
     }
 
@@ -141,9 +173,14 @@ class LikeServiceTest extends ServiceTest {
     void flipCommentLike_ReplyCreate() {
         LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(reply.getId(), AUTH_INFO, new LikeFlipRequest(FREE_BOARD_ID));
 
+        entityManager.flush();
+        entityManager.clear();
+        Comment foundReply = commentRepository.findById(reply.getId())
+                .orElseThrow(CommentNotFoundException::new);
         assertAll(
                 () -> assertThat(likeFlipResponse.isLike()).isTrue(),
-                () -> assertThat(likeFlipResponse.getLikeCount()).isEqualTo(1)
+                () -> assertThat(likeFlipResponse.getLikeCount()).isEqualTo(1),
+                () -> assertThat(foundReply.hasLikeOfMember(member.getId())).isTrue()
         );
     }
 
@@ -155,9 +192,12 @@ class LikeServiceTest extends ServiceTest {
 
         LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(reply.getId(), AUTH_INFO, likeFlipRequest);
 
+        entityManager.flush();
+        entityManager.clear();
         assertAll(
                 () -> assertThat(likeFlipResponse.isLike()).isFalse(),
-                () -> assertThat(likeFlipResponse.getLikeCount()).isZero()
+                () -> assertThat(likeFlipResponse.getLikeCount()).isZero(),
+                () -> assertThat(reply.hasLikeOfMember(member.getId())).isFalse()
         );
     }
 

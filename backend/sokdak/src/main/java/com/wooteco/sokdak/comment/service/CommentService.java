@@ -135,7 +135,7 @@ public class CommentService {
     }
 
     public CommentsResponse findComments(Long postId, AuthInfo authInfo) {
-        final List<Comment> comments = commentRepository.findCommentsByPostId(postId);
+        List<Comment> comments = commentRepository.findCommentsByPostId(postId);
         List<CommentResponse> commentResponses = comments.stream()
                 .map(it -> convertToCommentResponse(authInfo, it))
                 .collect(Collectors.toList());

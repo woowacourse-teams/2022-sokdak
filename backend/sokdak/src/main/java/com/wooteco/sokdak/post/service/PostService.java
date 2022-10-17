@@ -93,7 +93,7 @@ public class PostService {
     public PostDetailResponse findPost(Long postId, AuthInfo authInfo) {
         Post foundPost = findPostObject(postId);
         Board writableBoard = foundPost.getWritableBoard();
-        boolean liked = postLikeRepository.existsByMemberIdAndPostId(authInfo.getId(), postId);
+        boolean liked = foundPost.hasLikeOfMember(authInfo.getId());
         Hashtags hashtags = hashtagService.findHashtagsByPost(foundPost);
 
         return PostDetailResponse.of(foundPost, writableBoard, liked,

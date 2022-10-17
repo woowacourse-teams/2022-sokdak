@@ -15,8 +15,8 @@ const useLike = (
   const queryClient = useQueryClient();
 
   return useMutation(
-    ({ id }): Promise<AxiosResponse<{ like: boolean; likeCount: number }, string>> =>
-      authFetcher.put(`/posts/${id}/like`),
+    ({ id, boardId }): Promise<AxiosResponse<{ like: boolean; likeCount: number }, string>> =>
+      authFetcher.put(`/posts/${id}/like`, { boardId }),
     {
       ...options,
       onSuccess: (data, variables, context) => {

@@ -21,7 +21,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-class PostLikeAcceptanceTest extends AcceptanceTest {
+class LikeAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("로그인한 회원은 좋아요 하지 않은 게시물에 좋아요를 할 수 있다.")
     @Test

@@ -47,7 +47,7 @@ public class AuthService {
         if (isEditableBoardToApplicant(boardId)) {
             return;
         }
-        throw new AuthorizationException();
+        throw new AuthorizationException("인증된 사용자만 이용가능 합니다.");
     }
 
     private boolean isWootecoUser(AuthInfo authInfo) {

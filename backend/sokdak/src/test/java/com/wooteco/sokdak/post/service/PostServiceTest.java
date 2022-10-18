@@ -335,13 +335,12 @@ class PostServiceTest extends ServiceTest {
                 .content("본문")
                 .member(member)
                 .build();
-        postRepository.save(post1);
         Post post2 = Post.builder()
                 .title("제목2")
                 .content("본문2")
                 .member(member)
                 .build();
-        postRepository.save(post2);
+        postRepository.saveAll(List.of(post1, post2));
 
         PagePostsResponse myPosts = postService.findMyPosts(PageRequest.of(0, 1, DESC, "createdAt"), AUTH_INFO);
 
@@ -361,13 +360,12 @@ class PostServiceTest extends ServiceTest {
                 .content("본문")
                 .member(member)
                 .build();
-        postRepository.save(post1);
         Post post2 = Post.builder()
                 .title("제목2")
                 .content("본문2")
                 .member(member)
                 .build();
-        postRepository.save(post2);
+        postRepository.saveAll(List.of(post1, post2));
 
         PagePostsResponse myPosts = postService.searchWithQuery("2",
                 PageRequest.of(0, 5, DESC, "createdAt"));
@@ -388,13 +386,12 @@ class PostServiceTest extends ServiceTest {
                 .content("본문")
                 .member(member)
                 .build();
-        postRepository.save(post1);
         Post post2 = Post.builder()
                 .title("제목2")
                 .content("본문2")
                 .member(member)
                 .build();
-        postRepository.save(post2);
+        postRepository.saveAll(List.of(post1, post2));
 
         PagePostsResponse pagePostsResponse = postService.searchWithQuery("제목",
                 PageRequest.of(0, 5, DESC, "createdAt"));
@@ -415,19 +412,17 @@ class PostServiceTest extends ServiceTest {
                 .content("본문")
                 .member(member)
                 .build();
-        postRepository.save(post1);
         Post post2 = Post.builder()
                 .title("제목2")
                 .content("본문2검색")
                 .member(member)
                 .build();
-        postRepository.save(post2);
         Post post3 = Post.builder()
                 .title("제목2검색")
                 .content("본문2")
                 .member(member)
                 .build();
-        postRepository.save(post3);
+        postRepository.saveAll(List.of(post1, post2, post3));
 
         PagePostsResponse myPosts = postService.searchWithQuery("검색",
                 PageRequest.of(0, 5, DESC, "createdAt"));
@@ -448,19 +443,17 @@ class PostServiceTest extends ServiceTest {
                 .content("본문서치")
                 .member(member)
                 .build();
-        postRepository.save(post1);
         Post post2 = Post.builder()
                 .title("제목2")
                 .content("본문2검색")
                 .member(member)
                 .build();
-        postRepository.save(post2);
         Post post3 = Post.builder()
                 .title("제목2검색")
                 .content("본문2")
                 .member(member)
                 .build();
-        postRepository.save(post3);
+        postRepository.saveAll(List.of(post1, post2, post3));
 
         PagePostsResponse myPosts = postService.searchWithQuery("서치|검색",
                 PageRequest.of(0, 5, DESC, "createdAt"));
@@ -485,19 +478,17 @@ class PostServiceTest extends ServiceTest {
                 .content("본문서치")
                 .member(member)
                 .build();
-        postRepository.save(post1);
         Post post2 = Post.builder()
                 .title("제목2")
                 .content("본문2검색")
                 .member(member)
                 .build();
-        postRepository.save(post2);
         Post post3 = Post.builder()
                 .title("제목2검색")
                 .content("본문2")
                 .member(member)
                 .build();
-        postRepository.save(post3);
+        postRepository.saveAll(List.of(post1, post2, post3));
 
         PagePostsResponse myPosts = postService.searchWithQuery(query,
                 PageRequest.of(0, 5, DESC, "createdAt"));
@@ -513,19 +504,17 @@ class PostServiceTest extends ServiceTest {
                 .content("본문")
                 .member(member)
                 .build();
-        postRepository.save(post1);
         Post post2 = Post.builder()
                 .title("제목2")
                 .content("본문2검색")
                 .member(member)
                 .build();
-        postRepository.save(post2);
         Post post3 = Post.builder()
                 .title("제목2검색")
                 .content("본문2")
                 .member(member)
                 .build();
-        postRepository.save(post3);
+        postRepository.saveAll(List.of(post1, post2, post3));
 
         PagePostsResponse pagePostsResponse = postService.searchWithQuery(null,
                 PageRequest.of(0, 5, DESC, "createdAt"));

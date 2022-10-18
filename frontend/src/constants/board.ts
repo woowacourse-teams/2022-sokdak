@@ -17,6 +17,6 @@ export const BOARDS = [
   },
   {
     id: 5,
-    title: '️5️⃣d예비 크루기 게시판',
+    title: '🙌🏻 예비 크루 게시판',
   },
 ];

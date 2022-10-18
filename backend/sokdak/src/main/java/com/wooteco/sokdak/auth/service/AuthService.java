@@ -51,10 +51,10 @@ public class AuthService {
     }
 
     private boolean isWootecoUser(AuthInfo authInfo) {
-        return RoleType.APPLICANT.getName() != authInfo.getRole();
+        return RoleType.APPLICANT.isNot(authInfo.getRole());
     }
 
     private boolean isEditableBoardToApplicant(Long boardId) {
-        return boardId == APPLICANT_BOARD_ID;
+        return boardId.equals(APPLICANT_BOARD_ID);
     }
 }

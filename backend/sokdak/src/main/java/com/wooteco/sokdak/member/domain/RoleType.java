@@ -12,4 +12,8 @@ public enum RoleType {
     public String getName() {
         return name;
     }
+
+    public boolean isNot(String roleType) {
+        return !this.name.equals(roleType);
+    }
 }

@@ -226,7 +226,6 @@ public class Post {
     }
 
     public Long getBoardId() {
-        System.out.println(postBoards.size());
         return postBoards.stream()
                 .map(PostBoard::getBoard)
                 .map(Board::getId)

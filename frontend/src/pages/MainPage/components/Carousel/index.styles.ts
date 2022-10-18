@@ -40,6 +40,9 @@ export const PostListContainer = styled.div`
   overflow: auto;
   scroll-behavior: smooth;
   scroll-snap-type: x proximity;
+  ::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+  }
 `;
 
 const buttonStyle = css`

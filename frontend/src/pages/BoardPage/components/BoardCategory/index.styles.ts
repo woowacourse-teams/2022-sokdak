@@ -4,7 +4,7 @@ import Dropdown from '@/components/@shared/Dropdown';
 
 import ChevronDown from '@/assets/images/chevron-down.svg';
 
-import { css } from '@emotion/react';
+import { css, keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 
 export const BoardCategoryContainer = styled.div`
@@ -94,8 +94,21 @@ export const DesktopCategory = styled.p`
   opacity: 0.5;
 `;
 
+const thicken = keyframes`
+  0% {
+    opacity: 0;
+    border-bottom: 3px solid white;
+  }
+  100% {
+    opacity: 1;
+    border-bottom: 3px solid black;
+  }
+`;
+
 export const ActiveDesktopCategory = styled.p`
   ${DesktopCategoryStyle}
   font-family: 'BMHANNAPro', 'Noto Sans KR';
-  border-bottom: 3px solid black;
+
+  animation: ${thicken} 0.5s;
+  animation-fill-mode: forwards;
 `;

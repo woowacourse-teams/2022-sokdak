@@ -114,4 +114,8 @@ export const Panda = styled(PandaIcon)`
 
 export const DropdownContainer = styled.div`
   width: fit-content;
+
+  @media (min-width: 875px) {
+    margin-bottom: 7px;
+  }
 `;

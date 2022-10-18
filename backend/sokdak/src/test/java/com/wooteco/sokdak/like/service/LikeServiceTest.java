@@ -184,8 +184,20 @@ class LikeServiceTest extends ServiceTest {
 
     @DisplayName("지원자는 권한이 없는 게시판 게시글에 좋아요를 누를 수 없다.")
     @ParameterizedTest
-    @CsvSource({"1", "2", "3", "4"})
+    @CsvSource({"2", "3", "4"})
     void flipPostLike_Applicant_Exception(Long boardId) {
+        Post post = Post.builder()
+                .member(member)
+                .title(VALID_POST_TITLE)
+                .content(VALID_POST_CONTENT)
+                .writerNickname("randomNickname")
+                .build();
+        postRepository.save(post);
+        PostBoard postBoard = PostBoard.builder().build();
+        postBoard.addBoard(boardRepository.findById(boardId).get());
+        postBoard.addPost(post);
+        postBoardRepository.save(postBoard);
+
         assertThatThrownBy(() -> likeService.flipPostLike(post.getId(), APPLICANT_AUTH_INFO))
                 .isInstanceOf(AuthorizationException.class);
     }
@@ -237,37 +249,25 @@ class LikeServiceTest extends ServiceTest {
 
     @DisplayName("지원자는 권한이 없는 게시판 게시글의 댓글, 대댓글에 좋아요를 누를 수 없다.")
     @ParameterizedTest
-    @MethodSource("mockComments")
-    void flipCommentLike_Applicant_Exception(Comment mockComment) {
-        assertThatThrownBy(() -> likeService.flipCommentLike(mockComment.getId(), APPLICANT_AUTH_INFO))
+    @CsvSource({"2", "3", "4"})
+    void flipCommentLike_Applicant_Exception(Long boardId) {
+        Post post = Post.builder()
+                .member(member)
+                .title(VALID_POST_TITLE)
+                .content(VALID_POST_CONTENT)
+                .writerNickname("randomNickname")
+                .build();
+        postRepository.save(post);
+        PostBoard postBoard = PostBoard.builder().build();
+        postBoard.addBoard(boardRepository.findById(boardId).get());
+        postBoard.addPost(post);
+        postBoardRepository.save(postBoard);
+        comment = Comment.parent(member, post, "nickname", "댓글내용");
+        commentRepository.save(comment);
+
+        assertThatThrownBy(() -> likeService.flipCommentLike(comment.getId(), APPLICANT_AUTH_INFO))
                 .isInstanceOf(AuthorizationException.class);
     }
-
-    static Stream<Arguments> mockComments() {
-        Comment hotBoardComment = mock(Comment.class);
-        Comment freeBoardComment = mock(Comment.class);
-        Comment posutaBoardComment = mock(Comment.class);
-        Comment goodCrewBoardComment = mock(Comment.class);
-
-        when(hotBoardComment.getBoardId()).thenReturn(HOT_BOARD_ID);
-        when(freeBoardComment.getBoardId()).thenReturn(FREE_BOARD_ID);
-        when(posutaBoardComment.getBoardId()).thenReturn(POSUTA_BOARD_ID);
-        when(goodCrewBoardComment.getBoardId()).thenReturn(GOOD_CREW_BOARD_ID);
-
-        when(hotBoardComment.getId()).thenReturn(1L);
-        when(freeBoardComment.getId()).thenReturn(1L);
-        when(posutaBoardComment.getId()).thenReturn(1L);
-        when(goodCrewBoardComment.getId()).thenReturn(1L);
-
-        return Stream.of(
-                Arguments.of(hotBoardComment),
-                Arguments.of(freeBoardComment),
-                Arguments.of(posutaBoardComment),
-                Arguments.of(goodCrewBoardComment)
-        );
-    }
-
-
 
     @DisplayName("지원자는 권한이 있는 게시판 게시글의 댓글, 대댓글에 좋아요를 누를 수 있다.")
     @Test

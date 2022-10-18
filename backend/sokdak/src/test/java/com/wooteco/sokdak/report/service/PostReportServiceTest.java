@@ -177,36 +177,25 @@ class PostReportServiceTest extends ServiceTest {
 
     @DisplayName("지원자는 권한이 없는 게시판 게시글을 신고할 수 없다.")
     @ParameterizedTest
-    @MethodSource("mockPosts")
-    void flipPostLike_Applicant_Exception(Post mockPost) {
+    @CsvSource({"2", "3", "4"})
+    void flipPostLike_Applicant_Exception(Long boardId) {
+        Post post = Post.builder()
+                .member(member)
+                .title(VALID_POST_TITLE)
+                .content(VALID_POST_CONTENT)
+                .writerNickname("randomNickname")
+                .build();
+        postRepository.save(post);
+        PostBoard postBoard = PostBoard.builder().build();
+        postBoard.addBoard(boardRepository.findById(boardId).get());
+        postBoard.addPost(post);
+        postBoardRepository.save(postBoard);
+
         ReportRequest reportRequest = new ReportRequest("message");
 
-        assertThatThrownBy(() -> postReportService.reportPost(mockPost.getId(), reportRequest, APPLICANT_AUTH_INFO))
+
+        assertThatThrownBy(() -> postReportService.reportPost(post.getId(), reportRequest, APPLICANT_AUTH_INFO))
                 .isInstanceOf(AuthorizationException.class);
-    }
-
-    static Stream<Arguments> mockPosts() {
-        Post hotBoardPost = mock(Post.class);
-        Post freeBoardPost = mock(Post.class);
-        Post posutaBoardPost = mock(Post.class);
-        Post goodCrewBoardPost = mock(Post.class);
-
-        when(hotBoardPost.getBoardId()).thenReturn(HOT_BOARD_ID);
-        when(freeBoardPost.getBoardId()).thenReturn(FREE_BOARD_ID);
-        when(posutaBoardPost.getBoardId()).thenReturn(POSUTA_BOARD_ID);
-        when(goodCrewBoardPost.getBoardId()).thenReturn(GOOD_CREW_BOARD_ID);
-
-        when(hotBoardPost.getId()).thenReturn(1L);
-        when(freeBoardPost.getId()).thenReturn(1L);
-        when(posutaBoardPost.getId()).thenReturn(1L);
-        when(goodCrewBoardPost.getId()).thenReturn(1L);
-
-        return Stream.of(
-                Arguments.of(hotBoardPost),
-                Arguments.of(freeBoardPost),
-                Arguments.of(posutaBoardPost),
-                Arguments.of(goodCrewBoardPost)
-        );
     }
 
     @DisplayName("지원자는 권한이 있는 게시판 게시글을 신고할 수 있다.")

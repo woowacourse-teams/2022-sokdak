@@ -127,18 +127,28 @@ class CommentServiceTest extends ServiceTest {
 
     @DisplayName("지원자는 권한이 없는 게시판에 작성된 게시글에 댓글 작성할 수 없다.")
     @ParameterizedTest
-    @CsvSource({"1", "2", "3", "4"})
+    @CsvSource({"2", "3", "4"})
     void addComment_Applicant_Exception(Long boardId) {
+        Post post = Post.builder()
+                .member(member)
+                .title(VALID_POST_TITLE)
+                .content(VALID_POST_CONTENT)
+                .writerNickname(randomNickname)
+                .build();
+        postRepository.save(post);
+        PostBoard postBoard = PostBoard.builder().build();
+        postBoard.addBoard(boardRepository.findById(boardId).get());
+        postBoard.addPost(post);
+        postBoardRepository.save(postBoard);
+
         NewCommentRequest newCommentRequest = new NewCommentRequest("content", true);
-        assertThatThrownBy(() -> commentService.addComment(anonymousPost.getId(), newCommentRequest, APPLICANT_AUTH_INFO))
+        assertThatThrownBy(() -> commentService.addComment(post.getId(), newCommentRequest, APPLICANT_AUTH_INFO))
                 .isInstanceOf(AuthorizationException.class);
     }
 
     @DisplayName("지원자는 권한이 있는 게시판에 작성된 게시글에 댓글을 작성할 수 있다.")
     @Test
     void addComment_Applicant() {
-        NewCommentRequest newCommentRequest = new NewCommentRequest("content", true);
-
         Post applicantPost = Post.builder()
                 .member(member)
                 .title(VALID_POST_TITLE)
@@ -150,6 +160,8 @@ class CommentServiceTest extends ServiceTest {
         postBoard.addPost(applicantPost);
         postBoard.addBoard(boardRepository.findById(APPLICANT_BOARD_ID).get());
         postBoardRepository.save(postBoard);
+
+        NewCommentRequest newCommentRequest = new NewCommentRequest("content", true);
 
         Long commentId = commentService.addComment(applicantPost.getId(), newCommentRequest, APPLICANT_AUTH_INFO);
         Comment foundComment = commentRepository.findById(commentId).orElseThrow();
@@ -186,8 +198,20 @@ class CommentServiceTest extends ServiceTest {
 
     @DisplayName("지원자는 권한이 없는 게시판에 작성된 게시글에 달린 댓글에 대댓글을 작성할 수 없다.")
     @ParameterizedTest
-    @CsvSource({"1", "2", "3", "4"})
+    @CsvSource({"2", "3", "4"})
     void addReply_Applicant_Exception(Long boardId) {
+        Post post = Post.builder()
+                .member(member)
+                .title(VALID_POST_TITLE)
+                .content(VALID_POST_CONTENT)
+                .writerNickname(randomNickname)
+                .build();
+        postRepository.save(post);
+        PostBoard postBoard = PostBoard.builder().build();
+        postBoard.addBoard(boardRepository.findById(boardId).get());
+        postBoard.addPost(post);
+        postBoardRepository.save(postBoard);
+
         Long commentId = commentService.addComment(anonymousPost.getId(), APPLICANT_COMMENT_REQUEST, AUTH_INFO);
         NewReplyRequest newReplyRequest = new NewReplyRequest("content", true);
         assertThatThrownBy(() -> commentService.addReply(commentId, newReplyRequest, APPLICANT_AUTH_INFO))

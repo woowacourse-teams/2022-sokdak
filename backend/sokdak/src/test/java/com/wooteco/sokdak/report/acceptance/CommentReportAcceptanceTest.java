@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.report.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.BoardFixture.*;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.VALID_COMMENT_MESSAGE;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
@@ -10,7 +9,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
-import com.wooteco.sokdak.util.fixture.BoardFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +18,7 @@ import org.springframework.http.HttpStatus;
 @DisplayName("댓글 신고 관련 인수테스트")
 class CommentReportAcceptanceTest extends AcceptanceTest {
 
-    private static final ReportRequest REPORT_REQUEST = new ReportRequest(FREE_BOARD_ID, "나쁜댓글");
+    private static final ReportRequest REPORT_REQUEST = new ReportRequest("나쁜댓글");
 
     @DisplayName("댓글을 신고할 수 있다.")
     @Test
@@ -63,7 +61,7 @@ class CommentReportAcceptanceTest extends AcceptanceTest {
         String token = getChrisToken();
         Long postId = addNewPost();
 
-        NewCommentRequest newCommentRequest = new NewCommentRequest(FREE_BOARD_ID, VALID_COMMENT_MESSAGE, true);
+        NewCommentRequest newCommentRequest = new NewCommentRequest(VALID_COMMENT_MESSAGE, true);
         Long commentId = Long.parseLong(
                 httpPostWithAuthorization(newCommentRequest, "/posts/" + postId + "/comments", token)
                         .header("Location").split("/comments/")[1]);

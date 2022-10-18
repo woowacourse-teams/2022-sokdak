@@ -38,11 +38,9 @@ const Carousel = () => {
       {data?.posts.length !== 0 && (
         <Styled.Container>
           <Styled.Title>🔥 핫 게시판 🔥</Styled.Title>
-          {page !== 0 ? (
-            <Styled.ArrowLeft width={'30px'} height={'30px'} onClick={handleClickLastPage} />
-          ) : (
-            <Styled.EmptyContainer />
-          )}
+          {page !== 0 && <Styled.ArrowLeft onClick={handleClickLastPage}>{'<'}</Styled.ArrowLeft>}
+          {!isEnd && <Styled.ArrowRight onClick={handleClickNextPage}>{'>'}</Styled.ArrowRight>}
+
           <Styled.CarouselContainer>
             <Styled.PostContainer>
               <Styled.PostListContainer page={page}>
@@ -60,7 +58,6 @@ const Carousel = () => {
               </Styled.PostListContainer>
             </Styled.PostContainer>
           </Styled.CarouselContainer>
-          {!isEnd && <Styled.ArrowRight width={'30px'} height={'30px'} onClick={handleClickNextPage} />}
         </Styled.Container>
       )}
     </>

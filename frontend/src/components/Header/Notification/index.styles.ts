@@ -8,6 +8,16 @@ export const NotificationIcon = styled(NotificationImg)`
   width: 30px;
   height: 30px;
   position: relative;
+
+  @media (min-width: 875px) {
+    width: 35px;
+    height: 35px;
+    margin-bottom: 10px;
+
+    path {
+      stroke-width: 1;
+    }
+  }
 `;
 
 export const NotificationContainer = styled(Link)`
@@ -25,4 +35,9 @@ export const AlarmPointer = styled.div`
   top: 15%;
   right: 25%;
   z-index: 2;
+
+  @media (min-width: 875px) {
+    top: 13%;
+    right: 27%;
+  }
 `;

@@ -19,17 +19,21 @@ export const Container = styled.div`
   height: 100vh;
 
   position: fixed;
-  z-index: 10;
+  z-index: 100;
   background-color: white;
 
   top: 0;
   left: 50%;
   transform: translate(-50%, 0);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 export const Header = styled.div`
   height: 90px;
-  width: 100%;
+  width: 80%;
   margin-top: 25px;
   padding: 0 0 0 20px;
   display: flex;
@@ -73,7 +77,7 @@ export const CloseButton = styled.button`
 `;
 
 export const Content = styled.div`
-  width: 100%;
+  width: 80%;
   height: calc(100% - 110px);
   float: left;
   display: flex;
@@ -94,6 +98,11 @@ export const HashTagContainer = styled.div`
   row-gap: 7px;
   justify-content: center;
   animation: ${appear} 0.2s;
+
+  @media (min-width: 875px) {
+    width: 100%;
+    justify-content: start;
+  }
 `;
 
 export const HashTag = styled(HashTagComponent)`

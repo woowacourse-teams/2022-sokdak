@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.util.fixture;
 
-import static com.wooteco.sokdak.util.fixture.BoardFixture.*;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
 
@@ -13,16 +12,16 @@ public class CommentFixture {
     public static final String VALID_REPLY_COMMENT = "대댓글";
 
     public static final NewCommentRequest NON_ANONYMOUS_COMMENT_REQUEST
-            = new NewCommentRequest(FREE_BOARD_ID, VALID_COMMENT_MESSAGE, false);
+            = new NewCommentRequest(VALID_COMMENT_MESSAGE, false);
     public static final NewCommentRequest ANONYMOUS_COMMENT_REQUEST
-            = new NewCommentRequest(FREE_BOARD_ID, VALID_COMMENT_MESSAGE, true);
+            = new NewCommentRequest(VALID_COMMENT_MESSAGE, true);
     public static final NewCommentRequest APPLICANT_COMMENT_REQUEST
-            = new NewCommentRequest(APPLICANT_BOARD_ID, VALID_COMMENT_MESSAGE, false);
+            = new NewCommentRequest(VALID_COMMENT_MESSAGE, false);
 
     public static final NewReplyRequest NON_ANONYMOUS_REPLY_REQUEST =
-            new NewReplyRequest(FREE_BOARD_ID, VALID_REPLY_COMMENT, false);
+            new NewReplyRequest(VALID_REPLY_COMMENT, false);
     public static final NewReplyRequest ANONYMOUS_REPLY_REQUEST =
-            new NewReplyRequest(FREE_BOARD_ID, VALID_REPLY_COMMENT, true);
+            new NewReplyRequest(VALID_REPLY_COMMENT, true);
 
     public static Long addNewCommentInPost(Long postId) {
         return Long.parseLong(

@@ -9,7 +9,6 @@ import PasswordInput from './components/PasswordInput';
 import VerificationCodeInput from './components/VerificationCodeInput';
 import { useInput } from '@/components/@shared/InputBox/useInput';
 import Layout from '@/components/@styled/Layout';
-import CheckBox from '@/components/CheckBox';
 
 import useSignUp from '@/hooks/queries/member/useSignUp';
 import useSnackbar from '@/hooks/useSnackbar';
@@ -71,8 +70,13 @@ const SignUpPage = () => {
   return (
     <Layout>
       <Styled.SignUpForm>
+        <Styled.HomeLink to={PATH.HOME}>속닥속닥</Styled.HomeLink>
         <Styled.Heading>회원가입</Styled.Heading>
-        <CheckBox isChecked={isCourseCrew} labelText={'우아한테크코스 크루입니까?'} setIsChecked={setIsCourseCrew} />
+        <Styled.CrewCheck
+          isChecked={isCourseCrew}
+          labelText={'우아한테크코스 크루입니까?'}
+          setIsChecked={setIsCourseCrew}
+        />
         {isCourseCrew && (
           <>
             <EmailInput

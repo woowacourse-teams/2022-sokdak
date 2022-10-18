@@ -54,7 +54,7 @@ export const postList: Post[] = [
     authorized: false,
     boardId: 1,
     nickname: '짜증난 파이썬',
-    blocked: true,
+    blocked: false,
     imageName: '',
   },
 

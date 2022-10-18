@@ -1,4 +1,5 @@
 import { useContext, useReducer } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import SearchModal from '@/components/SearchModal';
 
@@ -24,10 +25,11 @@ const Header = () => {
   const { refetch: logout } = useLogout();
   const isHeaderSizeLineOver = useResponsive(875);
   const isDesktopSizeLineOver = useResponsive(1140);
+  const { pathname } = useLocation();
 
-  const handleClickLogout = () => {
-    logout();
-  };
+  const handleClickLogout = () => logout();
+
+  if (pathname === PATH.LOGIN || pathname === PATH.SIGN_UP) return null;
 
   return (
     <>

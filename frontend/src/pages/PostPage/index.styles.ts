@@ -110,13 +110,15 @@ export const NotFound = styled.div`
 `;
 
 export const Container = styled.div`
-  width: 100%;
+  width: 90%;
   display: flex;
   justify-content: space-between;
   position: relative;
+  padding: 1rem 0;
 
   @media (min-width: 875px) {
-    padding: 4rem 1rem;
+    width: 100%;
+    padding: 4rem 0;
   }
 `;
 

@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.report.domain;
 
+import static com.wooteco.sokdak.util.fixture.MemberFixture.ENCRYPTOR;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
@@ -8,6 +9,8 @@ import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.Nickname;
+import com.wooteco.sokdak.member.domain.Username;
 import com.wooteco.sokdak.post.domain.Post;
 import java.util.Collections;
 import java.util.stream.Stream;
@@ -66,14 +69,14 @@ class PostReportTest {
 
     static Stream<Arguments> isOwnerArguments() {
         Member reporter = Member.builder()
-                .username("reporter")
-                .nickname("reporterNickname")
-                .password("Abcd123!@")
+                .username(Username.of(ENCRYPTOR, "reporter"))
+                .nickname(new Nickname("reporterNickname"))
+                .password(VALID_PASSWORD)
                 .build();
         Member member = Member.builder()
-                .username("member")
-                .nickname("memberNickname")
-                .password("Abcd123!@")
+                .username(Username.of(ENCRYPTOR, "member"))
+                .nickname(new Nickname("memberNickname"))
+                .password(VALID_PASSWORD)
                 .build();
 
         return Stream.of(

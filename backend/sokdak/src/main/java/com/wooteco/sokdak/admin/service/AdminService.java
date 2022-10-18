@@ -7,9 +7,8 @@ import com.wooteco.sokdak.admin.dto.TicketElement;
 import com.wooteco.sokdak.admin.dto.TicketRequest;
 import com.wooteco.sokdak.admin.dto.TicketsResponse;
 import com.wooteco.sokdak.admin.exception.NoAdminException;
-import com.wooteco.sokdak.ticket.domain.Ticket;
+import com.wooteco.sokdak.auth.domain.encryptor.EncryptorI;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
-import com.wooteco.sokdak.auth.service.Encryptor;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.member.exception.SerialNumberNotFoundException;
@@ -22,6 +21,7 @@ import com.wooteco.sokdak.report.domain.PostReport;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.report.repository.PostReportRepository;
 import com.wooteco.sokdak.report.service.PostReportService;
+import com.wooteco.sokdak.ticket.domain.Ticket;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,16 +37,18 @@ public class AdminService {
     private final PostReportService postReportService;
     private final PostRepository postRepository;
     private final PostReportRepository postReportRepository;
+    private final EncryptorI encryptor;
 
     public AdminService(TicketRepository ticketRepository, PostService postService,
                         PostReportService postReportService,
                         PostRepository postRepository,
-                        PostReportRepository postReportRepository) {
+                        PostReportRepository postReportRepository, EncryptorI encryptor) {
         this.ticketRepository = ticketRepository;
         this.postService = postService;
         this.postReportService = postReportService;
         this.postRepository = postRepository;
         this.postReportRepository = postReportRepository;
+        this.encryptor = encryptor;
     }
 
     @Transactional
@@ -56,7 +58,7 @@ public class AdminService {
         List<String> emails = emailsAddRequest.getEmails();
 
         for (String email : emails) {
-            String serialNumber = Encryptor.encrypt(email);
+            String serialNumber = encryptor.encrypt(email);
             Optional<Ticket> foundSerialNumber = ticketRepository.findBySerialNumber(serialNumber);
             if (foundSerialNumber.isEmpty()) {
                 Ticket ticket = Ticket.builder()

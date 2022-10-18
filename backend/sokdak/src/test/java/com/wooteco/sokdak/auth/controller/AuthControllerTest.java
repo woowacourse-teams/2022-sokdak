@@ -14,8 +14,6 @@ import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.auth.exception.LoginFailedException;
 import com.wooteco.sokdak.member.domain.RoleType;
-import com.wooteco.sokdak.member.dto.VerificationRequest;
-import com.wooteco.sokdak.member.exception.InvalidAuthCodeException;
 import com.wooteco.sokdak.util.ControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -64,7 +62,7 @@ class AuthControllerTest extends ControllerTest {
     void logout() {
         doReturn(true)
                 .when(authInterceptor)
-                        .preHandle(any(),any(),any());
+                .preHandle(any(), any(), any());
 
         restDocs
                 .header("Authorization", "any")

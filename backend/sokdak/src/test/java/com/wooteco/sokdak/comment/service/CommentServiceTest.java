@@ -5,7 +5,6 @@ import static com.wooteco.sokdak.util.fixture.BoardFixture.APPLICANT_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.ANONYMOUS_COMMENT_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.ANONYMOUS_REPLY_REQUEST;
-import static com.wooteco.sokdak.util.fixture.CommentFixture.APPLICANT_COMMENT_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NON_ANONYMOUS_COMMENT_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NON_ANONYMOUS_REPLY_REQUEST;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
@@ -14,6 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.wooteco.sokdak.auth.domain.encryptor.EncryptorI;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.board.domain.Board;
@@ -28,6 +28,9 @@ import com.wooteco.sokdak.comment.dto.ReplyResponse;
 import com.wooteco.sokdak.comment.exception.ReplyDepthException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.Nickname;
+import com.wooteco.sokdak.member.domain.Password;
+import com.wooteco.sokdak.member.domain.Username;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
 import com.wooteco.sokdak.post.domain.Post;
@@ -62,6 +65,9 @@ class CommentServiceTest extends ServiceTest {
 
     @Autowired
     private PostBoardRepository postBoardRepository;
+
+    @Autowired
+    private EncryptorI encryptor;
 
     private Post anonymousPost;
     private Post identifiedPost;
@@ -194,42 +200,6 @@ class CommentServiceTest extends ServiceTest {
 
         assertThatThrownBy(() -> commentService.addReply(replyId, ANONYMOUS_REPLY_REQUEST, AUTH_INFO))
                 .isInstanceOf(ReplyDepthException.class);
-    }
-
-    @DisplayName("지원자는 권한이 없는 게시판에 작성된 게시글에 달린 댓글에 대댓글을 작성할 수 없다.")
-    @ParameterizedTest
-    @CsvSource({"2", "3", "4"})
-    void addReply_Applicant_Exception(Long boardId) {
-        Post post = Post.builder()
-                .member(member)
-                .title(VALID_POST_TITLE)
-                .content(VALID_POST_CONTENT)
-                .writerNickname(randomNickname)
-                .build();
-        postRepository.save(post);
-        PostBoard postBoard = PostBoard.builder().build();
-        postBoard.addBoard(boardRepository.findById(boardId).get());
-        postBoard.addPost(post);
-        postBoardRepository.save(postBoard);
-
-        Long commentId = commentService.addComment(anonymousPost.getId(), APPLICANT_COMMENT_REQUEST, AUTH_INFO);
-        NewReplyRequest newReplyRequest = new NewReplyRequest("content", true);
-        assertThatThrownBy(() -> commentService.addReply(commentId, newReplyRequest, APPLICANT_AUTH_INFO))
-                .isInstanceOf(AuthorizationException.class);
-    }
-
-    @DisplayName("지원자는 권한이 있는 게시판에 작성된 게시글에 달린 댓글에 대댓글을 작성할 수 있다.")
-    @Test
-    void addReply_Applicant() {
-        Long commentId = commentService.addComment(applicantPost.getId(), APPLICANT_COMMENT_REQUEST, AUTH_INFO);
-        NewReplyRequest newReplyRequest = new NewReplyRequest("content", true);
-
-        Long replyId = commentService.addReply(commentId, newReplyRequest, APPLICANT_AUTH_INFO);
-        Comment foundReply = commentRepository.findById(replyId).orElseThrow();
-        assertAll(
-                () -> assertThat(foundReply.getMessage()).isEqualTo(newReplyRequest.getContent()),
-                () -> assertThat(foundReply.getMember().getId()).isEqualTo(APPLICANT_AUTH_INFO.getId())
-        );
     }
 
     @DisplayName("익명 게시글에서 게시글 작성자가 기명으로 댓글 등록")
@@ -378,9 +348,9 @@ class CommentServiceTest extends ServiceTest {
     @Test
     void findComments_authorized() {
         Member otherMember = Member.builder()
-                .username("otherUser")
-                .password("test1234!")
-                .nickname("다른유저")
+                .username(Username.of(encryptor, "otherUser"))
+                .password(Password.of(encryptor, "test1234!"))
+                .nickname(new Nickname("다른유저"))
                 .build();
         memberRepository.save(otherMember);
         commentService.addComment(anonymousPost.getId(), ANONYMOUS_COMMENT_REQUEST, AUTH_INFO);

@@ -25,7 +25,8 @@ public class CommentFixture {
 
     public static Long addNewCommentInPost(Long postId) {
         return Long.parseLong(
-                httpPostWithAuthorization(NON_ANONYMOUS_COMMENT_REQUEST, "/posts/" + postId + "/comments", getChrisToken())
+                httpPostWithAuthorization(NON_ANONYMOUS_COMMENT_REQUEST, "/posts/" + postId + "/comments",
+                        getChrisToken())
                         .header("Location").split("/comments/")[1]);
     }
 }

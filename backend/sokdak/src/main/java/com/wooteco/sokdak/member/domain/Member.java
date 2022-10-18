@@ -35,14 +35,14 @@ public class Member {
     }
 
     @Builder
-    public Member(Long id, String username, String password, String nickname) {
+    public Member(Long id, Username username, Password password, Nickname nickname) {
         this.id = id;
-        this.username = new Username(username);
-        this.password = new Password(password);
-        this.nickname = new Nickname(nickname);
+        this.username = username;
+        this.password = password;
+        this.nickname = nickname;
     }
 
-    public static Member applicant(String username, String password, String nickname) {
+    public static Member applicant(Username username, Password password, Nickname nickname) {
         Member member = new Member(null, username, password, nickname);
         member.roleType = RoleType.APPLICANT;
         return member;

@@ -5,6 +5,7 @@ import static com.wooteco.sokdak.notification.domain.NotificationType.HOT_BOARD;
 import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_COMMENT;
 import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_REPLY;
 import static com.wooteco.sokdak.notification.domain.NotificationType.POST_REPORT;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.ENCRYPTOR;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
@@ -16,6 +17,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.Nickname;
+import com.wooteco.sokdak.member.domain.Password;
+import com.wooteco.sokdak.member.domain.Username;
 import com.wooteco.sokdak.post.domain.Post;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,16 +28,17 @@ class NotificationTest {
 
     private static final Member MEMBER1 = Member.builder()
             .id(1L)
-            .nickname(VALID_NICKNAME)
             .username(VALID_USERNAME)
             .password(VALID_PASSWORD)
+            .nickname(VALID_NICKNAME)
             .build();
     private static final Member MEMBER2 = Member.builder()
             .id(1L)
-            .nickname("joshNickname")
-            .username("josh")
-            .password("Ajkl312@!")
+            .nickname(new Nickname("joshNickname"))
+            .username(Username.of(ENCRYPTOR, "josh"))
+            .password(Password.of(ENCRYPTOR, "Ajkl312@!"))
             .build();
+
     private static final Post POST = Post.builder()
             .title(VALID_POST_TITLE)
             .content(VALID_POST_CONTENT)

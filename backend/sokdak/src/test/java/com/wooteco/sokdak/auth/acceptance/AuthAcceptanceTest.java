@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.auth.acceptance;
 
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.ENCRYPTOR;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.INVALID_LOGIN_REQUEST;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_LOGIN_REQUEST;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -8,10 +9,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-import com.wooteco.sokdak.ticket.domain.AuthCode;
-import com.wooteco.sokdak.auth.service.Encryptor;
 import com.wooteco.sokdak.member.dto.VerificationRequest;
 import com.wooteco.sokdak.member.repository.AuthCodeRepository;
+import com.wooteco.sokdak.ticket.domain.AuthCode;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -62,7 +62,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         String code = "ABCDEF";
         AuthCode authCode = AuthCode.builder()
                 .code(code)
-                .serialNumber(Encryptor.encrypt(email))
+                .serialNumber(ENCRYPTOR.encrypt(email))
                 .build();
         authCodeRepository.save(authCode);
 
@@ -79,7 +79,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         String code = "ABCDEF";
         AuthCode authCode = AuthCode.builder()
                 .code(code)
-                .serialNumber(Encryptor.encrypt(email))
+                .serialNumber(ENCRYPTOR.encrypt(email))
                 .build();
         authCodeRepository.save(authCode);
 
@@ -96,7 +96,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         String code = "ABCDEF";
         AuthCode authCode = AuthCode.builder()
                 .code(code)
-                .serialNumber(Encryptor.encrypt(email))
+                .serialNumber(ENCRYPTOR.encrypt(email))
                 .build();
         authCodeRepository.save(authCode);
 
@@ -113,7 +113,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         String code = "ABCDEF";
         AuthCode authCode = AuthCode.builder()
                 .code(code)
-                .serialNumber(Encryptor.encrypt(email))
+                .serialNumber(ENCRYPTOR.encrypt(email))
                 .build();
         authCodeRepository.save(authCode);
 

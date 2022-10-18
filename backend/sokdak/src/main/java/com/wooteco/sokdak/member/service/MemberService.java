@@ -1,20 +1,21 @@
 package com.wooteco.sokdak.member.service;
 
+import com.wooteco.sokdak.auth.domain.encryptor.EncryptorI;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
-import com.wooteco.sokdak.auth.service.AuthService;
-import com.wooteco.sokdak.auth.service.Encryptor;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.domain.Nickname;
+import com.wooteco.sokdak.member.domain.Password;
+import com.wooteco.sokdak.member.domain.Username;
+import com.wooteco.sokdak.member.dto.NicknameResponse;
+import com.wooteco.sokdak.member.dto.NicknameUpdateRequest;
 import com.wooteco.sokdak.member.dto.SignupRequest;
 import com.wooteco.sokdak.member.dto.UniqueResponse;
 import com.wooteco.sokdak.member.dto.VerificationRequest;
+import com.wooteco.sokdak.member.exception.DuplicateNicknameException;
 import com.wooteco.sokdak.member.exception.InvalidSignupFlowException;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.exception.PasswordConfirmationException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
-import com.wooteco.sokdak.member.dto.NicknameResponse;
-import com.wooteco.sokdak.member.dto.NicknameUpdateRequest;
-import com.wooteco.sokdak.member.exception.DuplicateNicknameException;
 import com.wooteco.sokdak.ticket.service.RegisterService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,20 +25,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final EmailService emailService;
-    private final AuthService authService;
     private final RegisterService registerService;
+    private final EncryptorI encryptor;
 
-    public MemberService(MemberRepository memberRepository, EmailService emailService,
-                         AuthService authService, RegisterService registerService) {
+    public MemberService(MemberRepository memberRepository,
+                         RegisterService registerService,
+                         EncryptorI encryptor) {
         this.memberRepository = memberRepository;
-        this.emailService = emailService;
-        this.authService = authService;
         this.registerService = registerService;
+        this.encryptor = encryptor;
     }
 
     public UniqueResponse checkUniqueUsername(String username) {
-        String hashedUsername = Encryptor.encrypt(username);
+        String hashedUsername = encryptor.encrypt(username);
         boolean unique = !memberRepository.existsMemberByUsernameValue(hashedUsername);
         return new UniqueResponse(unique);
     }
@@ -52,9 +52,9 @@ public class MemberService {
         validate(signupRequest);
 
         Member member = Member.builder()
-                .username(signupRequest.getUsername())
-                .password(signupRequest.getPassword())
-                .nickname(signupRequest.getNickname())
+                .username(Username.of(encryptor, signupRequest.getUsername()))
+                .password(Password.of(encryptor, signupRequest.getPassword()))
+                .nickname(new Nickname(signupRequest.getNickname()))
                 .build();
         memberRepository.save(member);
         registerService.useTicket(signupRequest.getEmail());
@@ -64,8 +64,9 @@ public class MemberService {
     public void signUpAsApplicant(SignupRequest signupRequest) {
         validateForApplicant(signupRequest);
 
-        Member member = Member.applicant(signupRequest.getUsername(), signupRequest.getPassword(),
-                signupRequest.getNickname());
+        Member member = Member.applicant(Username.of(encryptor, signupRequest.getUsername()),
+                Password.of(encryptor, signupRequest.getPassword()),
+                new Nickname(signupRequest.getNickname()));
         memberRepository.save(member);
     }
 
@@ -85,7 +86,7 @@ public class MemberService {
 
     private void validateUniqueUsername(SignupRequest signupRequest) {
         boolean isDuplicatedUsername = memberRepository
-                .existsMemberByUsernameValue(Encryptor.encrypt(signupRequest.getUsername()));
+                .existsMemberByUsernameValue(encryptor.encrypt(signupRequest.getUsername()));
         if (isDuplicatedUsername) {
             throw new InvalidSignupFlowException();
         }
@@ -106,7 +107,7 @@ public class MemberService {
     }
 
     private void validateSerialNumber(SignupRequest signupRequest) {
-        String serialNumber = Encryptor.encrypt(signupRequest.getEmail());
+        String serialNumber = encryptor.encrypt(signupRequest.getEmail());
         registerService.validateSignUpMember(serialNumber);
     }
 

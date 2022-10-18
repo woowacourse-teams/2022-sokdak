@@ -54,7 +54,7 @@ export const postList: Post[] = [
     authorized: false,
     boardId: 1,
     nickname: '짜증난 파이썬',
-    blocked: true,
+    blocked: false,
     imageName: '',
   },
 
@@ -991,4 +991,12 @@ export const notificationList: NoticeTable[] = [
     isChecked: false,
     postId: 7,
   },
+];
+
+export const AD = [
+  { name: '5기 모집 시작!', url: 'https://woowacourse.github.io/about.html' },
+  { name: '면담은 터놓고 🙊', url: 'https://ternoko.site' },
+  { name: '면담은 티타임 ☕️', url: 'https://teatime.pe.kr/' },
+  { name: '회고는 회고덕 🐤', url: 'https://ducks.kr/' },
+  { name: '레벨인터뷰는 레벨로그 ✏️', url: 'https://levellog.app/' },
 ];

@@ -2,6 +2,7 @@ package com.wooteco.sokdak.post.domain;
 
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;
+import com.wooteco.sokdak.board.exception.BoardNotFoundException;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.hashtag.domain.PostHashtag;
 import com.wooteco.sokdak.like.domain.PostLike;
@@ -34,6 +35,7 @@ public class Post {
 
     private static final int BLOCKED_CONDITION = 5;
     private static final String BLIND_POST_MESSAGE = "블라인드 처리된 게시글입니다.";
+    private static final Long HOT_BOARD_ID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -221,5 +223,14 @@ public class Post {
                 .findAny()
                 .orElseThrow(PostLikeNotFoundException::new);
         postLikes.remove(postLike);
+    }
+
+    public Long getBoardId() {
+        return postBoards.stream()
+                .map(PostBoard::getBoard)
+                .map(Board::getId)
+                .filter(id -> id != HOT_BOARD_ID)
+                .findAny()
+                .orElseThrow(IllegalStateException::new);
     }
 }

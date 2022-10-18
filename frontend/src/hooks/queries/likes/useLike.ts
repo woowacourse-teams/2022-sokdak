@@ -9,14 +9,14 @@ const useLike = (
   options?: UseMutationOptions<
     AxiosResponse<{ like: boolean; likeCount: number }, string>,
     AxiosError<{ message: string }>,
-    { id: string }
+    { id: string; boardId: number }
   >,
 ) => {
   const queryClient = useQueryClient();
 
   return useMutation(
-    ({ id }): Promise<AxiosResponse<{ like: boolean; likeCount: number }, string>> =>
-      authFetcher.put(`/posts/${id}/like`),
+    ({ id, boardId }): Promise<AxiosResponse<{ like: boolean; likeCount: number }, string>> =>
+      authFetcher.put(`/posts/${id}/like`, { boardId }),
     {
       ...options,
       onSuccess: (data, variables, context) => {

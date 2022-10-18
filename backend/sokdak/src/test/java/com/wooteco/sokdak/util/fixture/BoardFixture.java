@@ -13,5 +13,6 @@ public class BoardFixture {
     public static final long HOT_BOARD_ID = 1;
     public static final long FREE_BOARD_ID = 2;
     public static final long POSUTA_BOARD_ID = 3;
+    public static final long GOOD_CREW_BOARD_ID = 4;
     public static final long APPLICANT_BOARD_ID = 5;
 }

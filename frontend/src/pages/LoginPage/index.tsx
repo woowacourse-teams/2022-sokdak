@@ -46,6 +46,7 @@ const LoginPage = () => {
   return (
     <Layout>
       <Styled.LoginForm onSubmit={handleSubmitButton}>
+        <Styled.HomeLink to={PATH.HOME}>속닥속닥</Styled.HomeLink>
         <Styled.Heading>로그인</Styled.Heading>
         <IDInput {...form.ID} />
         <PasswordInput {...form.password} />

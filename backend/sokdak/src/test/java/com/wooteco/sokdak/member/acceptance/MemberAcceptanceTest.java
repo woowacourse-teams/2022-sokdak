@@ -67,6 +67,18 @@ class MemberAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
+    @DisplayName("지원자로 회원 가입을 할 수 있다.")
+    @Test
+    void signUp_Applicant() {
+        SignupRequest signupRequest =
+                new SignupRequest(null, "username", "nickname",
+                        "123456", "Abcd123!@", "Abcd123!@");
+
+        ExtractableResponse<Response> response = httpPost(signupRequest, "/members/signup");
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
     @DisplayName("닉네임을 수정할 수 있다.")
     @Test
     void editNickname() {

@@ -11,6 +11,8 @@ import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_WRITER_NICKNAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;
@@ -229,6 +231,23 @@ class PostTest {
         post.deleteLikeOfMember(member.getId());
 
         assertThat(post.hasLikeOfMember(member.getId())).isFalse();
+    }
+
+    @DisplayName("핫게시판을 제외한 게시글이 속한 boardId를 가져온다.")
+    @Test
+    void getBoardId() {
+        Board hotBoard = mock(Board.class);
+        Board freeBoard = mock(Board.class);
+        when(hotBoard.getId()).thenReturn(1L);
+        when(freeBoard.getId()).thenReturn(2L);
+        PostBoard hotPostBoard = PostBoard.builder().build();
+        hotPostBoard.addPost(post);
+        hotPostBoard.addBoard(hotBoard);
+        PostBoard freePostBoard = PostBoard.builder().build();
+        freePostBoard.addPost(post);
+        freePostBoard.addBoard(freeBoard);
+
+        assertThat(post.getBoardId()).isEqualTo(2L);
     }
 
     static Stream<Arguments> hasReportByMemberArguments() {

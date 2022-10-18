@@ -80,13 +80,7 @@ const NicknameInput = ({
       setIsAnimationActive={setIsAnimationActive}
     >
       <Styled.InputForm onSubmit={handleIDCheckForm}>
-        <InputBox.Input
-          handleInvalid={() => {
-            setError(SIGN_UP_ERROR.BLANK_NICKNAME);
-          }}
-          placeholder="닉네임"
-          required
-        />
+        <InputBox.Input handleInvalid={() => setError(SIGN_UP_ERROR.BLANK_NICKNAME)} placeholder="닉네임" required />
         <InputBox.SubmitButton disabled={error !== '' || value === ''}>
           {isSet ? '중복 확인 완료' : '중복 확인'}
         </InputBox.SubmitButton>
@@ -94,7 +88,7 @@ const NicknameInput = ({
           <InputBox.ErrorMessage />
         ) : (
           <Styled.MessageContainer>
-            <Styled.Message>테크코스 닉네임은 익명성을 헤칠수 있습니다.</Styled.Message>
+            <Styled.Message>테크코스 닉네임은 익명성을 헤칠 수 있습니다.</Styled.Message>
           </Styled.MessageContainer>
         )}
       </Styled.InputForm>

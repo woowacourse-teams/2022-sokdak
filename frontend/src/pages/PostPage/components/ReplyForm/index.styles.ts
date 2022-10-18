@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 export const Form = styled.form`
@@ -6,10 +7,11 @@ export const Form = styled.form`
   background-color: ${props => props.theme.colors.gray_5};
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
   box-sizing: border-box;
   margin-bottom: -0.5px;
   z-index: 5;
+  font-size: 0.75rem;
 `;
 
 export const Input = styled.textarea`
@@ -20,7 +22,7 @@ export const Input = styled.textarea`
   box-sizing: border-box;
 
   ::placeholder {
-    font-size: 12px;
+    font-size: 0.9em;
   }
 `;
 
@@ -37,25 +39,30 @@ export const ButtonContainer = styled.div`
   display: flex;
 `;
 
-export const CancelButton = styled.button`
-  width: 60px;
-  height: 24px;
-  background-color: transparent;
-  color: ${props => props.theme.colors.sub};
+const buttonStyle = css`
+  width: 3.75rem;
+  height: 1.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 11px;
+  font-size: 0.68rem;
+  border-radius: 3px;
+
+  @media (min-width: 875px) {
+    font-size: 0.8rem;
+    width: 4.75rem;
+    height: 1.8rem;
+  }
+`;
+
+export const CancelButton = styled.button`
+  ${buttonStyle};
+  background-color: transparent;
+  color: ${props => props.theme.colors.sub};
 `;
 
 export const SubmitButton = styled.button`
-  width: 60px;
-  height: 24px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 11px;
+  ${buttonStyle};
   background-color: ${props => props.theme.colors.sub};
   color: white;
-  border-radius: 3px;
 `;

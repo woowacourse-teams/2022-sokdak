@@ -1,35 +1,55 @@
-import Panda from '@/assets/images/panda_logo.svg';
-
 import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 
 export const BannerContainer = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   width: 100%;
-  max-width: 1450px;
   cursor: default;
+
   @media (max-width: 875px) {
     display: none;
+  }
+`;
+
+const leftAppear = keyframes`
+  0% {
+    transform: translateX(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+`;
+
+const rightAppear = keyframes`
+  0% {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0px);
+    opacity: 1;
   }
 `;
 
 export const LeftSide = styled.div`
   display: flex;
   align-items: center;
+  animation: ${leftAppear} 1s;
 `;
 
-export const PandaContainer = styled.div`
+export const RightSide = styled.div`
   display: flex;
+  position: relative;
   justify-content: center;
   align-items: center;
-  width: 115px;
-  margin-right: 10px;
-`;
-
-export const PandaLogo = styled(Panda)`
-  width: 200px;
-  transform: translate3d(-5px, 0, 0);
+  width: 45vw;
+  height: 300px;
+  border-radius: 30px;
+  background-image: linear-gradient(120deg, #e0c6d2 0%, #f6ecdc 100%);
+  animation: ${rightAppear} 2s;
 `;
 
 export const BannerText = styled.p`
@@ -39,24 +59,10 @@ export const BannerText = styled.p`
   font-size: 3rem;
   line-height: 1.3em;
   word-break: keep-all;
+
   @media (max-width: 1200px) {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
-`;
-
-export const HighlightText = styled.span`
-  color: ${props => props.theme.colors.sub_2};
-`;
-
-export const HashTagsContainer = styled.div`
-  display: flex;
-  position: relative;
-  justify-content: center;
-  align-items: center;
-  width: 50%;
-  height: 300px;
-  border-radius: 30px;
-  background-image: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%);
 `;
 
 const hvr_bob = keyframes`
@@ -73,6 +79,7 @@ const hvr_bob = keyframes`
       transform: translateY(-8px);
     }
 `;
+
 const hvr_bob_float = keyframes`
     100% {
       -webkit-transform: translateY(-8px);
@@ -92,6 +99,7 @@ export const HashtagContainer = styled.div<{ x: number; y: number }>`
   height: 70px;
   transform: translate(-50%, -50%) ${props => `translate3d(${props.x}px,${props.y}px, 0px)`};
   transform-style: preserve-3d;
+
   @media (max-width: 1200px) {
     font-size: 1.2rem;
   }

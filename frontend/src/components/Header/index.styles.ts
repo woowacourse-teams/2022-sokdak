@@ -7,15 +7,17 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 export const Container = styled.header`
-  width: 100%;
+  width: 80%;
   height: 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: 15px auto;
-  box-sizing: border-box;
   gap: 3em;
-  padding: 0 3em;
+
+  @media (max-width: 875px) {
+    width: 340px;
+  }
 `;
 
 export const LeftSide = styled(Link)`
@@ -112,6 +114,10 @@ export const Panda = styled(PandaIcon)`
 
 export const DropdownContainer = styled.div`
   width: fit-content;
+
+  @media (min-width: 875px) {
+    margin-bottom: 7px;
+  }
 `;
 
 export const SearchButton = styled.button`

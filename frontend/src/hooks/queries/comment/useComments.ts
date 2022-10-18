@@ -26,6 +26,7 @@ const useComments = ({
 }) =>
   useQuery([QUERY_KEYS.COMMENTS, storeCode], ({ queryKey: [, id] }) => authFetcher.get(`/posts/${id}/comments`), {
     select: data => data.data,
+    suspense: true,
     ...options,
   });
 

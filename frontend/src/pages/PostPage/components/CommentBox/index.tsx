@@ -28,6 +28,7 @@ interface CommentBoxProps extends CommentType {
   className?: string;
   openedFormId?: undefined | number;
   setOpenedFormId?: React.Dispatch<React.SetStateAction<undefined | number>>;
+  boardId: number;
 }
 
 const CommentBox = ({
@@ -44,6 +45,7 @@ const CommentBox = ({
   like,
   openedFormId,
   setOpenedFormId,
+  boardId,
 }: CommentBoxProps) => {
   const [isReportModalOpen, handleReportModal] = useReducer(state => !state, false);
   const [isDeleteModalOpen, handleDeleteModal] = useReducer(state => !state, false);
@@ -52,7 +54,7 @@ const CommentBox = ({
   const strokeColor = like ? theme.colors.pink_300 : theme.colors.gray_300;
   const fillColor = like ? theme.colors.pink_300 : 'white';
 
-  const { mutate: deleteComment } = useDeleteComment();
+  const { isLoading, mutate: deleteComment } = useDeleteComment();
   const { mutate: reportComment } = useReportComment({
     onSettled: () => {
       handleReportModal();
@@ -74,12 +76,21 @@ const CommentBox = ({
   };
 
   const submitReportComment = (message: string) => {
-    reportComment({ id, message });
+    reportComment({ id, message, boardId });
   };
 
   const handleLikeButton = () => {
-    likeComment({ id });
+    likeComment({ id, boardId });
   };
+  if (isLoading) {
+    return <></>;
+  }
+
+  useEffect(() => {
+    if (openedFormId !== id) {
+      setIsReplyFormOpen(false);
+    }
+  }, [openedFormId]);
 
   if (!content) {
     return <Styled.EmptyComment>작성자에 의해 삭제된 댓글 입니다.</Styled.EmptyComment>;
@@ -88,12 +99,6 @@ const CommentBox = ({
   if (blocked) {
     return <Styled.EmptyComment>신고에 의해 블라인드 처리되었습니다.</Styled.EmptyComment>;
   }
-
-  useEffect(() => {
-    if (openedFormId !== id) {
-      setIsReplyFormOpen(false);
-    }
-  }, [openedFormId]);
 
   return (
     <>
@@ -121,7 +126,7 @@ const CommentBox = ({
         </Styled.Footer>
       </Styled.Container>
 
-      {isReplyFormOpen && <ReplyForm commentId={id} setIsReplyFormOpen={setIsReplyFormOpen} />}
+      {isReplyFormOpen && <ReplyForm commentId={id} setIsReplyFormOpen={setIsReplyFormOpen} boardId={boardId} />}
       {isDeleteModalOpen && (
         <ConfirmModal
           title="삭제"

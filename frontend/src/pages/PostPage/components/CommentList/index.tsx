@@ -10,9 +10,10 @@ import CommentInput from '../CommentInput';
 
 interface CommentListProps {
   id: string;
+  boardId: number;
 }
 
-const CommentList = ({ id }: CommentListProps) => {
+const CommentList = ({ id, boardId }: CommentListProps) => {
   const { data } = useComments({ storeCode: id });
   const [openedFormId, setOpenedFormId] = useState<undefined | number>(undefined);
 
@@ -20,13 +21,18 @@ const CommentList = ({ id }: CommentListProps) => {
     <>
       {data && (
         <Styled.Container>
-          <CommentInput amount={data.totalCount} id={id} />
+          <CommentInput amount={data.totalCount} id={id} boardId={boardId} />
           <Styled.CommentsContainer>
             {data.comments.map(comment => (
               <Fragment key={comment.id}>
-                <CommentBox {...comment} openedFormId={openedFormId} setOpenedFormId={setOpenedFormId} />
+                <CommentBox
+                  {...comment}
+                  openedFormId={openedFormId}
+                  setOpenedFormId={setOpenedFormId}
+                  boardId={boardId}
+                />
                 {comment.replies.map(reply => (
-                  <Styled.ReplyBox key={reply.id} mode="replies" {...reply} />
+                  <Styled.ReplyBox key={reply.id} mode="replies" {...reply} boardId={boardId} />
                 ))}
               </Fragment>
             ))}

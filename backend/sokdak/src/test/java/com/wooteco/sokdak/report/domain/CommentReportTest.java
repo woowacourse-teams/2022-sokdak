@@ -3,6 +3,7 @@ package com.wooteco.sokdak.report.domain;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.VALID_COMMENT_MESSAGE;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.ENCRYPTOR;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME_TEXT;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
@@ -12,7 +13,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.domain.Nickname;
-import com.wooteco.sokdak.member.domain.Password;
 import com.wooteco.sokdak.member.domain.Username;
 import com.wooteco.sokdak.post.domain.Post;
 import java.util.Collections;
@@ -27,17 +27,16 @@ import org.junit.jupiter.params.provider.MethodSource;
 class CommentReportTest {
 
     private Member member;
-    private Post post;
     private Comment comment;
 
     @BeforeEach
     void setUp() {
         member = Member.builder()
-                .username(Username.of(ENCRYPTOR,VALID_USERNAME))
-                .password(Password.of(ENCRYPTOR, VALID_PASSWORD))
-                .nickname(new Nickname(VALID_NICKNAME))
+                .username(VALID_USERNAME)
+                .password(VALID_PASSWORD)
+                .nickname(VALID_NICKNAME)
                 .build();
-        post = Post.builder()
+        Post post = Post.builder()
                 .member(member)
                 .title(VALID_POST_TITLE)
                 .content(VALID_POST_CONTENT)
@@ -46,7 +45,7 @@ class CommentReportTest {
         comment = Comment.builder()
                 .member(member)
                 .post(post)
-                .nickname(VALID_NICKNAME)
+                .nickname(VALID_NICKNAME_TEXT)
                 .message(VALID_COMMENT_MESSAGE)
                 .build();
     }
@@ -78,14 +77,14 @@ class CommentReportTest {
 
     static Stream<Arguments> isOwnerArguments() {
         Member reporter = Member.builder()
-                .username(Username.of(ENCRYPTOR,"reporter"))
+                .username(Username.of(ENCRYPTOR, "reporter"))
                 .nickname(new Nickname("reporterNickname"))
-                .password(Password.of(ENCRYPTOR, "Abcd123!@"))
+                .password(VALID_PASSWORD)
                 .build();
         Member member = Member.builder()
-                .username(Username.of(ENCRYPTOR,"member"))
+                .username(Username.of(ENCRYPTOR, "member"))
                 .nickname(new Nickname("memberNickname"))
-                .password(Password.of(ENCRYPTOR, "Abcd123!@"))
+                .password(VALID_PASSWORD)
                 .build();
 
         return Stream.of(

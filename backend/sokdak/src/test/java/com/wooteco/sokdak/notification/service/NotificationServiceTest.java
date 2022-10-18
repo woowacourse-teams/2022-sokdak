@@ -5,7 +5,7 @@ import static com.wooteco.sokdak.notification.domain.NotificationType.HOT_BOARD;
 import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_COMMENT;
 import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_REPLY;
 import static com.wooteco.sokdak.notification.domain.NotificationType.POST_REPORT;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME_TEXT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -216,7 +216,7 @@ class NotificationServiceTest extends ServiceTest {
     @CsvSource({"3, true", "4, false"})
     void existsNewNotification(Long memberId, boolean expected) {
         notificationService.notifyPostReport(post);
-        AuthInfo authInfo = new AuthInfo(memberId, "USER", VALID_NICKNAME);
+        AuthInfo authInfo = new AuthInfo(memberId, "USER", VALID_NICKNAME_TEXT);
 
         NewNotificationCheckResponse newNotificationCheckResponse = notificationService.checkNewNotification(authInfo);
 

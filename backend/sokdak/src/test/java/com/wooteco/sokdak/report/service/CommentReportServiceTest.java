@@ -7,7 +7,7 @@ import static com.wooteco.sokdak.util.fixture.BoardFixture.GOOD_CREW_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.HOT_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.POSUTA_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.VALID_COMMENT_MESSAGE;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME_TEXT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -109,7 +109,7 @@ class CommentReportServiceTest extends ServiceTest {
         comment = Comment.builder()
                 .member(member)
                 .post(post)
-                .nickname(VALID_NICKNAME)
+                .nickname(VALID_NICKNAME_TEXT)
                 .message(VALID_COMMENT_MESSAGE)
                 .build();
         commentRepository.save(comment);
@@ -160,7 +160,7 @@ class CommentReportServiceTest extends ServiceTest {
     void reportComment_Block() {
         AuthInfo authInfo;
         for (long i = 1; i <= 5; i++) {
-            authInfo = new AuthInfo(i, "USER", VALID_NICKNAME);
+            authInfo = new AuthInfo(i, "USER", VALID_NICKNAME_TEXT);
             commentReportService.reportComment(comment.getId(), REPORT_REQUEST, authInfo);
         }
         String blindCommentMessage = "블라인드 처리된 댓글입니다.";
@@ -181,7 +181,7 @@ class CommentReportServiceTest extends ServiceTest {
     void reportComment_BlockNotification(int reportCount, boolean expected) {
         AuthInfo authInfo;
         for (long i = 1; i <= reportCount; i++) {
-            authInfo = new AuthInfo(i, "USER", VALID_NICKNAME);
+            authInfo = new AuthInfo(i, "USER", VALID_NICKNAME_TEXT);
             commentReportService.reportComment(comment.getId(), REPORT_REQUEST, authInfo);
         }
 

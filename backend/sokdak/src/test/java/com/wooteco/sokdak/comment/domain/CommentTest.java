@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.comment.domain;
 
 import static com.wooteco.sokdak.util.fixture.MemberFixture.ENCRYPTOR;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME_TEXT;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
@@ -31,15 +32,14 @@ class CommentTest {
 
     private Post post;
     private Comment comment;
-    private Member member;
 
     @BeforeEach
     void setUp() {
-        member = Member.builder()
+        Member member = Member.builder()
                 .id(1L)
-                .username(Username.of(ENCRYPTOR, VALID_USERNAME))
-                .password(Password.of(ENCRYPTOR, VALID_PASSWORD))
-                .nickname(new Nickname(VALID_NICKNAME))
+                .username(VALID_USERNAME)
+                .password(VALID_PASSWORD)
+                .nickname(VALID_NICKNAME)
                 .build();
         post = Post.builder()
                 .title("제목")
@@ -49,7 +49,7 @@ class CommentTest {
         comment = Comment.builder()
                 .member(member)
                 .post(post)
-                .nickname(VALID_NICKNAME)
+                .nickname(VALID_NICKNAME_TEXT)
                 .message("댓글")
                 .build();
     }
@@ -93,7 +93,7 @@ class CommentTest {
         Comment comment = Comment.builder()
                 .member(member)
                 .post(post)
-                .nickname(VALID_NICKNAME)
+                .nickname(VALID_NICKNAME_TEXT)
                 .message("댓글")
                 .build();
 
@@ -127,15 +127,15 @@ class CommentTest {
     private static Stream<Arguments> provideMemberAndExpected() {
         Member member1 = Member.builder()
                 .id(1L)
-                .username(Username.of(ENCRYPTOR, VALID_USERNAME))
-                .password(Password.of(ENCRYPTOR, VALID_PASSWORD))
-                .nickname(new Nickname(VALID_NICKNAME))
+                .username(VALID_USERNAME)
+                .password(VALID_PASSWORD)
+                .nickname(VALID_NICKNAME)
                 .build();
         Member member2 = Member.builder()
                 .id(2L)
-                .username(Username.of(ENCRYPTOR, VALID_USERNAME))
-                .password(Password.of(ENCRYPTOR, VALID_PASSWORD))
-                .nickname(new Nickname(VALID_NICKNAME))
+                .username(VALID_USERNAME)
+                .password(VALID_PASSWORD)
+                .nickname(VALID_NICKNAME)
                 .build();
         return Stream.of(
                 Arguments.of(member1, true),
@@ -161,12 +161,12 @@ class CommentTest {
         Member reporter = Member.builder()
                 .username(Username.of(ENCRYPTOR, "reporter"))
                 .nickname(new Nickname("reporterNickname"))
-                .password(Password.of(ENCRYPTOR, "Abcd123!@"))
+                .password(VALID_PASSWORD)
                 .build();
         Member member = Member.builder()
                 .username(Username.of(ENCRYPTOR, "member"))
                 .nickname(new Nickname("memberNickname"))
-                .password(Password.of(ENCRYPTOR, "Abcd123!@"))
+                .password(VALID_PASSWORD)
                 .build();
         return Stream.of(
                 Arguments.of(reporter, reporter, true),

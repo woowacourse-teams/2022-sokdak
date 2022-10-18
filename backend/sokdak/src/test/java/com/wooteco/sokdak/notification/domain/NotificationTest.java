@@ -14,8 +14,6 @@ import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.wooteco.sokdak.auth.domain.encryptor.EncryptorFactory;
-import com.wooteco.sokdak.auth.domain.encryptor.EncryptorI;
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.member.domain.Member;
@@ -28,19 +26,17 @@ import org.junit.jupiter.api.Test;
 
 class NotificationTest {
 
-    private static EncryptorI encryptor = ENCRYPTOR;
-
     private static final Member MEMBER1 = Member.builder()
             .id(1L)
-            .nickname(new Nickname(VALID_NICKNAME))
-            .username(Username.of(encryptor, VALID_USERNAME))
-            .password(Password.of(encryptor, VALID_PASSWORD))
+            .username(VALID_USERNAME)
+            .password(VALID_PASSWORD)
+            .nickname(VALID_NICKNAME)
             .build();
     private static final Member MEMBER2 = Member.builder()
             .id(1L)
             .nickname(new Nickname("joshNickname"))
-            .username(Username.of(encryptor, "josh"))
-            .password(Password.of(encryptor, "Ajkl312@!"))
+            .username(Username.of(ENCRYPTOR, "josh"))
+            .password(Password.of(ENCRYPTOR, "Ajkl312@!"))
             .build();
 
     private static final Post POST = Post.builder()

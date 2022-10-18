@@ -52,7 +52,7 @@ class NotificationRepositoryTest extends RepositoryTest {
     @BeforeEach
     void setUp() {
         member2 = Member.builder()
-                .username(Username.of(encryptor,"josh"))
+                .username(Username.of(encryptor, "josh"))
                 .password(Password.of(encryptor, "Abcd123!@"))
                 .nickname(new Nickname("joshNickname"))
                 .build();
@@ -92,8 +92,8 @@ class NotificationRepositoryTest extends RepositoryTest {
     @Test
     void findNotificationsByMemberId() {
         Member member3 = Member.builder()
-                .username(Username.of(encryptor,"east"))
-                .password(Password.of(encryptor, VALID_PASSWORD))
+                .username(Username.of(encryptor, "east"))
+                .password(VALID_PASSWORD)
                 .nickname(new Nickname("eastNickname"))
                 .build();
         memberRepository.save(member3);

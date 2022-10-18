@@ -3,18 +3,13 @@ package com.wooteco.sokdak.report.service;
 import static com.wooteco.sokdak.member.domain.RoleType.USER;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.APPLICANT_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
-import static com.wooteco.sokdak.util.fixture.BoardFixture.GOOD_CREW_BOARD_ID;
-import static com.wooteco.sokdak.util.fixture.BoardFixture.HOT_BOARD_ID;
-import static com.wooteco.sokdak.util.fixture.BoardFixture.POSUTA_BOARD_ID;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME_TEXT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_WRITER_NICKNAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
@@ -32,14 +27,11 @@ import com.wooteco.sokdak.report.exception.InvalidReportMessageException;
 import com.wooteco.sokdak.report.repository.PostReportRepository;
 import com.wooteco.sokdak.util.ServiceTest;
 import java.util.Collections;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 class PostReportServiceTest extends ServiceTest {
@@ -144,7 +136,7 @@ class PostReportServiceTest extends ServiceTest {
     void reportPost_blockNotification(int reportCount, boolean expected) {
         AuthInfo authInfo;
         for (long i = 1; i <= reportCount; i++) {
-            authInfo = new AuthInfo(i, "USER", VALID_NICKNAME);
+            authInfo = new AuthInfo(i, "USER", VALID_NICKNAME_TEXT);
             postReportService.reportPost(post.getId(), REPORT_REQUEST, authInfo);
         }
 
@@ -159,7 +151,7 @@ class PostReportServiceTest extends ServiceTest {
         int blockCondition = 5;
         AuthInfo authInfo;
         for (long i = 1; i <= blockCondition; i++) {
-            authInfo = new AuthInfo(i, "USER", VALID_NICKNAME);
+            authInfo = new AuthInfo(i, "USER", VALID_NICKNAME_TEXT);
             postReportService.reportPost(post.getId(), REPORT_REQUEST, authInfo);
         }
         String blindPostMessage = "블라인드 처리된 게시글입니다.";
@@ -192,7 +184,6 @@ class PostReportServiceTest extends ServiceTest {
         postBoardRepository.save(postBoard);
 
         ReportRequest reportRequest = new ReportRequest("message");
-
 
         assertThatThrownBy(() -> postReportService.reportPost(post.getId(), reportRequest, APPLICANT_AUTH_INFO))
                 .isInstanceOf(AuthorizationException.class);

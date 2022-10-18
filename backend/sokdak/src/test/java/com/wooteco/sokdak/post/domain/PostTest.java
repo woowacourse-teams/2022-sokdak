@@ -3,6 +3,7 @@ package com.wooteco.sokdak.post.domain;
 import static com.wooteco.sokdak.board.domain.BoardType.NON_WRITABLE;
 import static com.wooteco.sokdak.board.domain.BoardType.WRITABLE;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.ENCRYPTOR;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME_TEXT;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
@@ -15,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.wooteco.sokdak.auth.domain.encryptor.EncryptorFactory;
 import com.wooteco.sokdak.auth.domain.encryptor.EncryptorI;
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;
@@ -49,9 +49,9 @@ class PostTest {
     void setUp() {
         member = Member.builder()
                 .id(1L)
-                .username(Username.of(encryptor,VALID_USERNAME))
-                .password(Password.of(encryptor, VALID_PASSWORD))
-                .nickname(new Nickname(VALID_NICKNAME))
+                .username(VALID_USERNAME)
+                .password(VALID_PASSWORD)
+                .nickname(VALID_NICKNAME)
                 .build();
         post = Post.builder()
                 .title(VALID_POST_TITLE)
@@ -166,7 +166,7 @@ class PostTest {
     private static Stream<Arguments> isAnonymousArgs() {
         return Stream.of(
                 Arguments.arguments("익명", true),
-                Arguments.arguments(VALID_NICKNAME, false)
+                Arguments.arguments(VALID_NICKNAME_TEXT, false)
         );
     }
 
@@ -259,12 +259,12 @@ class PostTest {
 
     static Stream<Arguments> hasReportByMemberArguments() {
         Member reporter = Member.builder()
-                .username(Username.of(encryptor,"reporter"))
+                .username(Username.of(encryptor, "reporter"))
                 .nickname(new Nickname("reporterNickname"))
                 .password(Password.of(encryptor, "Abcd123!@"))
                 .build();
         Member member = Member.builder()
-                .username(Username.of(encryptor,"member"))
+                .username(Username.of(encryptor, "member"))
                 .nickname(new Nickname("memberNickname"))
                 .password(Password.of(encryptor, "Abcd123!@"))
                 .build();

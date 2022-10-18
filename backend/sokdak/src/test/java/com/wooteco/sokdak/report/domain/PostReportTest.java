@@ -31,9 +31,9 @@ class PostReportTest {
     @BeforeEach
     void setUp() {
         member = Member.builder()
-                .username(Username.of(ENCRYPTOR,VALID_USERNAME))
-                .password(Password.of(ENCRYPTOR, VALID_PASSWORD))
-                .nickname(new Nickname(VALID_NICKNAME))
+                .username(VALID_USERNAME)
+                .password(VALID_PASSWORD)
+                .nickname(VALID_NICKNAME)
                 .build();
         post = Post.builder()
                 .member(member)
@@ -70,14 +70,14 @@ class PostReportTest {
 
     static Stream<Arguments> isOwnerArguments() {
         Member reporter = Member.builder()
-                .username(Username.of(ENCRYPTOR,"reporter"))
+                .username(Username.of(ENCRYPTOR, "reporter"))
                 .nickname(new Nickname("reporterNickname"))
-                .password(Password.of(ENCRYPTOR, "Abcd123!@"))
+                .password(VALID_PASSWORD)
                 .build();
         Member member = Member.builder()
-                .username(Username.of(ENCRYPTOR,"member"))
+                .username(Username.of(ENCRYPTOR, "member"))
                 .nickname(new Nickname("memberNickname"))
-                .password(Password.of(ENCRYPTOR, "Abcd123!@"))
+                .password(VALID_PASSWORD)
                 .build();
 
         return Stream.of(

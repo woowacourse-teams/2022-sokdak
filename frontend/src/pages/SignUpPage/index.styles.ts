@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 
+import CheckBox from '@/components/CheckBox';
 import TimerComponent from '@/components/Timer';
 
 import { keyframes } from '@emotion/react';
@@ -14,15 +15,31 @@ export const InputForm = styled.form`
 
 export const SignUpForm = styled.div`
   display: flex;
-  width: 100%;
+  width: 90%;
+  height: 100vh;
+  max-width: 450px;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  gap: 5px;
+`;
+
+export const HomeLink = styled(Link)`
+  height: fit-content;
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
+  font-size: 40px;
+  color: ${props => props.theme.colors.sub};
 `;
 
 export const Heading = styled.h1`
   font-family: 'BMHANNAPro', 'Noto Sans KR';
   font-size: 27px;
   margin: 40px 0 70px;
+`;
+
+export const CrewCheck = styled(CheckBox)`
+  align-self: start;
+  margin-left: 7px;
 `;
 
 export const SubmitButton = styled.button`

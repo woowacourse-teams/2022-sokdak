@@ -32,6 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class BoardService {
 
     private static final int PAGE_SIZE = 3;
+    private static final long APPLICANT_BOARD_ID = 5;
+
     private final BoardRepository boardRepository;
     private final PostBoardRepository postBoardRepository;
     private final NotificationService notificationService;
@@ -78,6 +80,9 @@ public class BoardService {
 
     @Transactional
     public void checkAndSaveInSpecialBoard(Post originalPost) {
+        if (isApplicantBoard(originalPost)) {
+            return;
+        }
         Board specialBoard = boardRepository.findByTitle("Hot 게시판")
                 .orElseThrow(BoardNotFoundException::new);
 
@@ -93,6 +98,10 @@ public class BoardService {
             postBoardRepository.save(postBoard);
             notificationService.notifyHotBoard(originalPost);
         }
+    }
+
+    private boolean isApplicantBoard(Post originalPost) {
+        return originalPost.getBoardId().equals(APPLICANT_BOARD_ID);
     }
 
     private void validateUserWritableBoard(Board board, String role) {
@@ -116,7 +125,7 @@ public class BoardService {
     }
 
     public PostsResponse findPostsByBoard(Long boardId, Pageable pageable) {
-        Slice<PostBoard> postBoards = postBoardRepository.findPostBoardsByBoardId(boardId, pageable);
-        return PostsResponse.ofPostBoardSlice(postBoards);
+        Slice<Post> posts = postBoardRepository.findPostsByBoardId(boardId, pageable);
+        return PostsResponse.ofPostSlice(posts);
     }
 }

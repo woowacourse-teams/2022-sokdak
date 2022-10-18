@@ -1,9 +1,9 @@
+import { StateAndAction } from 'sokdak-util-types';
+
 import * as Styled from './index.styles';
 
-interface CheckBoxProps {
+interface CheckBoxProps extends StateAndAction<boolean, 'isChecked'> {
   className?: string;
-  isChecked: boolean;
-  setIsChecked: React.Dispatch<React.SetStateAction<boolean>>;
   labelText: string;
   visible?: boolean;
 }

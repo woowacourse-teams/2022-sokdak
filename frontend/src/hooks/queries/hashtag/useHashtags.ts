@@ -23,6 +23,7 @@ const useHashtags = ({
     [QUERY_KEYS.HASHTAGS, ...storeCode],
     ({ queryKey: [, limit, include] }) => axios.get(`/hashtags/popular?limit=${limit}&include=${include}`),
     {
+      staleTime: 1000 * 40,
       ...options,
     },
   );

@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.post.service;
 
 import static com.wooteco.sokdak.member.domain.RoleType.USER;
+import static com.wooteco.sokdak.util.fixture.BoardFixture.APPLICANT_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -8,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.board.exception.BoardNotFoundException;
@@ -15,6 +17,10 @@ import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.service.CommentService;
+import com.wooteco.sokdak.hashtag.domain.Hashtag;
+import com.wooteco.sokdak.hashtag.domain.PostHashtag;
+import com.wooteco.sokdak.hashtag.repository.HashtagRepository;
+import com.wooteco.sokdak.hashtag.repository.PostHashtagRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
@@ -32,6 +38,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -53,8 +61,15 @@ class PostServiceTest extends ServiceTest {
     @Autowired
     private CommentService commentService;
 
+    @Autowired
+    private HashtagRepository hashtagRepository;
+
+    @Autowired
+    private PostHashtagRepository postHashtagRepository;
+
     private Post post;
     private Board board;
+    private Board hotBoard;
     private PostBoard postBoard;
 
     @BeforeEach
@@ -64,20 +79,28 @@ class PostServiceTest extends ServiceTest {
                 .content("본문")
                 .writerNickname(member.getNickname())
                 .member(member)
-                .likes(new ArrayList<>())
+                .postLikes(new ArrayList<>())
                 .comments(new ArrayList<>())
                 .build();
         board = boardRepository.findById(2L)
+                .orElseThrow(BoardNotFoundException::new);
+        hotBoard = boardRepository.findById(1L)
                 .orElseThrow(BoardNotFoundException::new);
     }
 
     @DisplayName("특정 게시판에 익명으로 글 작성 기능")
     @Test
     void addPost_Anonymous() {
-        NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", true, Collections.emptyList());
+        String tagName = "tag";
+        Hashtag tag = Hashtag.builder()
+                .name(tagName)
+                .build();
+        NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", true, List.of(tagName));
 
         Long postId = postService.addPost(FREE_BOARD_ID, newPostRequest, AUTH_INFO);
         Post actual = postRepository.findById(postId).orElseThrow();
+        List<PostHashtag> postHashtags = postHashtagRepository.findAllByPost(actual);
+        List<Hashtag> hashtags = hashtagRepository.findAllByNameContains(tagName);
 
         assertAll(
                 () -> assertThat(actual.getTitle()).isEqualTo(newPostRequest.getTitle()),
@@ -85,7 +108,9 @@ class PostServiceTest extends ServiceTest {
                 () -> assertThat(actual.getMember().getId()).isEqualTo(member.getId()),
                 () -> assertThat(actual.getNickname()).isNotEqualTo(actual.getMember().getNickname()),
                 () -> assertThat(actual.getCreatedAt()).isNotNull(),
-                () -> assertThat(actual.getPostBoards().get(0).getBoard().getTitle()).isNotNull()
+                () -> assertThat(actual.getWritableBoard().getId()).isEqualTo(FREE_BOARD_ID),
+                () -> assertThat(postHashtags).hasSize(1),
+                () -> assertThat(hashtags).contains(tag)
         );
     }
 
@@ -107,14 +132,42 @@ class PostServiceTest extends ServiceTest {
         );
     }
 
+    @DisplayName("지원자는 권한이 없는 게시판에 글을 작성할 수 없다.")
+    @ParameterizedTest
+    @CsvSource({"1", "2", "3", "4"})
+    void addPost_Applicant_Exception(Long boardId) {
+        NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", false, Collections.emptyList());
+
+        assertThatThrownBy(() -> postService.addPost(boardId, newPostRequest, APPLICANT_AUTH_INFO))
+                .isInstanceOf(AuthorizationException.class);
+    }
+
+    @DisplayName("지원자는 권한이 있는 게시판에 글을 작성할 수 있다.")
+    @Test
+    void addPost_Applicant() {
+        NewPostRequest newPostRequest = new NewPostRequest("제목", "본문", false, Collections.emptyList());
+
+        Long postId = postService.addPost(APPLICANT_BOARD_ID, newPostRequest, APPLICANT_AUTH_INFO);
+        Post actual = postRepository.findById(postId).orElseThrow();
+
+        assertAll(
+                () -> assertThat(actual.getTitle()).isEqualTo(newPostRequest.getTitle()),
+                () -> assertThat(actual.getContent()).isEqualTo(newPostRequest.getContent()),
+                () -> assertThat(actual.getMember().getId()).isEqualTo(APPLICANT_AUTH_INFO.getId()),
+                () -> assertThat(actual.getNickname()).isEqualTo(actual.getMember().getNickname()),
+                () -> assertThat(actual.getCreatedAt()).isNotNull(),
+                () -> assertThat(actual.getPostBoards().get(0).getBoard().getTitle()).isNotNull()
+        );
+    }
+
     @DisplayName("본인이 작성한 게시글 조회 기능")
     @Test
     void findPost_Session_MyPost() {
         Long savedPostId = postRepository.save(post).getId();
         postBoard = PostBoard.builder()
-                .post(post)
-                .board(board)
                 .build();
+        postBoard.addPost(post);
+        postBoard.addBoard(board);
         postBoardRepository.save(postBoard);
 
         PostDetailResponse response = postService.findPost(savedPostId, AUTH_INFO);
@@ -133,10 +186,9 @@ class PostServiceTest extends ServiceTest {
     @Test
     void findPost_Session_OtherPost() {
         Long savedPostId = postRepository.save(post).getId();
-        postBoard = PostBoard.builder()
-                .post(post)
-                .board(board)
-                .build();
+        postBoard = PostBoard.builder().build();
+        postBoard.addPost(post);
+        postBoard.addBoard(board);
         postBoardRepository.save(postBoard);
 
         PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(2L, USER.getName(), "nickname"));
@@ -156,10 +208,37 @@ class PostServiceTest extends ServiceTest {
     void findPost_NoSession() {
         Long savedPostId = postRepository.save(post).getId();
         postBoard = PostBoard.builder()
-                .post(post)
-                .board(board)
                 .build();
+        postBoard.addPost(post);
+        postBoard.addBoard(board);
         postBoardRepository.save(postBoard);
+
+        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(null, USER.getName(), "nickname"));
+
+        assertAll(
+                () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
+                () -> assertThat(response.getContent()).isEqualTo(post.getContent()),
+                () -> assertThat(response.isAuthorized()).isFalse(),
+                () -> assertThat(response.isModified()).isFalse(),
+                () -> assertThat(response.getCreatedAt()).isNotNull(),
+                () -> assertThat(response.getBoardId()).isEqualTo(postBoard.getBoard().getId())
+        );
+    }
+
+    @DisplayName("로그인 없이,게시글 조회 기능")
+    @Test
+    void findPost_No_Hot_Board() {
+        Long savedPostId = postRepository.save(post).getId();
+        postBoard = PostBoard.builder()
+                .build();
+        postBoard.addPost(post);
+        postBoard.addBoard(board);
+        PostBoard postHotBoard = PostBoard.builder()
+                .build();
+        postHotBoard.addBoard(hotBoard);
+        postHotBoard.addPost(post);
+        postBoardRepository.save(postBoard);
+        postBoardRepository.save(postHotBoard);
 
         PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(null, USER.getName(), "nickname"));
 
@@ -184,7 +263,7 @@ class PostServiceTest extends ServiceTest {
 
     @DisplayName("특정 게시판 게시글 목록 조회 기능")
     @Test
-    void findPosts() {
+    void findPostsByBoard() {
         postService.addPost(board.getId(), new NewPostRequest("제목1", "본문1", false, new ArrayList<>()),
                 new AuthInfo(1L, USER.getName(), "nickname"));
         postService.addPost(board.getId(), new NewPostRequest("제목2", "본문2", false, new ArrayList<>()),
@@ -236,6 +315,9 @@ class PostServiceTest extends ServiceTest {
     @Test
     void deletePostWithComment() {
         postRepository.save(post);
+        PostBoard postBoard = PostBoard.builder().build();
+        postBoard.addBoard(board);
+        postBoard.addPost(post);
         NewCommentRequest newCommentRequest = new NewCommentRequest("댓글", true);
         commentService.addComment(post.getId(), newCommentRequest, AUTH_INFO);
 
@@ -261,7 +343,7 @@ class PostServiceTest extends ServiceTest {
                 .build();
         postRepository.save(post2);
 
-        MyPostsResponse myPosts = postService.findMyPosts(PageRequest.of(0, 1), AUTH_INFO);
+        MyPostsResponse myPosts = postService.findMyPosts(PageRequest.of(0, 1, DESC, "createdAt"), AUTH_INFO);
 
         assertAll(
                 () -> assertThat(myPosts.getPosts()).usingRecursiveComparison()
@@ -279,7 +361,7 @@ class PostServiceTest extends ServiceTest {
                 .content("본문")
                 .writerNickname(member.getNickname())
                 .member(member)
-                .likes(new ArrayList<>())
+                .postLikes(new ArrayList<>())
                 .comments(new ArrayList<>())
                 .build();
         postRepository.save(post);

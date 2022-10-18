@@ -7,12 +7,17 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 export const Container = styled.header`
-  width: 350px;
+  width: 80%;
   height: 50px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin: 15px auto;
-  box-sizing: border-box;
+  gap: 3em;
+
+  @media (max-width: 875px) {
+    width: 340px;
+  }
 `;
 
 export const LeftSide = styled(Link)`
@@ -27,8 +32,9 @@ export const RightSide = styled.div`
 `;
 
 export const Title = styled.p`
+  width: max-content;
   font-size: 1.5rem;
-  font-family: 'BMYEONSUNG';
+  font-family: 'BMHANNAPro';
 `;
 
 export const Avartar = styled.div`
@@ -54,15 +60,19 @@ export const LoginLink = styled(Link)`
   display: flex;
   justify-content: center;
   align-items: center;
-
   width: 50px;
   height: 20px;
-  font-family: 'BMHANNAPro', 'Noto Sans KR';
+  font-family: 'BMHANNAAir', 'Noto Sans KR';
   font-size: 12px;
-  color: ${props => props.theme.colors.gray_900};
-  border: 1px solid black;
+  color: black;
+  border: 1px solid ${props => props.theme.colors.gray_400};
   border-radius: 8px;
-  margin-left: 4px;
+  @media (min-width: 875px) {
+    width: 70px;
+    height: 2.2rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+  }
 `;
 
 export const AvatarContainer = styled.div`
@@ -104,4 +114,8 @@ export const Panda = styled(PandaIcon)`
 
 export const DropdownContainer = styled.div`
   width: fit-content;
+
+  @media (min-width: 875px) {
+    margin-bottom: 7px;
+  }
 `;

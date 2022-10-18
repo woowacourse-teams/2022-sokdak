@@ -1,6 +1,8 @@
 package com.wooteco.sokdak.comment.domain;
 
+import static com.wooteco.sokdak.util.fixture.MemberFixture.ENCRYPTOR;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME_TEXT;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getMembersForReport;
@@ -9,7 +11,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
+import com.wooteco.sokdak.like.domain.CommentLike;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.Nickname;
+import com.wooteco.sokdak.member.domain.Username;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.report.domain.CommentReport;
 import java.util.List;
@@ -44,7 +49,7 @@ class CommentTest {
         comment = Comment.builder()
                 .member(member)
                 .post(post)
-                .nickname(VALID_NICKNAME)
+                .nickname(VALID_NICKNAME_TEXT)
                 .message("댓글")
                 .build();
     }
@@ -88,7 +93,7 @@ class CommentTest {
         Comment comment = Comment.builder()
                 .member(member)
                 .post(post)
-                .nickname(VALID_NICKNAME)
+                .nickname(VALID_NICKNAME_TEXT)
                 .message("댓글")
                 .build();
 
@@ -136,5 +141,50 @@ class CommentTest {
                 Arguments.of(member1, true),
                 Arguments.of(member2, false)
         );
+    }
+
+    @DisplayName("특정 멤버가 신고를 이미 했으면 true를, 안했으면 false를 반환한다.")
+    @ParameterizedTest
+    @MethodSource("hasReportByMemberArguments")
+    void hasReportByMember(Member reporter, Member member, boolean expected) {
+        CommentReport commentReport = CommentReport.builder()
+                .comment(comment)
+                .reporter(reporter)
+                .reportMessage("report")
+                .build();
+        comment.addReport(commentReport);
+
+        assertThat(comment.hasReportByMember(member)).isEqualTo(expected);
+    }
+
+    static Stream<Arguments> hasReportByMemberArguments() {
+        Member reporter = Member.builder()
+                .username(Username.of(ENCRYPTOR, "reporter"))
+                .nickname(new Nickname("reporterNickname"))
+                .password(VALID_PASSWORD)
+                .build();
+        Member member = Member.builder()
+                .username(Username.of(ENCRYPTOR, "member"))
+                .nickname(new Nickname("memberNickname"))
+                .password(VALID_PASSWORD)
+                .build();
+        return Stream.of(
+                Arguments.of(reporter, reporter, true),
+                Arguments.of(reporter, member, false)
+        );
+    }
+
+    @DisplayName("특정 멤버가 누른 좋아요가 있는지 반환한다.")
+    @ParameterizedTest
+    @CsvSource({"1, true", "2, false"})
+    void hasLikeOfMember(Long memberId, boolean expected) {
+        CommentLike.builder()
+                .member(member)
+                .comment(comment)
+                .build();
+
+        boolean actual = comment.hasLikeOfMember(memberId);
+
+        assertThat(actual).isEqualTo(expected);
     }
 }

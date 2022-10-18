@@ -1,7 +1,7 @@
 package com.wooteco.sokdak.member.domain;
 
 public enum RoleType {
-    USER("USER"), ADMIN("ADMIN");
+    APPLICANT("APPLICANT"), USER("USER"), ADMIN("ADMIN");
 
     private String name;
 
@@ -11,5 +11,9 @@ public enum RoleType {
 
     public String getName() {
         return name;
+    }
+
+    public boolean isNot(String roleType) {
+        return !this.name.equals(roleType);
     }
 }

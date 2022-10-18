@@ -22,8 +22,8 @@ const PostListItem = forwardRef<HTMLDivElement, PostListItemProps>(
       return (
         <Styled.BlockedContainer ref={ref} data-testid={testid}>
           <Styled.HeadContainer>
-            <Styled.TitleContainer>
-              <Styled.Title isModified={false}>블라인드 처리된 글입니다.</Styled.Title>
+            <Styled.TitleContainer isModified={false}>
+              <Styled.Title>블라인드 처리된 글입니다.</Styled.Title>
             </Styled.TitleContainer>
           </Styled.HeadContainer>
           <Styled.ContentContainer>
@@ -36,8 +36,8 @@ const PostListItem = forwardRef<HTMLDivElement, PostListItemProps>(
     return (
       <Styled.Container onClick={handleClick} ref={ref} data-testid={testid}>
         <Styled.HeadContainer>
-          <Styled.TitleContainer>
-            <Styled.Title isModified={modified}>{title}</Styled.Title>
+          <Styled.TitleContainer isModified={modified}>
+            <Styled.Title>{title}</Styled.Title>
             {modified && <Styled.Modified>(편집됨)</Styled.Modified>}
           </Styled.TitleContainer>
           <Styled.Date>{timeConverter(createdAt)}</Styled.Date>

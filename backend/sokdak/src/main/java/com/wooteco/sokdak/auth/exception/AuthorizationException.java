@@ -9,4 +9,8 @@ public class AuthorizationException extends ForbiddenException {
     public AuthorizationException() {
         super(MESSAGE);
     }
+
+    public AuthorizationException(String message) {
+        super(message);
+    }
 }

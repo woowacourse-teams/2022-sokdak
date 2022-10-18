@@ -2,20 +2,20 @@ package com.wooteco.sokdak.comment.domain;
 
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.like.domain.CommentLike;
+import com.wooteco.sokdak.like.exception.CommentLikeNotFoundException;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.report.domain.CommentReport;
-import com.wooteco.sokdak.report.exception.AlreadyReportCommentException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ConstraintMode;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.ForeignKey;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -38,25 +38,25 @@ public class Comment {
     @Column(name = "comment_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "parent_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
     private Comment parent;
 
     @OneToMany(mappedBy = "parent")
     private List<Comment> children = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 
     @OneToMany(mappedBy = "comment")
     private List<CommentReport> commentReports = new ArrayList<>();
 
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<CommentLike> commentLikes = new ArrayList<>();
 
     private String nickname;
@@ -113,13 +113,12 @@ public class Comment {
     }
 
     public void addReport(CommentReport other) {
-        commentReports.stream()
-                .filter(it -> it.isSameReporter(other))
-                .findAny()
-                .ifPresent(it -> {
-                    throw new AlreadyReportCommentException();
-                });
         commentReports.add(other);
+    }
+
+    public boolean hasReportByMember(Member reporter) {
+        return commentReports.stream()
+                .anyMatch(report -> report.isOwner(reporter));
     }
 
     public Long getId() {
@@ -164,10 +163,6 @@ public class Comment {
         return commentReports;
     }
 
-    public List<CommentLike> getCommentLikes() {
-        return commentLikes;
-    }
-
     public int getCommentLikesCount() {
         return commentLikes.size();
     }
@@ -182,5 +177,34 @@ public class Comment {
 
     public void deleteChild(Comment reply) {
         children.remove(reply);
+    }
+
+    public boolean isParent() {
+        return Objects.isNull(parent);
+    }
+
+    public boolean hasNoReply() {
+        return children.isEmpty();
+    }
+
+    public boolean hasLikeOfMember(Long memberId) {
+        return commentLikes.stream()
+                .anyMatch(commentLike -> commentLike.isLikeOf(memberId));
+    }
+
+    public void addCommentLike(CommentLike commentLike) {
+        commentLikes.add(commentLike);
+    }
+
+    public void deleteLikeOfMember(Long memberId) {
+        CommentLike commentLike = commentLikes.stream()
+                .filter(it -> it.isLikeOf(memberId))
+                .findAny()
+                .orElseThrow(CommentLikeNotFoundException::new);
+        commentLikes.remove(commentLike);
+    }
+
+    public Long getBoardId() {
+        return post.getBoardId();
     }
 }

@@ -1,15 +1,15 @@
-import { ReactNode } from 'react';
+import { PropsWithChildrenC } from 'sokdak-util-types';
+
 import ReactDOM from 'react-dom';
 
 import * as Styled from './index.styles';
 
 interface ModalProps {
   isModalOpen: boolean;
-  children: ReactNode;
   handleCancel: () => void;
 }
 
-const Modal = ({ isModalOpen, children, handleCancel }: ModalProps) => {
+const Modal = ({ isModalOpen, children, handleCancel }: PropsWithChildrenC<ModalProps>) => {
   return (
     <>
       {isModalOpen && (

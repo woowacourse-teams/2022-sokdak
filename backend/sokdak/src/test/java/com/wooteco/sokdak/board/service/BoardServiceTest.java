@@ -2,10 +2,12 @@ package com.wooteco.sokdak.board.service;
 
 import static com.wooteco.sokdak.board.domain.BoardType.NON_WRITABLE;
 import static com.wooteco.sokdak.board.domain.BoardType.WRITABLE;
+import static com.wooteco.sokdak.util.fixture.BoardFixture.APPLICANT_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_1;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_2;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_3;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_4;
+import static com.wooteco.sokdak.util.fixture.BoardFixture.BOARD_REQUEST_5;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -24,9 +26,12 @@ import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.util.ServiceTest;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 class BoardServiceTest extends ServiceTest {
@@ -66,10 +71,10 @@ class BoardServiceTest extends ServiceTest {
     void findBoards() {
         BoardsResponse boards = boardService.findBoards();
 
-        assertThat(boards.getBoards()).hasSize(4)
+        assertThat(boards.getBoards()).hasSize(5)
                 .extracting("title")
                 .containsExactly(BOARD_REQUEST_1.getName(), BOARD_REQUEST_2.getName(), BOARD_REQUEST_3.getName(),
-                        BOARD_REQUEST_4.getName());
+                        BOARD_REQUEST_4.getName(), BOARD_REQUEST_5.getName());
     }
 
     @DisplayName("작성 가능 게시판에서 허용된 사용자가 게시글을 쓸 수 있다.")
@@ -79,7 +84,7 @@ class BoardServiceTest extends ServiceTest {
                 .title("제목")
                 .content("본문")
                 .member(member)
-                .likes(new ArrayList<>())
+                .postLikes(new ArrayList<>())
                 .build();
         postRepository.save(post);
         Board board = Board.builder()
@@ -105,7 +110,7 @@ class BoardServiceTest extends ServiceTest {
                 .title("제목")
                 .content("본문")
                 .member(member)
-                .likes(new ArrayList<>())
+                .postLikes(new ArrayList<>())
                 .build();
         postRepository.save(post);
         Board board = Board.builder()
@@ -118,26 +123,32 @@ class BoardServiceTest extends ServiceTest {
                 .isInstanceOf(BoardNotWritableException.class);
     }
 
-    @DisplayName("핫게시판에 게시글이 저장될 수 있다.")
-    @Test
-    void saveInSpecialBoard() {
+    @DisplayName("지원자 게시판을 제외한 모든 게시판의 글은 핫게시판에 저장될 수 있다.")
+    @ParameterizedTest
+    @CsvSource({"2", "3", "4"})
+    void saveInSpecialBoard(Long boardId) {
         post = Post.builder()
                 .title("제목")
                 .content("본문")
                 .member(member)
-                .likes(new ArrayList<>())
+                .postLikes(new ArrayList<>())
                 .build();
         postRepository.save(post);
-        Board board = boardRepository.findByTitle("Hot 게시판").get();
+        PostBoard postBoard = PostBoard.builder().build();
+        postBoard.addBoard(boardRepository.findById(boardId).get());
+        postBoard.addPost(post);
+        postBoardRepository.save(postBoard);
+
+        Board hotBoard = boardRepository.findByTitle("Hot 게시판").get();
 
         boardService.checkAndSaveInSpecialBoard(post);
-        Optional<PostBoard> postBoard = postBoardRepository.findPostBoardByPostAndBoard(post, board);
+        Optional<PostBoard> foundPostBoard = postBoardRepository.findPostBoardByPostAndBoard(post, hotBoard);
         boolean newNotification = notificationRepository.existsByMemberIdAndInquiredIsFalse(member.getId());
 
         assertAll(
-                () -> assertThat(postBoard).isNotEmpty(),
-                () -> assertThat(postBoard.get().getBoard().getTitle()).isEqualTo("Hot 게시판"),
-                () -> assertThat(postBoard.get().getPost().getTitle()).isEqualTo("제목"),
+                () -> assertThat(foundPostBoard).isNotEmpty(),
+                () -> assertThat(foundPostBoard.get().getBoard().getTitle()).isEqualTo("Hot 게시판"),
+                () -> assertThat(foundPostBoard.get().getPost().getTitle()).isEqualTo("제목"),
                 () -> assertThat(newNotification).isTrue()
         );
     }
@@ -149,11 +160,37 @@ class BoardServiceTest extends ServiceTest {
                 .title("제목")
                 .content("본문")
                 .member(member)
-                .likes(new ArrayList<>())
+                .postLikes(new ArrayList<>())
                 .build();
         postRepository.save(post);
 
         assertThatThrownBy(() -> boardService.savePostBoard(post, 9999L, RoleType.USER.getName()))
                 .isInstanceOf(BoardNotFoundException.class);
+    }
+
+    @DisplayName("지원자 게시판 게시글은 hot게시판으로 갈 수 없다.")
+    @Test
+    void checkAndSaveInSpecialBoard_Applicant() {
+        Board applicantBoard = boardRepository.findById(APPLICANT_BOARD_ID).get();
+        post = Post.builder()
+                .title("제목")
+                .content("본문")
+                .member(member)
+                .postLikes(new ArrayList<>())
+                .build();
+        postRepository.save(post);
+        PostBoard postBoard = PostBoard.builder().build();
+        postBoard.addPost(post);
+        postBoard.addBoard(applicantBoard);
+        postBoardRepository.save(postBoard);
+
+        boardService.checkAndSaveInSpecialBoard(post);
+
+        List<PostBoard> postBoards = postBoardRepository.findPostBoardsByPost(post);
+
+        assertAll(
+                () -> assertThat(postBoards).hasSize(1),
+                () -> assertThat(postBoards.get(0).getBoard()).isEqualTo(applicantBoard)
+        );
     }
 }

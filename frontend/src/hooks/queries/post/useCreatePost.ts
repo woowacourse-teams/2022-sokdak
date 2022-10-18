@@ -15,7 +15,7 @@ const useCreatePost = (
     Pick<Post, 'title' | 'content' | 'imageName'> & {
       hashtags: string[];
       anonymous?: boolean;
-      boardId?: string | number;
+      boardId?: number;
     }
   >,
 ) => {

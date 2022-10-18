@@ -4,6 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.Nickname;
+import com.wooteco.sokdak.member.domain.Password;
+import com.wooteco.sokdak.member.domain.Username;
 import com.wooteco.sokdak.util.RepositoryTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,9 +31,9 @@ class MemberRepositoryTest extends RepositoryTest {
     @Test
     void prevent_Duplicated_Nickname() {
         Member duplicatedNicknameMember = Member.builder()
-                .username("josh")
-                .password("Abcd123!@")
-                .nickname("chrisNickname")
+                .username(Username.of(encryptor, "josh"))
+                .password(Password.of(encryptor, "Abcd123!@"))
+                .nickname(new Nickname("chrisNickname"))
                 .build();
 
         assertThatThrownBy(() -> memberRepository.save(duplicatedNicknameMember))

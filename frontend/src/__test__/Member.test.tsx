@@ -82,7 +82,11 @@ describe('멤버 테스트', () => {
         </MemoryRouter>
       </QueryClientProvider>,
     );
+    // Change the viewport to 500px.
+    global.innerWidth = 500;
 
+    // Trigger the window resize event.
+    global.dispatchEvent(new Event('resize'));
     if (!document.getElementById('snackbar')) document.body.appendChild(snackBarElement);
   });
 

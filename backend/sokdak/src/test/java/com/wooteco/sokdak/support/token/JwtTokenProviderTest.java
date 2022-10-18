@@ -23,4 +23,18 @@ class JwtTokenProviderTest {
         assertThat(tokenManager.getParsedClaims(token).getRole()).isEqualTo("USER");
         assertThat(tokenManager.getParsedClaims(token).getNickname()).isEqualTo("nickname");
     }
+
+    @Test
+    @DisplayName("닉네임이 바뀌었을 때 새로운 토큰을 발급할 수 있다.")
+    void createNewTokenWithNewNickname() {
+        // given
+        AuthInfo authInfo = new AuthInfo(1L, USER.getName(), "oldNickname");
+
+        // when
+        String oldAccessToken = tokenManager.createAccessToken(authInfo);
+        String newToken = tokenManager.createNewTokenWithNewNickname("newNickname", authInfo);
+
+        // then
+        assertThat(oldAccessToken).isNotEqualTo(newToken);
+    }
 }

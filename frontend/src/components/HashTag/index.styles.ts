@@ -16,10 +16,18 @@ export const Container = styled.div<{ onClick: React.MouseEventHandler<HTMLDivEl
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media (min-width: 875px) {
+    font-size: 0.875rem;
+  }
 `;
 
 export const Count = styled.span`
   color: ${props => props.theme.colors.gray_200};
   font-size: 11px;
   margin-left: 3px;
+
+  @media (min-width: 875px) {
+    font-size: 0.75rem;
+  }
 `;

@@ -33,6 +33,8 @@ import com.wooteco.sokdak.report.service.PostReportService;
 import com.wooteco.sokdak.support.AuthInterceptor;
 import com.wooteco.sokdak.support.token.AuthenticationPrincipalArgumentResolver;
 import com.wooteco.sokdak.support.token.TokenManager;
+import com.wooteco.sokdak.ticket.controller.RegisterController;
+import com.wooteco.sokdak.ticket.service.RegisterService;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,7 +58,8 @@ import org.springframework.web.context.WebApplicationContext;
         HashtagController.class,
         NotificationController.class,
         HashtagController.class,
-        AdminController.class
+        AdminController.class,
+        RegisterController.class
 })
 @ExtendWith(RestDocumentationExtension.class)
 public class ControllerTest {
@@ -98,6 +101,9 @@ public class ControllerTest {
 
     @MockBean
     protected NotificationService notificationService;
+
+    @MockBean
+    protected RegisterService registerService;
 
     @MockBean
     protected TokenManager tokenManager;

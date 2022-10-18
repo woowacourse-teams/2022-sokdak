@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
@@ -34,24 +34,29 @@ public class NotificationService {
         this.notificationRepository = notificationRepository;
     }
 
+    @Transactional
     public void notifyCommentIfNotMine(Member member, Post post, Comment comment) {
         if (!comment.isAuthorized(member.getId())) {
             notify(member, post, comment, NEW_COMMENT);
         }
     }
 
+    @Transactional
     public void notifyCommentReport(Post post, Comment comment) {
         notify(comment.getMember(), post, comment, COMMENT_REPORT);
     }
 
+    @Transactional
     public void notifyHotBoard(Post post) {
         notify(post.getMember(), post, null, HOT_BOARD);
     }
 
+    @Transactional
     public void notifyPostReport(Post post) {
         notify(post.getMember(), post, null, POST_REPORT);
     }
 
+    @Transactional
     public void notifyReplyIfNotMine(Member member, Post post, Comment comment, Comment reply) {
         if (!reply.isAuthorized(member.getId())) {
             notify(member, post, comment, NEW_REPLY);
@@ -68,45 +73,58 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    public void deleteCommentNotification(Long commentId) {
-        notificationRepository.deleteAllByCommentId(commentId);
-    }
-
-    @Transactional(readOnly = true)
     public NewNotificationCheckResponse checkNewNotification(AuthInfo authInfo) {
         return new NewNotificationCheckResponse(
                 notificationRepository.existsByMemberIdAndInquiredIsFalse(authInfo.getId()));
     }
 
+    @Transactional
     public NotificationsResponse findNotifications(AuthInfo authInfo, Pageable pageable) {
         Slice<Notification> foundNotifications = notificationRepository
                 .findNotificationsByMemberId(authInfo.getId(), pageable);
         List<Notification> notifications = foundNotifications.getContent();
-        inquireNotification(notifications);
+        if (foundNotifications.hasContent()) {
+            inquireNotification(notifications);
+        }
+        return findNotifications(notifications, foundNotifications.isLast());
+    }
 
+    private void inquireNotification(List<Notification> notifications) {
+        List<Long> inquiredNotificationIds = notifications.stream()
+                .map(Notification::getId)
+                .collect(Collectors.toUnmodifiableList());
+        notificationRepository.inquireNotificationByIds(inquiredNotificationIds);
+    }
+
+    private NotificationsResponse findNotifications(List<Notification> notifications, boolean isLastPage) {
         List<NotificationResponse> notificationResponses = notifications
                 .stream()
                 .map(NotificationResponse::of)
                 .collect(Collectors.toUnmodifiableList());
-        return new NotificationsResponse(notificationResponses, foundNotifications.isLast());
+        return new NotificationsResponse(notificationResponses, isLastPage);
     }
 
-    private void inquireNotification(List<Notification> notifications) {
-        for (Notification notification : notifications) {
-            inquire(notification);
-        }
-    }
-
-    private void inquire(Notification notification) {
-        if (!notification.isInquired()) {
-            notification.inquire();
-        }
-    }
-
+    @Transactional
     public void deleteNotification(AuthInfo authInfo, Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(NotificationNotFoundException::new);
         notification.validateOwner(authInfo.getId());
         notificationRepository.deleteById(notificationId);
+    }
+
+    @Transactional
+    public void deleteCommentNotification(Long commentId) {
+        List<Long> ids = notificationRepository.findIdsByCommentId(commentId);
+        if (!ids.isEmpty()) {
+            notificationRepository.deleteAllById(ids);
+        }
+    }
+
+    @Transactional
+    public void deletePostNotification(Long postId) {
+        List<Long> ids = notificationRepository.findIdsByPostId(postId);
+        if (!ids.isEmpty()) {
+            notificationRepository.deleteAllById(ids);
+        }
     }
 }

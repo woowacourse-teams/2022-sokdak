@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.like.acceptance;
 
 import static com.wooteco.sokdak.util.fixture.CommentFixture.addNewCommentInPost;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.getToken;
@@ -8,10 +9,13 @@ import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.wooteco.sokdak.comment.dto.CommentResponse;
+import com.wooteco.sokdak.comment.dto.CommentsResponse;
 import com.wooteco.sokdak.like.dto.LikeFlipResponse;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -85,17 +89,25 @@ class LikeAcceptanceTest extends AcceptanceTest {
         Long postId = addNewPost();
         Long commentId = addNewCommentInPost(postId);
         String joshToken = getToken("josh");
-        httpPutWithAuthorization("/comments/" + commentId + "/like", joshToken);
+        httpPutWithAuthorization( "/comments/" + commentId + "/like", joshToken);
 
         ExtractableResponse<Response> response =
                 httpPutWithAuthorization("/comments/" + commentId + "/like", joshToken);
+
         LikeFlipResponse likeFlipResponse = response.jsonPath()
                 .getObject(".", LikeFlipResponse.class);
+        List<CommentResponse> comments = httpGetWithAuthorization("/posts/" + postId + "/comments", joshToken)
+                .jsonPath()
+                .getObject(".", CommentsResponse.class)
+                .getComments();
+        boolean like = comments.stream()
+                .anyMatch(CommentResponse::isLike);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(likeFlipResponse.isLike()).isFalse(),
-                () -> assertThat(likeFlipResponse.getLikeCount()).isZero()
+                () -> assertThat(likeFlipResponse.getLikeCount()).isZero(),
+                () -> assertThat(like).isFalse()
         );
     }
 

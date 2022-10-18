@@ -26,6 +26,7 @@ export const ErrorCode = styled.p`
 export const HashTag = styled.p`
   width: 100%;
   font-family: 'BMHANNAPro', 'Noto Sans KR';
-  font-size: 20px;
-  margin: -8px 0 25px -35px;
+  font-size: 1.5rem;
+  margin: 1em 0 2rem 0;
+  /* margin: -8px 0 25px -35px; */
 `;

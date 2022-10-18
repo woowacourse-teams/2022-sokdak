@@ -1,27 +1,27 @@
 package com.wooteco.sokdak.image;
 
-import static com.wooteco.sokdak.image.ImageController.IMAGE_DIR;
-
-import com.wooteco.sokdak.exception.FileIOException;
-import java.io.File;
-import java.util.UUID;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ImageService {
 
-    public ImageResponse uploadImage(MultipartFile image) {
-        final String extension = image.getContentType().split("/")[1];
-        final String imageName = UUID.randomUUID() + "." + extension;
+    @Value("${image-dir}")
+    private String imageDir;
 
-        try {
-            final File file = new File(IMAGE_DIR + imageName);
-            image.transferTo(file);
-        } catch (Exception e) {
-            throw new FileIOException();
+    public ImageResponse uploadImage(MultipartFile multipartFile) {
+        final Image image = Image.of(imageDir, extractExtension(multipartFile));
+        image.save(multipartFile);
+        if (image.canNotCompress()) {
+            return new ImageResponse(image.getName());
         }
 
-        return new ImageResponse(imageName);
+        final String compressedImageName = image.compress();
+        return new ImageResponse(compressedImageName);
+    }
+
+    private String extractExtension(MultipartFile multipartFile) {
+        return multipartFile.getContentType().split("/")[1];
     }
 }

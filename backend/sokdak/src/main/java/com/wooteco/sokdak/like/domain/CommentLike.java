@@ -36,10 +36,10 @@ public class CommentLike {
     private CommentLike(Comment comment, Member member) {
         this.comment = comment;
         this.member = member;
+        comment.addCommentLike(this);
     }
 
-    public void addComment(Comment comment) {
-        this.comment = comment;
-        comment.getCommentLikes().add(this);
+    public boolean isLikeOf(Long memberId) {
+        return member.hasId(memberId);
     }
 }

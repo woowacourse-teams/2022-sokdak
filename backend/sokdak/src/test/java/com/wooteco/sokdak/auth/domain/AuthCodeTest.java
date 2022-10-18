@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.wooteco.sokdak.member.exception.InvalidAuthCodeException;
 import com.wooteco.sokdak.member.repository.AuthCodeRepository;
+import com.wooteco.sokdak.ticket.domain.AuthCode;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ class AuthCodeTest {
 
     @DisplayName("학습테스트:빌더 null값이 자동 재매핑되는가")
     @Test
-    void builderTest_createdAt(){
+    void builderTest_createdAt() {
         AuthCode authCode = AuthCode.builder()
                 .code("ABCDEF")
                 .serialNumber("21f46568bf6002c23843d198af30bb2bc8123695bd3d12ce86e0fc35bc5d3279")
@@ -34,7 +35,7 @@ class AuthCodeTest {
 
     @DisplayName("학습테스트:빌더 createdAt 값이 DB에 저장시 무시되는가")
     @Test
-    void builderTest_createdAt_DB(){
+    void builderTest_createdAt_DB() {
         LocalDateTime TimeSetting = LocalDateTime.parse("2007-12-03T10:15:30");
         AuthCode authCode = AuthCode.builder()
                 .code("ABCDEF")

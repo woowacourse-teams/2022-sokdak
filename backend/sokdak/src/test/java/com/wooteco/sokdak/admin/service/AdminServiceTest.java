@@ -11,7 +11,6 @@ import com.wooteco.sokdak.admin.dto.PostReportsResponse;
 import com.wooteco.sokdak.admin.dto.TicketRequest;
 import com.wooteco.sokdak.admin.dto.TicketsResponse;
 import com.wooteco.sokdak.admin.exception.NoAdminException;
-import com.wooteco.sokdak.auth.domain.Ticket;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;
@@ -28,6 +27,7 @@ import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.post.service.PostService;
 import com.wooteco.sokdak.report.repository.PostReportRepository;
+import com.wooteco.sokdak.ticket.domain.Ticket;
 import com.wooteco.sokdak.util.ServiceTest;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +35,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @DisplayName("관리자 서비스 테스트")
-@Transactional(propagation = Propagation.NEVER)
+@Transactional
 class AdminServiceTest extends ServiceTest {
 
     private static final AuthInfo AUTH_INFO_ADMIN = new AuthInfo(1L, RoleType.ADMIN.getName(), "adminNickname");
@@ -74,7 +73,7 @@ class AdminServiceTest extends ServiceTest {
                 .content("본문")
                 .writerNickname(member.getNickname())
                 .member(member)
-                .likes(new ArrayList<>())
+                .postLikes(new ArrayList<>())
                 .comments(new ArrayList<>())
                 .build();
         board = boardRepository.findById((long) FREE_BOARD_ID)
@@ -115,7 +114,7 @@ class AdminServiceTest extends ServiceTest {
         adminService.blockPost(post.getId(), BLOCKED_COUNT, AUTH_INFO_ADMIN);
 
         assertAll(
-                () -> assertThat(postReportRepository.countByPostId(post.getId()))
+                () -> assertThat(post.getPostReports().size())
                         .isEqualTo(Math.toIntExact(BLOCKED_COUNT)),
                 () -> assertThat(postService.findPost(post.getId(), AUTH_INFO_ADMIN).isBlocked()).isTrue()
         );
@@ -129,7 +128,7 @@ class AdminServiceTest extends ServiceTest {
         assertAll(
                 () -> assertThatThrownBy(() -> adminService.blockPost(post.getId(), BLOCKED_COUNT, AUTH_INFO))
                         .isInstanceOf(NoAdminException.class),
-                () -> assertThat(postReportRepository.countByPostId(post.getId())).isZero(),
+                () -> assertThat(post.getPostReports().size()).isZero(),
                 () -> assertThat(postService.findPost(post.getId(), AUTH_INFO_ADMIN).isBlocked()).isFalse()
         );
     }
@@ -144,7 +143,7 @@ class AdminServiceTest extends ServiceTest {
 
         assertAll(
                 () -> assertThat(blocked).isTrue(),
-                () -> assertThat(postReportRepository.countByPostId(post.getId())).isZero(),
+                () -> assertThat(post.getPostReports().size()).isZero(),
                 () -> assertThat(postService.findPost(post.getId(), AUTH_INFO_ADMIN).isBlocked()).isFalse()
         );
     }
@@ -158,7 +157,7 @@ class AdminServiceTest extends ServiceTest {
         assertAll(
                 () -> assertThatThrownBy(() -> adminService.unblockPost(post.getId(), AUTH_INFO))
                         .isInstanceOf(NoAdminException.class),
-                () -> assertThat(postReportRepository.countByPostId(post.getId()))
+                () -> assertThat(post.getPostReports().size())
                         .isEqualTo(Math.toIntExact(BLOCKED_COUNT)),
                 () -> assertThat(postService.findPost(post.getId(), AUTH_INFO_ADMIN).isBlocked()).isTrue()
         );
@@ -281,7 +280,12 @@ class AdminServiceTest extends ServiceTest {
 
     private Post savePost() {
         Post post = postRepository.save(this.post);
-        postBoardRepository.save(PostBoard.builder().post(post).board(board).build());
+        PostBoard postBoard = PostBoard.builder()
+                .post(post)
+                .board(board)
+                .build();
+        postBoard.addPost(post);
+        postBoardRepository.save(postBoard);
         return post;
     }
 }

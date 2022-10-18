@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { PropsWithChildren, useState } from 'react';
 
 interface SnackbarContextValue {
   isVisible: boolean;
@@ -8,7 +8,7 @@ interface SnackbarContextValue {
 
 const SnackbarContext = React.createContext<SnackbarContextValue>({} as SnackbarContextValue);
 
-export const SnackBarContextProvider = (props: { children: React.ReactNode }) => {
+export const SnackBarContextProvider = ({ children }: PropsWithChildren) => {
   const [isVisible, setIsVisible] = useState(false);
   const [message, setMessage] = useState('');
   let timer: NodeJS.Timeout;
@@ -28,9 +28,7 @@ export const SnackBarContextProvider = (props: { children: React.ReactNode }) =>
     clearTimeout(timer);
   };
 
-  return (
-    <SnackbarContext.Provider value={{ isVisible, message, showSnackbar }}>{props.children}</SnackbarContext.Provider>
-  );
+  return <SnackbarContext.Provider value={{ isVisible, message, showSnackbar }}>{children}</SnackbarContext.Provider>;
 };
 
 export default SnackbarContext;

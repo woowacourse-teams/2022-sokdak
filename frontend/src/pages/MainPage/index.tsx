@@ -1,42 +1,41 @@
+import Banner from './components/Banner';
 import BoardItem from './components/BoardItem';
-import Layout from '@/components/@styled/Layout';
-import Spinner from '@/components/Spinner';
+import Carousel from './components/Carousel';
+import Footer from './components/Footer';
 
 import usePostByBoards from '@/hooks/queries/post/usePostsByBoard';
+import useResponsive from '@/hooks/useResponsive';
 
 import * as Styled from './index.styles';
 
 import { BOARDS } from '@/constants/board';
 
 const MainPage = () => {
-  const { isLoading, data } = usePostByBoards({
+  const isDesktop = useResponsive(875);
+  const { data } = usePostByBoards({
     options: {
       staleTime: 1000 * 20,
     },
   });
 
-  if (isLoading) {
-    return (
-      <Layout>
-        <Styled.SpinnerContainer>
-          <Spinner />
-        </Styled.SpinnerContainer>
-      </Layout>
-    );
+  if (!data) {
+    return <></>;
   }
 
-  if (data)
-    return (
-      <Layout>
-        <Styled.MainPageContainer>
+  return (
+    <>
+      <Styled.Container>
+        {isDesktop && <Banner />}
+        {isDesktop && <Carousel />}
+        <Styled.BoardItemContainer>
           {data.boards.map(board => (
-            <BoardItem key={board.id} {...board} title={BOARDS[board.id - 1].title} />
+            <BoardItem key={board.id} {...board} title={BOARDS[board.id - 1].title} boardId={board.id} />
           ))}
-        </Styled.MainPageContainer>
-      </Layout>
-    );
-
-  return <div />;
+        </Styled.BoardItemContainer>
+      </Styled.Container>
+      <Footer />
+    </>
+  );
 };
 
 export default MainPage;

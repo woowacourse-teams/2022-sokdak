@@ -5,6 +5,7 @@ import ConfirmModal from '@/components/ConfirmModal';
 import useDeleteComment from '@/hooks/queries/comment/useDeleteComment';
 import useLikeComment from '@/hooks/queries/comment/useLikeComment';
 import useReportComment from '@/hooks/queries/comment/useReportComment';
+import useDebounce from '@/hooks/useDebounce';
 
 import * as Styled from './index.styles';
 
@@ -52,7 +53,7 @@ const CommentBox = ({
   const strokeColor = like ? theme.colors.pink_300 : theme.colors.gray_300;
   const fillColor = like ? theme.colors.pink_300 : 'white';
 
-  const { mutate: deleteComment } = useDeleteComment();
+  const { isLoading, mutate: deleteComment } = useDeleteComment();
   const { mutate: reportComment } = useReportComment({
     onSettled: () => {
       handleReportModal();
@@ -77,9 +78,19 @@ const CommentBox = ({
     reportComment({ id, message });
   };
 
-  const handleLikeButton = () => {
+  const handleLikeButton = useDebounce(() => {
     likeComment({ id });
-  };
+  }, 100);
+
+  useEffect(() => {
+    if (openedFormId !== id) {
+      setIsReplyFormOpen(false);
+    }
+  }, [openedFormId]);
+
+  if (isLoading) {
+    return <></>;
+  }
 
   if (!content) {
     return <Styled.EmptyComment>작성자에 의해 삭제된 댓글 입니다.</Styled.EmptyComment>;
@@ -88,12 +99,6 @@ const CommentBox = ({
   if (blocked) {
     return <Styled.EmptyComment>신고에 의해 블라인드 처리되었습니다.</Styled.EmptyComment>;
   }
-
-  useEffect(() => {
-    if (openedFormId !== id) {
-      setIsReplyFormOpen(false);
-    }
-  }, [openedFormId]);
 
   return (
     <>

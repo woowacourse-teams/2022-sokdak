@@ -7,9 +7,13 @@ export const Container = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  padding: 0 13px;
+  width: 90%;
+  padding: 1em;
   box-sizing: border-box;
+
+  @media (min-width: 875px) {
+    width: 50%;
+  }
 `;
 
 export const Heading = styled.h1`
@@ -44,7 +48,7 @@ export const TitleInput = styled.input<InputProps>`
 
 export const ContentInput = styled.textarea<InputProps>`
   width: 100%;
-  height: 290px;
+  height: 35vh;
   padding: 10px;
   font-size: 14px;
   margin: 20px 0;
@@ -79,4 +83,5 @@ export const PostController = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 10px;
 `;

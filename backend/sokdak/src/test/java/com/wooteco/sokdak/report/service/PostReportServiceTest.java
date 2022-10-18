@@ -1,7 +1,9 @@
 package com.wooteco.sokdak.report.service;
 
 import static com.wooteco.sokdak.member.domain.RoleType.USER;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
+import static com.wooteco.sokdak.util.fixture.BoardFixture.APPLICANT_BOARD_ID;
+import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME_TEXT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_WRITER_NICKNAME;
@@ -10,6 +12,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.auth.exception.AuthorizationException;
+import com.wooteco.sokdak.board.domain.Board;
+import com.wooteco.sokdak.board.domain.PostBoard;
+import com.wooteco.sokdak.board.repository.BoardRepository;
+import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
@@ -43,10 +50,20 @@ class PostReportServiceTest extends ServiceTest {
     @Autowired
     private NotificationRepository notificationRepository;
 
+    @Autowired
+    private BoardRepository boardRepository;
+
+    @Autowired
+    private PostBoardRepository postBoardRepository;
+
     private Post post;
+    private Post applicantPost;
 
     @BeforeEach
     void setUp() {
+        Board freeBoard = boardRepository.findById(FREE_BOARD_ID).get();
+        Board applicantBoard = boardRepository.findById(APPLICANT_BOARD_ID).get();
+
         post = Post.builder()
                 .member(member)
                 .title(VALID_POST_TITLE)
@@ -54,19 +71,38 @@ class PostReportServiceTest extends ServiceTest {
                 .writerNickname(VALID_POST_WRITER_NICKNAME)
                 .postHashtags(Collections.emptyList())
                 .comments(Collections.emptyList())
-                .likes(Collections.emptyList())
+                .postLikes(Collections.emptyList())
                 .build();
         postRepository.save(post);
+        PostBoard postBoard = PostBoard.builder().build();
+        postBoard.addPost(post);
+        postBoard.addBoard(freeBoard);
+        postBoardRepository.save(postBoard);
+
+        applicantPost = Post.builder()
+                .member(member)
+                .title(VALID_POST_TITLE)
+                .content(VALID_POST_CONTENT)
+                .writerNickname(VALID_POST_WRITER_NICKNAME)
+                .postHashtags(Collections.emptyList())
+                .comments(Collections.emptyList())
+                .postLikes(Collections.emptyList())
+                .build();
+        postRepository.save(applicantPost);
+        PostBoard applicantPostBoard = PostBoard.builder().build();
+        applicantPostBoard.addBoard(applicantBoard);
+        applicantPostBoard.addPost(applicantPost);
+        postBoardRepository.save(applicantPostBoard);
     }
 
     @DisplayName("글 신고 기능")
     @Test
     void reportPost() {
-        int reportCountBeforeReport = postReportRepository.countByPostId(post.getId());
+        int reportCountBeforeReport = post.getPostReports().size();
 
         postReportService
                 .reportPost(post.getId(), REPORT_REQUEST, new AuthInfo(member.getId(), USER.getName(), "nickname"));
-        int reportCountAfterReport = postReportRepository.countByPostId(post.getId());
+        int reportCountAfterReport = post.getPostReports().size();
 
         assertThat(reportCountBeforeReport + 1).isEqualTo(reportCountAfterReport);
     }
@@ -100,7 +136,7 @@ class PostReportServiceTest extends ServiceTest {
     void reportPost_blockNotification(int reportCount, boolean expected) {
         AuthInfo authInfo;
         for (long i = 1; i <= reportCount; i++) {
-            authInfo = new AuthInfo(i, "USER", VALID_NICKNAME);
+            authInfo = new AuthInfo(i, "USER", VALID_NICKNAME_TEXT);
             postReportService.reportPost(post.getId(), REPORT_REQUEST, authInfo);
         }
 
@@ -115,7 +151,7 @@ class PostReportServiceTest extends ServiceTest {
         int blockCondition = 5;
         AuthInfo authInfo;
         for (long i = 1; i <= blockCondition; i++) {
-            authInfo = new AuthInfo(i, "USER", VALID_NICKNAME);
+            authInfo = new AuthInfo(i, "USER", VALID_NICKNAME_TEXT);
             postReportService.reportPost(post.getId(), REPORT_REQUEST, authInfo);
         }
         String blindPostMessage = "블라인드 처리된 게시글입니다.";
@@ -129,5 +165,40 @@ class PostReportServiceTest extends ServiceTest {
                 () -> assertThat(post.getTitle()).isEqualTo(blindPostMessage),
                 () -> assertThat(post.getContent()).isEqualTo(blindPostMessage)
         );
+    }
+
+    @DisplayName("지원자는 권한이 없는 게시판 게시글을 신고할 수 없다.")
+    @ParameterizedTest
+    @CsvSource({"2", "3", "4"})
+    void flipPostLike_Applicant_Exception(Long boardId) {
+        Post post = Post.builder()
+                .member(member)
+                .title(VALID_POST_TITLE)
+                .content(VALID_POST_CONTENT)
+                .writerNickname("randomNickname")
+                .build();
+        postRepository.save(post);
+        PostBoard postBoard = PostBoard.builder().build();
+        postBoard.addBoard(boardRepository.findById(boardId).get());
+        postBoard.addPost(post);
+        postBoardRepository.save(postBoard);
+
+        ReportRequest reportRequest = new ReportRequest("message");
+
+        assertThatThrownBy(() -> postReportService.reportPost(post.getId(), reportRequest, APPLICANT_AUTH_INFO))
+                .isInstanceOf(AuthorizationException.class);
+    }
+
+    @DisplayName("지원자는 권한이 있는 게시판 게시글을 신고할 수 있다.")
+    @Test
+    void flipPostLike_Applicant() {
+        ReportRequest reportRequest = new ReportRequest("message");
+        int reportCountBeforeReport = applicantPost.getPostReports().size();
+
+        postReportService.reportPost(applicantPost.getId(), reportRequest, APPLICANT_AUTH_INFO);
+
+        int reportCountAfterReport = applicantPost.getPostReports().size();
+
+        assertThat(reportCountBeforeReport + 1).isEqualTo(reportCountAfterReport);
     }
 }

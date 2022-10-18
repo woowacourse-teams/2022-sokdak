@@ -4,9 +4,12 @@ import styled from '@emotion/styled';
 
 export const LoginForm = styled.form`
   display: flex;
-  width: 100%;
+  width: 90%;
+  height: 90vh;
+  max-width: 450px;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 `;
 
 export const Heading = styled.h1`
@@ -42,4 +45,11 @@ export const SignUpText = styled.p`
   text-align: center;
   cursor: default;
   border-bottom: 1px solid ${props => props.theme.colors.gray_50};
+`;
+
+export const HomeLink = styled(Link)`
+  height: fit-content;
+  font-family: 'BMHANNAPro', 'Noto Sans KR';
+  font-size: 40px;
+  color: ${props => props.theme.colors.sub};
 `;

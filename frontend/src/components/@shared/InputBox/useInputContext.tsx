@@ -1,15 +1,16 @@
+import { PropsWithChildrenC } from 'sokdak-util-types';
+
 import React from 'react';
 
 import { useInput } from './useInput';
 
 interface InputContextProviderProps {
-  children: React.ReactNode;
   value?: ReturnType<typeof useInput>;
 }
 
 const InputContext = React.createContext<ReturnType<typeof useInput> | undefined>(undefined);
 
-const InputContextProvider = ({ children, value }: InputContextProviderProps) => {
+const InputContextProvider = ({ children, value }: PropsWithChildrenC<InputContextProviderProps>) => {
   return <InputContext.Provider value={value}>{children}</InputContext.Provider>;
 };
 

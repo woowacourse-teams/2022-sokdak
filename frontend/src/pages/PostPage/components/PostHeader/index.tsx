@@ -26,13 +26,14 @@ interface PostHeaderProps {
     hashtags: Omit<Hashtag, 'count'>[];
     authorized: boolean;
     nickname: string;
+    like: boolean;
+    likeCount: number;
   };
-  like: { isLiked: boolean; likeCount: number };
   onClickDeleteButton: () => void;
   onClickLikeButton: () => void;
 }
 
-const PostHeader = ({ post, like, onClickDeleteButton, onClickLikeButton }: PostHeaderProps) => {
+const PostHeader = ({ post, onClickDeleteButton, onClickLikeButton }: PostHeaderProps) => {
   const navigate = useNavigate();
   const { showSnackbar } = useContext(SnackbarContext);
   const [isReportModalOpen, handleReportModal] = useReducer(state => !state, false);
@@ -84,7 +85,7 @@ const PostHeader = ({ post, like, onClickDeleteButton, onClickLikeButton }: Post
         <Styled.Date>{timeConverter(post.createdAt)}</Styled.Date>
       </Styled.PostInfo>
       <Styled.LikeButtonContainer>
-        <LikeButton {...like} onClick={onClickLikeButton} />
+        <LikeButton isLiked={post.like} likeCount={post.likeCount} onClick={onClickLikeButton} />
       </Styled.LikeButtonContainer>
       <ReportModal isModalOpen={isReportModalOpen} onClose={handleReportModal} submitReport={handleSubmitReport} />
     </Styled.HeadContainer>

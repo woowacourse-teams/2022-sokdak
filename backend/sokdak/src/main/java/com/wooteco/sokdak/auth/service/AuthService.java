@@ -1,82 +1,50 @@
 package com.wooteco.sokdak.auth.service;
 
-import com.wooteco.sokdak.auth.domain.AuthCode;
-import com.wooteco.sokdak.auth.domain.Ticket;
+import com.wooteco.sokdak.auth.domain.encryptor.EncryptorI;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.dto.LoginRequest;
+import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.auth.exception.LoginFailedException;
 import com.wooteco.sokdak.member.domain.Member;
-import com.wooteco.sokdak.member.dto.VerificationRequest;
-import com.wooteco.sokdak.member.exception.NotWootecoMemberException;
-import com.wooteco.sokdak.member.exception.SerialNumberNotFoundException;
-import com.wooteco.sokdak.member.exception.TicketUsedException;
-import com.wooteco.sokdak.member.repository.AuthCodeRepository;
+import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.member.repository.MemberRepository;
-import com.wooteco.sokdak.member.repository.TicketRepository;
-import java.time.Clock;
-import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {
 
-    private final AuthCodeRepository authCodeRepository;
+    private static final Long APPLICANT_BOARD_ID = 5L;
     private final MemberRepository memberRepository;
-    private final TicketRepository ticketRepository;
-    private final Clock clock;
+    private final EncryptorI encryptor;
 
-    public AuthService(AuthCodeRepository authCodeRepository,
-                       MemberRepository memberRepository,
-                       TicketRepository ticketRepository, Clock clock) {
-        this.authCodeRepository = authCodeRepository;
+    public AuthService(MemberRepository memberRepository, EncryptorI encryptor) {
         this.memberRepository = memberRepository;
-        this.ticketRepository = ticketRepository;
-        this.clock = clock;
+        this.encryptor = encryptor;
     }
 
     public AuthInfo login(LoginRequest loginRequest) {
-        String username = Encryptor.encrypt(loginRequest.getUsername());
-        String password = Encryptor.encrypt(loginRequest.getPassword());
+        String username = encryptor.encrypt(loginRequest.getUsername());
+        String password = encryptor.encrypt(loginRequest.getPassword());
         Member member = memberRepository.findByUsernameValueAndPasswordValue(username, password)
                 .orElseThrow(LoginFailedException::new);
         return new AuthInfo(member.getId(), member.getRoleType().getName(), member.getNickname());
     }
 
-    @Transactional
-    public void useTicket(String email) {
-        String serialNumber = Encryptor.encrypt(email);
-        Ticket ticket = ticketRepository.findBySerialNumber(serialNumber)
-                .orElseThrow(SerialNumberNotFoundException::new);
-        ticket.use();
-    }
-
-    public void verifyAuthCode(VerificationRequest verificationRequest) {
-        String serialNumber = Encryptor.encrypt(verificationRequest.getEmail());
-        AuthCode authCode = authCodeRepository.findBySerialNumber(serialNumber)
-                .orElseThrow(SerialNumberNotFoundException::new);
-        authCode.verify(verificationRequest.getCode());
-        LocalDateTime now = LocalDateTime.now(clock);
-        authCode.verifyTime(now);
-    }
-
-    public void validateSignUpMember(String serialNumber) {
-        validateQualified(serialNumber);
-        validateNewMember(serialNumber);
-    }
-
-    public void validateQualified(String serialNumber) {
-        boolean exist = ticketRepository.existsBySerialNumber(serialNumber);
-        if (!exist) {
-            throw new NotWootecoMemberException();
+    public void checkAuthority(AuthInfo authInfo, Long boardId) {
+        if (isWootecoUser(authInfo)) {
+            return;
         }
+        if (isEditableBoardToApplicant(boardId)) {
+            return;
+        }
+        throw new AuthorizationException("인증된 사용자만 이용가능 합니다.");
     }
 
-    private void validateNewMember(String serialNumber) {
-        Ticket ticket = ticketRepository.findBySerialNumber(serialNumber)
-                .orElseThrow(NotWootecoMemberException::new);
-        if (ticket.isUsed()) {
-            throw new TicketUsedException();
-        }
+    private boolean isWootecoUser(AuthInfo authInfo) {
+        return RoleType.APPLICANT.isNot(authInfo.getRole());
+    }
+
+    private boolean isEditableBoardToApplicant(Long boardId) {
+        return boardId.equals(APPLICANT_BOARD_ID);
     }
 }

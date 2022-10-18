@@ -14,6 +14,8 @@ const Template = () => {
   const { error, setError, setValue, value } = useInput();
   const [isAnimationActive, setIsAnimationActive] = useState(false);
   const [isSet, setIsSet] = useState(false);
+  const [isCourseCrew] = useState(false);
+
   const [isVerified] = useState(false);
 
   return (
@@ -27,6 +29,7 @@ const Template = () => {
       isSet={isSet}
       setIsSet={setIsSet}
       isVerified={isVerified}
+      isCourseCrew={isCourseCrew}
     />
   );
 };

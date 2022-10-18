@@ -29,11 +29,11 @@ export const Label = styled.label`
 `;
 
 export const SubmitButton = styled.button`
-  padding: 4% 6%;
+  height: 2.5rem;
+  padding: 0.8em 1.2rem;
   float: right;
-  font-size: 13px;
+  font-size: 0.9rem;
   background-color: ${props => props.theme.colors.sub};
   color: white;
-  font-family: 'BMHANNAAir', 'Noto Sans KR';
-  border-radius: 8px;
+  border-radius: 3px;
 `;

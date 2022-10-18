@@ -1,18 +1,20 @@
 package com.wooteco.sokdak.post.service;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
-import com.wooteco.sokdak.board.domain.PostBoard;
+import com.wooteco.sokdak.auth.exception.AuthorizationException;
+import com.wooteco.sokdak.auth.service.AuthService;
+import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.board.service.BoardService;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.hashtag.domain.Hashtags;
 import com.wooteco.sokdak.hashtag.service.HashtagService;
-import com.wooteco.sokdak.like.repository.LikeRepository;
+import com.wooteco.sokdak.like.repository.PostLikeRepository;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
-import com.wooteco.sokdak.notification.repository.NotificationRepository;
+import com.wooteco.sokdak.notification.service.NotificationService;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
@@ -22,7 +24,6 @@ import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.Collections;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -39,40 +40,47 @@ public class PostService {
     private final PostBoardRepository postBoardRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
-    private final LikeRepository likeRepository;
-    private final NotificationRepository notificationRepository;
+    private final PostLikeRepository postLikeRepository;
+    private final NotificationService notificationService;
+    private final AuthService authService;
 
     public PostService(HashtagService hashtagService, BoardService boardService,
                        PostRepository postRepository, PostBoardRepository postBoardRepository,
                        MemberRepository memberRepository, CommentRepository commentRepository,
-                       LikeRepository likeRepository, NotificationRepository notificationRepository) {
+                       PostLikeRepository postLikeRepository, NotificationService notificationService,
+                       AuthService authService) {
         this.hashtagService = hashtagService;
         this.boardService = boardService;
         this.postRepository = postRepository;
         this.postBoardRepository = postBoardRepository;
         this.memberRepository = memberRepository;
         this.commentRepository = commentRepository;
-        this.likeRepository = likeRepository;
-        this.notificationRepository = notificationRepository;
+        this.postLikeRepository = postLikeRepository;
+        this.notificationService = notificationService;
+        this.authService = authService;
     }
 
     @Transactional
     public Long addPost(Long boardId, NewPostRequest newPostRequest, AuthInfo authInfo) {
-        Member member = memberRepository.findById(authInfo.getId())
-                .orElseThrow(MemberNotFoundException::new);
+        authService.checkAuthority(authInfo, boardId);
+        Member member = findMember(authInfo);
         String writerNickname = createPostWriterNickname(newPostRequest.isAnonymous(), member);
-        Post post = Post.builder()
+        Post post = createPost(newPostRequest, writerNickname, member);
+        Post savedPost = postRepository.save(post);
+
+        hashtagService.saveHashtag(newPostRequest.getHashtags(), savedPost);
+        boardService.savePostBoard(savedPost, boardId, authInfo.getRole());
+        return savedPost.getId();
+    }
+
+    private Post createPost(NewPostRequest newPostRequest, String writerNickname, Member member) {
+        return Post.builder()
                 .title(newPostRequest.getTitle())
                 .content(newPostRequest.getContent())
                 .writerNickname(writerNickname)
                 .member(member)
                 .imageName(newPostRequest.getImageName())
                 .build();
-        Post savedPost = postRepository.save(post);
-
-        hashtagService.saveHashtag(newPostRequest.getHashtags(), savedPost);
-        boardService.savePostBoard(savedPost, boardId, authInfo.getRole());
-        return savedPost.getId();
     }
 
     private String createPostWriterNickname(boolean anonymous, Member member) {
@@ -83,55 +91,69 @@ public class PostService {
     }
 
     public PostDetailResponse findPost(Long postId, AuthInfo authInfo) {
-        Post foundPost = postRepository.findById(postId)
-                .orElseThrow(PostNotFoundException::new);
-        List<PostBoard> postBoards = postBoardRepository.findPostBoardsByPostId(foundPost.getId());
-        boolean liked = likeRepository.existsByMemberIdAndPostId(authInfo.getId(), postId);
-        Hashtags hashtags = hashtagService.findHashtagsByPostId(postId);
+        Post foundPost = findPostObject(postId);
+        Board writableBoard = foundPost.getWritableBoard();
+        boolean liked = foundPost.hasLikeOfMember(authInfo.getId());
+        Hashtags hashtags = hashtagService.findHashtagsByPost(foundPost);
 
-        return PostDetailResponse.of(foundPost, postBoards.get(0), liked,
-                foundPost.isAuthorized(authInfo.getId()), hashtags, foundPost.getImageName());
+        return PostDetailResponse.of(foundPost, writableBoard, liked,
+                foundPost.isOwner(authInfo.getId()), hashtags, foundPost.getImageName());
+    }
+
+    private Post findPostObject(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(PostNotFoundException::new);
     }
 
     public PostsResponse findPostsByBoard(Long boardId, Pageable pageable) {
-        Slice<PostBoard> postBoards = postBoardRepository.findPostBoardsByBoardId(boardId, pageable);
-        return PostsResponse.ofPostBoardSlice(postBoards);
+        Slice<Post> posts = postBoardRepository.findPostsByBoardId(boardId, pageable);
+        return PostsResponse.ofPostSlice(posts);
     }
 
     public MyPostsResponse findMyPosts(Pageable pageable, AuthInfo authInfo) {
-        Member member = memberRepository.findById(authInfo.getId())
-                .orElseThrow(MemberNotFoundException::new);
+        Member member = findMember(authInfo);
         Page<Post> posts = postRepository.findPostsByMemberOrderByCreatedAtDesc(pageable, member);
         return MyPostsResponse.of(posts.getContent(), posts.getTotalPages());
     }
 
+    private Member findMember(AuthInfo authInfo) {
+        return memberRepository.findById(authInfo.getId())
+                .orElseThrow(MemberNotFoundException::new);
+    }
+
     @Transactional
     public void updatePost(Long postId, PostUpdateRequest postUpdateRequest, AuthInfo authInfo) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(PostNotFoundException::new);
-        Hashtags hashtags = hashtagService.findHashtagsByPostId(post.getId());
+        Post post = findPostObject(postId);
+        Hashtags hashtags = hashtagService.findHashtagsByPost(post);
 
-        // Todo: validateOwner 메서드 하나만 실행하게 리팩터링하기
-        post.updateTitle(postUpdateRequest.getTitle(), authInfo.getId());
-        post.updateContent(postUpdateRequest.getContent(), authInfo.getId());
-        post.updateImageName(postUpdateRequest.getImageName(), authInfo.getId());
+        validateOwner(authInfo, post);
+        post.updateTitle(postUpdateRequest.getTitle());
+        post.updateContent(postUpdateRequest.getContent());
+        post.updateImageName(postUpdateRequest.getImageName());
 
-        hashtagService.deleteAllByPostId(hashtags, post.getId());
+        hashtagService.deleteAllByPost(hashtags, post);
         hashtagService.saveHashtag(postUpdateRequest.getHashtags(), post);
     }
 
     @Transactional
     public void deletePost(Long id, AuthInfo authInfo) {
-        Post post = postRepository.findById(id)
-                .orElseThrow(PostNotFoundException::new);
-        post.validateOwner(authInfo.getId());
-        Hashtags hashtags = hashtagService.findHashtagsByPostId(post.getId());
+        Post post = findPostObject(id);
+        validateOwner(authInfo, post);
 
-        commentRepository.deleteAllByPostId(post.getId());
-        likeRepository.deleteAllByPostId(post.getId());
-        hashtagService.deleteAllByPostId(hashtags, id);
-        notificationRepository.deleteAllByPostId(id);
+        Hashtags hashtags = hashtagService.findHashtagsByPost(post);
+
+        commentRepository.deleteAllByPost(post);
+        postLikeRepository.deleteAllByPost(post);
+        postLikeRepository.deleteAllByPost(post);
+        hashtagService.deleteAllByPost(hashtags, post);
+        notificationService.deletePostNotification(id);
 
         postRepository.delete(post);
+    }
+
+    private void validateOwner(AuthInfo authInfo, Post post) {
+        if (!post.isOwner(authInfo.getId())) {
+            throw new AuthorizationException();
+        }
     }
 }

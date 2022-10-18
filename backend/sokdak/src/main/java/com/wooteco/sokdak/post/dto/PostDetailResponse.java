@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.post.dto;
 
+import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.hashtag.domain.Hashtags;
 import com.wooteco.sokdak.hashtag.dto.HashtagResponse;
@@ -50,11 +51,11 @@ public class PostDetailResponse {
     }
 
 
-    public static PostDetailResponse of(Post post, PostBoard postBoard, boolean liked,
+    public static PostDetailResponse of(Post post, Board board, boolean liked,
                                         boolean authorized, Hashtags hashtags, String imageName) {
         return PostDetailResponse.builder()
                 .id(post.getId())
-                .boardId(postBoard.getBoard().getId())
+                .boardId(board.getId())
                 .nickname(post.getNickname())
                 .title(post.getTitle())
                 .content(post.getContent())

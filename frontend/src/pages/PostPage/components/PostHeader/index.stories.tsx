@@ -15,15 +15,7 @@ export default {
 const Template: ComponentStory<typeof PostHeader> = () => {
   return (
     <Layout>
-      <PostHeader
-        post={postList[1]}
-        like={{
-          isLiked: false,
-          likeCount: 2,
-        }}
-        onClickDeleteButton={() => {}}
-        onClickLikeButton={() => {}}
-      />
+      <PostHeader post={postList[1]} onClickDeleteButton={() => {}} onClickLikeButton={() => {}} />
     </Layout>
   );
 };

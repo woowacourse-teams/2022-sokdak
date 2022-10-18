@@ -7,3 +7,14 @@ export const SpinnerContainer = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+export const BoardContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @media (max-width: 875px) {
+    width: 90%;
+  }
+`;

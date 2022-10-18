@@ -1,7 +1,7 @@
 package com.wooteco.sokdak.notification.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_COMMENT_REQUEST;
-import static com.wooteco.sokdak.util.fixture.CommentFixture.NEW_REPLY_REQUEST;
+import static com.wooteco.sokdak.util.fixture.CommentFixture.NON_ANONYMOUS_COMMENT_REQUEST;
+import static com.wooteco.sokdak.util.fixture.CommentFixture.NON_ANONYMOUS_REPLY_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.addNewCommentInPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithAuthorization;
@@ -39,7 +39,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         Long postId = addNewPost();
         LoginRequest loginRequest = new LoginRequest("josh", "Abcd123!@");
         String token = httpPost(loginRequest, "/login").header(AUTHORIZATION);
-        httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", token);
+        httpPostWithAuthorization(NON_ANONYMOUS_COMMENT_REQUEST, "/posts/" + postId + "/comments", token);
 
         ExtractableResponse<Response> response = httpGetWithAuthorization("/notifications/check", getChrisToken());
         NewNotificationCheckResponse newNotificationCheckResponse =
@@ -56,7 +56,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
     void checkNewNotification_NewComment_MyPost() {
         Long postId = addNewPost();
         String token = getChrisToken();
-        httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", token);
+        httpPostWithAuthorization(NON_ANONYMOUS_COMMENT_REQUEST, "/posts/" + postId + "/comments", token);
 
         ExtractableResponse<Response> response = httpGetWithAuthorization("/notifications/check", token);
         NewNotificationCheckResponse newNotificationCheckResponse =
@@ -74,8 +74,8 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         Long postId = addNewPost();
         String chrisToken = getChrisToken();
         String joshToken = getToken("josh");
-        httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", joshToken);
-        httpPostWithAuthorization(NEW_REPLY_REQUEST, "/comments" + 1 + "/reply", chrisToken);
+        httpPostWithAuthorization(NON_ANONYMOUS_COMMENT_REQUEST, "/posts/" + postId + "/comments", joshToken);
+        httpPostWithAuthorization(NON_ANONYMOUS_REPLY_REQUEST, "/comments" + 1 + "/reply", chrisToken);
 
         ExtractableResponse<Response> response = httpGetWithAuthorization("/notifications/check", joshToken);
         NewNotificationCheckResponse newNotificationCheckResponse =
@@ -131,7 +131,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
     void checkNewNotification_CommentReport() {
         Long postId = addNewPost();
         String commenterToken = getChrisToken();
-        httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", commenterToken);
+        httpPostWithAuthorization(NON_ANONYMOUS_COMMENT_REQUEST, "/posts/" + postId + "/comments", commenterToken);
         Long commentId = addNewCommentInPost(postId);
         List<String> reporterTokens = getTokens();
         for (int i = 0; i < 5; ++i) {
@@ -156,7 +156,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         String token = getChrisToken();
 
         String joshToken = getToken("josh");
-        httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", joshToken);
+        httpPostWithAuthorization(NON_ANONYMOUS_COMMENT_REQUEST, "/posts/" + postId + "/comments", joshToken);
 
         List<String> otherTokens = getTokens();
         for (String other : otherTokens) {
@@ -193,7 +193,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         Long postId = addNewPost();
         LoginRequest loginRequest = new LoginRequest("josh", "Abcd123!@");
         String token = httpPost(loginRequest, "/login").header(AUTHORIZATION);
-        httpPostWithAuthorization(NEW_COMMENT_REQUEST, "/posts/" + postId + "/comments", token);
+        httpPostWithAuthorization(NON_ANONYMOUS_COMMENT_REQUEST, "/posts/" + postId + "/comments", token);
 
         ExtractableResponse<Response> response =
                 httpDeleteWithAuthorization("/notifications/1", getChrisToken());

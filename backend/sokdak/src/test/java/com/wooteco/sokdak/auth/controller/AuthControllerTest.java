@@ -62,7 +62,7 @@ class AuthControllerTest extends ControllerTest {
     void logout() {
         doReturn(true)
                 .when(authInterceptor)
-                        .preHandle(any(),any(),any());
+                .preHandle(any(), any(), any());
 
         restDocs
                 .header("Authorization", "any")

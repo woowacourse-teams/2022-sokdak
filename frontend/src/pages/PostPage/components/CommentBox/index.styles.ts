@@ -1,4 +1,4 @@
-import { keyframes } from '@emotion/react';
+import { css, keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 
 const leaveComment = keyframes`
@@ -11,11 +11,17 @@ const leaveComment = keyframes`
 `;
 
 export const Container = styled.div`
-  width: calc(100%-1em);
-  padding: 1em 0.5em;
+  width: 100%;
+  padding: 1.8em 15px;
   border-top: 0.5px solid ${props => props.theme.colors.gray_150};
   background-color: white;
   animation: ${leaveComment} 0.7s;
+  font-size: 10px;
+  box-sizing: border-box;
+
+  @media (min-width: 875px) {
+    font-size: 13px;
+  }
 `;
 
 export const EmptyComment = styled.div`
@@ -24,9 +30,13 @@ export const EmptyComment = styled.div`
   border-bottom: 0.5px solid ${props => props.theme.colors.gray_150};
   margin-bottom: -0.5px;
   cursor: default;
-  padding: 3.5em 0.5em;
+  padding: 3.5rem 0.5rem;
   color: ${props => props.theme.colors.gray_200};
-  font-size: 12px;
+  font-size: 0.75rem;
+
+  @media (min-width: 875px) {
+    font-size: 0.975rem;
+  }
 `;
 
 export const CommentHeader = styled.div`
@@ -34,30 +44,34 @@ export const CommentHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1em;
+  margin-bottom: 1rem;
 `;
 
 export const ButtonContainer = styled.div``;
 
-export const ReplyButton = styled.button`
+const buttonStyle = css`
   background-color: transparent;
+  font-size: 1em;
+`;
+
+export const ReplyButton = styled.button`
+  ${buttonStyle};
   color: ${props => props.theme.colors.gray_200};
-  font-size: 0.6rem;
 `;
 
 export const DeleteButton = styled.button`
-  background-color: transparent;
+  ${buttonStyle};
   color: ${props => props.theme.colors.red_200};
-  font-size: 0.6rem;
 `;
 
 export const ReportButton = styled.button`
-  background-color: transparent;
+  ${buttonStyle};
 `;
 
 export const Nickname = styled.p`
   font-weight: bold;
   display: flex;
+  font-size: 1.3em;
 `;
 
 export const PostWriter = styled.span`
@@ -69,7 +83,7 @@ export const PostWriter = styled.span`
 `;
 
 export const Content = styled.p`
-  font-size: 12px;
+  font-size: 1.2em;
   line-height: 1.3;
   white-space: pre-wrap;
 `;
@@ -77,7 +91,7 @@ export const Content = styled.p`
 export const Date = styled.p`
   color: ${props => props.theme.colors.gray_200};
   margin: 10px 0;
-  font-size: 10px;
+  font-size: 1em;
 `;
 
 export const Footer = styled.div`
@@ -89,10 +103,10 @@ export const Footer = styled.div`
 export const LikeContainer = styled.button<{ isLiked: boolean }>`
   display: flex;
   color: ${props => props.theme.colors.pink_300};
-  font-size: 0.7rem;
+  font-size: 1em;
   justify-content: flex-end;
   align-items: center;
-  gap: 0.5em;
+  gap: 0.5rem;
   background-color: transparent;
   color: ${props => (props.isLiked ? props.theme.colors.pink_300 : props.theme.colors.gray_300)};
 `;

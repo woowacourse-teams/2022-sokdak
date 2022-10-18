@@ -28,7 +28,7 @@ interface PostFormProps {
     post: Pick<Post, 'title' | 'content' | 'imageName'> & {
       hashtags: string[];
       anonymous?: boolean;
-      boardId: string | number;
+      boardId: number;
     },
   ) => void;
 }

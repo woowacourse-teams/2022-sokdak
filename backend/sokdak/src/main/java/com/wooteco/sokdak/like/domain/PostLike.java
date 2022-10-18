@@ -13,12 +13,12 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Entity(name = "likes")
-public class Like {
+@Entity(name = "post_likes")
+public class PostLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "likes_id")
+    @Column(name = "post_likes_id")
     private Long id;
 
     @ManyToOne
@@ -29,17 +29,17 @@ public class Like {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    protected Like() {
+    protected PostLike() {
     }
 
     @Builder
-    private Like(Post post, Member member) {
+    private PostLike(Post post, Member member) {
         this.post = post;
         this.member = member;
+        post.addPostLike(this);
     }
 
-    public void addPost(Post post) {
-        this.post = post;
-        post.getLikes().add(this);
+    public boolean isLikeOf(Long memberId) {
+        return member.hasId(memberId);
     }
 }

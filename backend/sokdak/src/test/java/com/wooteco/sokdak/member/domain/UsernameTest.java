@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.member.domain;
 
+import static com.wooteco.sokdak.util.fixture.MemberFixture.ENCRYPTOR;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.wooteco.sokdak.member.exception.InvalidUsernameException;
@@ -13,7 +14,7 @@ class UsernameTest {
     @ParameterizedTest
     @ValueSource(strings = {"sok", "sokdaksokdaksokkk", "가sokdak", "sokdak!", "", " "})
     void create_Exception_Format(String invalidUsername) {
-        assertThatThrownBy(() -> new Username(invalidUsername))
+        assertThatThrownBy(() -> Username.of(ENCRYPTOR, invalidUsername))
                 .isInstanceOf(InvalidUsernameException.class);
     }
 }

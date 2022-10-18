@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.comment.service;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.auth.service.AuthService;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.CommentsResponse;
@@ -22,7 +23,6 @@ import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -37,23 +37,27 @@ public class CommentService {
     private final PostRepository postRepository;
     private final NotificationService notificationService;
     private final CommentLikeRepository commentLikeRepository;
+    private final AuthService authService;
 
     public CommentService(CommentRepository commentRepository, MemberRepository memberRepository,
                           PostRepository postRepository, NotificationService notificationService,
-                          CommentLikeRepository commentLikeRepository) {
+                          CommentLikeRepository commentLikeRepository,
+                          AuthService authService) {
         this.commentRepository = commentRepository;
         this.memberRepository = memberRepository;
         this.postRepository = postRepository;
         this.notificationService = notificationService;
         this.commentLikeRepository = commentLikeRepository;
+        this.authService = authService;
     }
 
     @Transactional
     public Long addComment(Long postId, NewCommentRequest newCommentRequest, AuthInfo authInfo) {
-        Member member = memberRepository.findById(authInfo.getId())
-                .orElseThrow(MemberNotFoundException::new);
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
+        authService.checkAuthority(authInfo, post.getBoardId());
+        Member member = memberRepository.findById(authInfo.getId())
+                .orElseThrow(MemberNotFoundException::new);
 
         String nickname = getCommentNickname(newCommentRequest.isAnonymous(), authInfo, post);
 
@@ -67,11 +71,13 @@ public class CommentService {
 
     @Transactional
     public Long addReply(Long commentId, NewReplyRequest newReplyRequest, AuthInfo authInfo) {
-        Member member = memberRepository.findById(authInfo.getId())
-                .orElseThrow(MemberNotFoundException::new);
         Comment parent = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
-        if (!isComment(parent.getParent())) {
+        authService.checkAuthority(authInfo, parent.getBoardId());
+        Member member = memberRepository.findById(authInfo.getId())
+                .orElseThrow(MemberNotFoundException::new);
+
+        if (!parent.isParent()){
             throw new ReplyDepthException();
         }
         Post post = parent.getPost();
@@ -91,7 +97,7 @@ public class CommentService {
         if (!anonymous) { // 기명이면 member table에서 memberId로 닉네임 가져옴.
             return memberNickname;
         }
-        if (post.isAuthorized(authInfo.getId())) { // 댓글 작성하는 사람과 게시글 작성자 일치
+        if (post.isOwner(authInfo.getId())) { // 댓글 작성하는 사람과 게시글 작성자 일치
             return getPostWriterNickname(post, authInfo.getId());
         }
 
@@ -110,7 +116,7 @@ public class CommentService {
         if (post.isAnonymous()) { // 작성자가 기명으로 글 작성
             return post.getNickname();
         }
-        if (commentRepository.existsByPostIdAndMemberId(post.getId(), memberId)) {
+        if (commentRepository.existsByPostAndMemberId(post, memberId)) {
             return commentRepository.findNickNamesByPostIdAndMemberId(post.getId(), memberId)
                     .get(0);
         }
@@ -129,9 +135,9 @@ public class CommentService {
     }
 
     public CommentsResponse findComments(Long postId, AuthInfo authInfo) {
-        List<Comment> comments = commentRepository.findAllByPostIdAndParentId(postId, null);
+        List<Comment> comments = commentRepository.findCommentsByPostId(postId);
         List<CommentResponse> commentResponses = comments.stream()
-                .map(it -> convertToCommentResponse(postId, authInfo, it))
+                .map(it -> convertToCommentResponse(authInfo, it))
                 .collect(Collectors.toList());
         int numOfComment = commentResponses.size();
         int numOfReply = commentResponses.stream()
@@ -140,17 +146,17 @@ public class CommentService {
         return new CommentsResponse(commentResponses, numOfComment + numOfReply);
     }
 
-    private CommentResponse convertToCommentResponse(Long postId, AuthInfo authInfo, Comment comment) {
+    private CommentResponse convertToCommentResponse(AuthInfo authInfo, Comment comment) {
         Long id = authInfo.getId();
         if (comment.isSoftRemoved()) {
-            return CommentResponse.softRemovedOf(comment, convertToReplyResponses(comment, postId, id));
+            return CommentResponse.softRemovedOf(comment, convertToReplyResponses(comment, id));
         }
         boolean liked = commentLikeRepository.existsByMemberIdAndCommentId(id, comment.getId());
-        return CommentResponse.of(comment, id, convertToReplyResponses(comment, postId, id), liked);
+        return CommentResponse.of(comment, id, convertToReplyResponses(comment, id), liked);
     }
 
-    private List<ReplyResponse> convertToReplyResponses(Comment parent, Long postId, Long accessMemberId) {
-        List<Comment> replies = commentRepository.findAllByPostIdAndParentId(postId, parent.getId());
+    private List<ReplyResponse> convertToReplyResponses(Comment parent, Long accessMemberId) {
+        final List<Comment> replies = commentRepository.findRepliesByParent(parent);
         List<ReplyResponse> replyResponses = new ArrayList<>();
         for (Comment reply : replies) {
             boolean liked = commentLikeRepository.existsByMemberIdAndCommentId(accessMemberId, reply.getId());
@@ -167,41 +173,33 @@ public class CommentService {
         notificationService.deleteCommentNotification(commentId);
         commentLikeRepository.deleteAllByCommentId(commentId);
 
-        Comment parent = comment.getParent();
-        deleteCommentOrReply(comment, parent);
+        deleteCommentOrReply(comment);
     }
 
-    private void deleteCommentOrReply(Comment comment, Comment parent) {
-        if (isComment(parent)) {
+    private void deleteCommentOrReply(Comment comment) {
+        if (comment.isParent()) {
             deleteParent(comment);
             return;
         }
 
-        deleteChild(comment, parent);
-    }
-
-    private void deleteChild(Comment comment, Comment parent) {
-        parent.deleteChild(comment);
-        commentRepository.delete(comment);
-
-        if (hasNoReply(parent) && parent.isSoftRemoved()) {
-            commentRepository.delete(parent);
-        }
+        deleteChild(comment);
     }
 
     private void deleteParent(Comment comment) {
-        if (hasNoReply(comment)) {
+        if (comment.hasNoReply()) {
             commentRepository.delete(comment);
             return;
         }
         comment.changePretendingToBeRemoved();
     }
 
-    private boolean isComment(Comment parent) {
-        return Objects.isNull(parent);
-    }
+    private void deleteChild(Comment comment) {
+        Comment parent = comment.getParent();
+        parent.deleteChild(comment);
+        commentRepository.delete(comment);
 
-    private boolean hasNoReply(Comment comment) {
-        return comment.getChildren().isEmpty();
+        if (parent.hasNoReply() && parent.isSoftRemoved()) {
+            commentRepository.delete(parent);
+        }
     }
 }

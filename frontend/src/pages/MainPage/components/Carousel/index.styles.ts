@@ -25,23 +25,21 @@ export const Title = styled.p`
   text-align: left;
 `;
 
-export const PostContainer = styled.div`
-  overflow: hidden;
-`;
-
 export const ItemContainer = styled.div`
   width: 360px;
   padding: 0.5em;
   flex-shrink: 0;
+  scroll-snap-align: end;
 `;
 
-export const PostListContainer = styled.div<{ page: number }>`
+export const PostListContainer = styled.div`
   display: flex;
   width: 100%;
   align-items: center;
   gap: 1em;
-  margin-left: ${props => `calc(-${props.page * 380}px - ${props.page * 0.5}em - 0.3em)`};
-  transition: 1s;
+  overflow: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
 `;
 
 const buttonStyle = css`
@@ -64,14 +62,14 @@ const buttonStyle = css`
 
 export const ArrowLeft = styled.button`
   ${buttonStyle};
-  left: 0;
+  left: -10px;
   border-top-right-radius: 30px;
   border-bottom-right-radius: 30px;
 `;
 
 export const ArrowRight = styled.button`
   ${buttonStyle};
-  right: 0;
+  right: -10px;
   border-top-left-radius: 30px;
   border-bottom-left-radius: 30px;
 `;

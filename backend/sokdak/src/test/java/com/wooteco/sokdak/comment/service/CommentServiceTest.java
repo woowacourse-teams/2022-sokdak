@@ -16,6 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
+import com.wooteco.sokdak.board.domain.Board;
+import com.wooteco.sokdak.board.domain.PostBoard;
+import com.wooteco.sokdak.board.repository.BoardRepository;
+import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
@@ -53,10 +57,18 @@ class CommentServiceTest extends ServiceTest {
     @Autowired
     private CommentRepository commentRepository;
 
+    @Autowired
+    private BoardRepository boardRepository;
+
+    @Autowired
+    private PostBoardRepository postBoardRepository;
+
     private Post anonymousPost;
     private Post identifiedPost;
     private Member member2;
     private String randomNickname;
+    private Board freeBoard;
+    private Post applicantPost;
 
     @BeforeEach
     void setUp() {
@@ -76,6 +88,28 @@ class CommentServiceTest extends ServiceTest {
                 .build();
         postRepository.save(anonymousPost);
         postRepository.save(identifiedPost);
+
+        freeBoard = boardRepository.findById(FREE_BOARD_ID).get();
+        PostBoard anonymousPostBoard = PostBoard.builder().build();
+        anonymousPostBoard.addBoard(freeBoard);
+        anonymousPostBoard.addPost(anonymousPost);
+        PostBoard identifiedPostBoard = PostBoard.builder().build();
+        identifiedPostBoard.addBoard(freeBoard);
+        identifiedPostBoard.addPost(identifiedPost);
+        postBoardRepository.save(anonymousPostBoard);
+        postBoardRepository.save(identifiedPostBoard);
+
+        applicantPost = Post.builder()
+                .member(member)
+                .title(VALID_POST_TITLE)
+                .content(VALID_POST_CONTENT)
+                .writerNickname(randomNickname)
+                .build();
+        postRepository.save(applicantPost);
+        PostBoard postBoard = PostBoard.builder().build();
+        postBoard.addPost(applicantPost);
+        postBoard.addBoard(boardRepository.findById(APPLICANT_BOARD_ID).get());
+        postBoardRepository.save(postBoard);
     }
 
     @DisplayName("자신이 작성한 글에 기명으로 댓글을 등록")
@@ -93,19 +127,43 @@ class CommentServiceTest extends ServiceTest {
 
     @DisplayName("지원자는 권한이 없는 게시판에 작성된 게시글에 댓글 작성할 수 없다.")
     @ParameterizedTest
-    @CsvSource({"1", "2", "3", "4"})
+    @CsvSource({"2", "3", "4"})
     void addComment_Applicant_Exception(Long boardId) {
-        NewCommentRequest newCommentRequest = new NewCommentRequest(boardId, "content", true);
-        assertThatThrownBy(() -> commentService.addComment(anonymousPost.getId(), newCommentRequest, APPLICANT_AUTH_INFO))
+        Post post = Post.builder()
+                .member(member)
+                .title(VALID_POST_TITLE)
+                .content(VALID_POST_CONTENT)
+                .writerNickname(randomNickname)
+                .build();
+        postRepository.save(post);
+        PostBoard postBoard = PostBoard.builder().build();
+        postBoard.addBoard(boardRepository.findById(boardId).get());
+        postBoard.addPost(post);
+        postBoardRepository.save(postBoard);
+
+        NewCommentRequest newCommentRequest = new NewCommentRequest("content", true);
+        assertThatThrownBy(() -> commentService.addComment(post.getId(), newCommentRequest, APPLICANT_AUTH_INFO))
                 .isInstanceOf(AuthorizationException.class);
     }
 
     @DisplayName("지원자는 권한이 있는 게시판에 작성된 게시글에 댓글을 작성할 수 있다.")
     @Test
     void addComment_Applicant() {
-        NewCommentRequest newCommentRequest = new NewCommentRequest(APPLICANT_BOARD_ID, "content", true);
+        Post applicantPost = Post.builder()
+                .member(member)
+                .title(VALID_POST_TITLE)
+                .content(VALID_POST_CONTENT)
+                .writerNickname(randomNickname)
+                .build();
+        postRepository.save(applicantPost);
+        PostBoard postBoard = PostBoard.builder().build();
+        postBoard.addPost(applicantPost);
+        postBoard.addBoard(boardRepository.findById(APPLICANT_BOARD_ID).get());
+        postBoardRepository.save(postBoard);
 
-        Long commentId = commentService.addComment(anonymousPost.getId(), newCommentRequest, APPLICANT_AUTH_INFO);
+        NewCommentRequest newCommentRequest = new NewCommentRequest("content", true);
+
+        Long commentId = commentService.addComment(applicantPost.getId(), newCommentRequest, APPLICANT_AUTH_INFO);
         Comment foundComment = commentRepository.findById(commentId).orElseThrow();
         assertAll(
                 () -> assertThat(foundComment.getMessage()).isEqualTo(newCommentRequest.getContent()),
@@ -140,10 +198,22 @@ class CommentServiceTest extends ServiceTest {
 
     @DisplayName("지원자는 권한이 없는 게시판에 작성된 게시글에 달린 댓글에 대댓글을 작성할 수 없다.")
     @ParameterizedTest
-    @CsvSource({"1", "2", "3", "4"})
+    @CsvSource({"2", "3", "4"})
     void addReply_Applicant_Exception(Long boardId) {
+        Post post = Post.builder()
+                .member(member)
+                .title(VALID_POST_TITLE)
+                .content(VALID_POST_CONTENT)
+                .writerNickname(randomNickname)
+                .build();
+        postRepository.save(post);
+        PostBoard postBoard = PostBoard.builder().build();
+        postBoard.addBoard(boardRepository.findById(boardId).get());
+        postBoard.addPost(post);
+        postBoardRepository.save(postBoard);
+
         Long commentId = commentService.addComment(anonymousPost.getId(), APPLICANT_COMMENT_REQUEST, AUTH_INFO);
-        NewReplyRequest newReplyRequest = new NewReplyRequest(boardId, "content", true);
+        NewReplyRequest newReplyRequest = new NewReplyRequest("content", true);
         assertThatThrownBy(() -> commentService.addReply(commentId, newReplyRequest, APPLICANT_AUTH_INFO))
                 .isInstanceOf(AuthorizationException.class);
     }
@@ -151,8 +221,8 @@ class CommentServiceTest extends ServiceTest {
     @DisplayName("지원자는 권한이 있는 게시판에 작성된 게시글에 달린 댓글에 대댓글을 작성할 수 있다.")
     @Test
     void addReply_Applicant() {
-        Long commentId = commentService.addComment(anonymousPost.getId(), APPLICANT_COMMENT_REQUEST, AUTH_INFO);
-        NewReplyRequest newReplyRequest = new NewReplyRequest(APPLICANT_BOARD_ID, "content", true);
+        Long commentId = commentService.addComment(applicantPost.getId(), APPLICANT_COMMENT_REQUEST, AUTH_INFO);
+        NewReplyRequest newReplyRequest = new NewReplyRequest("content", true);
 
         Long replyId = commentService.addReply(commentId, newReplyRequest, APPLICANT_AUTH_INFO);
         Comment foundReply = commentRepository.findById(replyId).orElseThrow();
@@ -284,8 +354,12 @@ class CommentServiceTest extends ServiceTest {
                 .title("다른 게시글")
                 .content("본문")
                 .build();
+        PostBoard postBoard = PostBoard.builder().build();
+        postBoard.addPost(otherPost);
+        postBoard.addBoard(freeBoard);
+
         postRepository.save(otherPost);
-        NewCommentRequest newCommentRequestToOtherPost = new NewCommentRequest(FREE_BOARD_ID, "다른 게시글의 댓글", true);
+        NewCommentRequest newCommentRequestToOtherPost = new NewCommentRequest("다른 게시글의 댓글", true);
         commentService.addComment(anonymousPost.getId(), ANONYMOUS_COMMENT_REQUEST, AUTH_INFO);
         commentService.addComment(otherPost.getId(), newCommentRequestToOtherPost, AUTH_INFO);
 
@@ -326,7 +400,7 @@ class CommentServiceTest extends ServiceTest {
     @DisplayName("댓글, 대댓글을 등록하고 해당 게시물의 댓글을 조회하면 댓글과 대댓글이 같이 조회된다.")
     @Test
     void findComments_Having_Reply() {
-        NewReplyRequest newReplyRequest2 = new NewReplyRequest(FREE_BOARD_ID, "대댓글2", false);
+        NewReplyRequest newReplyRequest2 = new NewReplyRequest("대댓글2", false);
         Long commentId = commentService.addComment(anonymousPost.getId(), NON_ANONYMOUS_COMMENT_REQUEST, AUTH_INFO);
         commentService.addReply(commentId, NON_ANONYMOUS_REPLY_REQUEST, AUTH_INFO);
         commentService.addReply(commentId, newReplyRequest2, AUTH_INFO);

@@ -38,9 +38,9 @@ public class PostReportService {
 
     @Transactional
     public void reportPost(Long postId, ReportRequest reportRequest, AuthInfo authInfo) {
-        authService.checkAuthority(authInfo, reportRequest.getBoardId());
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
+        authService.checkAuthority(authInfo, post.getBoardId());
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
         checkMemberAlreadyReport(post, member);

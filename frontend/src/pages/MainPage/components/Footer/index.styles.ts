@@ -19,7 +19,10 @@ export const FooterItemContainer = styled.div`
   color: ${props => props.theme.colors.gray_300};
 `;
 
-export const FooterItem = styled.button`
-  color: ${props => props.theme.colors.gray_300};
+export const FooterItem = styled.a`
+  color: ${props => props.theme.colors.gray_200};
   background-color: transparent;
+  font-size: 13px;
+  cursor: pointer;
+  margin: 0 10px;
 `;

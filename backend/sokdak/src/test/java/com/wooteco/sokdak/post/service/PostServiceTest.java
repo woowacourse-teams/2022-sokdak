@@ -463,7 +463,7 @@ class PostServiceTest extends ServiceTest {
         postRepository.save(post3);
 
         PagePostsResponse myPosts = postService.searchWithQuery("서치|검색",
-                PageRequest.of(0, 5, DESC, "created_at"));
+                PageRequest.of(0, 5, DESC, "createdAt"));
 
         assertAll(
                 () -> assertThat(myPosts.getPosts()).usingRecursiveComparison()
@@ -500,7 +500,7 @@ class PostServiceTest extends ServiceTest {
         postRepository.save(post3);
 
         PagePostsResponse myPosts = postService.searchWithQuery(query,
-                PageRequest.of(0, 5, DESC, "created_at"));
+                PageRequest.of(0, 5, DESC, "createdAt"));
 
         assertThat(myPosts.getTotalPostCount()).isEqualTo(3);
     }
@@ -531,7 +531,7 @@ class PostServiceTest extends ServiceTest {
                 PageRequest.of(0, 5, DESC, "createdAt"));
 
         PagePostsResponse pagePostsResponse2 = postService.searchWithQuery("",
-                PageRequest.of(0, 5, DESC, "createdAt"));
+                PageRequest.of(0, 2, DESC, "createdAt"));
 
         assertAll(
                 () -> assertThat(pagePostsResponse.getPosts()).usingRecursiveComparison()

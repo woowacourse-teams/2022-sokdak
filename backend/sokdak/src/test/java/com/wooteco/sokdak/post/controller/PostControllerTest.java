@@ -280,11 +280,52 @@ class PostControllerTest extends ControllerTest {
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(AUTHORIZATION, "Bearer any")
                 .when().get("/posts?query=제목&size=2&page=0")
                 .then().log().all()
                 .assertThat()
                 .apply(document("search/posts/success"))
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("or 게시글 검색 시 200 반환")
+    @Test
+    void searchPosts_or() {
+        PageRequest pageRequest = PageRequest.of(0, 2);
+        PagePostsResponse pagePostsResponse = new PagePostsResponse(
+                List.of(POSTS_ELEMENT_RESPONSE_2, POSTS_ELEMENT_RESPONSE_1),
+                5,
+                10);
+        doReturn(pagePostsResponse)
+                .when(postService)
+                .findMyPosts(refEq(pageRequest), any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/posts?query=제목2|제목1&size=2&page=0")
+                .then().log().all()
+                .assertThat()
+                .apply(document("search/posts/success/or"))
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("and 게시글 검색 시 200 반환")
+    @Test
+    void searchPosts_and() {
+        PageRequest pageRequest = PageRequest.of(0, 2);
+        PagePostsResponse pagePostsResponse = new PagePostsResponse(
+                List.of(POSTS_ELEMENT_RESPONSE_2, POSTS_ELEMENT_RESPONSE_1),
+                5,
+                10);
+        doReturn(pagePostsResponse)
+                .when(postService)
+                .findMyPosts(refEq(pageRequest), any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/posts?query=목&제&size=2&page=0")
+                .then().log().all()
+                .assertThat()
+                .apply(document("search/posts/success/and"))
                 .statusCode(HttpStatus.OK.value());
     }
 

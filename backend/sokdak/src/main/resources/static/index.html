@@ -493,12 +493,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#_게시글_추천">7.1. 게시글 추천</a></li>
 <li><a href="#_댓글_추천">7.2. 댓글 추천</a></li>
+<li><a href="#_해시태그로_검색">7.3. 해시태그로 검색</a></li>
+<li><a href="#_해시태그_목록_조회">7.4. 해시태그 목록 조회</a></li>
 </ul>
 </li>
-<li><a href="#_해시태그">8. 해시태그</a>
+<li><a href="#_검색">8. 검색</a>
 <ul class="sectlevel2">
-<li><a href="#_해시태그로_검색">8.1. 해시태그로 검색</a></li>
-<li><a href="#_해시태그_목록_조회">8.2. 해시태그 목록 조회</a></li>
+<li><a href="#_특정_키워드로_검색">8.1. 특정 키워드로 검색</a></li>
+<li><a href="#_or_검색">8.2. or 검색</a></li>
+<li><a href="#_and_검색">8.3. and 검색</a></li>
 </ul>
 </li>
 <li><a href="#_신고">9. 신고</a></li>
@@ -882,11 +885,11 @@ Content-Length: 22
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /members/signup HTTP/1.1
 Content-Type: application/json
 Content-Type: application/json
-Content-Length: 177
+Content-Length: 163
 Host: localhost:8080
 
 {
-  "email" : "test@gmail.com",
+  "email" : "",
   "username" : "username",
   "nickname" : "nickname",
   "code" : "a1b1c1",
@@ -1223,7 +1226,7 @@ Host: localhost:8080
 <h6 id="_아이디나_비밀번호가_잘못되었을_경우_http_response"><a class="link" href="#_아이디나_비밀번호가_잘못되었을_경우_http_response">HTTP response</a></h6>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 401 Unauthorized
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
@@ -1266,35 +1269,35 @@ Vary: Access-Control-Request-Headers</code></pre>
 </div>
 </div>
 </div>
-  <div class="sect2">
-    <h3 id="_리프레시"><a class="link" href="#_리프레시">3.3. 리프레시</a></h3>
-    <div class="sect3">
-      <h4 id="_성공_9"><a class="link" href="#_성공_9">3.3.1. 성공</a></h4>
-      <div class="sect4">
-        <h5 id="_성공_9_http_request"><a class="link" href="#_성공_9_http_request">HTTP request</a></h5>
-        <div class="listingblock">
-          <div class="content">
+<div class="sect2">
+<h3 id="_리프레시"><a class="link" href="#_리프레시">3.3. 리프레시</a></h3>
+<div class="sect3">
+<h4 id="_성공_9"><a class="link" href="#_성공_9">3.3.1. 성공</a></h4>
+<div class="sect4">
+<h5 id="_성공_9_http_request"><a class="link" href="#_성공_9_http_request">HTTP request</a></h5>
+<div class="listingblock">
+<div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /refresh HTTP/1.1
 Authorization: any
 Refresh-Token: any
 Host: localhost:8080</code></pre>
-          </div>
-        </div>
-      </div>
-      <div class="sect4">
-        <h5 id="_성공_9_http_response"><a class="link" href="#_성공_9_http_response">HTTP response</a></h5>
-        <div class="listingblock">
-          <div class="content">
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_성공_9_http_response"><a class="link" href="#_성공_9_http_response">HTTP response</a></h5>
+<div class="listingblock">
+<div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Authorization: Bearer null</code></pre>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1303,9 +1306,9 @@ Authorization: Bearer null</code></pre>
 <div class="sect2">
 <h3 id="_게시판_목록_조회"><a class="link" href="#_게시판_목록_조회">4.1. 게시판 목록 조회</a></h3>
 <div class="sect3">
-  <h4 id="_성공_10"><a class="link" href="#_성공_10">4.1.1. 성공</a></h4>
+<h4 id="_성공_10"><a class="link" href="#_성공_10">4.1.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_10_http_request"><a class="link" href="#_성공_10_http_request">HTTP request</a></h5>
+<h5 id="_성공_10_http_request"><a class="link" href="#_성공_10_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /boards HTTP/1.1
@@ -1316,7 +1319,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_10_http_response"><a class="link" href="#_성공_10_http_response">HTTP response</a></h5>
+<h5 id="_성공_10_http_response"><a class="link" href="#_성공_10_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -1336,29 +1339,30 @@ Vary: Access-Control-Request-Headers</code></pre>
 <div class="sect2">
 <h3 id="_글_작성하기"><a class="link" href="#_글_작성하기">5.1. 글 작성하기</a></h3>
 <div class="sect3">
-  <h4 id="_성공_11"><a class="link" href="#_성공_11">5.1.1. 성공</a></h4>
+<h4 id="_성공_11"><a class="link" href="#_성공_11">5.1.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_11_http_request"><a class="link" href="#_성공_11_http_request">HTTP request</a></h5>
+<h5 id="_성공_11_http_request"><a class="link" href="#_성공_11_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /boards/1/posts HTTP/1.1
 Content-Type: application/json
 Content-Type: application/json
 Authorization: any
-Content-Length: 112
+Content-Length: 132
 Host: localhost:8080
 
 {
   "title" : "제목",
   "content" : "본문",
   "anonymous" : false,
-  "hashtags" : [ "태그1", "태그2" ]
+  "hashtags" : [ "태그1", "태그2" ],
+  "imageName" : ""
 }</code></pre>
 </div>
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_11_http_response"><a class="link" href="#_성공_11_http_response">HTTP response</a></h5>
+<h5 id="_성공_11_http_response"><a class="link" href="#_성공_11_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
@@ -1382,14 +1386,15 @@ Location: /posts/0</code></pre>
 Content-Type: application/json
 Content-Type: application/json
 Authorization: any
-Content-Length: 87
+Content-Length: 107
 Host: localhost:8080
 
 {
   "title" : null,
   "content" : "본문",
   "anonymous" : false,
-  "hashtags" : [ ]
+  "hashtags" : [ ],
+  "imageName" : ""
 }</code></pre>
 </div>
 </div>
@@ -1422,14 +1427,15 @@ Content-Length: 71
 Content-Type: application/json
 Content-Type: application/json
 Authorization: any
-Content-Length: 87
+Content-Length: 107
 Host: localhost:8080
 
 {
   "title" : "제목",
   "content" : null,
   "anonymous" : false,
-  "hashtags" : [ ]
+  "hashtags" : [ ],
+  "imageName" : ""
 }</code></pre>
 </div>
 </div>
@@ -1457,9 +1463,9 @@ Content-Length: 73
 <div class="sect2">
 <h3 id="_글_목록_조회"><a class="link" href="#_글_목록_조회">5.2. 글 목록 조회</a></h3>
 <div class="sect3">
-  <h4 id="_성공_12"><a class="link" href="#_성공_12">5.2.1. 성공</a></h4>
+<h4 id="_성공_12"><a class="link" href="#_성공_12">5.2.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_12_http_request"><a class="link" href="#_성공_12_http_request">HTTP request</a></h5>
+<h5 id="_성공_12_http_request"><a class="link" href="#_성공_12_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /boards/1/posts?size=3&amp;page=0 HTTP/1.1
@@ -1471,7 +1477,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_12_http_response"><a class="link" href="#_성공_12_http_response">HTTP response</a></h5>
+<h5 id="_성공_12_http_response"><a class="link" href="#_성공_12_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -1479,14 +1485,14 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
-Content-Length: 462
+Content-Length: 463
 
 {
   "posts" : [ {
     "id" : 1,
     "title" : "제목1",
     "content" : "본문1",
-    "createdAt" : "2022-08-17T16:56:14.79177",
+    "createdAt" : "2022-10-18T11:35:58.879534",
     "likeCount" : 0,
     "commentCount" : 0,
     "modified" : false,
@@ -1495,7 +1501,7 @@ Content-Length: 462
     "id" : 2,
     "title" : "제목2",
     "content" : "본문2",
-    "createdAt" : "2022-08-17T16:56:14.791959",
+    "createdAt" : "2022-10-18T11:35:58.879548",
     "likeCount" : 0,
     "commentCount" : 0,
     "modified" : false,
@@ -1511,9 +1517,9 @@ Content-Length: 462
 <div class="sect2">
 <h3 id="_글_상세_보기"><a class="link" href="#_글_상세_보기">5.3. 글 상세 보기</a></h3>
 <div class="sect3">
-  <h4 id="_성공_13"><a class="link" href="#_성공_13">5.3.1. 성공</a></h4>
+<h4 id="_성공_13"><a class="link" href="#_성공_13">5.3.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_13_http_request"><a class="link" href="#_성공_13_http_request">HTTP request</a></h5>
+<h5 id="_성공_13_http_request"><a class="link" href="#_성공_13_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /posts/1 HTTP/1.1
@@ -1524,7 +1530,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_13_http_response"><a class="link" href="#_성공_13_http_response">HTTP response</a></h5>
+<h5 id="_성공_13_http_response"><a class="link" href="#_성공_13_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -1532,7 +1538,7 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
-Content-Length: 312
+Content-Length: 334
 
 {
   "id" : 1,
@@ -1545,11 +1551,12 @@ Content-Length: 312
     "id" : 1,
     "name" : "gogo"
   } ],
-  "createdAt" : "2022-08-17T16:56:15.040285",
+  "createdAt" : "2022-10-18T11:35:59.133998",
   "likeCount" : 0,
-  "postLike" : false,
+  "like" : false,
   "authorized" : true,
-  "modified" : false
+  "modified" : false,
+  "imageName" : null
 }</code></pre>
 </div>
 </div>
@@ -1594,28 +1601,29 @@ Content-Length: 57
 <div class="sect2">
 <h3 id="_글_수정하기"><a class="link" href="#_글_수정하기">5.4. 글 수정하기</a></h3>
 <div class="sect3">
-  <h4 id="_성공_14"><a class="link" href="#_성공_14">5.4.1. 성공</a></h4>
+<h4 id="_성공_14"><a class="link" href="#_성공_14">5.4.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_14_http_request"><a class="link" href="#_성공_14_http_request">HTTP request</a></h5>
+<h5 id="_성공_14_http_request"><a class="link" href="#_성공_14_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /posts/1 HTTP/1.1
 Content-Type: application/json
 Content-Type: application/json
 Authorization: any
-Content-Length: 94
+Content-Length: 114
 Host: localhost:8080
 
 {
   "title" : "변경된 제목",
   "content" : "변경된 본문",
-  "hashtags" : [ "tag" ]
+  "hashtags" : [ "tag" ],
+  "imageName" : ""
 }</code></pre>
 </div>
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_14_http_response"><a class="link" href="#_성공_14_http_response">HTTP response</a></h5>
+<h5 id="_성공_14_http_response"><a class="link" href="#_성공_14_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
@@ -1638,13 +1646,14 @@ Vary: Access-Control-Request-Headers</code></pre>
 Content-Type: application/json
 Content-Type: application/json
 Authorization: any
-Content-Length: 94
+Content-Length: 114
 Host: localhost:8080
 
 {
   "title" : "변경된 제목",
   "content" : "변경된 본문",
-  "hashtags" : [ "tag" ]
+  "hashtags" : [ "tag" ],
+  "imageName" : ""
 }</code></pre>
 </div>
 </div>
@@ -1677,13 +1686,14 @@ Content-Length: 43
 Content-Type: application/json
 Content-Type: application/json
 Authorization: any
-Content-Length: 80
+Content-Length: 100
 Host: localhost:8080
 
 {
   "title" : null,
   "content" : "변경된 본문",
-  "hashtags" : [ "tag" ]
+  "hashtags" : [ "tag" ],
+  "imageName" : ""
 }</code></pre>
 </div>
 </div>
@@ -1711,9 +1721,9 @@ Content-Length: 57
 <div class="sect2">
 <h3 id="_글_삭제하기"><a class="link" href="#_글_삭제하기">5.5. 글 삭제하기</a></h3>
 <div class="sect3">
-  <h4 id="_성공_15"><a class="link" href="#_성공_15">5.5.1. 성공</a></h4>
+<h4 id="_성공_15"><a class="link" href="#_성공_15">5.5.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_15_http_request"><a class="link" href="#_성공_15_http_request">HTTP request</a></h5>
+<h5 id="_성공_15_http_request"><a class="link" href="#_성공_15_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /posts/1 HTTP/1.1
@@ -1725,7 +1735,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_15_http_response"><a class="link" href="#_성공_15_http_response">HTTP response</a></h5>
+<h5 id="_성공_15_http_response"><a class="link" href="#_성공_15_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
@@ -1780,19 +1790,20 @@ Content-Length: 43
 <div class="sect2">
 <h3 id="_댓글_작성"><a class="link" href="#_댓글_작성">6.1. 댓글 작성</a></h3>
 <div class="sect3">
-  <h4 id="_성공_16"><a class="link" href="#_성공_16">6.1.1. 성공</a></h4>
+<h4 id="_성공_16"><a class="link" href="#_성공_16">6.1.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_16_http_request"><a class="link" href="#_성공_16_http_request">HTTP request</a></h5>
+<h5 id="_성공_16_http_request"><a class="link" href="#_성공_16_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /posts/1/comments HTTP/1.1
 Content-Type: application/json
 Content-Type: application/json
 Authorization: any
-Content-Length: 48
+Content-Length: 65
 Host: localhost:8080
 
 {
+  "boardId" : 2,
   "content" : "댓글",
   "anonymous" : true
 }</code></pre>
@@ -1800,7 +1811,7 @@ Host: localhost:8080
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_16_http_response"><a class="link" href="#_성공_16_http_response">HTTP response</a></h5>
+<h5 id="_성공_16_http_response"><a class="link" href="#_성공_16_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
@@ -1823,11 +1834,12 @@ Location: /comments/0</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /posts/1/comments HTTP/1.1
 Content-Type: application/json
 Content-Type: application/json
-Content-Length: 44
+Authorization: any
+Content-Length: 61
 Host: localhost:8080
-Cookie: JSESSIONID=mySessionId
 
 {
+  "boardId" : 2,
   "content" : null,
   "anonymous" : true
 }</code></pre>
@@ -1857,19 +1869,20 @@ Content-Length: 71
 <div class="sect2">
 <h3 id="_대댓글_작성"><a class="link" href="#_대댓글_작성">6.2. 대댓글 작성</a></h3>
 <div class="sect3">
-  <h4 id="_성공_17"><a class="link" href="#_성공_17">6.2.1. 성공</a></h4>
+<h4 id="_성공_17"><a class="link" href="#_성공_17">6.2.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_17_http_request"><a class="link" href="#_성공_17_http_request">HTTP request</a></h5>
+<h5 id="_성공_17_http_request"><a class="link" href="#_성공_17_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /comments/1/reply HTTP/1.1
 Content-Type: application/json
 Content-Type: application/json
 Authorization: any
-Content-Length: 51
+Content-Length: 68
 Host: localhost:8080
 
 {
+  "boardId" : 2,
   "content" : "대댓글",
   "anonymous" : true
 }</code></pre>
@@ -1877,7 +1890,7 @@ Host: localhost:8080
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_17_http_response"><a class="link" href="#_성공_17_http_response">HTTP response</a></h5>
+<h5 id="_성공_17_http_response"><a class="link" href="#_성공_17_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
@@ -1893,9 +1906,9 @@ Location: /comments/0</code></pre>
 <div class="sect2">
 <h3 id="_댓글_목록_조회"><a class="link" href="#_댓글_목록_조회">6.3. 댓글 목록 조회</a></h3>
 <div class="sect3">
-  <h4 id="_성공_18"><a class="link" href="#_성공_18">6.3.1. 성공</a></h4>
+<h4 id="_성공_18"><a class="link" href="#_성공_18">6.3.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_18_http_request"><a class="link" href="#_성공_18_http_request">HTTP request</a></h5>
+<h5 id="_성공_18_http_request"><a class="link" href="#_성공_18_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /posts/1/comments HTTP/1.1
@@ -1904,7 +1917,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_18_http_response"><a class="link" href="#_성공_18_http_response">HTTP response</a></h5>
+<h5 id="_성공_18_http_response"><a class="link" href="#_성공_18_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -1919,43 +1932,43 @@ Content-Length: 1087
     "id" : 1,
     "nickname" : "조시1",
     "content" : "댓글1",
-    "createdAt" : "2022-08-17T16:55:45.880872",
+    "createdAt" : "2022-10-18T11:35:17.046291",
     "blocked" : false,
     "postWriter" : false,
     "authorized" : false,
     "likeCount" : 3,
-    "postLike" : false,
+    "like" : false,
     "replies" : [ {
       "id" : 3,
       "nickname" : "이스트1",
       "content" : "대댓글1",
-      "createdAt" : "2022-08-17T16:55:45.880837",
+      "createdAt" : "2022-10-18T11:35:17.046253",
       "blocked" : false,
       "postWriter" : false,
       "authorized" : false,
       "likeCount" : 2,
-      "postLike" : false
+      "like" : false
     }, {
       "id" : 4,
       "nickname" : "이스트2",
       "content" : "대댓글2",
-      "createdAt" : "2022-08-17T16:55:45.880863",
+      "createdAt" : "2022-10-18T11:35:17.046283",
       "blocked" : false,
       "postWriter" : false,
       "authorized" : false,
       "likeCount" : 3,
-      "postLike" : true
+      "like" : true
     } ]
   }, {
     "id" : 2,
     "nickname" : "조시2",
     "content" : "댓글2",
-    "createdAt" : "2022-08-17T16:55:45.880898",
+    "createdAt" : "2022-10-18T11:35:17.046317",
     "blocked" : false,
     "postWriter" : true,
     "authorized" : false,
     "likeCount" : 2,
-    "postLike" : true,
+    "like" : true,
     "replies" : [ ]
   } ],
   "totalCount" : 4
@@ -1968,9 +1981,9 @@ Content-Length: 1087
 <div class="sect2">
 <h3 id="_댓글_삭제"><a class="link" href="#_댓글_삭제">6.4. 댓글 삭제</a></h3>
 <div class="sect3">
-  <h4 id="_성공_19"><a class="link" href="#_성공_19">6.4.1. 성공</a></h4>
+<h4 id="_성공_19"><a class="link" href="#_성공_19">6.4.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_19_http_request"><a class="link" href="#_성공_19_http_request">HTTP request</a></h5>
+<h5 id="_성공_19_http_request"><a class="link" href="#_성공_19_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /comments/1 HTTP/1.1
@@ -1979,7 +1992,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_19_http_response"><a class="link" href="#_성공_19_http_response">HTTP response</a></h5>
+<h5 id="_성공_19_http_response"><a class="link" href="#_성공_19_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
@@ -1993,78 +2006,54 @@ Vary: Access-Control-Request-Headers</code></pre>
 </div>
 </div>
 </div>
-  <div class="sect1">
-    <h2 id="_추천"><a class="link" href="#_추천">7. 추천</a></h2>
-    <div class="sectionbody">
-      <div class="sect2">
-        <h3 id="_게시글_추천"><a class="link" href="#_게시글_추천">7.1. 게시글 추천</a></h3>
-        <div class="sect3">
-          <h4 id="_성공_20"><a class="link" href="#_성공_20">7.1.1. 성공</a></h4>
-          <div class="sect4">
-            <h5 id="_성공_20_http_request"><a class="link" href="#_성공_20_http_request">HTTP request</a></h5>
-            <div class="listingblock">
-              <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /posts/1/postLike HTTP/1.1
-Content-Type: application/json
-Content-Type: application/json
-Authorization: any
-Host: localhost:8080</code></pre>
-              </div>
-            </div>
-          </div>
-          <div class="sect4">
-            <h5 id="_성공_20_http_response"><a class="link" href="#_성공_20_http_response">HTTP response</a></h5>
-            <div class="listingblock">
-              <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers</code></pre>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="sect2">
-        <h3 id="_댓글_추천"><a class="link" href="#_댓글_추천">7.2. 댓글 추천</a></h3>
-        <div class="sect3">
-          <h4 id="_성공_21"><a class="link" href="#_성공_21">7.2.1. 성공</a></h4>
-          <div class="sect4">
-            <h5 id="_성공_21_http_request"><a class="link" href="#_성공_21_http_request">HTTP request</a></h5>
-            <div class="listingblock">
-              <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /comments/1/postLike HTTP/1.1
-Content-Type: application/json
-Content-Type: application/json
-Authorization: any
-Host: localhost:8080</code></pre>
-              </div>
-            </div>
-          </div>
-          <div class="sect4">
-            <h5 id="_성공_21_http_response"><a class="link" href="#_성공_21_http_response">HTTP response</a></h5>
-            <div class="listingblock">
-              <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers</code></pre>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 <div class="sect1">
-<h2 id="_해시태그"><a class="link" href="#_해시태그">8. 해시태그</a></h2>
+<h2 id="_추천"><a class="link" href="#_추천">7. 추천</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_해시태그로_검색"><a class="link" href="#_해시태그로_검색">8.1. 해시태그로 검색</a></h3>
+<h3 id="_게시글_추천"><a class="link" href="#_게시글_추천">7.1. 게시글 추천</a></h3>
 <div class="sect3">
-  <h4 id="_성공_22"><a class="link" href="#_성공_22">8.1.1. 성공</a></h4>
+<h4 id="_성공_20"><a class="link" href="#_성공_20">7.1.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_22_http_request"><a class="link" href="#_성공_22_http_request">HTTP request</a></h5>
+<h5 id="_성공_20_http_request"><a class="link" href="#_성공_20_http_request">HTTP request</a></h5>
+<div class="paragraph">
+<p>Snippet http-request not found for operation::postLike/post/success</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_성공_20_http_response"><a class="link" href="#_성공_20_http_response">HTTP response</a></h5>
+<div class="paragraph">
+<p>Snippet http-response not found for operation::postLike/post/success</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_댓글_추천"><a class="link" href="#_댓글_추천">7.2. 댓글 추천</a></h3>
+<div class="sect3">
+<h4 id="_성공_21"><a class="link" href="#_성공_21">7.2.1. 성공</a></h4>
+<div class="sect4">
+<h5 id="_성공_21_http_request"><a class="link" href="#_성공_21_http_request">HTTP request</a></h5>
+<div class="paragraph">
+<p>Snippet http-request not found for operation::postLike/comment/success</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_성공_21_http_response"><a class="link" href="#_성공_21_http_response">HTTP response</a></h5>
+<div class="paragraph">
+<p>Snippet http-response not found for operation::postLike/comment/success</p>
+</div>
+</div>
+<div class="paragraph">
+<p>시</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_해시태그로_검색"><a class="link" href="#_해시태그로_검색">7.3. 해시태그로 검색</a></h3>
+<div class="sect3">
+<h4 id="_성공_22"><a class="link" href="#_성공_22">7.3.1. 성공</a></h4>
+<div class="sect4">
+<h5 id="_성공_22_http_request"><a class="link" href="#_성공_22_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /posts?hashtag=%EC%86%8D%EB%8B%A5&amp;size=5&amp;page=0 HTTP/1.1
@@ -2075,7 +2064,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_22_http_response"><a class="link" href="#_성공_22_http_response">HTTP response</a></h5>
+<h5 id="_성공_22_http_response"><a class="link" href="#_성공_22_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -2112,7 +2101,7 @@ Content-Length: 470
 </div>
 </div>
 <div class="sect3">
-<h4 id="_실패_10"><a class="link" href="#_실패_10">8.1.2. 실패</a></h4>
+<h4 id="_실패_10"><a class="link" href="#_실패_10">7.3.2. 실패</a></h4>
 <div class="sect4">
 <h5 id="_댓글_내용이_없는_경우_2"><a class="link" href="#_댓글_내용이_없는_경우_2">댓글 내용이 없는 경우</a></h5>
 <div class="sect5">
@@ -2147,11 +2136,11 @@ Content-Length: 77
 </div>
 </div>
 <div class="sect2">
-<h3 id="_해시태그_목록_조회"><a class="link" href="#_해시태그_목록_조회">8.2. 해시태그 목록 조회</a></h3>
+<h3 id="_해시태그_목록_조회"><a class="link" href="#_해시태그_목록_조회">7.4. 해시태그 목록 조회</a></h3>
 <div class="sect3">
-  <h4 id="_성공_23"><a class="link" href="#_성공_23">8.2.1. 성공</a></h4>
+<h4 id="_성공_23"><a class="link" href="#_성공_23">7.4.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_23_http_request"><a class="link" href="#_성공_23_http_request">HTTP request</a></h5>
+<h5 id="_성공_23_http_request"><a class="link" href="#_성공_23_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /hashtags/popular?include=%ED%83%9C%EA%B7%B8&amp;limit=3 HTTP/1.1
@@ -2162,7 +2151,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_23_http_response"><a class="link" href="#_성공_23_http_response">HTTP response</a></h5>
+<h5 id="_성공_23_http_response"><a class="link" href="#_성공_23_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -2191,6 +2180,95 @@ Content-Length: 143
 </div>
 </div>
 <div class="sect1">
+<h2 id="_검색"><a class="link" href="#_검색">8. 검색</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_특정_키워드로_검색"><a class="link" href="#_특정_키워드로_검색">8.1. 특정 키워드로 검색</a></h3>
+<div class="sect3">
+<h4 id="_성공_24"><a class="link" href="#_성공_24">8.1.1. 성공</a></h4>
+<div class="sect4">
+<h5 id="_성공_24_http_request"><a class="link" href="#_성공_24_http_request">HTTP request</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /posts?query=%EC%A0%9C%EB%AA%A9&amp;size=2&amp;page=0 HTTP/1.1
+Content-Type: application/json
+Content-Type: application/json
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_성공_24_http_response"><a class="link" href="#_성공_24_http_response">HTTP response</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_or_검색"><a class="link" href="#_or_검색">8.2. or 검색</a></h3>
+<div class="sect3">
+<h4 id="_성공_25"><a class="link" href="#_성공_25">8.2.1. 성공</a></h4>
+<div class="sect4">
+<h5 id="_성공_25_http_request"><a class="link" href="#_성공_25_http_request">HTTP request</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /posts?query=%EC%A0%9C%EB%AA%A92%7C%EC%A0%9C%EB%AA%A91&amp;size=2&amp;page=0 HTTP/1.1
+Content-Type: application/json
+Content-Type: application/json
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_성공_25_http_response"><a class="link" href="#_성공_25_http_response">HTTP response</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_and_검색"><a class="link" href="#_and_검색">8.3. and 검색</a></h3>
+<div class="sect3">
+<h4 id="_성공_26"><a class="link" href="#_성공_26">8.3.1. 성공</a></h4>
+<div class="sect4">
+<h5 id="_성공_26_http_request"><a class="link" href="#_성공_26_http_request">HTTP request</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /posts?query=%EB%AA%A9&amp;%EC%A0%9C&amp;size=2&amp;page=0&amp;%EC%A0%9C= HTTP/1.1
+Content-Type: application/json
+Content-Type: application/json
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_성공_26_http_response"><a class="link" href="#_성공_26_http_response">HTTP response</a></h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_신고"><a class="link" href="#_신고">9. 신고</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -2204,9 +2282,9 @@ Content-Length: 143
 <div class="sect2">
 <h3 id="_닉네임_조회"><a class="link" href="#_닉네임_조회">10.1. 닉네임 조회</a></h3>
 <div class="sect3">
-  <h4 id="_성공_24"><a class="link" href="#_성공_24">10.1.1. 성공</a></h4>
+<h4 id="_성공_27"><a class="link" href="#_성공_27">10.1.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_24_http_request"><a class="link" href="#_성공_24_http_request">HTTP request</a></h5>
+<h5 id="_성공_27_http_request"><a class="link" href="#_성공_27_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /members/nickname HTTP/1.1
@@ -2218,7 +2296,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_24_http_response"><a class="link" href="#_성공_24_http_response">HTTP response</a></h5>
+<h5 id="_성공_27_http_response"><a class="link" href="#_성공_27_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -2239,9 +2317,9 @@ Content-Length: 34
 <div class="sect2">
 <h3 id="_닉네임_변경"><a class="link" href="#_닉네임_변경">10.2. 닉네임 변경</a></h3>
 <div class="sect3">
-  <h4 id="_성공_25"><a class="link" href="#_성공_25">10.2.1. 성공</a></h4>
+<h4 id="_성공_28"><a class="link" href="#_성공_28">10.2.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_25_http_request"><a class="link" href="#_성공_25_http_request">HTTP request</a></h5>
+<h5 id="_성공_28_http_request"><a class="link" href="#_성공_28_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /members/nickname HTTP/1.1
@@ -2258,13 +2336,14 @@ Host: localhost:8080
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_25_http_response"><a class="link" href="#_성공_25_http_response">HTTP response</a></h5>
+<h5 id="_성공_28_http_response"><a class="link" href="#_성공_28_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
 Vary: Origin
 Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers</code></pre>
+Vary: Access-Control-Request-Headers
+Authorization: Bearer null</code></pre>
 </div>
 </div>
 </div>
@@ -2350,7 +2429,7 @@ Content-Length: 56
 <div class="sect2">
 <h3 id="_내가_쓴_글_조회"><a class="link" href="#_내가_쓴_글_조회">10.3. 내가 쓴 글 조회</a></h3>
 <div class="sect3">
-  <h4 id="_성공_26"><a class="link" href="#_성공_26">10.3.1. 성공</a></h4>
+<h4 id="_성공_29"><a class="link" href="#_성공_29">10.3.1. 성공</a></h4>
 <div class="sect4">
 <h5 id="_해당_페이지의_글이_존재할_경우"><a class="link" href="#_해당_페이지의_글이_존재할_경우">해당 페이지의 글이 존재할 경우</a></h5>
 <div class="sect5">
@@ -2372,32 +2451,7 @@ Host: localhost:8080</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json
-Content-Length: 465
-
-{
-  "posts" : [ {
-    "id" : 2,
-    "title" : "제목2",
-    "content" : "본문2",
-    "createdAt" : "2022-08-17T16:56:14.791959",
-    "likeCount" : 0,
-    "commentCount" : 0,
-    "modified" : false,
-    "blocked" : false
-  }, {
-    "id" : 1,
-    "title" : "제목1",
-    "content" : "본문1",
-    "createdAt" : "2022-08-17T16:56:14.79177",
-    "likeCount" : 0,
-    "commentCount" : 0,
-    "modified" : false,
-    "blocked" : false
-  } ],
-  "totalPageCount" : 5
-}</code></pre>
+Vary: Access-Control-Request-Headers</code></pre>
 </div>
 </div>
 </div>
@@ -2423,14 +2477,7 @@ Host: localhost:8080</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json
-Content-Length: 43
-
-{
-  "posts" : [ ],
-  "totalPageCount" : 5
-}</code></pre>
+Vary: Access-Control-Request-Headers</code></pre>
 </div>
 </div>
 </div>
@@ -2440,9 +2487,9 @@ Content-Length: 43
 <div class="sect2">
 <h3 id="_새로_등록된_알림이_있는지_조회"><a class="link" href="#_새로_등록된_알림이_있는지_조회">10.4. 새로 등록된 알림이 있는지 조회</a></h3>
 <div class="sect3">
-  <h4 id="_성공_27"><a class="link" href="#_성공_27">10.4.1. 성공</a></h4>
+<h4 id="_성공_30"><a class="link" href="#_성공_30">10.4.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_27_http_request"><a class="link" href="#_성공_27_http_request">HTTP request</a></h5>
+<h5 id="_성공_30_http_request"><a class="link" href="#_성공_30_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /notifications/check HTTP/1.1
@@ -2454,7 +2501,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_27_http_response"><a class="link" href="#_성공_27_http_response">HTTP response</a></h5>
+<h5 id="_성공_30_http_response"><a class="link" href="#_성공_30_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -2475,9 +2522,9 @@ Content-Length: 24
 <div class="sect2">
 <h3 id="_알림_조회"><a class="link" href="#_알림_조회">10.5. 알림 조회</a></h3>
 <div class="sect3">
-  <h4 id="_성공_28"><a class="link" href="#_성공_28">10.5.1. 성공</a></h4>
+<h4 id="_성공_31"><a class="link" href="#_성공_31">10.5.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_28_http_request"><a class="link" href="#_성공_28_http_request">HTTP request</a></h5>
+<h5 id="_성공_31_http_request"><a class="link" href="#_성공_31_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /notifications?size=2&amp;page=1 HTTP/1.1
@@ -2489,7 +2536,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_28_http_response"><a class="link" href="#_성공_28_http_response">HTTP response</a></h5>
+<h5 id="_성공_31_http_response"><a class="link" href="#_성공_31_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -2503,13 +2550,13 @@ Content-Length: 347
   "notifications" : [ {
     "id" : 1,
     "content" : "게시글 제목",
-    "createdAt" : "2022-08-17T16:56:10.990202",
+    "createdAt" : "2022-10-18T11:35:53.005506",
     "type" : "POST_REPORT",
     "postId" : 1
   }, {
     "id" : 1,
     "content" : "게시글 제목",
-    "createdAt" : "2022-08-17T16:56:10.990224",
+    "createdAt" : "2022-10-18T11:35:53.005641",
     "type" : "NEW_COMMENT",
     "postId" : 1
   } ],
@@ -2555,9 +2602,9 @@ Vary: Access-Control-Request-Headers</code></pre>
 <div class="sect2">
 <h3 id="_관리자_페이지에서_글_삭제하기"><a class="link" href="#_관리자_페이지에서_글_삭제하기">11.1. 관리자 페이지에서 글 삭제하기</a></h3>
 <div class="sect3">
-  <h4 id="_성공_29"><a class="link" href="#_성공_29">11.1.1. 성공</a></h4>
+<h4 id="_성공_32"><a class="link" href="#_성공_32">11.1.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_29_http_request"><a class="link" href="#_성공_29_http_request">HTTP request</a></h5>
+<h5 id="_성공_32_http_request"><a class="link" href="#_성공_32_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /admin/posts/1 HTTP/1.1
@@ -2569,7 +2616,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_29_http_response"><a class="link" href="#_성공_29_http_response">HTTP response</a></h5>
+<h5 id="_성공_32_http_response"><a class="link" href="#_성공_32_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
@@ -2619,9 +2666,9 @@ Content-Length: 56
 <div class="sect2">
 <h3 id="_관리자_페이지에서_글_블락하기"><a class="link" href="#_관리자_페이지에서_글_블락하기">11.2. 관리자 페이지에서 글 블락하기</a></h3>
 <div class="sect3">
-  <h4 id="_성공_30"><a class="link" href="#_성공_30">11.2.1. 성공</a></h4>
+<h4 id="_성공_33"><a class="link" href="#_성공_33">11.2.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_30_http_request"><a class="link" href="#_성공_30_http_request">HTTP request</a></h5>
+<h5 id="_성공_33_http_request"><a class="link" href="#_성공_33_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /admin/posts/1/postreports/5 HTTP/1.1
@@ -2633,7 +2680,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_30_http_response"><a class="link" href="#_성공_30_http_response">HTTP response</a></h5>
+<h5 id="_성공_33_http_response"><a class="link" href="#_성공_33_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
@@ -2683,9 +2730,9 @@ Content-Length: 56
 <div class="sect2">
 <h3 id="_관리자_페이지에서_글_블락_복구하기"><a class="link" href="#_관리자_페이지에서_글_블락_복구하기">11.3. 관리자 페이지에서 글 블락 복구하기</a></h3>
 <div class="sect3">
-  <h4 id="_성공_31"><a class="link" href="#_성공_31">11.3.1. 성공</a></h4>
+<h4 id="_성공_34"><a class="link" href="#_성공_34">11.3.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_31_http_request"><a class="link" href="#_성공_31_http_request">HTTP request</a></h5>
+<h5 id="_성공_34_http_request"><a class="link" href="#_성공_34_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">DELETE /admin/posts/1/postreports HTTP/1.1
@@ -2697,7 +2744,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_31_http_response"><a class="link" href="#_성공_31_http_response">HTTP response</a></h5>
+<h5 id="_성공_34_http_response"><a class="link" href="#_성공_34_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
@@ -2747,9 +2794,9 @@ Content-Length: 56
 <div class="sect2">
 <h3 id="_관리자_페이지에서_글_신고_목록_조회하기"><a class="link" href="#_관리자_페이지에서_글_신고_목록_조회하기">11.4. 관리자 페이지에서 글 신고 목록 조회하기</a></h3>
 <div class="sect3">
-  <h4 id="_성공_32"><a class="link" href="#_성공_32">11.4.1. 성공</a></h4>
+<h4 id="_성공_35"><a class="link" href="#_성공_35">11.4.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_32_http_request"><a class="link" href="#_성공_32_http_request">HTTP request</a></h5>
+<h5 id="_성공_35_http_request"><a class="link" href="#_성공_35_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /admin/postreports HTTP/1.1
@@ -2761,7 +2808,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_32_http_response"><a class="link" href="#_성공_32_http_response">HTTP response</a></h5>
+<h5 id="_성공_35_http_response"><a class="link" href="#_성공_35_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -2769,7 +2816,7 @@ Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
 Content-Type: application/json
-Content-Length: 308
+Content-Length: 310
 
 {
   "postReports" : [ {
@@ -2777,13 +2824,13 @@ Content-Length: 308
     "postId" : 1,
     "reporterId" : 1,
     "reportMessage" : "비속어",
-    "createdAt" : "2022-08-17T16:55:11.5885"
+    "createdAt" : "2022-10-18T11:34:42.436922"
   }, {
     "id" : 1,
     "postId" : 1,
     "reporterId" : 2,
     "reportMessage" : "비속어",
-    "createdAt" : "2022-08-17T16:55:11.588547"
+    "createdAt" : "2022-10-18T11:34:42.436966"
   } ]
 }</code></pre>
 </div>
@@ -2829,9 +2876,9 @@ Content-Length: 56
 <div class="sect2">
 <h3 id="_관리자_페이지에서_티켓_조회하기"><a class="link" href="#_관리자_페이지에서_티켓_조회하기">11.5. 관리자 페이지에서 티켓 조회하기</a></h3>
 <div class="sect3">
-  <h4 id="_성공_33"><a class="link" href="#_성공_33">11.5.1. 성공</a></h4>
+<h4 id="_성공_36"><a class="link" href="#_성공_36">11.5.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_33_http_request"><a class="link" href="#_성공_33_http_request">HTTP request</a></h5>
+<h5 id="_성공_36_http_request"><a class="link" href="#_성공_36_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /admin/tickets HTTP/1.1
@@ -2843,7 +2890,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_33_http_response"><a class="link" href="#_성공_33_http_response">HTTP response</a></h5>
+<h5 id="_성공_36_http_response"><a class="link" href="#_성공_36_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -2907,9 +2954,9 @@ Content-Length: 56
 <div class="sect2">
 <h3 id="_관리자_페이지에서_티켓_저장하기"><a class="link" href="#_관리자_페이지에서_티켓_저장하기">11.6. 관리자 페이지에서 티켓 저장하기</a></h3>
 <div class="sect3">
-  <h4 id="_성공_34"><a class="link" href="#_성공_34">11.6.1. 성공</a></h4>
+<h4 id="_성공_37"><a class="link" href="#_성공_37">11.6.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_34_http_request"><a class="link" href="#_성공_34_http_request">HTTP request</a></h5>
+<h5 id="_성공_37_http_request"><a class="link" href="#_성공_37_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /admin/tickets HTTP/1.1
@@ -2928,7 +2975,7 @@ Host: localhost:8080
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_34_http_response"><a class="link" href="#_성공_34_http_response">HTTP response</a></h5>
+<h5 id="_성공_37_http_response"><a class="link" href="#_성공_37_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -2985,9 +3032,9 @@ Content-Length: 56
 <div class="sect2">
 <h3 id="_관리자_페이지에서_티켓_사용여부_수정하기"><a class="link" href="#_관리자_페이지에서_티켓_사용여부_수정하기">11.7. 관리자 페이지에서 티켓 사용여부 수정하기</a></h3>
 <div class="sect3">
-  <h4 id="_성공_35"><a class="link" href="#_성공_35">11.7.1. 성공</a></h4>
+<h4 id="_성공_38"><a class="link" href="#_성공_38">11.7.1. 성공</a></h4>
 <div class="sect4">
-  <h5 id="_성공_35_http_request"><a class="link" href="#_성공_35_http_request">HTTP request</a></h5>
+<h5 id="_성공_38_http_request"><a class="link" href="#_성공_38_http_request">HTTP request</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /admin/tickets HTTP/1.1
@@ -3006,7 +3053,7 @@ Host: localhost:8080
 </div>
 </div>
 <div class="sect4">
-  <h5 id="_성공_35_http_response"><a class="link" href="#_성공_35_http_response">HTTP response</a></h5>
+<h5 id="_성공_38_http_response"><a class="link" href="#_성공_38_http_response">HTTP response</a></h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -3066,7 +3113,7 @@ Content-Length: 56
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-  Last updated 2022-08-17 16:48:52 +0900
+Last updated 2022-10-18 11:26:06 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

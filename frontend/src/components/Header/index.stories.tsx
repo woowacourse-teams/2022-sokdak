@@ -14,9 +14,9 @@ export default {
 } as ComponentMeta<typeof Header>;
 
 const Template: ComponentStory<typeof Header> = () => {
-  const { setIsLogin, setUserName } = useContext(AuthContext);
+  const { setIsLogin, setUsername } = useContext(AuthContext);
   setIsLogin(true);
-  setUserName('hi');
+  setUsername('hi');
   return <Header />;
 };
 

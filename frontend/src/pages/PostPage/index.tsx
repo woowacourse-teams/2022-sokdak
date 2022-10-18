@@ -55,7 +55,7 @@ const PostPage = () => {
   });
 
   const handleLikeButton = () => {
-    if (data?.boardId) putLike({ id: id!, boardId: data?.boardId });
+    if (data?.boardId) putLike({ id: id! });
   };
 
   if (isError || !data) {

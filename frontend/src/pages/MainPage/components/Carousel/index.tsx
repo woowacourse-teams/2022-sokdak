@@ -34,31 +34,33 @@ const Carousel = () => {
   };
 
   return (
-    data?.posts.length !== 0 && (
-      <Styled.Container>
-        <Styled.Title>🔥 핫 게시판 🔥</Styled.Title>
-        {page !== 0 && <Styled.ArrowLeft onClick={handleClickLastPage}>{'<'}</Styled.ArrowLeft>}
-        {!isEnd && <Styled.ArrowRight onClick={handleClickNextPage}>{'>'}</Styled.ArrowRight>}
+    <>
+      {data?.posts.length !== 0 && (
+        <Styled.Container>
+          <Styled.Title>🔥 핫 게시판 🔥</Styled.Title>
+          {page !== 0 && <Styled.ArrowLeft onClick={handleClickLastPage}>{'<'}</Styled.ArrowLeft>}
+          {!isEnd && <Styled.ArrowRight onClick={handleClickNextPage}>{'>'}</Styled.ArrowRight>}
 
-        <Styled.CarouselContainer>
-          <Styled.PostContainer>
-            <Styled.PostListContainer page={page}>
-              {data?.posts.map((item, idx) => (
-                <Styled.ItemContainer key={item.id} ref={idx === data.posts.length - 1 ? ref : null}>
-                  <PostListItem
-                    {...item}
-                    handleClick={() => {
-                      handleClickPostItem(item.id);
-                    }}
-                    testid={item.id}
-                  />
-                </Styled.ItemContainer>
-              ))}
-            </Styled.PostListContainer>
-          </Styled.PostContainer>
-        </Styled.CarouselContainer>
-      </Styled.Container>
-    )
+          <Styled.CarouselContainer>
+            <Styled.PostContainer>
+              <Styled.PostListContainer page={page}>
+                {data?.posts.map((item, idx) => (
+                  <Styled.ItemContainer key={item.id} ref={idx === data.posts.length - 1 ? ref : null}>
+                    <PostListItem
+                      {...item}
+                      handleClick={() => {
+                        handleClickPostItem(item.id);
+                      }}
+                      testid={item.id}
+                    />
+                  </Styled.ItemContainer>
+                ))}
+              </Styled.PostListContainer>
+            </Styled.PostContainer>
+          </Styled.CarouselContainer>
+        </Styled.Container>
+      )}
+    </>
   );
 };
 

@@ -101,7 +101,7 @@ public class BoardService {
     }
 
     private boolean isApplicantBoard(Post originalPost) {
-        return originalPost.getBoardId() == APPLICANT_BOARD_ID;
+        return originalPost.getBoardId().equals(APPLICANT_BOARD_ID);
     }
 
     private void validateUserWritableBoard(Board board, String role) {

@@ -5,6 +5,7 @@ import ConfirmModal from '@/components/ConfirmModal';
 import useDeleteComment from '@/hooks/queries/comment/useDeleteComment';
 import useLikeComment from '@/hooks/queries/comment/useLikeComment';
 import useReportComment from '@/hooks/queries/comment/useReportComment';
+import useDebounce from '@/hooks/useDebounce';
 
 import * as Styled from './index.styles';
 
@@ -77,18 +78,19 @@ const CommentBox = ({
     reportComment({ id, message });
   };
 
-  const handleLikeButton = () => {
+  const handleLikeButton = useDebounce(() => {
     likeComment({ id });
-  };
-  if (isLoading) {
-    return <></>;
-  }
+  }, 100);
 
   useEffect(() => {
     if (openedFormId !== id) {
       setIsReplyFormOpen(false);
     }
   }, [openedFormId]);
+
+  if (isLoading) {
+    return <></>;
+  }
 
   if (!content) {
     return <Styled.EmptyComment>작성자에 의해 삭제된 댓글 입니다.</Styled.EmptyComment>;

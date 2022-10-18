@@ -14,6 +14,7 @@ import useLike from '@/hooks/queries/likes/useLike';
 import useDeletePost from '@/hooks/queries/post/useDeletePost';
 import usePost from '@/hooks/queries/post/usePost';
 import usePosts from '@/hooks/queries/post/usePosts';
+import useDebounce from '@/hooks/useDebounce';
 import useResponsive from '@/hooks/useResponsive';
 
 import * as Styled from './index.styles';
@@ -36,6 +37,11 @@ const PostPage = () => {
       staleTime: 1000 * 20,
     },
   });
+
+  const handleLikeButton = useDebounce(() => {
+    if (data?.boardId) putLike({ id: id! });
+  }, 100);
+
   const hasImage = !!(data && data.imageName !== '');
   const { mutate: putLike } = useLike({});
   const { mutate: deletePost } = useDeletePost({
@@ -53,10 +59,6 @@ const PostPage = () => {
       staleTime: 1000 * 20,
     },
   });
-
-  const handleLikeButton = () => {
-    if (data?.boardId) putLike({ id: id! });
-  };
 
   if (isError || !data) {
     return (

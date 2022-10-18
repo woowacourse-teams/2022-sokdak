@@ -1,6 +1,6 @@
 package com.wooteco.sokdak.auth.domain.encryptor;
 
 @FunctionalInterface
-public interface Encoder {
+public interface EncryptorI {
     String encode(String text);
 }

@@ -81,4 +81,13 @@ class PostRepositoryTest extends RepositoryTest {
                 () -> assertThat(result.getTotalPages()).isEqualTo(3)
         );
     }
+
+    @DisplayName("특정 쿼리에 부합하는 글을 시간순으로 가져오는지 확인")
+    @Test
+    void findPostPagesByQuery() {
+        Page<Post> result = postRepository.findPostPagesByQuery(PageRequest.of(0, 2, DESC, "created_at"), "");
+        assertThat(result.getContent()).containsExactly(post5, post4);
+        assertThat(result.getTotalPages()).isEqualTo(3);
+        assertThat(result.getTotalElements()).isEqualTo(5);
+    }
 }

@@ -1,5 +1,7 @@
 package com.wooteco.sokdak.post.service;
 
+import static org.springframework.data.domain.Sort.Direction.DESC;
+
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.auth.service.AuthService;
@@ -25,12 +27,15 @@ import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.Collections;
 import java.util.Locale;
+import java.util.Set;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +44,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class PostService {
 
+    private static final Pattern SPECIAL_CHARS = Pattern.compile("\\[‘”-#@;=*/+]");
+    private static final Set<String> STRING_SET = Set.of("update", "select", "delete", "insert");
     private final HashtagService hashtagService;
     private final BoardService boardService;
     private final PostRepository postRepository;
@@ -123,21 +130,20 @@ public class PostService {
 
     public PagePostsResponse searchWithQuery(@Nullable String query,
                                              Pageable pageable) {
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), DESC, "created_at");
         if (query != null) {
-            query = query.toLowerCase(Locale.ROOT);
-            query = changeNoSqlInjection(query);
+            query = changeNoSqlInjection(query.toLowerCase(Locale.ROOT));
         }
-        log.info("query: {}", query);
-        Page<Post> posts = postRepository.findPostPagesByQuery(
-                pageable, query);
+        if (query == null) {
+            query = "";
+        }
+        Page<Post> posts = postRepository.findPostPagesByQuery(pageable, query);
         return PagePostsResponse.of(posts.getContent(), posts.getTotalPages(), (int) posts.getTotalElements());
     }
 
     private String changeNoSqlInjection(String query) {
-        final Pattern specialChars = Pattern.compile("\\[‘”-#@;=*/+]");
-        query = specialChars.matcher(query).replaceAll("");
-        String[] reserve = new String[]{"update", "select", "delete", "insert"};
-        for (String s : reserve) {
+        query = SPECIAL_CHARS.matcher(query).replaceAll("");
+        for (String s : STRING_SET) {
             if (query.contains(s)) {
                 return "";
             }

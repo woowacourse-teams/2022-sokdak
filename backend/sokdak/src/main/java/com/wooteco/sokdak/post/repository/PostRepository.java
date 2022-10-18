@@ -15,7 +15,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findPostsByMemberOrderByCreatedAtDesc(Pageable pageable, Member member);
 
     @Query(value = "SELECT p.* from post p where "
-            + "(:query is null) "
+            + "(:query is null or :query = '') "
             + "or "
             + "(p.title regexp :query) "
             + "or "

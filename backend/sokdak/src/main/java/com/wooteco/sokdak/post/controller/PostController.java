@@ -11,7 +11,6 @@ import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.service.PostService;
 import com.wooteco.sokdak.support.token.Login;
 import java.net.URI;
-import java.util.Locale;
 import javax.annotation.Nullable;
 import javax.validation.Valid;
 import org.springframework.data.domain.Pageable;
@@ -59,7 +58,7 @@ public class PostController {
 
     @GetMapping(path = "/posts")
     public ResponseEntity<PagePostsResponse> searchPosts(@RequestParam @Nullable String query,
-                                                         @PageableDefault(sort = "created_at", direction = DESC) Pageable pageable) {
+                                                         @PageableDefault(sort = "createdAt", direction = DESC) Pageable pageable) {
         PagePostsResponse postsResponse = postService.searchWithQuery(query, pageable);
         return ResponseEntity.ok(postsResponse);
     }

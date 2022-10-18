@@ -3,6 +3,9 @@ package com.wooteco.sokdak.report.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.Nickname;
+import com.wooteco.sokdak.member.domain.Password;
+import com.wooteco.sokdak.member.domain.Username;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.report.domain.PostReport;
@@ -64,9 +67,9 @@ class PostReportRepositoryTest extends RepositoryTest {
         int expected = 3;
         for (int i = 0; i<expected; ++i) {
             Member member = Member.builder()
-                    .username("username" + i)
-                    .nickname("nickname" + i)
-                    .password("Abcd123!@")
+                    .username(Username.of(encryptor,"username" + i))
+                    .nickname(new Nickname("nickname" + i))
+                    .password(Password.of(encryptor, "Abcd123!@"))
                     .build();
             memberRepository.save(member);
             PostReport postReport = PostReport.builder()

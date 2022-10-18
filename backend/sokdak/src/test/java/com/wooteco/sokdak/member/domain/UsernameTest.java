@@ -14,7 +14,7 @@ class UsernameTest {
     @ParameterizedTest
     @ValueSource(strings = {"sok", "sokdaksokdaksokkk", "가sokdak", "sokdak!", "", " "})
     void create_Exception_Format(String invalidUsername) {
-        assertThatThrownBy(() -> new Username(EncryptorFactory.encryptor(), invalidUsername))
+        assertThatThrownBy(() -> Username.of(EncryptorFactory.encryptor(), invalidUsername))
                 .isInstanceOf(InvalidUsernameException.class);
     }
 }

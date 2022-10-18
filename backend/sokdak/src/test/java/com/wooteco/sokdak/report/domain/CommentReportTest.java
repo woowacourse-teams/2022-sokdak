@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.report.domain;
 
 import static com.wooteco.sokdak.util.fixture.CommentFixture.VALID_COMMENT_MESSAGE;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.ENCRYPTOR;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
@@ -10,6 +11,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.Nickname;
+import com.wooteco.sokdak.member.domain.Password;
+import com.wooteco.sokdak.member.domain.Username;
 import com.wooteco.sokdak.post.domain.Post;
 import java.util.Collections;
 import java.util.stream.Stream;
@@ -29,9 +33,9 @@ class CommentReportTest {
     @BeforeEach
     void setUp() {
         member = Member.builder()
-                .username(VALID_USERNAME)
-                .password(VALID_PASSWORD)
-                .nickname(VALID_NICKNAME)
+                .username(Username.of(ENCRYPTOR,VALID_USERNAME))
+                .password(Password.of(ENCRYPTOR, VALID_PASSWORD))
+                .nickname(new Nickname(VALID_NICKNAME))
                 .build();
         post = Post.builder()
                 .member(member)
@@ -74,14 +78,14 @@ class CommentReportTest {
 
     static Stream<Arguments> isOwnerArguments() {
         Member reporter = Member.builder()
-                .username("reporter")
-                .nickname("reporterNickname")
-                .password("Abcd123!@")
+                .username(Username.of(ENCRYPTOR,"reporter"))
+                .nickname(new Nickname("reporterNickname"))
+                .password(Password.of(ENCRYPTOR, "Abcd123!@"))
                 .build();
         Member member = Member.builder()
-                .username("member")
-                .nickname("memberNickname")
-                .password("Abcd123!@")
+                .username(Username.of(ENCRYPTOR,"member"))
+                .nickname(new Nickname("memberNickname"))
+                .password(Password.of(ENCRYPTOR, "Abcd123!@"))
                 .build();
 
         return Stream.of(

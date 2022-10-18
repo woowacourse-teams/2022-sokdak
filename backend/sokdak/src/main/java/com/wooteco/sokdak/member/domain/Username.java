@@ -1,6 +1,6 @@
 package com.wooteco.sokdak.member.domain;
 
-import com.wooteco.sokdak.auth.domain.encryptor.Encryptor;
+import com.wooteco.sokdak.auth.domain.encryptor.EncryptorI;
 import com.wooteco.sokdak.member.exception.InvalidUsernameException;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -20,12 +20,16 @@ public class Username {
     protected Username() {
     }
 
-    public Username(Encryptor encryptor, String value) {
-        validate(value);
-        this.value = encryptor.encode(value);
+    public Username(String value) {
+        this.value = value;
     }
 
-    private void validate(String value) {
+    public static Username of(EncryptorI encryptorI, String value) {
+        validate(value);
+        return new Username(encryptorI.encode(value));
+    }
+
+    private static void validate(String value) {
         if (!PATTERN.matcher(value).matches()) {
             throw new InvalidUsernameException();
         }

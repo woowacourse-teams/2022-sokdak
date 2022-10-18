@@ -6,14 +6,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class EncryptorFactory {
 
-    private static final EncryptorI SHA_256 = new Encryptor();
-
     public static EncryptorI encryptor() {
-        return SHA_256;
+        return new Encryptor();
     }
 
     @Bean
-    public EncryptorI getSha256() {
-        return SHA_256;
+    public EncryptorI getEncryptor() {
+        return new Encryptor();
     }
 }

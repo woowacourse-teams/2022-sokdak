@@ -15,7 +15,7 @@ class PasswordTest {
     @ValueSource(strings = {"", " ", "abcdAbcd", "abCd1234", "12341234", "abcd12!", "abcd1234^",
             "123456789012345678901"})
     void create_Exception_Format(String invalidPassword) {
-        assertThatThrownBy(() -> new Password(EncryptorFactory.encryptor(), invalidPassword))
+        assertThatThrownBy(() -> Password.of(EncryptorFactory.encryptor(), invalidPassword))
                 .isInstanceOf(InvalidPasswordFormatException.class);
     }
 }

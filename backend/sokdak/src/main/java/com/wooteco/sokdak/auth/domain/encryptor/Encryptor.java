@@ -6,6 +6,8 @@ import java.security.NoSuchAlgorithmException;
 
 public class Encryptor implements EncryptorI {
 
+    public Encryptor() {}
+
     public static String encrypt(String text) {
         return EncryptorFactory.encryptor().encode(text);
     }

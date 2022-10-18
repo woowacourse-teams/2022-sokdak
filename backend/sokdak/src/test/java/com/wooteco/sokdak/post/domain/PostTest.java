@@ -2,6 +2,7 @@ package com.wooteco.sokdak.post.domain;
 
 import static com.wooteco.sokdak.board.domain.BoardType.NON_WRITABLE;
 import static com.wooteco.sokdak.board.domain.BoardType.WRITABLE;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.ENCRYPTOR;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_USERNAME;
@@ -14,10 +15,15 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.wooteco.sokdak.auth.domain.encryptor.EncryptorFactory;
+import com.wooteco.sokdak.auth.domain.encryptor.EncryptorI;
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.like.domain.PostLike;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.Nickname;
+import com.wooteco.sokdak.member.domain.Password;
+import com.wooteco.sokdak.member.domain.Username;
 import com.wooteco.sokdak.report.domain.PostReport;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,14 +43,15 @@ class PostTest {
 
     private Post post;
     private Member member;
+    private static final EncryptorI encryptor = ENCRYPTOR;
 
     @BeforeEach
     void setUp() {
         member = Member.builder()
                 .id(1L)
-                .username(VALID_USERNAME)
-                .password(VALID_PASSWORD)
-                .nickname(VALID_NICKNAME)
+                .username(Username.of(encryptor,VALID_USERNAME))
+                .password(Password.of(encryptor, VALID_PASSWORD))
+                .nickname(new Nickname(VALID_NICKNAME))
                 .build();
         post = Post.builder()
                 .title(VALID_POST_TITLE)
@@ -252,14 +259,14 @@ class PostTest {
 
     static Stream<Arguments> hasReportByMemberArguments() {
         Member reporter = Member.builder()
-                .username("reporter")
-                .nickname("reporterNickname")
-                .password("Abcd123!@")
+                .username(Username.of(encryptor,"reporter"))
+                .nickname(new Nickname("reporterNickname"))
+                .password(Password.of(encryptor, "Abcd123!@"))
                 .build();
         Member member = Member.builder()
-                .username("member")
-                .nickname("memberNickname")
-                .password("Abcd123!@")
+                .username(Username.of(encryptor,"member"))
+                .nickname(new Nickname("memberNickname"))
+                .password(Password.of(encryptor, "Abcd123!@"))
                 .build();
         return Stream.of(
                 Arguments.of(reporter, reporter, true),

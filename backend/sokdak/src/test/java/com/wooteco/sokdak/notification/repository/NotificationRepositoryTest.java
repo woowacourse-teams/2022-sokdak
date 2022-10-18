@@ -11,6 +11,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.Nickname;
+import com.wooteco.sokdak.member.domain.Password;
+import com.wooteco.sokdak.member.domain.Username;
 import com.wooteco.sokdak.notification.domain.Notification;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
@@ -49,9 +52,9 @@ class NotificationRepositoryTest extends RepositoryTest {
     @BeforeEach
     void setUp() {
         member2 = Member.builder()
-                .username("josh")
-                .password("Abcd123!@")
-                .nickname("joshNickname")
+                .username(Username.of(encryptor,"josh"))
+                .password(Password.of(encryptor, "Abcd123!@"))
+                .nickname(new Nickname("joshNickname"))
                 .build();
         memberRepository.save(member2);
         post = Post.builder()
@@ -89,9 +92,9 @@ class NotificationRepositoryTest extends RepositoryTest {
     @Test
     void findNotificationsByMemberId() {
         Member member3 = Member.builder()
-                .username("east")
-                .password(VALID_PASSWORD)
-                .nickname("eastNickname")
+                .username(Username.of(encryptor,"east"))
+                .password(Password.of(encryptor, VALID_PASSWORD))
+                .nickname(new Nickname("eastNickname"))
                 .build();
         memberRepository.save(member3);
         Comment comment2 = Comment.builder()

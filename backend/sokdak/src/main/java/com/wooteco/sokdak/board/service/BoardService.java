@@ -33,6 +33,7 @@ public class BoardService {
 
     private static final int PAGE_SIZE = 3;
     private static final long APPLICANT_BOARD_ID = 5;
+
     private final BoardRepository boardRepository;
     private final PostBoardRepository postBoardRepository;
     private final NotificationService notificationService;

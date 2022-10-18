@@ -148,8 +148,7 @@ class LikeServiceTest extends ServiceTest {
     @DisplayName("댓글 좋아요 등록")
     @Test
     void flipCommentLike_create() {
-        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(comment.getId(), AUTH_INFO
-        );
+        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(comment.getId(), AUTH_INFO);
 
         entityManager.flush();
         entityManager.clear();
@@ -217,8 +216,7 @@ class LikeServiceTest extends ServiceTest {
     @DisplayName("대댓글 좋아요 등록")
     @Test
     void flipCommentLike_ReplyCreate() {
-        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(reply.getId(), AUTH_INFO
-        );
+        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(reply.getId(), AUTH_INFO);
 
         entityManager.flush();
         entityManager.clear();
@@ -272,8 +270,7 @@ class LikeServiceTest extends ServiceTest {
     @DisplayName("지원자는 권한이 있는 게시판 게시글의 댓글, 대댓글에 좋아요를 누를 수 있다.")
     @Test
     void flipCommentLike_Applicant() {
-        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(applicantComment.getId(), APPLICANT_AUTH_INFO
-        );
+        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(applicantComment.getId(), APPLICANT_AUTH_INFO);
 
         assertAll(
                 () -> assertThat(likeFlipResponse.isLike()).isTrue(),

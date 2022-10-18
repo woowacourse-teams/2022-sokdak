@@ -1,6 +1,6 @@
 package com.wooteco.sokdak.auth.service;
 
-import com.wooteco.sokdak.auth.domain.encryptor.Encryptor;
+import com.wooteco.sokdak.auth.domain.encryptor.EncryptorI;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
@@ -15,16 +15,16 @@ public class AuthService {
 
     private static final Long APPLICANT_BOARD_ID = 5L;
     private final MemberRepository memberRepository;
-    private final Encryptor encryptor;
+    private final EncryptorI encryptor;
 
-    public AuthService(MemberRepository memberRepository, Encryptor encryptor) {
+    public AuthService(MemberRepository memberRepository, EncryptorI encryptor) {
         this.memberRepository = memberRepository;
         this.encryptor = encryptor;
     }
 
     public AuthInfo login(LoginRequest loginRequest) {
-        String username = encryptor.encode(loginRequest.getUsername());
-        String password = encryptor.encode(loginRequest.getPassword());
+        String username = encryptor.encrypt(loginRequest.getUsername());
+        String password = encryptor.encrypt(loginRequest.getPassword());
         Member member = memberRepository.findByUsernameValueAndPasswordValue(username, password)
                 .orElseThrow(LoginFailedException::new);
         return new AuthInfo(member.getId(), member.getRoleType().getName(), member.getNickname());

@@ -1,6 +1,6 @@
 package com.wooteco.sokdak.ticket.service;
 
-import com.wooteco.sokdak.auth.domain.encryptor.Encryptor;
+import com.wooteco.sokdak.auth.domain.encryptor.EncryptorI;
 import com.wooteco.sokdak.member.dto.VerificationRequest;
 import com.wooteco.sokdak.member.exception.NotWootecoMemberException;
 import com.wooteco.sokdak.member.exception.SerialNumberNotFoundException;
@@ -20,11 +20,11 @@ public class RegisterService {
     private final TicketRepository ticketRepository;
     private final AuthCodeRepository authCodeRepository;
     private final Clock clock;
-    private final Encryptor encryptor;
+    private final EncryptorI encryptor;
 
     public RegisterService(TicketRepository ticketRepository,
                            AuthCodeRepository authCodeRepository, Clock clock,
-                           Encryptor encryptor) {
+                           EncryptorI encryptor) {
         this.ticketRepository = ticketRepository;
         this.authCodeRepository = authCodeRepository;
         this.clock = clock;
@@ -33,14 +33,14 @@ public class RegisterService {
 
     @Transactional
     public void useTicket(String email) {
-        String serialNumber = encryptor.encode(email);
+        String serialNumber = encryptor.encrypt(email);
         Ticket ticket = ticketRepository.findBySerialNumber(serialNumber)
                 .orElseThrow(SerialNumberNotFoundException::new);
         ticket.use();
     }
 
     public void verifyAuthCode(VerificationRequest verificationRequest) {
-        String serialNumber = encryptor.encode(verificationRequest.getEmail());
+        String serialNumber = encryptor.encrypt(verificationRequest.getEmail());
         AuthCode authCode = authCodeRepository.findBySerialNumber(serialNumber)
                 .orElseThrow(SerialNumberNotFoundException::new);
         authCode.verify(verificationRequest.getCode());

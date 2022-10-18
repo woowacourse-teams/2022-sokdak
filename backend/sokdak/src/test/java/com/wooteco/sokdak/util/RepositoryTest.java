@@ -2,7 +2,6 @@ package com.wooteco.sokdak.util;
 
 import static com.wooteco.sokdak.util.fixture.MemberFixture.ENCRYPTOR;
 
-import com.wooteco.sokdak.auth.domain.encryptor.EncryptorFactory;
 import com.wooteco.sokdak.auth.domain.encryptor.EncryptorI;
 import com.wooteco.sokdak.config.JPAConfig;
 import com.wooteco.sokdak.member.domain.Member;

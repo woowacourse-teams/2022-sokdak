@@ -26,7 +26,7 @@ public class Username {
 
     public static Username of(EncryptorI encryptorI, String value) {
         validate(value);
-        return new Username(encryptorI.encode(value));
+        return new Username(encryptorI.encrypt(value));
     }
 
     private static void validate(String value) {

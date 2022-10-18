@@ -1,8 +1,8 @@
 package com.wooteco.sokdak.member.util;
 
+import static com.wooteco.sokdak.util.fixture.MemberFixture.ENCRYPTOR;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.wooteco.sokdak.auth.domain.encryptor.Encryptor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,8 +13,8 @@ class EncryptorTest {
     void encrypt_same_input() {
         String text = "bjuuuu98@gmail.com";
 
-        String encrypt1 = Encryptor.encrypt(text);
-        String encrypt2 = Encryptor.encrypt(text);
+        String encrypt1 = ENCRYPTOR.encrypt(text);
+        String encrypt2 = ENCRYPTOR.encrypt(text);
 
         assertThat(encrypt1).isEqualTo(encrypt2);
     }
@@ -25,8 +25,8 @@ class EncryptorTest {
         String text = "안녕하세요";
         String other = "반갑습니다";
 
-        String encrypt1 = Encryptor.encrypt(text);
-        String encrypt2 = Encryptor.encrypt(other);
+        String encrypt1 = ENCRYPTOR.encrypt(text);
+        String encrypt2 = ENCRYPTOR.encrypt(other);
 
         assertThat(encrypt1).isNotEqualTo(encrypt2);
     }

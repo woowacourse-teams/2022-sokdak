@@ -23,7 +23,7 @@ public class Password {
 
     public static Password of(EncryptorI encryptor, String password) {
         validate(password);
-        return new Password(encryptor.encode(password));
+        return new Password(encryptor.encrypt(password));
     }
 
     public Password(String value) {

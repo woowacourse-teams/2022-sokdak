@@ -37,7 +37,7 @@ class CommentRepositoryTest extends RepositoryTest {
     @DisplayName("게시물에 해당하는 모든 댓글을 가져온다.")
     @Test
     void findAllByPostId() {
-        Comment comment1 = Comment.parent(member1, post,"east","댓글");
+        Comment comment1 = Comment.parent(member1, post, "east", "댓글");
         Comment comment2 = Comment.parent(member1, post, "east", "댓글2");
         commentRepository.save(comment1);
         commentRepository.save(comment2);

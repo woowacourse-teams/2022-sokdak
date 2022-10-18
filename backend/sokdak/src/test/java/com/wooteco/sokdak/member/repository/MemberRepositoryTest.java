@@ -31,7 +31,7 @@ class MemberRepositoryTest extends RepositoryTest {
     @Test
     void prevent_Duplicated_Nickname() {
         Member duplicatedNicknameMember = Member.builder()
-                .username(Username.of(encryptor,"josh"))
+                .username(Username.of(encryptor, "josh"))
                 .password(Password.of(encryptor, "Abcd123!@"))
                 .nickname(new Nickname("chrisNickname"))
                 .build();

@@ -348,7 +348,7 @@ class CommentServiceTest extends ServiceTest {
     @Test
     void findComments_authorized() {
         Member otherMember = Member.builder()
-                .username(Username.of(encryptor,"otherUser"))
+                .username(Username.of(encryptor, "otherUser"))
                 .password(Password.of(encryptor, "test1234!"))
                 .nickname(new Nickname("다른유저"))
                 .build();

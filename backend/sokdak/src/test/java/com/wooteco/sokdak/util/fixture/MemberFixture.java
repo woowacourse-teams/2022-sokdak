@@ -3,7 +3,7 @@ package com.wooteco.sokdak.util.fixture;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-import com.wooteco.sokdak.auth.domain.encryptor.Encryptor;
+import com.wooteco.sokdak.auth.domain.encryptor.EncryptorFactory;
 import com.wooteco.sokdak.auth.domain.encryptor.EncryptorI;
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.member.domain.Member;
@@ -14,8 +14,9 @@ import java.util.List;
 
 public class MemberFixture {
 
-    public static final EncryptorI ENCRYPTOR = new Encryptor();
+    public static final EncryptorI ENCRYPTOR = new EncryptorFactory().getEncryptor();
     public static final String APPLICANT_USERNAME = "applicant";
+
     public static final String VALID_USERNAME_TEXT = "chris";
     public static final Username VALID_USERNAME = Username.of(ENCRYPTOR, VALID_USERNAME_TEXT);
 

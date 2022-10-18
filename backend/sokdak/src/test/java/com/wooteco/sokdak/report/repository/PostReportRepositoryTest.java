@@ -65,9 +65,9 @@ class PostReportRepositoryTest extends RepositoryTest {
     @DisplayName("특정 postId를 가지는 데이터 개수를 반환한다.")
     void countByPostId() {
         int expected = 3;
-        for (int i = 0; i<expected; ++i) {
+        for (int i = 0; i < expected; ++i) {
             Member member = Member.builder()
-                    .username(Username.of(encryptor,"username" + i))
+                    .username(Username.of(encryptor, "username" + i))
                     .nickname(new Nickname("nickname" + i))
                     .password(Password.of(encryptor, "Abcd123!@"))
                     .build();

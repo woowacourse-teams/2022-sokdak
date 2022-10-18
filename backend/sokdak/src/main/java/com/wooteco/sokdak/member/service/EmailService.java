@@ -1,8 +1,8 @@
 package com.wooteco.sokdak.member.service;
 
+import com.wooteco.sokdak.auth.domain.encryptor.EncryptorI;
 import com.wooteco.sokdak.auth.service.AuthCodeGenerator;
 import com.wooteco.sokdak.auth.service.AuthService;
-import com.wooteco.sokdak.auth.domain.encryptor.Encryptor;
 import com.wooteco.sokdak.member.dto.EmailRequest;
 import com.wooteco.sokdak.member.repository.AuthCodeRepository;
 import com.wooteco.sokdak.ticket.domain.AuthCode;
@@ -16,18 +16,16 @@ public class EmailService {
 
     private final AuthCodeGenerator authCodeGenerator;
     private final EmailSender emailSender;
-    private final AuthService authService;
     private final RegisterService registerService;
     private final AuthCodeRepository authCodeRepository;
-    private final Encryptor encryptor;
+    private final EncryptorI encryptor;
 
 
     public EmailService(AuthCodeGenerator authCodeGenerator,
-                        AuthService authService, EmailSender emailSender,
+                        EmailSender emailSender,
                         RegisterService registerService,
-                        AuthCodeRepository authCodeRepository, Encryptor encryptor) {
+                        AuthCodeRepository authCodeRepository, EncryptorI encryptor) {
         this.authCodeGenerator = authCodeGenerator;
-        this.authService = authService;
         this.emailSender = emailSender;
         this.registerService = registerService;
         this.authCodeRepository = authCodeRepository;
@@ -36,7 +34,7 @@ public class EmailService {
 
     @Transactional
     public void sendCodeToValidUser(EmailRequest emailRequest) {
-        String serialNumber = encryptor.encode(emailRequest.getEmail());
+        String serialNumber = encryptor.encrypt(emailRequest.getEmail());
         registerService.validateSignUpMember(serialNumber);
 
         String authCode = createAndSaveAuthCode(serialNumber);

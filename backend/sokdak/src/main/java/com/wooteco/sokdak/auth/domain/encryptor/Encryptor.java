@@ -8,12 +8,8 @@ public class Encryptor implements EncryptorI {
 
     public Encryptor() {}
 
-    public static String encrypt(String text) {
-        return EncryptorFactory.encryptor().encode(text);
-    }
-
     @Override
-    public String encode(String text) {
+    public String encrypt(String text) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
             messageDigest.update(text.getBytes());

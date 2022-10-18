@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.member.domain;
 
+import static com.wooteco.sokdak.util.fixture.MemberFixture.ENCRYPTOR;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.wooteco.sokdak.auth.domain.encryptor.EncryptorFactory;
@@ -15,7 +16,7 @@ class PasswordTest {
     @ValueSource(strings = {"", " ", "abcdAbcd", "abCd1234", "12341234", "abcd12!", "abcd1234^",
             "123456789012345678901"})
     void create_Exception_Format(String invalidPassword) {
-        assertThatThrownBy(() -> Password.of(EncryptorFactory.encryptor(), invalidPassword))
+        assertThatThrownBy(() -> Password.of(ENCRYPTOR, invalidPassword))
                 .isInstanceOf(InvalidPasswordFormatException.class);
     }
 }

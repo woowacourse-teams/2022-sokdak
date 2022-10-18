@@ -58,7 +58,7 @@ public class AdminService {
         List<String> emails = emailsAddRequest.getEmails();
 
         for (String email : emails) {
-            String serialNumber = encryptor.encode(email);
+            String serialNumber = encryptor.encrypt(email);
             Optional<Ticket> foundSerialNumber = ticketRepository.findBySerialNumber(serialNumber);
             if (foundSerialNumber.isEmpty()) {
                 Ticket ticket = Ticket.builder()

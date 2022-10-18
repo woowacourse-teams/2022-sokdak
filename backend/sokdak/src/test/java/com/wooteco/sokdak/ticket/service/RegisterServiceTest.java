@@ -1,10 +1,10 @@
 package com.wooteco.sokdak.ticket.service;
 
+import static com.wooteco.sokdak.util.fixture.MemberFixture.ENCRYPTOR;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.doReturn;
 
-import com.wooteco.sokdak.auth.domain.encryptor.Encryptor;
 import com.wooteco.sokdak.member.dto.VerificationRequest;
 import com.wooteco.sokdak.member.exception.InvalidAuthCodeException;
 import com.wooteco.sokdak.member.exception.SerialNumberNotFoundException;
@@ -39,7 +39,7 @@ class RegisterServiceTest extends ServiceTest {
     void verifyAuthCode() {
         AuthCode authCode = AuthCode.builder()
                 .code(AUTH_CODE)
-                .serialNumber(Encryptor.encrypt(EMAIL))
+                .serialNumber(ENCRYPTOR.encrypt(EMAIL))
                 .build();
         authCodeRepository.save(authCode);
 
@@ -52,7 +52,7 @@ class RegisterServiceTest extends ServiceTest {
     void verifyAuthCode_Exception_WrongAuthCode() {
         AuthCode authCode = AuthCode.builder()
                 .code(AUTH_CODE)
-                .serialNumber(Encryptor.encrypt(EMAIL))
+                .serialNumber(ENCRYPTOR.encrypt(EMAIL))
                 .build();
         authCodeRepository.save(authCode);
 
@@ -66,7 +66,7 @@ class RegisterServiceTest extends ServiceTest {
     void verifyAuthCode_Exception_WrongEmail() {
         AuthCode authCode = AuthCode.builder()
                 .code(AUTH_CODE)
-                .serialNumber(Encryptor.encrypt(EMAIL))
+                .serialNumber(ENCRYPTOR.encrypt(EMAIL))
                 .build();
         authCodeRepository.save(authCode);
 
@@ -80,7 +80,7 @@ class RegisterServiceTest extends ServiceTest {
     void verifyAuthCode_Exception_Expired() {
         AuthCode authCode = AuthCode.builder()
                 .code(AUTH_CODE)
-                .serialNumber(Encryptor.encrypt(EMAIL))
+                .serialNumber(ENCRYPTOR.encrypt(EMAIL))
                 .build();
         authCodeRepository.save(authCode);
 

@@ -117,7 +117,7 @@ class CommentReportServiceTest extends ServiceTest {
         applicantComment = Comment.builder()
                 .member(member)
                 .post(applicantPost)
-                .nickname(VALID_NICKNAME)
+                .nickname(VALID_NICKNAME_TEXT)
                 .message(VALID_COMMENT_MESSAGE)
                 .build();
         commentRepository.save(applicantComment);

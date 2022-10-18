@@ -4,7 +4,6 @@ import static com.wooteco.sokdak.util.fixture.MemberFixture.ENCRYPTOR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.wooteco.sokdak.auth.domain.encryptor.Encryptor;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.member.dto.NicknameUpdateRequest;
@@ -68,8 +67,8 @@ class MemberServiceTest extends ServiceTest {
         memberService.signUpAsApplicant(signupRequest);
 
         Member member = memberRepository.findByUsernameValueAndPasswordValue(
-                Encryptor.encrypt(signupRequest.getUsername()),
-                Encryptor.encrypt(signupRequest.getPassword())).get();
+                ENCRYPTOR.encrypt(signupRequest.getUsername()),
+                ENCRYPTOR.encrypt(signupRequest.getPassword())).get();
         assertThat(member.getRoleType()).isEqualTo(RoleType.APPLICANT);
     }
 

@@ -31,10 +31,11 @@ class CommentTest {
 
     private Post post;
     private Comment comment;
+    private Member member;
 
     @BeforeEach
     void setUp() {
-        Member member = Member.builder()
+        member = Member.builder()
                 .id(1L)
                 .username(VALID_USERNAME)
                 .password(VALID_PASSWORD)

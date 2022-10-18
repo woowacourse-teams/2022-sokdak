@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.member.domain;
 
-import com.wooteco.sokdak.auth.domain.encryptor.EncryptorI;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -43,15 +42,7 @@ public class Member {
         this.nickname = nickname;
     }
 
-    //    @Builder
-    public Member(Long id, String username, String password, String nickname, EncryptorI encryptor) {
-        this.id = id;
-        this.username = Username.of(encryptor, username);
-        this.password = Password.of(encryptor, password);
-        this.nickname = new Nickname(nickname);
-    }
-
-    public static Member applicant(String username, String password, String nickname) {
+    public static Member applicant(Username username, Password password, Nickname nickname) {
         Member member = new Member(null, username, password, nickname);
         member.roleType = RoleType.APPLICANT;
         return member;

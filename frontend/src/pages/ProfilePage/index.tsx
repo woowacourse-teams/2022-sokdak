@@ -83,6 +83,7 @@ const ProfilePage = () => {
           </Styled.NicknameInputField>
           <Styled.UpdateButton>{disabled ? '수정' : '완료'}</Styled.UpdateButton>
         </Styled.NicknameField>
+
         <Styled.PostField>
           <Styled.PostListHeader>내가 쓴 글</Styled.PostListHeader>
           {data && data.posts && data.posts.length !== 0 ? (

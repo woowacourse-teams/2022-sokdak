@@ -7,9 +7,13 @@ export const Container = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: calc(100% - 2em);
+  width: 90%;
   padding: 1em;
   box-sizing: border-box;
+
+  @media (min-width: 875px) {
+    width: 50%;
+  }
 `;
 
 export const Heading = styled.h1`

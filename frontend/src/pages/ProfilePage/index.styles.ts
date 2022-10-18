@@ -7,9 +7,14 @@ import styled from '@emotion/styled';
 
 export const Container = styled.div`
   display: flex;
-  width: 100%;
+  width: 80%;
   flex-direction: column;
   padding: 1em 0;
+
+  @media (min-width: 875px) {
+    width: 50%;
+    margin-top: 10px;
+  }
 `;
 
 export const Avatar = styled.div`

@@ -1,16 +1,11 @@
-import ArrowLeftSvg from '@/assets/images/arrow_left.svg';
-import ArrowRightSvg from '@/assets/images/arrow_right.svg';
-
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 export const Container = styled.div`
   width: 100%;
-  display: grid;
   align-items: center;
-  grid-template-columns: 1fr 8fr 1fr;
-  grid-template-areas:
-    '. title .'
-    'arrowLeft carousel arrowRight';
+  position: relative;
+
   @media (max-width: 875px) {
     display: none;
   }
@@ -18,31 +13,20 @@ export const Container = styled.div`
 
 export const CarouselContainer = styled.div`
   width: 100%;
-  max-width: 1400px;
-  overflow-x: auto;
+  overflow-x: hidden;
   box-sizing: border-box;
-  display: -ms-inline-grid;
   align-items: center;
-  gap: 1.5em;
-  grid-area: carousel;
 `;
 
 export const Title = styled.p`
-  width: calc(100% - 3em);
-  max-width: 1400px;
   font-family: 'BMHANNAPro';
   font-size: 1.5rem;
+  margin-bottom: 0.5em;
   text-align: left;
-  grid-area: title;
 `;
 
 export const PostContainer = styled.div`
   overflow: hidden;
-`;
-
-export const EmptyContainer = styled.div`
-  width: 30px;
-  grid-area: arrowLeft;
 `;
 
 export const ItemContainer = styled.div`
@@ -60,15 +44,34 @@ export const PostListContainer = styled.div<{ page: number }>`
   transition: 1s;
 `;
 
-export const ArrowLeft = styled(ArrowLeftSvg)`
+const buttonStyle = css`
   cursor: pointer;
-  grid-area: arrowLeft;
-  justify-self: end;
-  margin-right: 1rem;
+  position: absolute;
+  top: 50%;
+  z-index: 10;
+  width: 30px;
+  height: 60px;
+  font-size: 1rem;
+
+  background-color: black;
+  color: white;
+  opacity: 0.6;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
-export const ArrowRight = styled(ArrowRightSvg)`
-  cursor: pointer;
-  grid-area: arrowRight;
-  margin-left: 1rem;
+export const ArrowLeft = styled.button`
+  ${buttonStyle};
+  left: 0;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+`;
+
+export const ArrowRight = styled.button`
+  ${buttonStyle};
+  right: 0;
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
 `;

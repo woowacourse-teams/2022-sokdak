@@ -11,30 +11,31 @@ import * as Styled from './index.styles';
 import { BOARDS } from '@/constants/board';
 
 const MainPage = () => {
+  const isDesktop = useResponsive(875);
   const { data } = usePostByBoards({
     options: {
       staleTime: 1000 * 20,
     },
   });
-  const isTabletSizeOver = useResponsive(875);
 
-  if (data)
-    return (
-      <>
-        <Styled.MainPageContainer>
-          {isTabletSizeOver && <Banner />}
-          {isTabletSizeOver && <Carousel />}
-          <Styled.BoardItemContainer>
-            {data.boards.map(board => (
-              <BoardItem key={board.id} {...board} title={BOARDS[board.id - 1].title} boardId={board.id} />
-            ))}
-          </Styled.BoardItemContainer>
-        </Styled.MainPageContainer>
-        <Footer />
-      </>
-    );
+  if (!data) {
+    return <></>;
+  }
 
-  return <div />;
+  return (
+    <>
+      <Styled.Container>
+        {isDesktop && <Banner />}
+        {isDesktop && <Carousel />}
+        <Styled.BoardItemContainer>
+          {data.boards.map(board => (
+            <BoardItem key={board.id} {...board} title={BOARDS[board.id - 1].title} boardId={board.id} />
+          ))}
+        </Styled.BoardItemContainer>
+      </Styled.Container>
+      <Footer />
+    </>
+  );
 };
 
 export default MainPage;

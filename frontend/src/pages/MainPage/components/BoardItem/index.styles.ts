@@ -6,11 +6,15 @@ import Heart from '@/assets/images/heart.svg';
 import styled from '@emotion/styled';
 
 export const Container = styled.div<{ boardId: number }>`
-  width: 100%;
-  max-width: 340px;
-  min-width: 300px;
+  width: 30%;
+  min-width: 340px;
+
   @media (min-width: 875px) {
     display: ${props => (props.boardId === 1 ? 'none' : 'block')};
+  }
+
+  @media (max-width: 1275px) {
+    width: 45%;
   }
 `;
 

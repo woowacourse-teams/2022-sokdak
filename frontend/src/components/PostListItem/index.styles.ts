@@ -29,22 +29,19 @@ export const BlockedContainer = styled.div`
 export const HeadContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
 `;
 
-export const TitleContainer = styled.div`
-  display: flex;
-  align-items: flex-end;
+export const TitleContainer = styled.div<{ isModified: boolean }>`
+  display: grid;
+  grid-template-columns: ${({ isModified }) => (isModified ? '8fr 2fr' : '1fr')};
   gap: 7px;
 `;
 
-export const Title = styled.p<{ isModified: boolean }>`
+export const Title = styled.p`
   font-size: 24px;
   font-family: 'BMHANNAPro', 'Noto Sans KR';
-
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: ${({ isModified }) => (isModified ? '200px' : '250px')};
   white-space: nowrap;
 `;
 
@@ -52,6 +49,9 @@ export const Modified = styled.span`
   color: ${props => props.theme.colors.gray_200};
   font-size: 10px;
   min-width: 35px;
+
+  display: flex;
+  align-items: end;
 `;
 
 export const Date = styled.span`
@@ -59,6 +59,10 @@ export const Date = styled.span`
   color: ${props => props.theme.colors.gray_200};
   width: fit-content;
   text-align: end;
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  min-width: 80px;
 `;
 
 export const ContentContainer = styled.div`

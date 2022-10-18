@@ -10,8 +10,11 @@ export const SpinnerContainer = styled.div`
 
 export const BoardContainer = styled.div`
   width: 100%;
-  padding: 1rem 0 5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @media (max-width: 875px) {
+    width: 90%;
+  }
 `;

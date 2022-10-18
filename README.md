@@ -28,7 +28,7 @@
 
 평소에 전하지 못한 말이나 기명으로 하기 힘든 말들을 전합니다.
 
-## 🥰 멤버
+## 🙌🏻 멤버
 
 |                                         Frontend                                         |                                          Frontend                                          |                                          Backend                                           |                                         Backend                                         |                                         Backend                                         |                                          Backend                                          |                                         Backend                                         |
 | :--------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------: |
@@ -39,20 +39,7 @@
 
 ### 🧷 프론트엔드
 
-<div align="middle">
-
-<img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"> <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
-<img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black">
-<img src="https://img.shields.io/badge/react router-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white">
-<img src="https://img.shields.io/badge/react query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white">
-<img src="https://img.shields.io/badge/axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white">
-<img src="https://img.shields.io/badge/emotion-D26AC2?style=for-the-badge&logo=emotion&logoColor=white">
-<img src="https://img.shields.io/badge/storybook-FF4785?style=for-the-badge&logo=storybook&logoColor=white">
-<img src="https://img.shields.io/badge/jest-C21325?style=for-the-badge&logo=jest&logoColor=white">
-<img src="https://img.shields.io/badge/testing library-E33332?style=for-the-badge&logo=testinglibrary&logoColor=white">
-<img src="https://img.shields.io/badge/msw-ff6933?style=for-the-badge&logo=msw&logoColor=black">
-<img src="https://img.shields.io/badge/webpack-8DD6F9?style=for-the-badge&logo=webpack&logoColor=black">
-<img src="https://img.shields.io/badge/babel-F9DC3E?style=for-the-badge&logo=babel&logoColor=black">
+![image](https://user-images.githubusercontent.com/52737532/196379430-239eea8a-a45d-460e-992e-d3e9e7c5066a.png)
   
 **Language |** Javascript, Typescript
 
@@ -63,24 +50,11 @@
 **Test |** Storybook, Jest, Testing Library, MSW
 
 **Build |** Webpack, Babel
-  
-</div>
 
 
 ### 🧷 백엔드
 
-<div align="middle">
-
-<img src="https://img.shields.io/badge/java-3a75b0?style=for-the-badge&logo=java&logoColor=black"> <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
-<img src="https://img.shields.io/badge/spring boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
-<img src="https://img.shields.io/badge/spring mvc-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
-<img src="https://img.shields.io/badge/JPA Hibernate-59666C?style=for-the-badge&logo=Hibernate&logoColor=white">
-<img src="https://img.shields.io/badge/gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white">
-<img src="https://img.shields.io/badge/junit-25A162?style=for-the-badge&logo=junit5&logoColor=white">
-<img src="https://img.shields.io/badge/spring test-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
-<img src="https://img.shields.io/badge/Mockito-C5D9C8?style=for-the-badge&logo=Mockito&logoColor=white">
-<img src="https://img.shields.io/badge/spring rest docs-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
-  
+![image](https://user-images.githubusercontent.com/52737532/196380007-1416bf34-7fad-4d38-8efd-9fc24eae8ad1.png)  
   
 **Language |** Java 11
 
@@ -93,23 +67,11 @@
 **Test |** Junit 5.8.2, Mockito 4.5.1
 
 **Docs |** Spring REST Docs 2.0.6
-  
-</div>
 
 
 ### 🧷 인프라
 
-<div align="middle">
-
-<img src="https://img.shields.io/badge/AWS EC2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white"> <img src="https://img.shields.io/badge/ngnix-009639?style=for-the-badge&logo=nginx&logoColor=white">
-<img src="https://img.shields.io/badge/h2-0000bb?style=for-the-badge&logo=h2&logoColor=white">
-<img src="https://img.shields.io/badge/my sql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
-<img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
-<img src="https://img.shields.io/badge/github action-181717?style=for-the-badge&logo=github&logoColor=white">
-<img src="https://img.shields.io/badge/jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=white">
-<img src="https://img.shields.io/badge/SonarQube-D24939?style=for-the-badge&logo=SonarQube&logoColor=white">
-<img src="https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=Grafana&logoColor=white">
-<img src="https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=Prometheus&logoColor=white">
+![image](https://user-images.githubusercontent.com/52737532/196380111-50198068-9aeb-4a8b-8b51-df91cb1c5ec3.png)
   
 **Infra |** AWS EC2, Nginx
 
@@ -119,9 +81,6 @@
 
 **Monitoring |** SonarQube, Grafana, Prometheus
   
-</div>
-
-
 
 ## 핵심 기능
 

@@ -8,7 +8,6 @@ import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.like.domain.CommentLike;
 import com.wooteco.sokdak.like.domain.PostLike;
-import com.wooteco.sokdak.like.dto.LikeFlipRequest;
 import com.wooteco.sokdak.like.dto.LikeFlipResponse;
 import com.wooteco.sokdak.like.repository.CommentLikeRepository;
 import com.wooteco.sokdak.like.repository.PostLikeRepository;
@@ -49,7 +48,7 @@ public class LikeService {
     }
 
     @Transactional
-    public LikeFlipResponse flipPostLike(Long postId, AuthInfo authInfo, LikeFlipRequest likeFlipRequest) {
+    public LikeFlipResponse flipPostLike(Long postId, AuthInfo authInfo) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
         authService.checkAuthority(authInfo, post.getBoardId());
@@ -87,10 +86,10 @@ public class LikeService {
     }
 
     @Transactional
-    public LikeFlipResponse flipCommentLike(Long commentId, AuthInfo authInfo, LikeFlipRequest likeFlipRequest) {
-        authService.checkAuthority(authInfo, likeFlipRequest.getBoardId());
+    public LikeFlipResponse flipCommentLike(Long commentId, AuthInfo authInfo) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
+        authService.checkAuthority(authInfo, comment.getBoardId());
 
         flipCommentLike(authInfo.getId(), comment);
         int likeCount = comment.getCommentLikesCount();

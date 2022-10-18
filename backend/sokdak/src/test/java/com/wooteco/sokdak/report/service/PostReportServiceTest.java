@@ -13,8 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
-import com.wooteco.sokdak.like.dto.LikeFlipRequest;
-import com.wooteco.sokdak.like.dto.LikeFlipResponse;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
@@ -24,7 +22,6 @@ import com.wooteco.sokdak.report.exception.AlreadyReportPostException;
 import com.wooteco.sokdak.report.exception.InvalidReportMessageException;
 import com.wooteco.sokdak.report.repository.PostReportRepository;
 import com.wooteco.sokdak.util.ServiceTest;
-import com.wooteco.sokdak.util.fixture.BoardFixture;
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

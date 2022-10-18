@@ -2,11 +2,16 @@ package com.wooteco.sokdak.like.service;
 
 import static com.wooteco.sokdak.util.fixture.BoardFixture.APPLICANT_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
+import static com.wooteco.sokdak.util.fixture.BoardFixture.GOOD_CREW_BOARD_ID;
+import static com.wooteco.sokdak.util.fixture.BoardFixture.HOT_BOARD_ID;
+import static com.wooteco.sokdak.util.fixture.BoardFixture.POSUTA_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.board.domain.Board;
@@ -19,20 +24,22 @@ import com.wooteco.sokdak.comment.dto.ReplyResponse;
 import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.comment.service.CommentService;
-import com.wooteco.sokdak.like.dto.LikeFlipRequest;
 import com.wooteco.sokdak.like.dto.LikeFlipResponse;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.util.ServiceTest;
 import java.util.List;
+import java.util.stream.Stream;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 class LikeServiceTest extends ServiceTest {
@@ -62,6 +69,7 @@ class LikeServiceTest extends ServiceTest {
     private Post applicantPost;
     private Comment comment;
     private Comment reply;
+    private Comment applicantComment;
 
     @BeforeEach
     void setUp() {
@@ -96,13 +104,15 @@ class LikeServiceTest extends ServiceTest {
         reply = Comment.child(member, post, "닉네임2", "대댓글", comment);
         commentRepository.save(reply);
         entityManager.clear();
+
+        applicantComment = Comment.parent(member, applicantPost, "nickname", "message");
+        commentRepository.save(applicantComment);
     }
 
     @DisplayName("게시글 좋아요 등록")
     @Test
     void flipPostLike_create() {
-        LikeFlipResponse putLikeResponse = likeService.flipPostLike(post.getId(), AUTH_INFO, new LikeFlipRequest(
-                FREE_BOARD_ID));
+        LikeFlipResponse putLikeResponse = likeService.flipPostLike(post.getId(), AUTH_INFO);
 
         entityManager.flush();
         entityManager.clear();
@@ -118,12 +128,11 @@ class LikeServiceTest extends ServiceTest {
     @DisplayName("게시글 좋아요 취소")
     @Test
     void flipPostLike_delete() {
-        LikeFlipRequest likeFlipRequest = new LikeFlipRequest(FREE_BOARD_ID);
-        likeService.flipPostLike(post.getId(), AUTH_INFO, likeFlipRequest);
+        likeService.flipPostLike(post.getId(), AUTH_INFO);
         entityManager.flush();
         entityManager.clear();
 
-        LikeFlipResponse putLikeResponse = likeService.flipPostLike(post.getId(), AUTH_INFO, likeFlipRequest);
+        LikeFlipResponse putLikeResponse = likeService.flipPostLike(post.getId(), AUTH_INFO);
 
         entityManager.flush();
         entityManager.clear();
@@ -139,8 +148,8 @@ class LikeServiceTest extends ServiceTest {
     @DisplayName("댓글 좋아요 등록")
     @Test
     void flipCommentLike_create() {
-        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(comment.getId(), AUTH_INFO,
-                new LikeFlipRequest(FREE_BOARD_ID));
+        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(comment.getId(), AUTH_INFO
+        );
 
         entityManager.flush();
         entityManager.clear();
@@ -156,12 +165,11 @@ class LikeServiceTest extends ServiceTest {
     @DisplayName("댓글 좋아요 취소")
     @Test
     void flipCommentLike_delete() {
-        LikeFlipRequest likeFlipRequest = new LikeFlipRequest(FREE_BOARD_ID);
-        likeService.flipCommentLike(comment.getId(), AUTH_INFO, likeFlipRequest);
+        likeService.flipCommentLike(comment.getId(), AUTH_INFO);
         entityManager.flush();
         entityManager.clear();
 
-        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(comment.getId(), AUTH_INFO, likeFlipRequest);
+        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(comment.getId(), AUTH_INFO);
 
         entityManager.flush();
         entityManager.clear();
@@ -178,19 +186,15 @@ class LikeServiceTest extends ServiceTest {
     @ParameterizedTest
     @CsvSource({"1", "2", "3", "4"})
     void flipPostLike_Applicant_Exception(Long boardId) {
-        LikeFlipRequest likeFlipRequest = new LikeFlipRequest(boardId);
-
-        assertThatThrownBy(() -> likeService.flipPostLike(post.getId(), APPLICANT_AUTH_INFO, likeFlipRequest))
+        assertThatThrownBy(() -> likeService.flipPostLike(post.getId(), APPLICANT_AUTH_INFO))
                 .isInstanceOf(AuthorizationException.class);
     }
 
     @DisplayName("지원자는 권한이 있는 게시판 게시글에 좋아요를 누를 수 있다.")
     @Test
     void flipPostLike_Applicant() {
-        LikeFlipRequest likeFlipRequest = new LikeFlipRequest(APPLICANT_BOARD_ID);
-
-        LikeFlipResponse likeFlipResponse = likeService.flipPostLike(applicantPost.getId(), APPLICANT_AUTH_INFO,
-                likeFlipRequest);
+        LikeFlipResponse likeFlipResponse = likeService.flipPostLike(applicantPost.getId(), APPLICANT_AUTH_INFO
+        );
 
         assertAll(
                 () -> assertThat(likeFlipResponse.isLike()).isTrue(),
@@ -201,8 +205,8 @@ class LikeServiceTest extends ServiceTest {
     @DisplayName("대댓글 좋아요 등록")
     @Test
     void flipCommentLike_ReplyCreate() {
-        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(reply.getId(), AUTH_INFO,
-                new LikeFlipRequest(FREE_BOARD_ID));
+        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(reply.getId(), AUTH_INFO
+        );
 
         entityManager.flush();
         entityManager.clear();
@@ -218,10 +222,9 @@ class LikeServiceTest extends ServiceTest {
     @DisplayName("대댓글 좋아요 취소")
     @Test
     void flipCommentLike_ReplyDelete() {
-        LikeFlipRequest likeFlipRequest = new LikeFlipRequest(FREE_BOARD_ID);
-        likeService.flipCommentLike(reply.getId(), AUTH_INFO, likeFlipRequest);
+        likeService.flipCommentLike(reply.getId(), AUTH_INFO);
 
-        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(reply.getId(), AUTH_INFO, likeFlipRequest);
+        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(reply.getId(), AUTH_INFO);
 
         entityManager.flush();
         entityManager.clear();
@@ -234,21 +237,43 @@ class LikeServiceTest extends ServiceTest {
 
     @DisplayName("지원자는 권한이 없는 게시판 게시글의 댓글, 대댓글에 좋아요를 누를 수 없다.")
     @ParameterizedTest
-    @CsvSource({"1", "2", "3", "4"})
-    void flipCommentLike_Applicant_Exception(Long boardId) {
-        LikeFlipRequest likeFlipRequest = new LikeFlipRequest(boardId);
-
-        assertThatThrownBy(() -> likeService.flipCommentLike(comment.getId(), APPLICANT_AUTH_INFO, likeFlipRequest))
+    @MethodSource("mockComments")
+    void flipCommentLike_Applicant_Exception(Comment mockComment) {
+        assertThatThrownBy(() -> likeService.flipCommentLike(mockComment.getId(), APPLICANT_AUTH_INFO))
                 .isInstanceOf(AuthorizationException.class);
     }
+
+    static Stream<Arguments> mockComments() {
+        Comment hotBoardComment = mock(Comment.class);
+        Comment freeBoardComment = mock(Comment.class);
+        Comment posutaBoardComment = mock(Comment.class);
+        Comment goodCrewBoardComment = mock(Comment.class);
+
+        when(hotBoardComment.getBoardId()).thenReturn(HOT_BOARD_ID);
+        when(freeBoardComment.getBoardId()).thenReturn(FREE_BOARD_ID);
+        when(posutaBoardComment.getBoardId()).thenReturn(POSUTA_BOARD_ID);
+        when(goodCrewBoardComment.getBoardId()).thenReturn(GOOD_CREW_BOARD_ID);
+
+        when(hotBoardComment.getId()).thenReturn(1L);
+        when(freeBoardComment.getId()).thenReturn(1L);
+        when(posutaBoardComment.getId()).thenReturn(1L);
+        when(goodCrewBoardComment.getId()).thenReturn(1L);
+
+        return Stream.of(
+                Arguments.of(hotBoardComment),
+                Arguments.of(freeBoardComment),
+                Arguments.of(posutaBoardComment),
+                Arguments.of(goodCrewBoardComment)
+        );
+    }
+
+
 
     @DisplayName("지원자는 권한이 있는 게시판 게시글의 댓글, 대댓글에 좋아요를 누를 수 있다.")
     @Test
     void flipCommentLike_Applicant() {
-        LikeFlipRequest likeFlipRequest = new LikeFlipRequest(APPLICANT_BOARD_ID);
-
-        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(comment.getId(), APPLICANT_AUTH_INFO,
-                likeFlipRequest);
+        LikeFlipResponse likeFlipResponse = likeService.flipCommentLike(applicantComment.getId(), APPLICANT_AUTH_INFO
+        );
 
         assertAll(
                 () -> assertThat(likeFlipResponse.isLike()).isTrue(),
@@ -259,7 +284,7 @@ class LikeServiceTest extends ServiceTest {
     @DisplayName("댓글 목록 조회 시 좋아요 개수를 알 수 있고 내가 좋아요를 눌렀음을 알 수 있다.")
     @Test
     void getCommentsLikes() {
-        likeService.flipCommentLike(comment.getId(), AUTH_INFO, new LikeFlipRequest(FREE_BOARD_ID));
+        likeService.flipCommentLike(comment.getId(), AUTH_INFO);
 
         List<CommentResponse> comments = commentService.findComments(post.getId(), AUTH_INFO).getComments();
 
@@ -272,7 +297,7 @@ class LikeServiceTest extends ServiceTest {
     @DisplayName("댓글 목록 조회 시 좋아요 개수와 내가 좋아요를 누르지 않았음을 알 수 있다.")
     @Test
     void getCommentsLikesOfOther() {
-        likeService.flipCommentLike(comment.getId(), AUTH_INFO, new LikeFlipRequest(FREE_BOARD_ID));
+        likeService.flipCommentLike(comment.getId(), AUTH_INFO);
 
         List<CommentResponse> comments = commentService.findComments(post.getId(), AUTH_INFO2)
                 .getComments();
@@ -286,7 +311,7 @@ class LikeServiceTest extends ServiceTest {
     @DisplayName("대댓글 목록 조회 시 좋아요 개수를 알 수 있고 내가 좋아요를 눌렀음을 알 수 있다.")
     @Test
     void getCommentsLikesReply() {
-        likeService.flipCommentLike(reply.getId(), AUTH_INFO, new LikeFlipRequest(FREE_BOARD_ID));
+        likeService.flipCommentLike(reply.getId(), AUTH_INFO);
 
         List<ReplyResponse> replies = commentService.findComments(post.getId(), AUTH_INFO)
                 .getComments()
@@ -302,7 +327,7 @@ class LikeServiceTest extends ServiceTest {
     @DisplayName("대댓글 목록 조회 시 좋아요 개수와 내가 좋아요를 누르지 않았음을 알 수 있다.")
     @Test
     void getCommentsLikesReplyOfOther() {
-        likeService.flipCommentLike(reply.getId(), AUTH_INFO, new LikeFlipRequest(FREE_BOARD_ID));
+        likeService.flipCommentLike(reply.getId(), AUTH_INFO);
 
         List<ReplyResponse> replies = commentService.findComments(post.getId(), AUTH_INFO2)
                 .getComments()

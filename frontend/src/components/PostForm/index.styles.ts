@@ -48,7 +48,7 @@ export const TitleInput = styled.input<InputProps>`
 
 export const ContentInput = styled.textarea<InputProps>`
   width: 100%;
-  height: 50vh;
+  height: 35vh;
   padding: 10px;
   font-size: 14px;
   margin: 20px 0;
@@ -83,4 +83,5 @@ export const PostController = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 10px;
 `;

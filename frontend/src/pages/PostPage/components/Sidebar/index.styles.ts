@@ -12,6 +12,7 @@ export const Container = styled.div`
   padding: 30px;
   box-sizing: border-box;
   background-color: white;
+  border-radius: 10px;
 `;
 
 export const Title = styled.h1`

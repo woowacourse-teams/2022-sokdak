@@ -102,10 +102,10 @@ const PostPage = () => {
         {isDesktop && hotPosts && (
           <SidebarContainer>
             <Sidebar
-              title="실시간 인기글"
+              title="✨ 실시간 인기글"
               items={hotPosts.pages.map(item => ({ name: item.title, url: `${PATH.POST}/${item.id}` }))!}
             />
-            <Sidebar title="AD" items={AD} domain="external" />
+            <Sidebar title="📢 홍보" items={AD} domain="external" />
           </SidebarContainer>
         )}
 

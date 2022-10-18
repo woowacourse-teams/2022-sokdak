@@ -47,7 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 class CommentReportServiceTest extends ServiceTest {
 
-    private static final ReportRequest REPORT_REQUEST = new ReportRequest(FREE_BOARD_ID, "나쁜댓글");
+    private static final ReportRequest REPORT_REQUEST = new ReportRequest("나쁜댓글");
 
     @Autowired
     private PostRepository postRepository;
@@ -147,7 +147,7 @@ class CommentReportServiceTest extends ServiceTest {
     @DisplayName("신고내용 없이 신고하면 예외발생")
     @Test
     void reportComment_Exception_No_Content() {
-        ReportRequest reportRequest = new ReportRequest(FREE_BOARD_ID, "  ");
+        ReportRequest reportRequest = new ReportRequest("  ");
 
         assertThatThrownBy(
                 () -> commentReportService.reportComment(comment.getId(), reportRequest,
@@ -194,7 +194,7 @@ class CommentReportServiceTest extends ServiceTest {
     @ParameterizedTest
     @MethodSource("mockComments")
     void flipPostLike_Applicant_Exception(Comment mockComment) {
-        ReportRequest reportRequest = new ReportRequest(mockComment.getBoardId(), "message");
+        ReportRequest reportRequest = new ReportRequest("message");
 
         assertThatThrownBy(() -> commentReportService.reportComment(mockComment.getId(), reportRequest, APPLICANT_AUTH_INFO))
                 .isInstanceOf(AuthorizationException.class);
@@ -227,7 +227,7 @@ class CommentReportServiceTest extends ServiceTest {
     @DisplayName("지원자는 권한이 있는 게시판 게시글의 댓글 대댓글을 신고할 수 있다.")
     @Test
     void flipPostLike_Applicant() {
-        ReportRequest reportRequest = new ReportRequest(APPLICANT_BOARD_ID, "message");
+        ReportRequest reportRequest = new ReportRequest("message");
         int reportCountBeforeReport = applicantComment.getCommentReports().size();
 
         commentReportService.reportComment(applicantComment.getId(), reportRequest, APPLICANT_AUTH_INFO);

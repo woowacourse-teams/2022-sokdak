@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.comment.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.BoardFixture.*;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.ANONYMOUS_COMMENT_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.ANONYMOUS_REPLY_REQUEST;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.NON_ANONYMOUS_COMMENT_REQUEST;
@@ -21,7 +20,6 @@ import com.wooteco.sokdak.comment.dto.CommentsResponse;
 import com.wooteco.sokdak.comment.dto.ReplyResponse;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
-import com.wooteco.sokdak.util.fixture.BoardFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -124,7 +122,7 @@ class CommentAcceptanceTest extends AcceptanceTest {
         String blindMessage = "블라인드 처리된 댓글입니다.";
 
         for (int i = 0; i < 5; ++i) {
-            ReportRequest reportRequest = new ReportRequest(FREE_BOARD_ID, "댓글신고");
+            ReportRequest reportRequest = new ReportRequest("댓글신고");
             httpPostWithAuthorization(reportRequest, "/comments/" + commentId + "/report", tokens.get(i));
         }
 

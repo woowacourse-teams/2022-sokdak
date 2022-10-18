@@ -44,7 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 class PostReportServiceTest extends ServiceTest {
 
-    private static final ReportRequest REPORT_REQUEST = new ReportRequest(FREE_BOARD_ID, "나쁜글");
+    private static final ReportRequest REPORT_REQUEST = new ReportRequest("나쁜글");
 
     @Autowired
     private PostRepository postRepository;
@@ -130,7 +130,7 @@ class PostReportServiceTest extends ServiceTest {
     @DisplayName("신고내용 없이 신고하면 예외발생")
     @Test
     void reportPost_Exception_No_Content() {
-        ReportRequest invalidReportRequest = new ReportRequest(FREE_BOARD_ID, "  ");
+        ReportRequest invalidReportRequest = new ReportRequest("  ");
 
         assertThatThrownBy(
                 () -> postReportService.reportPost(post.getId(), invalidReportRequest,
@@ -179,7 +179,7 @@ class PostReportServiceTest extends ServiceTest {
     @ParameterizedTest
     @MethodSource("mockPosts")
     void flipPostLike_Applicant_Exception(Post mockPost) {
-        ReportRequest reportRequest = new ReportRequest(mockPost.getBoardId(), "message");
+        ReportRequest reportRequest = new ReportRequest("message");
 
         assertThatThrownBy(() -> postReportService.reportPost(mockPost.getId(), reportRequest, APPLICANT_AUTH_INFO))
                 .isInstanceOf(AuthorizationException.class);
@@ -212,7 +212,7 @@ class PostReportServiceTest extends ServiceTest {
     @DisplayName("지원자는 권한이 있는 게시판 게시글을 신고할 수 있다.")
     @Test
     void flipPostLike_Applicant() {
-        ReportRequest reportRequest = new ReportRequest(APPLICANT_BOARD_ID, "message");
+        ReportRequest reportRequest = new ReportRequest("message");
         int reportCountBeforeReport = applicantPost.getPostReports().size();
 
         postReportService.reportPost(applicantPost.getId(), reportRequest, APPLICANT_AUTH_INFO);

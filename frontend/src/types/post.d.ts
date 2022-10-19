@@ -19,6 +19,7 @@ interface Post {
   nickname: string;
   blocked: boolean;
   imageName: string;
+  viewCount: number;
 }
 
 interface Image {

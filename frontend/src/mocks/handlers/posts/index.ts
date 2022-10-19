@@ -44,6 +44,7 @@ const postHandlers = [
         authorized: true,
         nickname: anonymous ? '짜증난 파이썬' : '테스트 계정',
         blocked: false,
+        viewCount: 0,
       };
 
       postList.unshift(newPost);

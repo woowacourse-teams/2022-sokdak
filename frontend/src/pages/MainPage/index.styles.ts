@@ -11,6 +11,7 @@ export const Container = styled.div`
   gap: 5rem;
 
   @media (max-width: 875px) {
+    width: 90%;
     gap: 3rem;
   }
 `;
@@ -26,5 +27,6 @@ export const BoardItemContainer = styled.div`
     gap: 50px;
     flex-direction: column;
     align-items: center;
+    flex-wrap: unset;
   }
 `;

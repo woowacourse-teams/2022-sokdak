@@ -12,18 +12,20 @@ public class PostsElementResponse {
     private String title;
     private String content;
     private LocalDateTime createdAt;
+    private int viewCount;
     private int likeCount;
     private int commentCount;
     private boolean modified;
     private boolean blocked;
 
     @Builder
-    private PostsElementResponse(Long id, String title, String content, LocalDateTime createdAt,
+    private PostsElementResponse(Long id, String title, String content, LocalDateTime createdAt, int viewCount,
                                  int likeCount, int commentCount, boolean modified, boolean blocked) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.createdAt = createdAt;
+        this.viewCount = viewCount;
         this.likeCount = likeCount;
         this.commentCount = commentCount;
         this.modified = modified;
@@ -36,6 +38,7 @@ public class PostsElementResponse {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .createdAt(post.getCreatedAt())
+                .viewCount(post.getViewCount())
                 .likeCount(post.getLikeCount())
                 .commentCount(post.getCommentCount())
                 .modified(post.isModified())

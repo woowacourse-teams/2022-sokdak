@@ -114,6 +114,20 @@ class PostServiceTest extends ServiceTest {
         );
     }
 
+    @DisplayName("특정 게시물을 조회하면 viewCount가 1 증가됨")
+    @Test
+    void findViewCount() {
+        postRepository.save(post);
+        PostBoard postBoard = PostBoard.builder().build();
+        postBoard.addBoard(board);
+        postBoard.addPost(post);
+
+        PostDetailResponse firstFindPostResponse = postService.findPost(post.getId(), AUTH_INFO);
+        PostDetailResponse secondFindPostResponse = postService.findPost(post.getId(), AUTH_INFO2);
+
+        assertThat(firstFindPostResponse.getViewCount() + 1).isEqualTo(secondFindPostResponse.getViewCount());
+    }
+
     @DisplayName("특정 게시판에 기명으로 글 작성 기능")
     @Test
     void addPost_Identified() {

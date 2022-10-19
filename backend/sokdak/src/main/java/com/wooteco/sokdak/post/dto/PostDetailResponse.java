@@ -23,6 +23,7 @@ public class PostDetailResponse {
     private List<HashtagResponse> hashtags;
     private LocalDateTime createdAt;
     private int likeCount;
+    private int viewCount;
     private boolean like;
     private boolean authorized;
     private boolean modified;
@@ -33,7 +34,7 @@ public class PostDetailResponse {
 
     @Builder
     private PostDetailResponse(Long id, Long boardId, String nickname, String title, String content, boolean blocked,
-                               List<HashtagResponse> hashtagResponses, LocalDateTime createdAt, int likeCount,
+                               List<HashtagResponse> hashtagResponses, LocalDateTime createdAt, int likeCount, int viewCount,
                                boolean like, boolean authorized, boolean modified, String imageName) {
         this.id = id;
         this.boardId = boardId;
@@ -44,6 +45,7 @@ public class PostDetailResponse {
         this.hashtags = hashtagResponses;
         this.createdAt = createdAt;
         this.likeCount = likeCount;
+        this.viewCount = viewCount;
         this.like = like;
         this.authorized = authorized;
         this.modified = modified;
@@ -62,6 +64,7 @@ public class PostDetailResponse {
                 .blocked(post.isBlocked())
                 .createdAt(post.getCreatedAt())
                 .likeCount(post.getLikeCount())
+                .viewCount(post.getViewCount())
                 .like(liked)
                 .authorized(authorized)
                 .hashtagResponses(toResponse(hashtags))

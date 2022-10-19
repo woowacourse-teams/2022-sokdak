@@ -33,7 +33,7 @@ const PostListItem = forwardRef<HTMLDivElement, PostListItemProps>(
       );
     }
     return (
-      <Styled.Container onClick={handleClick} ref={ref} data-testid={testid} tabIndex={0}>
+      <Styled.Container onClick={handleClick} ref={ref} data-testid={testid}>
         <Styled.HeadContainer>
           <Styled.TitleContainer isModified={modified}>
             <Styled.Title>{title}</Styled.Title>

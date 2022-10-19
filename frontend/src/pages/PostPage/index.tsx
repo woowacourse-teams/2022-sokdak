@@ -19,9 +19,8 @@ import useResponsive from '@/hooks/useResponsive';
 
 import * as Styled from './index.styles';
 
+import AD from '@/constants/AD';
 import PATH from '@/constants/path';
-
-import { AD } from '@/dummy';
 
 const HOT_BORAD_ID = 1;
 const POST_COUNT = 5;

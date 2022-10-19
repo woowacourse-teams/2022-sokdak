@@ -73,7 +73,6 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<PostReport> postReports = new ArrayList<>();
 
-
     @CreatedDate
     private LocalDateTime createdAt;
 

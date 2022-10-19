@@ -1,10 +1,13 @@
 package com.wooteco.sokdak.image.util;
 
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.exif.ExifIFD0Directory;
+import com.wooteco.sokdak.image.exception.ImageReadException;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
 import javax.imageio.IIOImage;
@@ -12,6 +15,8 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
+import org.imgscalr.Scalr;
+import org.imgscalr.Scalr.Rotation;
 
 public class ImageCompressor {
 
@@ -38,8 +43,8 @@ public class ImageCompressor {
         originalFile.delete();
     }
 
-    private static BufferedImage extractBufferedImage(File originalFile) throws IOException {
-        final BufferedImage bufferedImage = ImageIO.read(originalFile);
+    private static BufferedImage extractBufferedImage(File originalFile) {
+        final BufferedImage bufferedImage = rotateIfUnexpectedRotation(originalFile);
         if (!bufferedImage.getColorModel().hasAlpha()) {
             return bufferedImage;
         }
@@ -52,5 +57,19 @@ public class ImageCompressor {
         g.dispose();
 
         return newBufferedImage;
+    }
+
+    private static BufferedImage rotateIfUnexpectedRotation(File originalFile) {
+        try {
+            final BufferedImage bufferedImage = ImageIO.read(originalFile);
+            final Metadata metadata = ImageMetadataReader.readMetadata(originalFile);
+            final ExifIFD0Directory directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
+            if (directory == null) {
+                return bufferedImage;
+            }
+            return Scalr.rotate(bufferedImage, Rotation.CW_90, null);
+        } catch (Exception exception) {
+            throw new ImageReadException();
+        }
     }
 }

@@ -44,7 +44,7 @@ const PostListItem = forwardRef<HTMLDivElement, PostListItemProps>(
         <Styled.ContentContainer>
           <Styled.Content>{content}</Styled.Content>
         </Styled.ContentContainer>
-        <PostCountInfo likeCount={likeCount} commentCount={commentCount} ariaHidden={false} />
+        <PostCountInfo likeCount={likeCount} commentCount={commentCount} />
       </Styled.Container>
     );
   },

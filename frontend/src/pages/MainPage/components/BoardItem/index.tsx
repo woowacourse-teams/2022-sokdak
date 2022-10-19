@@ -19,7 +19,7 @@ const BoardItem = ({ id, title, posts, boardId }: BoardItemProps) => {
         {posts.map(post => (
           <Styled.Item key={post.id} to={`${PATH.POST}/${post.id}`} data-testid={post.id}>
             <Styled.ItemTitle>{post.title}</Styled.ItemTitle>
-            <PostCountInfo likeCount={post.likeCount} commentCount={post.commentCount} ariaHidden={false} />
+            <PostCountInfo likeCount={post.likeCount} commentCount={post.commentCount} />
           </Styled.Item>
         ))}
       </Styled.ItemContainer>

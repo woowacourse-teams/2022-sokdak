@@ -5,7 +5,7 @@ import countFormatter from '@/utils/countFormatter';
 interface PostCountInfoProps {
   likeCount: number;
   commentCount: number;
-  ariaHidden: boolean;
+  ariaHidden?: boolean;
 }
 
 const PostCountInfo = ({ likeCount, commentCount, ariaHidden = false }: PostCountInfoProps) => {

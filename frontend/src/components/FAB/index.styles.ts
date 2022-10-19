@@ -18,6 +18,7 @@ export const Container = styled.button`
   cursor: pointer;
   position: fixed;
   bottom: 50px;
+  z-index: 10;
 `;
 
 export const ButtonContainer = styled.div`

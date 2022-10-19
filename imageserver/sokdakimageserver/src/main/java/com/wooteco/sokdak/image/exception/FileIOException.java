@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.exception;
+package com.wooteco.sokdak.image.exception;
 
 import com.wooteco.sokdak.advice.InternalException;
 

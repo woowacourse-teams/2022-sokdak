@@ -85,8 +85,14 @@ export const Date = styled.span`
   }
 `;
 
-export const LikeButtonContainer = styled.div`
-  width: 100%;
+export const ViewCount = styled.p`
+  color: ${props => props.theme.colors.gray_600};
+  width: max-content;
+  margin-top: 10px;
+  font-size: 0.8rem;
+`;
+
+export const CountContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 `;

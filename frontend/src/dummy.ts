@@ -31,7 +31,7 @@ export const postList: Post[] = [
     nickname: '테스트 계정',
     blocked: false,
     imageName: '7cc22416-4b03-41b8-ab26-477145a5a537.gif',
-    viewCount: 2,
+    viewCount: 20000000,
   },
   {
     id: 2,

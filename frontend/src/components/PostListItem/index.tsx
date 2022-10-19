@@ -15,7 +15,18 @@ interface PostListItemProps
 
 const PostListItem = forwardRef<HTMLDivElement, PostListItemProps>(
   (
-    { title, content, createdAt, likeCount, commentCount, modified, handleClick, testid, blocked }: PostListItemProps,
+    {
+      title,
+      content,
+      createdAt,
+      likeCount,
+      commentCount,
+      modified,
+      handleClick,
+      testid,
+      blocked,
+      viewCount,
+    }: PostListItemProps,
     ref,
   ) => {
     if (blocked) {
@@ -45,12 +56,15 @@ const PostListItem = forwardRef<HTMLDivElement, PostListItemProps>(
         <Styled.ContentContainer>
           <Styled.Content>{content}</Styled.Content>
         </Styled.ContentContainer>
-        <Styled.PostInfoContainer>
-          <Styled.LikeIcon />
-          <Styled.LikeCount>{countFormatter(likeCount)}</Styled.LikeCount>
-          <Styled.CommentIcon />
-          <Styled.CommentCount>{countFormatter(commentCount)}</Styled.CommentCount>
-        </Styled.PostInfoContainer>
+        <Styled.FooterContainer>
+          <Styled.ViewCountContainer>조회수 {countFormatter(viewCount)}회</Styled.ViewCountContainer>
+          <Styled.PostInfoContainer>
+            <Styled.LikeIcon />
+            <Styled.LikeCount>{countFormatter(likeCount)}</Styled.LikeCount>
+            <Styled.CommentIcon />
+            <Styled.CommentCount>{countFormatter(commentCount)}</Styled.CommentCount>
+          </Styled.PostInfoContainer>
+        </Styled.FooterContainer>
       </Styled.Container>
     );
   },

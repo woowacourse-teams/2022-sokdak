@@ -2,7 +2,6 @@ package com.wooteco.sokdak.post.domain;
 
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;
-import com.wooteco.sokdak.board.exception.BoardNotFoundException;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.hashtag.domain.PostHashtag;
 import com.wooteco.sokdak.like.domain.PostLike;
@@ -24,6 +23,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import lombok.Builder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -52,6 +52,9 @@ public class Post {
     @Embedded
     private Content content;
 
+    @Embedded
+    private ViewCount viewCount = new ViewCount();
+
     private String writerNickname;
 
     private String imageName;
@@ -70,6 +73,7 @@ public class Post {
 
     @OneToMany(mappedBy = "post")
     private List<PostReport> postReports = new ArrayList<>();
+
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -232,5 +236,13 @@ public class Post {
                 .filter(id -> id != HOT_BOARD_ID)
                 .findAny()
                 .orElseThrow(IllegalStateException::new);
+    }
+
+    public void addViewCount() {
+        viewCount.addViewCount();
+    }
+
+    public int getViewCount() {
+        return viewCount.getViewCount();
     }
 }

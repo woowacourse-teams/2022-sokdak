@@ -28,7 +28,7 @@ const useSearchPosts = ({
   useInfiniteQuery(
     [QUERY_KEYS.POSTS, ...storeCode],
     ({ pageParam = 0, queryKey: [, query, size] }) =>
-      axios.get(`/posts?query=${query.replaceAll(' ', '&#124;')}&size=${size}&page=${pageParam}`),
+      axios.get(`/posts?query=${query.replaceAll(' ', '%7C')}&size=${size}&page=${pageParam}`),
     {
       select: data => ({
         pages: data.pages.flatMap((page: AxiosResponse) => page.data.posts),

@@ -14,10 +14,10 @@ const SearchedPostPage = () => {
   if (!query) return null;
 
   const { data: postResult, fetchNextPage } = useSearchPosts({
-    storeCode: [query.trim().replaceAll(' ', '+').replaceAll('+', '|'), 5],
+    storeCode: [query.trim(), 5],
   });
   const { data: countResult } = useSearchPostCount({
-    storeCode: [query.trim().replaceAll(' ', '+').replaceAll('+', '|')],
+    storeCode: [query.trim()],
   });
 
   return (

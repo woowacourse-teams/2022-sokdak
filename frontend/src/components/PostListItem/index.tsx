@@ -4,6 +4,7 @@ import PostCountInfo from '@/components/PostCountInfo';
 
 import * as Styled from './index.styles';
 
+import countFormatter from '@/utils/countFormatter';
 import timeConverter from '@/utils/timeConverter';
 
 interface PostListItemProps
@@ -58,10 +59,7 @@ const PostListItem = forwardRef<HTMLDivElement, PostListItemProps>(
         <Styled.FooterContainer>
           <Styled.ViewCountContainer>조회수 {countFormatter(viewCount)}회</Styled.ViewCountContainer>
           <Styled.PostInfoContainer>
-            <Styled.LikeIcon />
-            <Styled.LikeCount>{countFormatter(likeCount)}</Styled.LikeCount>
-            <Styled.CommentIcon />
-            <Styled.CommentCount>{countFormatter(commentCount)}</Styled.CommentCount>
+            <PostCountInfo likeCount={likeCount} commentCount={commentCount} ariaHidden={true} />
           </Styled.PostInfoContainer>
         </Styled.FooterContainer>
       </Styled.Container>

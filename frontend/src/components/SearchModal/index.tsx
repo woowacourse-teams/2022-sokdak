@@ -13,9 +13,6 @@ import * as Styled from './index.styles';
 
 import useModalHistory from './useModalHistory';
 
-// TODO: 게시글이 없을 경우 없다는 화면 표시
-// TODO: 상수 분리
-
 interface SearchModalProps {
   handleSearchModal: React.DispatchWithoutAction;
 }

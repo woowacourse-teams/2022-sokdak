@@ -17,9 +17,13 @@ const useSearchPostCount = ({
   storeCode: [Query];
   options?: UseQueryOptions<AxiosResponse<ResponseData>, AxiosError, ResponseData, [QueryKey, Query]>;
 }) =>
-  useQuery([QUERY_KEYS.POST, ...storeCode], ({ queryKey: [, query] }) => axios.get(`/posts/count?query=${query}`), {
-    select: data => data.data,
-    ...options,
-  });
+  useQuery(
+    [QUERY_KEYS.POST, ...storeCode],
+    ({ queryKey: [, query] }) => axios.get(`/posts/count?query=${query.replaceAll(' ', '|')}`),
+    {
+      select: data => data.data,
+      ...options,
+    },
+  );
 
 export default useSearchPostCount;

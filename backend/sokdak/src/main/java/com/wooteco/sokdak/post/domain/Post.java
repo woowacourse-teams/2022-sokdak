@@ -51,8 +51,7 @@ public class Post {
     @Embedded
     private Content content;
 
-    @Embedded
-    private ViewCount viewCount = new ViewCount();
+    private int viewCount = 0;
 
     private String writerNickname;
 
@@ -236,11 +235,7 @@ public class Post {
                 .orElseThrow(IllegalStateException::new);
     }
 
-    public void addViewCount() {
-        viewCount.addViewCount();
-    }
-
     public int getViewCount() {
-        return viewCount.getViewCount();
+        return viewCount;
     }
 }

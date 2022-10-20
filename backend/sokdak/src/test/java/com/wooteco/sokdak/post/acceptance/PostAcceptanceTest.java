@@ -199,6 +199,23 @@ class PostAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("특정 게시글을 조회하면 해당 글의 조회수가 1 증가한다.")
+    @Test
+    void findPost_ViewCount() {
+        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT, true,
+                Collections.emptyList());
+        String postId = parsePostId(
+                httpPostWithAuthorization(newPostRequest, FREE_BOARD_POST_URI, getChrisToken()));
+
+        ExtractableResponse<Response> firstResponse = httpGet("/posts/" + postId);
+        PostDetailResponse firstPostDetailResponse = firstResponse.jsonPath().getObject(".", PostDetailResponse.class);
+
+        ExtractableResponse<Response> secondResponse = httpGet("/posts/" + postId);
+        PostDetailResponse secondPostDetailResponse = secondResponse.jsonPath().getObject(".", PostDetailResponse.class);
+
+        assertThat(firstPostDetailResponse.getViewCount() + 1).isEqualTo(secondPostDetailResponse.getViewCount());
+    }
+
     @DisplayName("게시글 제목이 없는 경우 글 작성을 할 수 없다.")
     @Test
     void addPost_Exception_NoTitle() {

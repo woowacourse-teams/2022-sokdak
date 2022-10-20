@@ -95,10 +95,13 @@ public class PostService {
         Board writableBoard = foundPost.getWritableBoard();
         boolean liked = foundPost.hasLikeOfMember(authInfo.getId());
         Hashtags hashtags = hashtagService.findHashtagsByPost(foundPost);
-        foundPost.addViewCount();
 
         return PostDetailResponse.of(foundPost, writableBoard, liked,
                 foundPost.isOwner(authInfo.getId()), hashtags, foundPost.getImageName());
+    }
+
+    public void updateViewCount(Long postId) {
+        postRepository.updateViewCount(postId);
     }
 
     private Post findPostObject(Long postId) {

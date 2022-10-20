@@ -273,13 +273,4 @@ class PostTest {
                 Arguments.of(reporter, member, false)
         );
     }
-
-    @DisplayName("글의 조회수를 1 증가시킨다.")
-    @Test
-    void addViewCount() {
-        int viewCount = post.getViewCount();
-        post.addViewCount();
-
-        assertThat(viewCount + 1).isEqualTo(post.getViewCount());
-    }
 }

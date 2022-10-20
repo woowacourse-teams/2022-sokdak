@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,6 +45,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 class PostServiceTest extends ServiceTest {
 
@@ -66,6 +70,9 @@ class PostServiceTest extends ServiceTest {
 
     @Autowired
     private PostHashtagRepository postHashtagRepository;
+
+    @PersistenceContext
+    private EntityManager em;
 
     private Post post;
     private Board board;
@@ -114,18 +121,21 @@ class PostServiceTest extends ServiceTest {
         );
     }
 
-    @DisplayName("특정 게시물을 조회하면 viewCount가 1 증가됨")
+    @DisplayName("특정 게시물의 조회수를 1 증가시킴")
     @Test
     void findViewCount() {
         postRepository.save(post);
         PostBoard postBoard = PostBoard.builder().build();
         postBoard.addBoard(board);
         postBoard.addPost(post);
+        postBoardRepository.save(postBoard);
 
-        PostDetailResponse firstFindPostResponse = postService.findPost(post.getId(), AUTH_INFO);
-        PostDetailResponse secondFindPostResponse = postService.findPost(post.getId(), AUTH_INFO2);
+        int viewCount = post.getViewCount();
+        postService.updateViewCount(post.getId());
+        em.clear();
+        int updatedViewCount = postRepository.findById(post.getId()).get().getViewCount();
 
-        assertThat(firstFindPostResponse.getViewCount() + 1).isEqualTo(secondFindPostResponse.getViewCount());
+        assertThat(viewCount + 1).isEqualTo(updatedViewCount);
     }
 
     @DisplayName("특정 게시판에 기명으로 글 작성 기능")

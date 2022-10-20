@@ -1,6 +1,7 @@
-package com.wooteco.sokdak.image;
+package com.wooteco.sokdak.image.domain;
 
-import com.wooteco.sokdak.exception.FileIOException;
+import com.wooteco.sokdak.image.util.ImageCompressor;
+import com.wooteco.sokdak.image.exception.FileIOException;
 import java.io.File;
 import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;

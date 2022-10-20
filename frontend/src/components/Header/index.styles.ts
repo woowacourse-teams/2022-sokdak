@@ -120,3 +120,13 @@ export const DropdownContainer = styled.div`
     margin-bottom: 7px;
   }
 `;
+
+export const SearchButton = styled.button`
+  width: fit-content;
+  background-color: transparent;
+  height: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+`;

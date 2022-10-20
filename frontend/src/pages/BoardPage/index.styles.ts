@@ -13,6 +13,7 @@ export const BoardContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 
   @media (max-width: 875px) {
     width: 90%;

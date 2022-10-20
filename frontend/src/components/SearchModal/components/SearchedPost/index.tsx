@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
+import NoResult from '@/pages/SearchedPostPage/components/NoResult';
+
 import Post from './components/Post';
 
 import * as Styled from './index.styles';
@@ -25,9 +27,13 @@ const SearchedPost = ({ posts, totalPostCount, keyword, closeModal }: SearchedPo
         <Styled.ResultCount>{totalPostCount}개의 검색 결과</Styled.ResultCount>
         {!!totalPostCount && <Styled.ViewMore onClick={viewMore}>더보기</Styled.ViewMore>}
       </Styled.Header>
-      {posts.map(({ id, title, content }) => (
-        <Post key={id} id={id} title={title} content={content} keyword={keyword} closeModal={closeModal} />
-      ))}
+      {posts.length ? (
+        posts.map(({ id, title, content }) => (
+          <Post key={id} id={id} title={title} content={content} keyword={keyword} closeModal={closeModal} />
+        ))
+      ) : (
+        <NoResult />
+      )}
     </Styled.Container>
   );
 };

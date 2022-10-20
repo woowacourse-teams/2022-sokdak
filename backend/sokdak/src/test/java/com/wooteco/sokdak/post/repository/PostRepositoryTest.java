@@ -7,6 +7,8 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 import com.wooteco.sokdak.config.JPAConfig;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.util.RepositoryTest;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,12 +16,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 
 @Import(JPAConfig.class)
 class PostRepositoryTest extends RepositoryTest {
 
     @Autowired
     private PostRepository postRepository;
+
+    @PersistenceContext
+    private EntityManager em;
 
     private Post post1;
     private Post post2;
@@ -80,5 +86,31 @@ class PostRepositoryTest extends RepositoryTest {
                 () -> assertThat(result.getContent()).containsExactly(post5, post4),
                 () -> assertThat(result.getTotalPages()).isEqualTo(3)
         );
+    }
+
+    @DisplayName("post의 viewCount를 1 증가시킨다.")
+    @Test
+    void updateViewCount() {
+        int originViewCount = postRepository.findById(post1.getId()).get().getViewCount();
+        postRepository.updateViewCount(post1.getId());
+        em.clear();
+        int viewCount = postRepository.findById(post1.getId()).get().getViewCount();
+
+        assertThat(originViewCount + 1).isEqualTo(viewCount);
+    }
+
+    @DisplayName("특정 쿼리에 부합하는 글을 시간순으로 가져오는지 확인")
+    @Test
+    void findPostSlicePagesByQuery() {
+        Slice<Post> result = postRepository.findPostSlicePagesByQuery(PageRequest.of(0, 2, DESC, "created_at"), "");
+        assertThat(result.getContent()).containsExactly(post5, post4);
+        assertThat(result.isLast()).isEqualTo(false);
+    }
+
+    @DisplayName("특정 쿼리에 부합하는 글의 개수 확인")
+    @Test
+    void countPostsByQuery() {
+        Page<Post> result = postRepository.findPostPagesByQuery(PageRequest.of(0, 2, DESC, "created_at"), "");
+        assertThat(result.getTotalElements()).isEqualTo(5L);
     }
 }

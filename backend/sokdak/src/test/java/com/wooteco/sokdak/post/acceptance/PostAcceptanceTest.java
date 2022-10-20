@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.post.acceptance;
 
+import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getExceptionMessage;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
@@ -20,10 +21,11 @@ import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
+import com.wooteco.sokdak.post.dto.PagePostsResponse;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
+import com.wooteco.sokdak.post.dto.PostsCountResponse;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.report.dto.ReportRequest;
@@ -69,7 +71,7 @@ class PostAcceptanceTest extends AcceptanceTest {
         httpPostWithAuthorization(NEW_POST_REQUEST, FREE_BOARD_POST_URI, token);
         httpPostWithAuthorization(postRequest2, FREE_BOARD_POST_URI, token);
         httpPostWithAuthorization(postRequest3, FREE_BOARD_POST_URI, token);
-        Long writableBoardID = 2L;
+        long writableBoardID = 2L;
 
         ExtractableResponse<Response> response = httpGet("/boards/" + writableBoardID + "/posts?size=2&page=0");
         List<String> postNames = parsePostTitles(response);
@@ -199,6 +201,23 @@ class PostAcceptanceTest extends AcceptanceTest {
         );
     }
 
+    @DisplayName("특정 게시글을 조회하면 해당 글의 조회수가 1 증가한다.")
+    @Test
+    void findPost_ViewCount() {
+        NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT, true,
+                Collections.emptyList());
+        String postId = parsePostId(
+                httpPostWithAuthorization(newPostRequest, FREE_BOARD_POST_URI, getChrisToken()));
+
+        ExtractableResponse<Response> firstResponse = httpGet("/posts/" + postId);
+        PostDetailResponse firstPostDetailResponse = firstResponse.jsonPath().getObject(".", PostDetailResponse.class);
+
+        ExtractableResponse<Response> secondResponse = httpGet("/posts/" + postId);
+        PostDetailResponse secondPostDetailResponse = secondResponse.jsonPath().getObject(".", PostDetailResponse.class);
+
+        assertThat(firstPostDetailResponse.getViewCount() + 1).isEqualTo(secondPostDetailResponse.getViewCount());
+    }
+
     @DisplayName("게시글 제목이 없는 경우 글 작성을 할 수 없다.")
     @Test
     void addPost_Exception_NoTitle() {
@@ -288,7 +307,7 @@ class PostAcceptanceTest extends AcceptanceTest {
         long wrongPage = 5L;
 
         ExtractableResponse<Response> response = httpGetWithAuthorization("/posts/me?size=3&page=" + wrongPage, token);
-        MyPostsResponse postsResponse = toMyPostsResponse(response);
+        PagePostsResponse postsResponse = toMyPostsResponse(response);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
@@ -296,6 +315,68 @@ class PostAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(postsResponse.getTotalPageCount()).isEqualTo(1)
         );
     }
+
+    @DisplayName("특정 쿼리에 부합하는 게시물을 검색 시 최신순으로 조회할 수 있다.")
+    @Test
+    void searchPosts() {
+        String token = getChrisToken();
+        NewPostRequest postRequest1 = new NewPostRequest("제목1검", "본문1", false, Collections.emptyList());
+        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", false, Collections.emptyList());
+        NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3색", false, Collections.emptyList());
+        httpPostWithAuthorization(postRequest1, FREE_BOARD_POST_URI, token);
+        httpPostWithAuthorization(postRequest2, FREE_BOARD_POST_URI, token);
+        httpPostWithAuthorization(postRequest3, FREE_BOARD_POST_URI, token);
+
+        ExtractableResponse<Response> response = httpGet("/posts?query=검|색&size=10&page=0");
+        PostsResponse postsResponse = toPostsResponse(response);
+        List<String> postNames = parsePostTitles(response);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(postNames).isEqualTo(List.of("제목3", "제목1검")),
+                () -> assertThat(postsResponse.isLastPage()).isTrue()
+        );
+    }
+
+    @DisplayName("query 를 지정하지 않을 시 모든 게시물들을 최신순으로 조회할 수 있다.")
+    @Test
+    void searchPosts_null() {
+        String token = getChrisToken();
+        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", false, Collections.emptyList());
+        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", false, Collections.emptyList());
+        NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", false, Collections.emptyList());
+        httpPostWithAuthorization(postRequest1, FREE_BOARD_POST_URI, token);
+        httpPostWithAuthorization(postRequest2, FREE_BOARD_POST_URI, token);
+        httpPostWithAuthorization(postRequest3, FREE_BOARD_POST_URI, token);
+
+        ExtractableResponse<Response> response = httpGet("/posts?size=10&page=0");
+        PostsResponse postsResponse = toPostsResponse(response);
+        List<String> postNames = parsePostTitles(response);
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(postNames).isEqualTo(List.of("제목3", "제목2", "제목1")),
+                () -> assertThat(postsResponse.isLastPage()).isTrue()
+        );
+    }
+
+    @DisplayName("특정 검색 결과 개수를 받아올 수 있다.")
+    @Test
+    void countPostWithQuery() {
+        String token = getChrisToken();
+        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", false, Collections.emptyList());
+        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", false, Collections.emptyList());
+        NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", false, Collections.emptyList());
+        httpPostWithAuthorization(postRequest1, FREE_BOARD_POST_URI, token);
+        httpPostWithAuthorization(postRequest2, FREE_BOARD_POST_URI, token);
+        httpPostWithAuthorization(postRequest3, FREE_BOARD_POST_URI, token);
+
+        ExtractableResponse<Response> response = httpGet("/posts/count?query=1");
+        PostsCountResponse postsResponse = toPostCountResponse(response);
+
+        assertThat(postsResponse.getTotalPostCount()).isEqualTo(1);
+    }
+
 
     private String parsePostId(ExtractableResponse<Response> response) {
         return response.header("Location")
@@ -311,9 +392,21 @@ class PostAcceptanceTest extends AcceptanceTest {
                 .collect(Collectors.toList());
     }
 
-    private MyPostsResponse toMyPostsResponse(ExtractableResponse<Response> response) {
+    private PostsResponse toPostsResponse(ExtractableResponse<Response> response) {
         return response.body()
                 .jsonPath()
-                .getObject(".", MyPostsResponse.class);
+                .getObject(".", PostsResponse.class);
+    }
+
+    private PostsCountResponse toPostCountResponse(ExtractableResponse<Response> response) {
+        return response.body()
+                .jsonPath()
+                .getObject(".", PostsCountResponse.class);
+    }
+
+    private PagePostsResponse toMyPostsResponse(ExtractableResponse<Response> response) {
+        return response.body()
+                .jsonPath()
+                .getObject(".", PagePostsResponse.class);
     }
 }

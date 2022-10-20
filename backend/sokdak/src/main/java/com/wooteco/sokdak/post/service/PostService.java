@@ -1,5 +1,7 @@
 package com.wooteco.sokdak.post.service;
 
+import static org.springframework.data.domain.Sort.Direction.DESC;
+
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.auth.service.AuthService;
@@ -16,15 +18,20 @@ import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
 import com.wooteco.sokdak.notification.service.NotificationService;
 import com.wooteco.sokdak.post.domain.Post;
-import com.wooteco.sokdak.post.dto.MyPostsResponse;
+import com.wooteco.sokdak.post.domain.SearchQuery;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
+import com.wooteco.sokdak.post.dto.PagePostsResponse;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
+import com.wooteco.sokdak.post.dto.PostsCountResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.Collections;
+import javax.annotation.Nullable;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -32,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
+@Slf4j
 public class PostService {
 
     private final HashtagService hashtagService;
@@ -100,6 +108,11 @@ public class PostService {
                 foundPost.isOwner(authInfo.getId()), hashtags, foundPost.getImageName());
     }
 
+    @Transactional
+    public void updateViewCount(Long postId) {
+        postRepository.updateViewCount(postId);
+    }
+
     private Post findPostObject(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
@@ -110,10 +123,26 @@ public class PostService {
         return PostsResponse.ofPostSlice(posts);
     }
 
-    public MyPostsResponse findMyPosts(Pageable pageable, AuthInfo authInfo) {
+    public PagePostsResponse findMyPosts(Pageable pageable, AuthInfo authInfo) {
         Member member = findMember(authInfo);
         Page<Post> posts = postRepository.findPostsByMemberOrderByCreatedAtDesc(pageable, member);
-        return MyPostsResponse.of(posts.getContent(), posts.getTotalPages());
+        return PagePostsResponse.of(posts.getContent(), posts.getTotalPages(), (int) posts.getTotalElements());
+    }
+
+    public PostsCountResponse countPostWithQuery(String query) {
+        Pageable pageable = PageRequest.of(0, 3, DESC, "created_at");
+        SearchQuery searchQuery = new SearchQuery(query);
+
+        Page<Post> posts = postRepository.findPostPagesByQuery(pageable, searchQuery.getValue());
+        return PostsCountResponse.of((int) posts.getTotalElements());
+    }
+
+    public PostsResponse searchSliceWithQuery(@Nullable String query,
+                                              Pageable pageable) {
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), DESC, "created_at");
+        SearchQuery searchQuery = new SearchQuery(query);
+        Slice<Post> posts = postRepository.findPostSlicePagesByQuery(pageable, searchQuery.getValue());
+        return PostsResponse.ofPostSlice(posts);
     }
 
     private Member findMember(AuthInfo authInfo) {

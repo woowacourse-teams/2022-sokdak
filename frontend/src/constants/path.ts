@@ -9,6 +9,7 @@ const PATH = {
   HASHTAG: '/hashtag',
   NOTIFICATION: '/notification',
   PROFILE: '/profile',
+  SEARCH_POST: '/search/post',
 };
 
 export default PATH;

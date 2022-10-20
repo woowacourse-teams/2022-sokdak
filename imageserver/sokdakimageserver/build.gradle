@@ -21,6 +21,10 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	implementation 'com.drewnoakes:metadata-extractor:2.18.0'
+	implementation 'org.imgscalr:imgscalr-lib:4.2'
+
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

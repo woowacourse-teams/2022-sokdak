@@ -40,7 +40,11 @@ const Header = () => {
         </Styled.LeftSide>
         {isHeaderSizeLineOver && <SearchWeb onClickSearchIcon={handleSearchModal} />}
         <Styled.RightSide>
-          {!isHeaderSizeLineOver && <Styled.Search onClick={handleSearchModal} />}
+          {!isHeaderSizeLineOver && (
+            <Styled.SearchButton onClick={handleSearchModal}>
+              <Styled.Search title={'검색'} />
+            </Styled.SearchButton>
+          )}
           {isLogin && username ? (
             <>
               <Notification />

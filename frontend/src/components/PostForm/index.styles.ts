@@ -7,12 +7,13 @@ export const Container = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 90%;
-  padding: 1em;
+  width: 100%;
+  padding: 1em 0.5em;
   box-sizing: border-box;
 
   @media (min-width: 875px) {
     width: 50%;
+    padding: 3rem 0.5rem;
   }
 `;
 

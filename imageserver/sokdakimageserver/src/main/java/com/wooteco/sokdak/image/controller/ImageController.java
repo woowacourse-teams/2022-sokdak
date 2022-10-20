@@ -1,5 +1,7 @@
-package com.wooteco.sokdak.image;
+package com.wooteco.sokdak.image.controller;
 
+import com.wooteco.sokdak.image.dto.ImageResponse;
+import com.wooteco.sokdak.image.service.ImageService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +23,6 @@ public class ImageController {
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<ImageResponse> upload(@RequestPart MultipartFile image) {
         ImageResponse imageResponse = imageService.uploadImage(image);
-
         return ResponseEntity.ok(imageResponse);
     }
 }

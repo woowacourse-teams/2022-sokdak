@@ -4,6 +4,7 @@ import PostCountInfo from '@/components/PostCountInfo';
 
 import * as Styled from './index.styles';
 
+import countFormatter from '@/utils/countFormatter';
 import timeConverter from '@/utils/timeConverter';
 
 interface PostListItemProps
@@ -14,7 +15,18 @@ interface PostListItemProps
 
 const PostListItem = forwardRef<HTMLDivElement, PostListItemProps>(
   (
-    { title, content, createdAt, likeCount, commentCount, modified, handleClick, testid, blocked }: PostListItemProps,
+    {
+      title,
+      content,
+      createdAt,
+      likeCount,
+      commentCount,
+      modified,
+      handleClick,
+      testid,
+      blocked,
+      viewCount,
+    }: PostListItemProps,
     ref,
   ) => {
     if (blocked) {
@@ -44,7 +56,12 @@ const PostListItem = forwardRef<HTMLDivElement, PostListItemProps>(
         <Styled.ContentContainer>
           <Styled.Content>{content}</Styled.Content>
         </Styled.ContentContainer>
-        <PostCountInfo likeCount={likeCount} commentCount={commentCount} />
+        <Styled.FooterContainer>
+          <Styled.ViewCountContainer>조회수 {countFormatter(viewCount)}회</Styled.ViewCountContainer>
+          <Styled.PostInfoContainer>
+            <PostCountInfo likeCount={likeCount} commentCount={commentCount} ariaHidden={true} />
+          </Styled.PostInfoContainer>
+        </Styled.FooterContainer>
       </Styled.Container>
     );
   },

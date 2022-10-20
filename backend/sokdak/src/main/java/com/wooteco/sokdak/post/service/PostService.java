@@ -108,6 +108,7 @@ public class PostService {
                 foundPost.isOwner(authInfo.getId()), hashtags, foundPost.getImageName());
     }
 
+    @Transactional
     public void updateViewCount(Long postId) {
         postRepository.updateViewCount(postId);
     }

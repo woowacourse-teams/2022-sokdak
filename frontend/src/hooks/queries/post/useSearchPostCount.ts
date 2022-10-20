@@ -19,7 +19,8 @@ const useSearchPostCount = ({
 }) =>
   useQuery(
     [QUERY_KEYS.POST, ...storeCode],
-    ({ queryKey: [, query] }) => axios.get(`/posts/count?query=${query.replaceAll(' ', '%7C')}`),
+    ({ queryKey: [, query] }) =>
+      axios.get(`/posts/count?query=${query.replaceAll(' ', '%7C').replaceAll('|', '%7C').replaceAll('+', '%7C')}`),
     {
       select: data => data.data,
       ...options,

@@ -37,6 +37,7 @@ public class PostController {
 
     @GetMapping("/posts/{id}")
     public ResponseEntity<PostDetailResponse> findPost(@PathVariable Long id, @Login AuthInfo authInfo) {
+        postService.updateViewCount(id);
         PostDetailResponse postResponse = postService.findPost(id, authInfo);
         return ResponseEntity.ok(postResponse);
     }

@@ -108,6 +108,10 @@ public class PostService {
                 foundPost.isOwner(authInfo.getId()), hashtags, foundPost.getImageName());
     }
 
+    public void updateViewCount(Long postId) {
+        postRepository.updateViewCount(postId);
+    }
+
     private Post findPostObject(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);

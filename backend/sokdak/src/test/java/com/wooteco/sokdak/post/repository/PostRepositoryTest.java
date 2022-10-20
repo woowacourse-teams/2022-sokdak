@@ -7,6 +7,8 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 import com.wooteco.sokdak.config.JPAConfig;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.util.RepositoryTest;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +23,9 @@ class PostRepositoryTest extends RepositoryTest {
 
     @Autowired
     private PostRepository postRepository;
+
+    @PersistenceContext
+    private EntityManager em;
 
     private Post post1;
     private Post post2;
@@ -60,6 +65,7 @@ class PostRepositoryTest extends RepositoryTest {
         postRepository.save(post3);
         postRepository.save(post4);
         postRepository.save(post5);
+        System.out.println("@@@@@@ save all post!!!!!!");
     }
 
     @DisplayName("게시글, 회원 매핑 확인")
@@ -81,6 +87,17 @@ class PostRepositoryTest extends RepositoryTest {
                 () -> assertThat(result.getContent()).containsExactly(post5, post4),
                 () -> assertThat(result.getTotalPages()).isEqualTo(3)
         );
+    }
+
+    @DisplayName("post의 viewCount를 1 증가시킨다.")
+    @Test
+    void updateViewCount() {
+        int originViewCount = postRepository.findById(post1.getId()).get().getViewCount();
+        postRepository.updateViewCount(post1.getId());
+        em.clear();
+        int viewCount = postRepository.findById(post1.getId()).get().getViewCount();
+
+        assertThat(originViewCount + 1).isEqualTo(viewCount);
     }
 
     @DisplayName("특정 쿼리에 부합하는 글을 시간순으로 가져오는지 확인")

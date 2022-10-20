@@ -2,7 +2,6 @@ package com.wooteco.sokdak.post.domain;
 
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;
-import com.wooteco.sokdak.board.exception.BoardNotFoundException;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.hashtag.domain.PostHashtag;
 import com.wooteco.sokdak.like.domain.PostLike;
@@ -51,6 +50,8 @@ public class Post {
 
     @Embedded
     private Content content;
+
+    private int viewCount = 0;
 
     private String writerNickname;
 
@@ -232,5 +233,9 @@ public class Post {
                 .filter(id -> id != HOT_BOARD_ID)
                 .findAny()
                 .orElseThrow(IllegalStateException::new);
+    }
+
+    public int getViewCount() {
+        return viewCount;
     }
 }

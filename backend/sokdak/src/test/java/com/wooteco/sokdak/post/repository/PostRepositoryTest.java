@@ -98,6 +98,7 @@ class PostRepositoryTest extends RepositoryTest {
         int viewCount = postRepository.findById(post1.getId()).get().getViewCount();
 
         assertThat(originViewCount + 1).isEqualTo(viewCount);
+    }
 
     @DisplayName("특정 쿼리에 부합하는 글을 시간순으로 가져오는지 확인")
     @Test

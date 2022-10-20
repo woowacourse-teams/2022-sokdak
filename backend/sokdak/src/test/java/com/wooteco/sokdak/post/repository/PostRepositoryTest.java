@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 
 @Import(JPAConfig.class)
 class PostRepositoryTest extends RepositoryTest {
@@ -80,5 +81,20 @@ class PostRepositoryTest extends RepositoryTest {
                 () -> assertThat(result.getContent()).containsExactly(post5, post4),
                 () -> assertThat(result.getTotalPages()).isEqualTo(3)
         );
+    }
+
+    @DisplayName("특정 쿼리에 부합하는 글을 시간순으로 가져오는지 확인")
+    @Test
+    void findPostSlicePagesByQuery() {
+        Slice<Post> result = postRepository.findPostSlicePagesByQuery(PageRequest.of(0, 2, DESC, "created_at"), "");
+        assertThat(result.getContent()).containsExactly(post5, post4);
+        assertThat(result.isLast()).isEqualTo(false);
+    }
+
+    @DisplayName("특정 쿼리에 부합하는 글의 개수 확인")
+    @Test
+    void countPostsByQuery() {
+        Page<Post> result = postRepository.findPostPagesByQuery(PageRequest.of(0, 2, DESC, "created_at"), "");
+        assertThat(result.getTotalElements()).isEqualTo(5L);
     }
 }

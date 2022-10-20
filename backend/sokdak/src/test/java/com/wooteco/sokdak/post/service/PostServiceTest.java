@@ -22,10 +22,11 @@ import com.wooteco.sokdak.hashtag.domain.PostHashtag;
 import com.wooteco.sokdak.hashtag.repository.HashtagRepository;
 import com.wooteco.sokdak.hashtag.repository.PostHashtagRepository;
 import com.wooteco.sokdak.post.domain.Post;
-import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
+import com.wooteco.sokdak.post.dto.PagePostsResponse;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
+import com.wooteco.sokdak.post.dto.PostsCountResponse;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
@@ -335,21 +336,173 @@ class PostServiceTest extends ServiceTest {
                 .content("본문")
                 .member(member)
                 .build();
-        postRepository.save(post1);
         Post post2 = Post.builder()
                 .title("제목2")
                 .content("본문2")
                 .member(member)
                 .build();
-        postRepository.save(post2);
+        postRepository.saveAll(List.of(post1, post2));
 
-        MyPostsResponse myPosts = postService.findMyPosts(PageRequest.of(0, 1, DESC, "createdAt"), AUTH_INFO);
+        PagePostsResponse myPosts = postService.findMyPosts(PageRequest.of(0, 1, DESC, "createdAt"), AUTH_INFO);
 
         assertAll(
                 () -> assertThat(myPosts.getPosts()).usingRecursiveComparison()
                         .comparingOnlyFields("title", "content")
                         .isEqualTo(List.of(PostsElementResponse.from(post2))),
                 () -> assertThat(myPosts.getTotalPageCount()).isEqualTo(2)
+        );
+    }
+
+    @DisplayName("쿼리로 포스트 하나 검색 기능")
+    @Test
+    void searchSliceWithQueryAndHashtags_OnePost() {
+        Post post1 = Post.builder()
+                .title("제목")
+                .content("본문")
+                .member(member)
+                .build();
+        Post post2 = Post.builder()
+                .title("제목2")
+                .content("본문2")
+                .member(member)
+                .build();
+        postRepository.saveAll(List.of(post1, post2));
+
+        String query = "2";
+        PostsResponse myPosts = postService.searchSliceWithQuery(query,
+                PageRequest.of(0, 5, DESC, "createdAt"));
+        PostsCountResponse postsCountResponse = postService.countPostWithQuery(query);
+
+        assertAll(
+                () -> assertThat(myPosts.getPosts()).usingRecursiveComparison()
+                        .comparingOnlyFields("title", "content")
+                        .isEqualTo(List.of(PostsElementResponse.from(post2))),
+                () -> assertThat(postsCountResponse.getTotalPostCount()).isEqualTo(1)
+        );
+    }
+
+    @DisplayName("쿼리로 여러 포스트 검색 기능")
+    @Test
+    void searchSliceWithQuery_MultiPost() {
+        Post post1 = Post.builder()
+                .title("제목")
+                .content("본문")
+                .member(member)
+                .build();
+        Post post2 = Post.builder()
+                .title("제목2")
+                .content("본문2")
+                .member(member)
+                .build();
+        postRepository.saveAll(List.of(post1, post2));
+
+        PostsResponse pagePostsResponse = postService.searchSliceWithQuery("제목",
+                PageRequest.of(0, 5, DESC, "createdAt"));
+
+        assertAll(
+                () -> assertThat(pagePostsResponse.getPosts()).usingRecursiveComparison()
+                        .comparingOnlyFields("title", "content")
+                        .isEqualTo(List.of(PostsElementResponse.from(post2), PostsElementResponse.from(post1)))
+        );
+    }
+
+    @DisplayName("쿼리로 제목과 본문 안에서 검색 기능")
+    @Test
+    void searchSliceWithQuery_TitleOrContent() {
+        Post post1 = Post.builder()
+                .title("제목")
+                .content("본문")
+                .member(member)
+                .build();
+        Post post2 = Post.builder()
+                .title("제목2")
+                .content("본문2검색")
+                .member(member)
+                .build();
+        Post post3 = Post.builder()
+                .title("제목2검색")
+                .content("본문2")
+                .member(member)
+                .build();
+        postRepository.saveAll(List.of(post1, post2, post3));
+
+        String query = "검색";
+        PostsResponse myPosts = postService.searchSliceWithQuery(query,
+                PageRequest.of(0, 5, DESC, "createdAt"));
+        PostsCountResponse postsCountResponse = postService.countPostWithQuery(query);
+
+        assertAll(
+                () -> assertThat(myPosts.getPosts()).usingRecursiveComparison()
+                        .comparingOnlyFields("title", "content")
+                        .isEqualTo(List.of(PostsElementResponse.from(post3), PostsElementResponse.from(post2))),
+                () -> assertThat(postsCountResponse.getTotalPostCount()).isEqualTo(2)
+        );
+    }
+
+    @DisplayName("띄어쓰기 쿼리로 제목과 본문 안에서 검색 기능")
+    @Test
+    void searchSliceWithQuery_Or() {
+        Post post1 = Post.builder()
+                .title("제목")
+                .content("본문서치")
+                .member(member)
+                .build();
+        Post post2 = Post.builder()
+                .title("제목2")
+                .content("본문2검색")
+                .member(member)
+                .build();
+        Post post3 = Post.builder()
+                .title("제목2검색")
+                .content("본문2")
+                .member(member)
+                .build();
+        postRepository.saveAll(List.of(post1, post2, post3));
+
+        String query = "서치|검색";
+        PostsResponse myPosts = postService.searchSliceWithQuery(query,
+                PageRequest.of(0, 5, DESC, "createdAt"));
+        PostsCountResponse postsCountResponse = postService.countPostWithQuery(query);
+
+        assertAll(
+                () -> assertThat(myPosts.getPosts()).usingRecursiveComparison()
+                        .comparingOnlyFields("title", "content")
+                        .isEqualTo(List.of(
+                                PostsElementResponse.from(post3),
+                                PostsElementResponse.from(post2),
+                                PostsElementResponse.from(post1))),
+                () -> assertThat(postsCountResponse.getTotalPostCount()).isEqualTo(3)
+        );
+    }
+
+    @DisplayName("인젝션 위험 쿼리는 빈 쿼리로 대체")
+    @ParameterizedTest
+    @CsvSource(value = {"update", "delete", "insert", "select", "()"})
+    void searchSliceWithQuery_noInjection(String query) {
+        Post post1 = Post.builder()
+                .title("제목")
+                .content("본문서치")
+                .member(member)
+                .build();
+        Post post2 = Post.builder()
+                .title("제목2")
+                .content("본문2검색")
+                .member(member)
+                .build();
+        Post post3 = Post.builder()
+                .title("제목2검색")
+                .content("본문2")
+                .member(member)
+                .build();
+        postRepository.saveAll(List.of(post1, post2, post3));
+
+        PostsResponse myPosts = postService.searchSliceWithQuery(query,
+                PageRequest.of(0, 5, DESC, "createdAt"));
+        PostsCountResponse postsCountResponse = postService.countPostWithQuery(query);
+
+        assertAll(
+                () -> assertThat(myPosts.isLastPage()).isEqualTo(true),
+                () -> assertThat(postsCountResponse.getTotalPostCount()).isEqualTo(3)
         );
     }
 
@@ -367,7 +520,7 @@ class PostServiceTest extends ServiceTest {
         postRepository.save(post);
         int wrongPage = 99;
 
-        MyPostsResponse myPosts = postService.findMyPosts(PageRequest.of(wrongPage, 3), AUTH_INFO);
+        PagePostsResponse myPosts = postService.findMyPosts(PageRequest.of(wrongPage, 3, DESC, "createdAt"), AUTH_INFO);
 
         assertAll(
                 () -> assertThat(myPosts.getPosts()).isEmpty(),

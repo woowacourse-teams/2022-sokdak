@@ -270,15 +270,15 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("게시글 검색 시 200 반환")
     @Test
     void searchPosts() {
-        PageRequest pageRequest = PageRequest.of(0, 2);
         PostsResponse pagePostsResponse = new PostsResponse(
                 List.of(POSTS_ELEMENT_RESPONSE_2, POSTS_ELEMENT_RESPONSE_1), true);
         doReturn(pagePostsResponse)
                 .when(postService)
-                .searchSliceWithQuery(any(), refEq(pageRequest));
+                .searchSliceWithQuery(any(), any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(AUTHORIZATION, "Bearer any")
                 .when().get("/posts?query=제목&size=2&page=0")
                 .then().log().all()
                 .assertThat()
@@ -289,12 +289,11 @@ class PostControllerTest extends ControllerTest {
     @DisplayName("or 게시글 검색 시 200 반환")
     @Test
     void searchPosts_or() {
-        PageRequest pageRequest = PageRequest.of(0, 2);
         PostsResponse pagePostsResponse = new PostsResponse(
                 List.of(POSTS_ELEMENT_RESPONSE_2, POSTS_ELEMENT_RESPONSE_1), false);
         doReturn(pagePostsResponse)
                 .when(postService)
-                .searchSliceWithQuery(any(), refEq(pageRequest));
+                .searchSliceWithQuery(any(), any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -302,6 +301,24 @@ class PostControllerTest extends ControllerTest {
                 .then().log().all()
                 .assertThat()
                 .apply(document("search/posts/success/or"))
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("and 게시글 검색 시 200 반환")
+    @Test
+    void searchPosts_and() {
+        PostsResponse pagePostsResponse = new PostsResponse(
+                List.of(POSTS_ELEMENT_RESPONSE_2, POSTS_ELEMENT_RESPONSE_1), false);
+        doReturn(pagePostsResponse)
+                .when(postService)
+                .searchSliceWithQuery(any(), any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/posts?query=제목2&제목1&size=2&page=0")
+                .then().log().all()
+                .assertThat()
+                .apply(document("search/posts/success/and"))
                 .statusCode(HttpStatus.OK.value());
     }
 

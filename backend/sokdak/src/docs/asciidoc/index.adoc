@@ -196,6 +196,11 @@ operation::search/posts/success/or[snippets='http-request,http-response']
 ==== 성공
 operation::search/posts/success/and[snippets='http-request,http-response']
 
+
+=== 게시글 개수 조회
+==== 성공
+operation::count/posts/success[snippets='http-request,http-response']
+
 == 신고
 게시글/댓글 신고 관련 컨트롤러 테스트 구현 필요
 

@@ -13,6 +13,7 @@ import * as Styled from './index.styles';
 import PATH from '@/constants/path';
 import { MUTATION_KEY } from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
+import countFormatter from '@/utils/countFormatter';
 import timeConverter from '@/utils/timeConverter';
 
 import ReportModal from '../ReportModal';
@@ -28,6 +29,7 @@ interface PostHeaderProps {
     nickname: string;
     like: boolean;
     likeCount: number;
+    viewCount: number;
   };
   onClickDeleteButton: () => void;
   onClickLikeButton: () => void;
@@ -84,9 +86,11 @@ const PostHeader = ({ post, onClickDeleteButton, onClickLikeButton }: PostHeader
         <Styled.Author>{post.nickname}</Styled.Author>
         <Styled.Date>{timeConverter(post.createdAt)}</Styled.Date>
       </Styled.PostInfo>
-      <Styled.LikeButtonContainer>
+      <Styled.CountContainer>
+        <Styled.ViewCount>조회수 {countFormatter(post.viewCount)}회</Styled.ViewCount>
+
         <LikeButton isLiked={post.like} likeCount={post.likeCount} onClick={onClickLikeButton} />
-      </Styled.LikeButtonContainer>
+      </Styled.CountContainer>
       <ReportModal isModalOpen={isReportModalOpen} onClose={handleReportModal} submitReport={handleSubmitReport} />
     </Styled.HeadContainer>
   );

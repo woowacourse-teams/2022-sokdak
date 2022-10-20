@@ -25,11 +25,9 @@ class AuthCodeTest {
                 .code("ABCDEF")
                 .serialNumber("21f46568bf6002c23843d198af30bb2bc8123695bd3d12ce86e0fc35bc5d3279")
                 .build();
-        System.err.println(authCode.getCreatedAt());
         assertThat(authCode.getCreatedAt()).isNull();
 
         AuthCode save = authCodeRepository.save(authCode);
-        System.err.println(save.getCreatedAt());
         assertThat(save.getCreatedAt()).isNotNull();
     }
 
@@ -42,11 +40,9 @@ class AuthCodeTest {
                 .serialNumber("21f46568bf6002c23843d198af30bb2bc8123695bd3d12ce86e0fc35bc5d3279")
                 .createdAt(TimeSetting)
                 .build();
-        System.err.println(authCode.getCreatedAt());
         assertThat(authCode.getCreatedAt()).isEqualTo(TimeSetting);
 
         AuthCode save = authCodeRepository.save(authCode);
-        System.err.println(save.getCreatedAt());
         assertThat(save.getCreatedAt()).isNotEqualTo(TimeSetting);
     }
 

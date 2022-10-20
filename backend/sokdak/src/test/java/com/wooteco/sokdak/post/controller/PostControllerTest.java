@@ -12,10 +12,11 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.hashtag.dto.HashtagResponse;
-import com.wooteco.sokdak.post.dto.MyPostsResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
+import com.wooteco.sokdak.post.dto.PagePostsResponse;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
+import com.wooteco.sokdak.post.dto.PostsCountResponse;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
@@ -248,10 +249,11 @@ class PostControllerTest extends ControllerTest {
     @Test
     void findMyPosts() {
         PageRequest pageRequest = PageRequest.of(0, 2);
-        MyPostsResponse myPostsResponse = new MyPostsResponse(
+        PagePostsResponse pagePostsResponse = new PagePostsResponse(
                 List.of(POSTS_ELEMENT_RESPONSE_2, POSTS_ELEMENT_RESPONSE_1),
-                5);
-        doReturn(myPostsResponse)
+                5,
+                10);
+        doReturn(pagePostsResponse)
                 .when(postService)
                 .findMyPosts(refEq(pageRequest), any());
 
@@ -265,11 +267,83 @@ class PostControllerTest extends ControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
+    @DisplayName("게시글 검색 시 200 반환")
+    @Test
+    void searchPosts() {
+        PostsResponse pagePostsResponse = new PostsResponse(
+                List.of(POSTS_ELEMENT_RESPONSE_2, POSTS_ELEMENT_RESPONSE_1), true);
+        doReturn(pagePostsResponse)
+                .when(postService)
+                .searchSliceWithQuery(any(), any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(AUTHORIZATION, "Bearer any")
+                .when().get("/posts?query=제목&size=2&page=0")
+                .then().log().all()
+                .assertThat()
+                .apply(document("search/posts/success"))
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("or 게시글 검색 시 200 반환")
+    @Test
+    void searchPosts_or() {
+        PostsResponse pagePostsResponse = new PostsResponse(
+                List.of(POSTS_ELEMENT_RESPONSE_2, POSTS_ELEMENT_RESPONSE_1), false);
+        doReturn(pagePostsResponse)
+                .when(postService)
+                .searchSliceWithQuery(any(), any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/posts?query=제목2|제목1&size=2&page=0")
+                .then().log().all()
+                .assertThat()
+                .apply(document("search/posts/success/or"))
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("and 게시글 검색 시 200 반환")
+    @Test
+    void searchPosts_and() {
+        PostsResponse pagePostsResponse = new PostsResponse(
+                List.of(POSTS_ELEMENT_RESPONSE_2, POSTS_ELEMENT_RESPONSE_1), false);
+        doReturn(pagePostsResponse)
+                .when(postService)
+                .searchSliceWithQuery(any(), any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/posts?query=제목2&제목1&size=2&page=0")
+                .then().log().all()
+                .assertThat()
+                .apply(document("search/posts/success/and"))
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("게시글 개수검색 시 200 반환")
+    @Test
+    void searchPostsCount() {
+        PostsCountResponse countResponse = new PostsCountResponse(3);
+        doReturn(countResponse)
+                .when(postService)
+                .countPostWithQuery(any());
+
+        restDocs
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/posts/count?query=제목")
+                .then().log().all()
+                .assertThat()
+                .apply(document("count/posts/success"))
+                .statusCode(HttpStatus.OK.value());
+    }
+
     @DisplayName("내가 쓴 글의 없는 페이지 조회 시 200 반환")
     @Test
     void findMyPosts_Exception_NoPage() {
         PageRequest pageRequest = PageRequest.of(WRONG_PAGE, 2);
-        doReturn(new MyPostsResponse(Collections.emptyList(), 5))
+        doReturn(new PagePostsResponse(Collections.emptyList(), 1, 0))
                 .when(postService)
                 .findMyPosts(refEq(pageRequest), any());
 

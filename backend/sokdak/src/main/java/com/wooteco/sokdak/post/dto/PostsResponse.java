@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.post.dto;
 
-import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.post.domain.Post;
 import java.util.List;
 import java.util.stream.Collectors;

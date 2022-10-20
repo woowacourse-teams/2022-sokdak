@@ -14,9 +14,10 @@ export const Container = styled.header`
   align-items: center;
   margin: 15px auto;
   gap: 3em;
+  box-sizing: border-box;
 
   @media (max-width: 875px) {
-    width: 340px;
+    width: 320px;
   }
 `;
 
@@ -118,4 +119,14 @@ export const DropdownContainer = styled.div`
   @media (min-width: 875px) {
     margin-bottom: 7px;
   }
+`;
+
+export const SearchButton = styled.button`
+  width: fit-content;
+  background-color: transparent;
+  height: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
 `;

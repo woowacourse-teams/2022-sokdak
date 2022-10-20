@@ -31,6 +31,7 @@ export const postList: Post[] = [
     nickname: '테스트 계정',
     blocked: false,
     imageName: '7cc22416-4b03-41b8-ab26-477145a5a537.gif',
+    viewCount: 20000000,
   },
   {
     id: 2,
@@ -56,6 +57,7 @@ export const postList: Post[] = [
     nickname: '짜증난 파이썬',
     blocked: false,
     imageName: '',
+    viewCount: 3,
   },
 
   {
@@ -78,6 +80,7 @@ export const postList: Post[] = [
     nickname: '테스트 계정',
     blocked: false,
     imageName: '7b81f2dc-37ae-4fca-9109-2e6c03343df6.png',
+    viewCount: 5,
   },
   {
     id: 4,
@@ -99,6 +102,7 @@ export const postList: Post[] = [
     nickname: '짜증난 파이썬',
     blocked: false,
     imageName: '',
+    viewCount: 7,
   },
   {
     id: 5,
@@ -120,6 +124,7 @@ export const postList: Post[] = [
     nickname: '테스트 계정',
     blocked: true,
     imageName: '',
+    viewCount: 5,
   },
   {
     id: 6,
@@ -136,6 +141,7 @@ export const postList: Post[] = [
     nickname: '못된 젠킨스',
     blocked: true,
     imageName: '',
+    viewCount: 3,
   },
   {
     id: 7,
@@ -152,6 +158,7 @@ export const postList: Post[] = [
     nickname: '행복한 리액트',
     blocked: false,
     imageName: '',
+    viewCount: 4,
   },
   {
     id: 8,
@@ -168,6 +175,7 @@ export const postList: Post[] = [
     nickname: '슬픈 자바',
     blocked: false,
     imageName: '',
+    viewCount: 4,
   },
   {
     id: 9,
@@ -184,6 +192,7 @@ export const postList: Post[] = [
     nickname: '짜증난 파이썬',
     blocked: false,
     imageName: '',
+    viewCount: 8,
   },
   {
     id: 10,
@@ -200,6 +209,7 @@ export const postList: Post[] = [
     nickname: '짜증난 파이썬',
     blocked: false,
     imageName: '',
+    viewCount: 0,
   },
   {
     id: 11,
@@ -216,6 +226,7 @@ export const postList: Post[] = [
     nickname: '짜증난 파이썬',
     blocked: false,
     imageName: '',
+    viewCount: 7,
   },
   {
     id: 12,
@@ -232,6 +243,7 @@ export const postList: Post[] = [
     nickname: '짜증난 파이썬',
     blocked: false,
     imageName: '',
+    viewCount: 8,
   },
   {
     id: 13,
@@ -248,6 +260,7 @@ export const postList: Post[] = [
     nickname: '짜증난 파이썬',
     blocked: false,
     imageName: '',
+    viewCount: 5,
   },
   {
     id: 14,
@@ -264,6 +277,7 @@ export const postList: Post[] = [
     nickname: '짜증난 파이썬',
     blocked: false,
     imageName: '',
+    viewCount: 7,
   },
   {
     id: 15,
@@ -280,6 +294,7 @@ export const postList: Post[] = [
     nickname: '짜증난 파이썬',
     blocked: false,
     imageName: '',
+    viewCount: 8,
   },
   {
     id: 16,
@@ -296,6 +311,7 @@ export const postList: Post[] = [
     nickname: '짜증난 파이썬',
     blocked: false,
     imageName: '',
+    viewCount: 9,
   },
   {
     id: 17,
@@ -312,6 +328,7 @@ export const postList: Post[] = [
     nickname: '짜증난 파이썬',
     blocked: false,
     imageName: '',
+    viewCount: 6,
   },
   {
     id: 18,
@@ -328,6 +345,7 @@ export const postList: Post[] = [
     nickname: '짜증난 파이썬',
     blocked: false,
     imageName: '',
+    viewCount: 6,
   },
   {
     id: 19,
@@ -344,6 +362,7 @@ export const postList: Post[] = [
     nickname: '짜증난 파이썬',
     blocked: false,
     imageName: '',
+    viewCount: 5,
   },
   {
     id: 20,
@@ -360,6 +379,7 @@ export const postList: Post[] = [
     nickname: '못된 젠킨스',
     blocked: false,
     imageName: '',
+    viewCount: 5,
   },
   {
     id: 21,
@@ -376,6 +396,7 @@ export const postList: Post[] = [
     nickname: '테스트 계정',
     blocked: false,
     imageName: '',
+    viewCount: 5,
   },
   {
     id: 22,
@@ -392,6 +413,7 @@ export const postList: Post[] = [
     nickname: '테스트 계정',
     blocked: false,
     imageName: '',
+    viewCount: 2,
   },
   {
     id: 23,
@@ -408,6 +430,7 @@ export const postList: Post[] = [
     nickname: '테스트 계정',
     blocked: false,
     imageName: '',
+    viewCount: 2,
   },
   {
     id: 24,
@@ -424,6 +447,7 @@ export const postList: Post[] = [
     nickname: '테스트 계정',
     blocked: false,
     imageName: '',
+    viewCount: 1,
   },
   {
     id: 25,
@@ -440,6 +464,7 @@ export const postList: Post[] = [
     nickname: '테스트 계정',
     blocked: false,
     imageName: '',
+    viewCount: 3,
   },
   {
     id: 26,
@@ -456,6 +481,7 @@ export const postList: Post[] = [
     nickname: '테스트 계정',
     blocked: false,
     imageName: '',
+    viewCount: 2,
   },
   {
     id: 27,
@@ -472,6 +498,7 @@ export const postList: Post[] = [
     nickname: '테스트 계정',
     blocked: false,
     imageName: '',
+    viewCount: 1,
   },
   {
     id: 28,
@@ -488,6 +515,7 @@ export const postList: Post[] = [
     nickname: '테스트 계정',
     blocked: false,
     imageName: '',
+    viewCount: 1,
   },
   {
     id: 29,
@@ -504,6 +532,7 @@ export const postList: Post[] = [
     nickname: '테스트 계정',
     blocked: false,
     imageName: '',
+    viewCount: 2,
   },
   {
     id: 30,
@@ -520,6 +549,7 @@ export const postList: Post[] = [
     nickname: '테스트 계정',
     blocked: false,
     imageName: '',
+    viewCount: 1,
   },
   {
     id: 31,
@@ -536,6 +566,75 @@ export const postList: Post[] = [
     nickname: '테스트 계정',
     blocked: false,
     imageName: '',
+    viewCount: 2,
+  },
+  {
+    id: 32,
+    title: '예비 크루 게시판',
+    createdAt: '2022-08-16T11:55:31.016376300',
+    content: '쩐다.',
+    likeCount: 0,
+    commentCount: 0,
+    like: false,
+    modified: false,
+    hashtags: [],
+    authorized: true,
+    boardId: 5,
+    nickname: '테스트 계정',
+    blocked: false,
+    imageName: '',
+    viewCount: 1,
+  },
+  {
+    id: 33,
+    title: '새로운 글',
+    createdAt: '2022-08-16T11:55:31.016376300',
+    content: '안녕~',
+    likeCount: 0,
+    commentCount: 0,
+    like: false,
+    modified: false,
+    hashtags: [],
+    authorized: true,
+    boardId: 5,
+    nickname: '테스트 계정',
+    blocked: false,
+    imageName: '',
+    viewCount: 9,
+  },
+  {
+    id: 34,
+    title: '새새로운 글',
+    createdAt: '2022-08-16T11:55:31.016376300',
+    content: '안녕~',
+    likeCount: 0,
+    commentCount: 0,
+    like: false,
+    modified: false,
+    hashtags: [],
+    authorized: true,
+    boardId: 5,
+    nickname: '테스트 계정',
+    blocked: false,
+    imageName: '',
+    viewCount: 2,
+  },
+  {
+    id: 35,
+    title: '새새새로운 글',
+    createdAt: '2022-08-16T11:55:31.016376300',
+    content: '안녕~',
+    likeCount: 0,
+    commentCount: 0,
+    like: false,
+    modified: false,
+    hashtags: [],
+    authorized: true,
+    boardId: 5,
+    nickname: '테스트 계정',
+    blocked: false,
+    imageName: '',
+    viewCount: 1,
   },
 ];
 
@@ -876,6 +975,10 @@ export const boardList = [
     id: 4,
     title: '️💌 감동 크루',
   },
+  {
+    id: 5,
+    title: '️🙌🏻 예비 크루 게시판',
+  },
 ];
 
 export const reportList = [{ postId: 1, message: '그냥 마음에 들지 않는다' }];
@@ -991,13 +1094,4 @@ export const notificationList: NoticeTable[] = [
     isChecked: false,
     postId: 7,
   },
-];
-
-export const AD = [
-  { name: '5기 모집 시작!', url: 'https://woowacourse.github.io/about.html' },
-  { name: '질문은 공식 🤔', url: 'https://gongseek.site/' },
-  { name: '모임은 모모 🙋🏻‍♀️🙋🏻‍♂️', url: 'https://www.moyeora.site/' },
-  { name: '면담은 터놓고 🐒', url: 'https://ternoko.site/' },
-  { name: '챌린지는 스모디 🧋', url: 'https://www.smody.co.kr/' },
-  { name: '일정 공유는 달록 🐰', url: 'https://dallog.me/' },
 ];

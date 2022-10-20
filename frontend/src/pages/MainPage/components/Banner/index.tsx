@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import useHashtags from '@/hooks/queries/hashtag/useHashtags';
+import useSearchHashtags from '@/hooks/queries/hashtag/useSearchHashtags';
 
 import * as Styled from './index.styles';
 
@@ -18,7 +18,7 @@ const HASHTAG_POSITION: { x: number; y: number }[] = [
 const Banner = () => {
   const navigate = useNavigate();
 
-  const { data } = useHashtags({
+  const { data } = useSearchHashtags({
     storeCode: [10, ''],
   });
 

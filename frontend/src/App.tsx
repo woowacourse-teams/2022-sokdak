@@ -31,6 +31,7 @@ const PostPage = lazy(() => import(/* webpackChunkName: "PostPage" */ '@/pages/P
 const ProfilePage = lazy(() => import(/* webpackChunkName: "ProfilePage" */ '@/pages/ProfilePage'));
 const SignUpPage = lazy(() => import(/* webpackChunkName: "SignUpPage" */ '@/pages/SignUpPage'));
 const UpdatePostPage = lazy(() => import(/* webpackChunkName: "UpdatePostPage" */ '@/pages/UpdatePostPage'));
+const SearchedPostPage = lazy(() => import(/* webpackChunkName: "SearchedPostPage" */ '@/pages/SearchedPostPage'));
 
 const App = () => {
   const { isVisible, message, showSnackbar } = useSnackbar();
@@ -62,6 +63,7 @@ const App = () => {
           <Route path={PATH.UPDATE_POST} element={<UpdatePostPage />} />
           <Route path={`${PATH.BOARD}/:id`} element={<BoardPage />} />
           <Route path={`${PATH.HASHTAG}/:name`} element={<HashTagPage />} />
+          <Route path={`${PATH.SEARCH_POST}/:query`} element={<SearchedPostPage />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route element={<PrivateRoute />}>
             <Route path={PATH.CREATE_POST} element={<CreatePostPage />} />

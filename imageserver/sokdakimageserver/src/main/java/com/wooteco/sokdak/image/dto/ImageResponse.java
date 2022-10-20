@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.image;
+package com.wooteco.sokdak.image.dto;
 
 public class ImageResponse {
 

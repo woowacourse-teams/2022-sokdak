@@ -7,7 +7,9 @@ interface FABProps {
 const FAB = ({ handleClick }: FABProps) => {
   return (
     <Styled.ButtonContainer>
-      <Styled.Container onClick={handleClick}>+</Styled.Container>
+      <Styled.Container onClick={handleClick} aria-label={'글 작성하기'}>
+        +
+      </Styled.Container>
     </Styled.ButtonContainer>
   );
 };

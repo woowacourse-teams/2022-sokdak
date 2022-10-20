@@ -1,5 +1,6 @@
-package com.wooteco.sokdak.image;
+package com.wooteco.sokdak.image.domain;
 
+import com.wooteco.sokdak.image.exception.NotSupportedExtensionException;
 import java.util.Arrays;
 
 public enum Extension {
@@ -20,10 +21,6 @@ public enum Extension {
                 .filter(it -> it.value.equals(extension))
                 .findAny()
                 .orElseThrow(NotSupportedExtensionException::new);
-    }
-
-    public boolean canNotCompress() {
-        return this == GIF;
     }
 
     public String getValue() {

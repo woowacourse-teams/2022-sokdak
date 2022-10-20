@@ -7,7 +7,7 @@ import styled from '@emotion/styled';
 
 export const Container = styled.div<{ boardId: number }>`
   width: 30%;
-  min-width: 340px;
+  min-width: 320px;
 
   @media (min-width: 875px) {
     display: ${props => (props.boardId === 1 ? 'none' : 'block')};

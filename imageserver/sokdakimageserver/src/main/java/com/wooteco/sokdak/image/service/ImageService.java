@@ -1,5 +1,7 @@
-package com.wooteco.sokdak.image;
+package com.wooteco.sokdak.image.service;
 
+import com.wooteco.sokdak.image.domain.Image;
+import com.wooteco.sokdak.image.dto.ImageResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

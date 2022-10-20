@@ -1,5 +1,3 @@
-import HashTagComponent from '@/components/HashTag';
-
 import Search from '@/assets/images/search.svg';
 
 import { keyframes } from '@emotion/react';
@@ -83,37 +81,7 @@ export const Content = styled.div`
   display: flex;
   padding: 0 20px;
   box-sizing: border-box;
-  justify-content: center;
-`;
-
-export const HashTagContainer = styled.div`
-  max-width: 1140px;
-  float: left;
-  display: flex;
-  gap: 5px;
-
-  box-sizing: border-box;
-  flex-wrap: wrap;
-  height: fit-content;
-  row-gap: 7px;
-  justify-content: center;
-  animation: ${appear} 0.2s;
-
-  @media (min-width: 875px) {
-    width: 100%;
-    justify-content: start;
-  }
-`;
-
-export const HashTag = styled(HashTagComponent)`
-  font-size: 12px;
-
-  :hover {
-    color: white;
-    background-color: ${props => props.theme.colors.sub};
-
-    span {
-      color: white;
-    }
-  }
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
 `;

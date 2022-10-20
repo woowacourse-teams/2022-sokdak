@@ -1,35 +1,47 @@
 import { useState } from 'react';
 import ReactDOM from 'react-dom';
-import { useNavigate } from 'react-router-dom';
 
-import useHashtags from '@/hooks/queries/hashtag/useHashtags';
+import SearchedHashtag from './components/SearchedHashtag';
+import SearchedPost from './components/SearchedPost';
+
 import useQueryDebounce from '@/hooks/queries/hashtag/useQueryDebounce';
+import useSearchHashtags from '@/hooks/queries/hashtag/useSearchHashtags';
+import useSearchPostCount from '@/hooks/queries/post/useSearchPostCount';
+import useSearchPosts from '@/hooks/queries/post/useSearchPosts';
 
 import * as Styled from './index.styles';
 
-import PATH from '@/constants/path';
-
 import useModalHistory from './useModalHistory';
+
+// TODO: 반응형
+// TODO: 더보기
+// TODO: 상수 분리
 
 interface SearchModalProps {
   handleSearchModal: React.DispatchWithoutAction;
 }
 
 const SearchModal = ({ handleSearchModal: closeModal }: SearchModalProps) => {
-  const navigate = useNavigate();
   const limit = 10;
   const [include, setInclude] = useState('');
   const { debounceValue: debouncedInclude } = useQueryDebounce(include);
   useModalHistory({ closeModal });
 
-  const { data } = useHashtags({
+  const { data: hashtagResult } = useSearchHashtags({
     storeCode: [limit, debouncedInclude],
   });
-
-  const handleHashTagClick = (name: string) => {
-    closeModal();
-    navigate(`${PATH.HASHTAG}/${name}`);
-  };
+  const { data: postResult } = useSearchPosts({
+    storeCode: [debouncedInclude.trim(), 3],
+    options: {
+      enabled: !!debouncedInclude,
+    },
+  });
+  const { data: postResultCount } = useSearchPostCount({
+    storeCode: [debouncedInclude],
+    options: {
+      enabled: !!debouncedInclude,
+    },
+  });
 
   return (
     <>
@@ -49,17 +61,14 @@ const SearchModal = ({ handleSearchModal: closeModal }: SearchModalProps) => {
           </Styled.Header>
 
           <Styled.Content>
-            {data && (
-              <Styled.HashTagContainer>
-                {data.data.hashtags.map(({ name, count }) => (
-                  <Styled.HashTag
-                    key={name}
-                    name={name}
-                    count={count}
-                    handleTagClick={() => handleHashTagClick(name)}
-                  />
-                ))}
-              </Styled.HashTagContainer>
+            {hashtagResult && <SearchedHashtag hashtags={hashtagResult.data.hashtags} closeModal={closeModal} />}
+            {postResult && postResultCount && (
+              <SearchedPost
+                posts={postResult.pages}
+                totalPostCount={postResultCount.totalPostCount}
+                keyword={debouncedInclude}
+                closeModal={closeModal}
+              />
             )}
           </Styled.Content>
         </Styled.Container>,

@@ -79,8 +79,7 @@ export const Content = styled.div`
   height: calc(100% - 110px);
   float: left;
   display: flex;
-  padding: 0 20px;
-  box-sizing: border-box;
+  padding: 0 0 0 20px;
   flex-direction: column;
   align-items: center;
   gap: 50px;

@@ -12,10 +12,11 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.hashtag.dto.HashtagResponse;
-import com.wooteco.sokdak.post.dto.PagePostsResponse;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
+import com.wooteco.sokdak.post.dto.PagePostsResponse;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
+import com.wooteco.sokdak.post.dto.PostsCountResponse;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
@@ -270,13 +271,11 @@ class PostControllerTest extends ControllerTest {
     @Test
     void searchPosts() {
         PageRequest pageRequest = PageRequest.of(0, 2);
-        PagePostsResponse pagePostsResponse = new PagePostsResponse(
-                List.of(POSTS_ELEMENT_RESPONSE_2, POSTS_ELEMENT_RESPONSE_1),
-                5,
-                10);
+        PostsResponse pagePostsResponse = new PostsResponse(
+                List.of(POSTS_ELEMENT_RESPONSE_2, POSTS_ELEMENT_RESPONSE_1), true);
         doReturn(pagePostsResponse)
                 .when(postService)
-                .findMyPosts(refEq(pageRequest), any());
+                .searchSliceWithQuery(any(), refEq(pageRequest));
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -291,13 +290,11 @@ class PostControllerTest extends ControllerTest {
     @Test
     void searchPosts_or() {
         PageRequest pageRequest = PageRequest.of(0, 2);
-        PagePostsResponse pagePostsResponse = new PagePostsResponse(
-                List.of(POSTS_ELEMENT_RESPONSE_2, POSTS_ELEMENT_RESPONSE_1),
-                5,
-                10);
+        PostsResponse pagePostsResponse = new PostsResponse(
+                List.of(POSTS_ELEMENT_RESPONSE_2, POSTS_ELEMENT_RESPONSE_1), false);
         doReturn(pagePostsResponse)
                 .when(postService)
-                .findMyPosts(refEq(pageRequest), any());
+                .searchSliceWithQuery(any(), refEq(pageRequest));
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -308,24 +305,20 @@ class PostControllerTest extends ControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("and 게시글 검색 시 200 반환")
+    @DisplayName("게시글 개수검색 시 200 반환")
     @Test
-    void searchPosts_and() {
-        PageRequest pageRequest = PageRequest.of(0, 2);
-        PagePostsResponse pagePostsResponse = new PagePostsResponse(
-                List.of(POSTS_ELEMENT_RESPONSE_2, POSTS_ELEMENT_RESPONSE_1),
-                5,
-                10);
-        doReturn(pagePostsResponse)
+    void searchPostsCount() {
+        PostsCountResponse countResponse = new PostsCountResponse(3);
+        doReturn(countResponse)
                 .when(postService)
-                .findMyPosts(refEq(pageRequest), any());
+                .countPostWithQuery(any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/posts?query=목&제&size=2&page=0")
+                .when().get("/posts/count?query=제목")
                 .then().log().all()
                 .assertThat()
-                .apply(document("search/posts/success/and"))
+                .apply(document("count/posts/success"))
                 .statusCode(HttpStatus.OK.value());
     }
 

@@ -23,6 +23,7 @@ import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PagePostsResponse;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
+import com.wooteco.sokdak.post.dto.PostsCountResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
@@ -123,12 +124,20 @@ public class PostService {
         return PagePostsResponse.of(posts.getContent(), posts.getTotalPages(), (int) posts.getTotalElements());
     }
 
-    public PagePostsResponse searchWithQuery(@Nullable String query,
-                                             Pageable pageable) {
+    public PostsCountResponse countPostWithQuery(String query) {
+        Pageable pageable = PageRequest.of(0, 3, DESC, "created_at");
+        SearchQuery searchQuery = new SearchQuery(query);
+
+        Page<Post> posts = postRepository.findPostPagesByQuery(pageable, searchQuery.getValue());
+        return PostsCountResponse.of((int) posts.getTotalElements());
+    }
+
+    public PostsResponse searchSliceWithQuery(@Nullable String query,
+                                              Pageable pageable) {
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), DESC, "created_at");
         SearchQuery searchQuery = new SearchQuery(query);
-        Page<Post> posts = postRepository.findPostPagesByQuery(pageable, searchQuery.getValue());
-        return PagePostsResponse.of(posts.getContent(), posts.getTotalPages(), (int) posts.getTotalElements());
+        Slice<Post> posts = postRepository.findPostSlicePagesByQuery(pageable, searchQuery.getValue());
+        return PostsResponse.ofPostSlice(posts);
     }
 
     private Member findMember(AuthInfo authInfo) {

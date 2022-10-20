@@ -25,6 +25,7 @@ import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PagePostsResponse;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
+import com.wooteco.sokdak.post.dto.PostsCountResponse;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.report.dto.ReportRequest;
@@ -70,7 +71,7 @@ class PostAcceptanceTest extends AcceptanceTest {
         httpPostWithAuthorization(NEW_POST_REQUEST, FREE_BOARD_POST_URI, token);
         httpPostWithAuthorization(postRequest2, FREE_BOARD_POST_URI, token);
         httpPostWithAuthorization(postRequest3, FREE_BOARD_POST_URI, token);
-        Long writableBoardID = 2L;
+        long writableBoardID = 2L;
 
         ExtractableResponse<Response> response = httpGet("/boards/" + writableBoardID + "/posts?size=2&page=0");
         List<String> postNames = parsePostTitles(response);
@@ -310,11 +311,13 @@ class PostAcceptanceTest extends AcceptanceTest {
         httpPostWithAuthorization(postRequest3, FREE_BOARD_POST_URI, token);
 
         ExtractableResponse<Response> response = httpGet("/posts?query=검|색&size=10&page=0");
-        List<String> postNames = parsePostPageTitles(response);
+        PostsResponse postsResponse = toPostsResponse(response);
+        List<String> postNames = parsePostTitles(response);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(postNames).isEqualTo(List.of("제목3", "제목1검"))
+                () -> assertThat(postNames).isEqualTo(List.of("제목3", "제목1검")),
+                () -> assertThat(postsResponse.isLastPage()).isTrue()
         );
     }
 
@@ -330,13 +333,33 @@ class PostAcceptanceTest extends AcceptanceTest {
         httpPostWithAuthorization(postRequest3, FREE_BOARD_POST_URI, token);
 
         ExtractableResponse<Response> response = httpGet("/posts?size=10&page=0");
-        List<String> postNames = parsePostPageTitles(response);
+        PostsResponse postsResponse = toPostsResponse(response);
+        List<String> postNames = parsePostTitles(response);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(postNames).isEqualTo(List.of("제목3", "제목2", "제목1"))
+                () -> assertThat(postNames).isEqualTo(List.of("제목3", "제목2", "제목1")),
+                () -> assertThat(postsResponse.isLastPage()).isTrue()
         );
     }
+
+    @DisplayName("특정 검색 결과 개수를 받아올 수 있다.")
+    @Test
+    void countPostWithQuery() {
+        String token = getChrisToken();
+        NewPostRequest postRequest1 = new NewPostRequest("제목1", "본문1", false, Collections.emptyList());
+        NewPostRequest postRequest2 = new NewPostRequest("제목2", "본문2", false, Collections.emptyList());
+        NewPostRequest postRequest3 = new NewPostRequest("제목3", "본문3", false, Collections.emptyList());
+        httpPostWithAuthorization(postRequest1, FREE_BOARD_POST_URI, token);
+        httpPostWithAuthorization(postRequest2, FREE_BOARD_POST_URI, token);
+        httpPostWithAuthorization(postRequest3, FREE_BOARD_POST_URI, token);
+
+        ExtractableResponse<Response> response = httpGet("/posts/count?query=1");
+        PostsCountResponse postsResponse = toPostCountResponse(response);
+
+        assertThat(postsResponse.getTotalPostCount()).isEqualTo(1);
+    }
+
 
     private String parsePostId(ExtractableResponse<Response> response) {
         return response.header("Location")
@@ -352,13 +375,16 @@ class PostAcceptanceTest extends AcceptanceTest {
                 .collect(Collectors.toList());
     }
 
-    private List<String> parsePostPageTitles(ExtractableResponse<Response> response) {
-        return response.jsonPath()
-                .getObject(".", PagePostsResponse.class)
-                .getPosts()
-                .stream()
-                .map(PostsElementResponse::getTitle)
-                .collect(Collectors.toList());
+    private PostsResponse toPostsResponse(ExtractableResponse<Response> response) {
+        return response.body()
+                .jsonPath()
+                .getObject(".", PostsResponse.class);
+    }
+
+    private PostsCountResponse toPostCountResponse(ExtractableResponse<Response> response) {
+        return response.body()
+                .jsonPath()
+                .getObject(".", PostsCountResponse.class);
     }
 
     private PagePostsResponse toMyPostsResponse(ExtractableResponse<Response> response) {

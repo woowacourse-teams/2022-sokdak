@@ -7,6 +7,7 @@ import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PagePostsResponse;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
+import com.wooteco.sokdak.post.dto.PostsCountResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.service.PostService;
 import com.wooteco.sokdak.support.token.Login;
@@ -56,10 +57,18 @@ public class PostController {
         return ResponseEntity.ok(postsResponse);
     }
 
+    @GetMapping(path = "/posts/count")
+    public ResponseEntity<PostsCountResponse> searchPostCount(@RequestParam @Nullable String query) {
+        PostsCountResponse postsResponse = postService.countPostWithQuery(query);
+        return ResponseEntity.ok(postsResponse);
+    }
+
+
+
     @GetMapping(path = "/posts")
-    public ResponseEntity<PagePostsResponse> searchPosts(@RequestParam @Nullable String query,
-                                                         @PageableDefault(sort = "createdAt", direction = DESC) Pageable pageable) {
-        PagePostsResponse postsResponse = postService.searchWithQuery(query, pageable);
+    public ResponseEntity<PostsResponse> searchSlicePosts(@RequestParam @Nullable String query,
+                                                          @PageableDefault(sort = "createdAt", direction = DESC) Pageable pageable) {
+        PostsResponse postsResponse = postService.searchSliceWithQuery(query, pageable);
         return ResponseEntity.ok(postsResponse);
     }
 

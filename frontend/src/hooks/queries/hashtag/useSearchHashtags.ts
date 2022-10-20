@@ -7,7 +7,7 @@ import QUERY_KEYS from '@/constants/queries';
 type Limit = number;
 type Include = string;
 
-const useHashtags = ({
+const useSearchHashtags = ({
   storeCode,
   options,
 }: {
@@ -29,4 +29,4 @@ const useHashtags = ({
   );
 };
 
-export default useHashtags;
+export default useSearchHashtags;

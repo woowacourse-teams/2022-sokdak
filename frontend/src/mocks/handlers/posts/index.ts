@@ -81,6 +81,37 @@ const postHandlers = [
     );
   }),
 
+  rest.get('/posts/count', (req, res, ctx) => {
+    const query = req.url.searchParams.get('query');
+
+    if (!query) {
+      return res(ctx.status(400), ctx.json({ message: '키워드를 입력하세요.' }));
+    }
+
+    const keywords = query.split('|');
+    const result = [];
+
+    for (const post of postList) {
+      let include = false;
+
+      for (const keyword of keywords) {
+        if (post.title.includes(keyword)) {
+          include = true;
+          break;
+        }
+        if (post.content.includes(keyword)) {
+          include = true;
+        }
+      }
+
+      if (include) {
+        result.push(post);
+      }
+    }
+
+    return res(ctx.status(200), ctx.json({ totalPostCount: result.length }));
+  }),
+
   rest.get('/posts/:id', (req, res, ctx) => {
     const { id } = req.params;
 
@@ -213,9 +244,45 @@ const postHandlers = [
 
   rest.get('/posts', (req, res, ctx) => {
     const hashtagName = req.url.searchParams.get('hashtag');
+    const query = req.url.searchParams.get('query');
     const size = Number(req.url.searchParams.get('size')!);
     const page = Number(req.url.searchParams.get('page')!);
 
+    if (hashtagName === null && query !== null) {
+      // 쿼리 검색일 경우
+      const keywords = query.split('|');
+      const result = [];
+
+      for (const post of postList) {
+        let include = false;
+
+        for (const keyword of keywords) {
+          if (post.title.includes(keyword)) {
+            include = true;
+            break;
+          }
+          if (post.content.includes(keyword)) {
+            include = true;
+          }
+        }
+
+        if (include) {
+          result.push(post);
+        }
+      }
+
+      const currentPagePosts = result.slice(page * size, page * size + size);
+
+      return res(
+        ctx.status(200),
+        ctx.json({
+          posts: currentPagePosts,
+          lastPage: result.length - size * page - currentPagePosts.length === 0 && currentPagePosts.length !== 0,
+        }),
+      );
+    }
+
+    // 해시태그 검색일 경우
     const postsByHashtag = postList.filter(post => post.hashtags.some(hashtag => hashtag.name === hashtagName));
 
     if (postsByHashtag.length <= 0) {
@@ -232,6 +299,7 @@ const postHandlers = [
       }),
     );
   }),
+
   rest.post<{ message: string }>('/posts/:id/report', (req, res, ctx) => {
     const { id } = req.params;
     const { message } = req.body;

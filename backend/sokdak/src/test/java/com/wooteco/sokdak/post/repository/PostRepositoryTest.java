@@ -65,7 +65,6 @@ class PostRepositoryTest extends RepositoryTest {
         postRepository.save(post3);
         postRepository.save(post4);
         postRepository.save(post5);
-        System.out.println("@@@@@@ save all post!!!!!!");
     }
 
     @DisplayName("게시글, 회원 매핑 확인")

@@ -6,6 +6,8 @@ import Post from './components/Post';
 
 import * as Styled from './index.styles';
 
+import PATH from '@/constants/path';
+
 interface SearchedPostProps {
   posts: Post[];
   totalPostCount: number;
@@ -18,7 +20,7 @@ const SearchedPost = ({ posts, totalPostCount, keyword, closeModal }: SearchedPo
 
   const viewMore = () => {
     closeModal();
-    navigate(`/search/post/${keyword.trim().replaceAll(' ', '+')}`);
+    navigate(`${PATH.SEARCH_POST}/${keyword.trim().replaceAll(' ', '+')}`);
   };
 
   return (

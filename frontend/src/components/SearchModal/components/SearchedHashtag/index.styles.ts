@@ -13,7 +13,6 @@ const appear = keyframes`
 `;
 
 export const Container = styled.div`
-  max-width: 1140px;
   float: left;
   display: flex;
   gap: 5px;
@@ -22,12 +21,13 @@ export const Container = styled.div`
   flex-wrap: wrap;
   height: fit-content;
   row-gap: 7px;
-  justify-content: center;
+  width: 100%;
+  justify-content: start;
+  padding-left: 10px;
   animation: ${appear} 0.2s;
 
   @media (min-width: 875px) {
-    width: 100%;
-    justify-content: start;
+    max-width: 1200px;
   }
 `;
 

@@ -64,9 +64,10 @@ public class ImageCompressor {
             final BufferedImage bufferedImage = ImageIO.read(originalFile);
             final Metadata metadata = ImageMetadataReader.readMetadata(originalFile);
             final ExifIFD0Directory directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
-            if (directory == null) {
+            if (directory == null || !directory.containsTag(ExifIFD0Directory.TAG_ORIENTATION)) {
                 return bufferedImage;
             }
+
             return Scalr.rotate(bufferedImage, Rotation.CW_90, null);
         } catch (Exception exception) {
             throw new ImageReadException();

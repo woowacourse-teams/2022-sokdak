@@ -9,7 +9,7 @@ export const SidebarContainer = styled.div`
 export const Container = styled.div<{ position: number }>`
   display: flex;
   flex-direction: column;
-  width: max-content;
+  width: 100%;
   left: 0;
   box-sizing: border-box;
   transform: ${({ position }) => `translateY(${position}px)`};

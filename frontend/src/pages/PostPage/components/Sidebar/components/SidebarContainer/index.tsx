@@ -1,36 +1,18 @@
-import { HTMLAttributes, PropsWithChildren, useEffect, useLayoutEffect, useRef, useState } from 'react';
-
-import useThrottle from '@/hooks/useThrottle';
+import { HTMLAttributes, PropsWithChildren, useRef } from 'react';
 
 import * as Styled from './index.styles';
 
-const SidebarContainer = ({ children, className }: PropsWithChildren<HTMLAttributes<HTMLDivElement>>) => {
-  const [position, setPosition] = useState(document.documentElement.scrollTop);
-  const moveSidebar = useThrottle(() => setPosition(document.documentElement.scrollTop), 50);
+import useAnimateContainer from './useAnimateContainer';
 
+const SidebarContainer = ({ children, className }: PropsWithChildren<HTMLAttributes<HTMLDivElement>>) => {
   const sideBarContainerRef = useRef<HTMLDivElement>(null);
   const sideBarRef = useRef<HTMLDivElement>(null);
-  const [sideBarContainerHeight, setSideBarContainerHeight] = useState(0);
-  const [sideBarHeight, setSideBarHeight] = useState(0);
 
-  useLayoutEffect(() => {
-    setSideBarContainerHeight(sideBarContainerRef.current?.clientHeight!);
-    setSideBarHeight(sideBarRef.current?.clientHeight!);
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener('scroll', moveSidebar);
-
-    return () => window.removeEventListener('scroll', moveSidebar);
-  }, []);
+  const { movementDegree } = useAnimateContainer({ parentContainer: sideBarContainerRef, childContainer: sideBarRef });
 
   return (
     <Styled.SidebarContainer ref={sideBarContainerRef}>
-      <Styled.Container
-        position={Math.min(sideBarContainerHeight - sideBarHeight, position)}
-        className={className}
-        ref={sideBarRef}
-      >
+      <Styled.Container position={movementDegree} className={className} ref={sideBarRef}>
         {children}
       </Styled.Container>
     </Styled.SidebarContainer>

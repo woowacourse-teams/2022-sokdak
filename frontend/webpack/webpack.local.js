@@ -3,6 +3,7 @@ const path = require('path');
 const common = require('./webpack.config');
 const { DefinePlugin } = require('webpack');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 require('dotenv').config();
 
@@ -13,6 +14,7 @@ module.exports = merge(common, {
       'process.env.MODE': JSON.stringify(process.env.MODE),
     }),
     new ReactRefreshWebpackPlugin(),
+    new Dotenv(),
   ],
   devServer: {
     port: 3000,

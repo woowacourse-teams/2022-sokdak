@@ -27,9 +27,8 @@ const SidebarContainer = ({ children, className }: PropsWithChildren<HTMLAttribu
   return (
     <Styled.SidebarContainer ref={sideBarContainerRef}>
       <Styled.Container
-        position={position}
+        position={Math.min(sideBarContainerHeight - sideBarHeight, position)}
         className={className}
-        height={sideBarContainerHeight - sideBarHeight}
         ref={sideBarRef}
       >
         {children}

@@ -1,16 +1,10 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { ESBuildMinifyPlugin } = require('esbuild-loader');
 const { DefinePlugin } = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
-  mode: 'development',
-  resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
-    alias: {
-      '@': path.resolve(__dirname, '../src/'),
-    },
-  },
   entry: {
     main: path.join(__dirname, '../src/index.tsx'),
   },
@@ -21,10 +15,20 @@ module.exports = {
     chunkFilename: '[name].[contenthash].chunk.js',
     clean: true,
   },
+  cache: {
+    type: 'filesystem',
+  },
+  resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    alias: {
+      '@': path.resolve(__dirname, '../src/'),
+    },
+    symlinks: false,
+  },
   module: {
     rules: [
       {
-        test: /\.(png|jpg|jpeg|woff2)$/i,
+        test: /\.(png)$/i,
         type: 'asset/resource',
       },
       {
@@ -62,8 +66,11 @@ module.exports = {
     new DefinePlugin({
       'process.env.IMAGE_API_URL': JSON.stringify('https://img.sokdaksokdak.com/images/'),
     }),
+    new CopyWebpackPlugin({
+      patterns: [{ from: './public/icons', to: './icons' }, './public/manifest.json'],
+    }),
+    new Dotenv(),
   ],
-  devtool: 'source-map',
   optimization: {
     splitChunks: {
       chunks: 'all',
@@ -74,10 +81,5 @@ module.exports = {
         },
       },
     },
-    minimizer: [
-      new ESBuildMinifyPlugin({
-        target: 'esnext',
-      }),
-    ],
   },
 };

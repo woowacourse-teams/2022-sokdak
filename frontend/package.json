@@ -90,7 +90,6 @@
     "prettier": "^2.7.1",
     "react-refresh": "^0.14.0",
     "react-router-dom": "^6.3.0",
-    "react-test-renderer": "^18.2.0",
     "sokdak-util-types": "^1.0.1",
     "storybook-addon-react-router-v6": "^0.1.10",
     "ts-jest": "^28.0.7",

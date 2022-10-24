@@ -3,18 +3,20 @@ const path = require('path');
 const common = require('./webpack.config');
 const { DefinePlugin } = require('webpack');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 require('dotenv').config();
 
 module.exports = merge(common, {
   mode: 'development',
-  devtools: 'eval-cheap-source-map',
+  devtool: 'eval-cheap-source-map',
   plugins: [
     new DefinePlugin({
       'process.env.API_URL': JSON.stringify(process.env.API_URL),
       'process.env.MODE': JSON.stringify(process.env.MODE),
     }),
     new ReactRefreshWebpackPlugin(),
+    new Dotenv(),
   ],
   devServer: {
     port: 3000,
@@ -29,5 +31,7 @@ module.exports = merge(common, {
       stats: 'errors-only',
     },
   },
-  minimize: false,
+  optimization: {
+    minimize: false,
+  },
 });

@@ -2,8 +2,8 @@ const { merge } = require('webpack-merge');
 const common = require('./webpack.config.js');
 const { DefinePlugin } = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
+const { ESBuildMinifyPlugin } = require('esbuild-loader');
 
 module.exports = merge(common, {
   mode: 'production',
@@ -17,12 +17,16 @@ module.exports = merge(common, {
       analyzerMode: 'static',
       reportFilename: 'bundle-analyzer.html',
     }),
-    new CopyWebpackPlugin({
-      patterns: [{ from: './public/icons', to: './icons' }, './public/manifest.json'],
-    }),
     new WorkboxPlugin.GenerateSW({
       clientsClaim: true,
       skipWaiting: true,
     }),
   ],
+  optimization: {
+    minimizer: [
+      new ESBuildMinifyPlugin({
+        target: 'esnext',
+      }),
+    ],
+  },
 });

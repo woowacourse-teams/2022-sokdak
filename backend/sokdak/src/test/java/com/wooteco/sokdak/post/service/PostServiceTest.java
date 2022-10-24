@@ -32,17 +32,23 @@ import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.util.ServiceTest;
+import com.wooteco.sokdak.util.fixture.PostFixture;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -122,7 +128,7 @@ class PostServiceTest extends ServiceTest {
 
     @DisplayName("특정 게시물의 조회수를 1 증가시킴")
     @Test
-    void findViewCount() {
+    void findPost_ViewCount_Deprecated() {
         postRepository.save(post);
         PostBoard postBoard = PostBoard.builder().build();
         postBoard.addBoard(board);
@@ -130,11 +136,39 @@ class PostServiceTest extends ServiceTest {
         postBoardRepository.save(postBoard);
 
         int viewCount = post.getViewCount();
-        postService.updateViewCount(post.getId());
+        postService.findPost(post.getId(), AUTH_INFO, "");
         em.clear();
         int updatedViewCount = postRepository.findById(post.getId()).get().getViewCount();
 
         assertThat(viewCount + 1).isEqualTo(updatedViewCount);
+    }
+
+    @DisplayName("오늘 처음 방문한 사이트를 조회하면 조회수가 1 증가되고, 이미 오늘 방문한 사이트를 조회하면 조회수가 올라가지 않는다.")
+    @ParameterizedTest
+    @MethodSource("argsOfFindPostViewCount")
+    void findPost_ViewCount(String logs, int expectedIncreasementViewcount) {
+        postRepository.save(post);
+        PostBoard postBoard = PostBoard.builder().build();
+        postBoard.addBoard(board);
+        postBoard.addPost(post);
+        postBoardRepository.save(postBoard);
+
+        int viewCount = post.getViewCount();
+        postService.findPost(post.getId(), AUTH_INFO, logs);
+        em.clear();
+        int updatedViewCount = postRepository.findById(post.getId()).get().getViewCount();
+
+        assertThat(viewCount + expectedIncreasementViewcount).isEqualTo(updatedViewCount);
+    }
+
+    // post.getId == 1
+    static Stream<Arguments> argsOfFindPostViewCount() {
+        int today = LocalDateTime.now().getDayOfMonth();
+        return Stream.of(
+                Arguments.of("", 1),
+                Arguments.of(today + ":2/3", 1),
+                Arguments.of(today+":1/2/3", 0)
+        );
     }
 
     @DisplayName("특정 게시판에 기명으로 글 작성 기능")
@@ -193,7 +227,7 @@ class PostServiceTest extends ServiceTest {
         postBoard.addBoard(board);
         postBoardRepository.save(postBoard);
 
-        PostDetailResponse response = postService.findPost(savedPostId, AUTH_INFO);
+        PostDetailResponse response = postService.findPost(savedPostId, AUTH_INFO, "");
 
         assertAll(
                 () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
@@ -214,7 +248,7 @@ class PostServiceTest extends ServiceTest {
         postBoard.addBoard(board);
         postBoardRepository.save(postBoard);
 
-        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(2L, USER.getName(), "nickname"));
+        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(2L, USER.getName(), "nickname"), "");
 
         assertAll(
                 () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
@@ -236,7 +270,7 @@ class PostServiceTest extends ServiceTest {
         postBoard.addBoard(board);
         postBoardRepository.save(postBoard);
 
-        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(null, USER.getName(), "nickname"));
+        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(null, USER.getName(), "nickname"), "");
 
         assertAll(
                 () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
@@ -263,7 +297,7 @@ class PostServiceTest extends ServiceTest {
         postBoardRepository.save(postBoard);
         postBoardRepository.save(postHotBoard);
 
-        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(null, USER.getName(), "nickname"));
+        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(null, USER.getName(), "nickname"), "");
 
         assertAll(
                 () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
@@ -280,7 +314,7 @@ class PostServiceTest extends ServiceTest {
     void findPost_Exception() {
         Long invalidPostId = 9999L;
 
-        assertThatThrownBy(() -> postService.findPost(invalidPostId, AUTH_INFO))
+        assertThatThrownBy(() -> postService.findPost(invalidPostId, AUTH_INFO, ""))
                 .isInstanceOf(PostNotFoundException.class);
     }
 

@@ -1,10 +1,10 @@
 package com.wooteco.sokdak.post.acceptance;
 
-import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.getExceptionMessage;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithCookie;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
@@ -32,11 +32,13 @@ import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 @DisplayName("게시글 관련 인수테스트")
@@ -172,12 +174,51 @@ class PostAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> response = httpGet("/posts/" + postId);
         PostDetailResponse postDetailResponse = response.jsonPath().getObject(".", PostDetailResponse.class);
 
+        int today = LocalDateTime.now().getDayOfMonth();
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.header(HttpHeaders.SET_COOKIE)).isEqualTo("viewedPost=" + today + ":" + postId),
                 () -> assertThat(postDetailResponse.getTitle()).isEqualTo(NEW_POST_REQUEST.getTitle()),
                 () -> assertThat(postDetailResponse.getContent()).isEqualTo(NEW_POST_REQUEST.getContent()),
                 () -> assertThat(postDetailResponse.getNickname()).isEqualTo("chrisNickname"),
                 () -> assertThat(postDetailResponse.getBoardId()).isEqualTo(2)
+        );
+    }
+
+    @DisplayName("게시글을 조회하면 조회수가 올라간다. 그리고 조회 정보가 쿠키에 담긴다.")
+    @Test
+    void findPost_ViewCount_Log() {
+        String postId = parsePostId(
+                httpPostWithAuthorization(NEW_POST_REQUEST, FREE_BOARD_POST_URI, getChrisToken()));
+
+        ExtractableResponse<Response> firstResponse = httpGet("/posts/" + postId);
+        PostDetailResponse firstPostDetailResponse = firstResponse.jsonPath().getObject(".", PostDetailResponse.class);
+
+        ExtractableResponse<Response> secondResponse = httpGet("/posts/" + postId);
+        PostDetailResponse secondPostDetailResponse = secondResponse.jsonPath().getObject(".", PostDetailResponse.class);
+
+        int today = LocalDateTime.now().getDayOfMonth();
+        assertAll(
+                () -> assertThat(firstResponse.header(HttpHeaders.SET_COOKIE)).isEqualTo("viewedPost=" + today + ":" + postId),
+                () -> assertThat(firstPostDetailResponse.getViewCount() + 1).isEqualTo(secondPostDetailResponse.getViewCount())
+        );
+    }
+
+    @DisplayName("쿠키에 오늘 게시글을 조회한 로그가 있으면 동일한 게시글을 조회해도 조회수가 올라가지 않는다.")
+    @Test
+    void findPost_ViewCount_Abusing() {
+        String postId = parsePostId(
+                httpPostWithAuthorization(NEW_POST_REQUEST, FREE_BOARD_POST_URI, getChrisToken()));
+
+        ExtractableResponse<Response> firstResponse = httpGet("/posts/" + postId);
+        PostDetailResponse firstPostDetailResponse = firstResponse.jsonPath().getObject(".", PostDetailResponse.class);
+
+        ExtractableResponse<Response> secondResponse = httpGetWithCookie("/posts/" + postId, firstResponse.header(HttpHeaders.SET_COOKIE));
+        PostDetailResponse secondPostDetailResponse = secondResponse.jsonPath().getObject(".", PostDetailResponse.class);
+
+        assertAll(
+                () -> assertThat(firstResponse.header(HttpHeaders.SET_COOKIE)).isEqualTo(secondResponse.header(HttpHeaders.SET_COOKIE)),
+                () -> assertThat(firstPostDetailResponse.getViewCount()).isEqualTo(secondPostDetailResponse.getViewCount())
         );
     }
 

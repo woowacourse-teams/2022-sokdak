@@ -17,7 +17,6 @@ import java.time.ZoneOffset;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 
 class RegisterServiceTest extends ServiceTest {
 
@@ -30,9 +29,6 @@ class RegisterServiceTest extends ServiceTest {
 
     @Autowired
     private AuthCodeRepository authCodeRepository;
-
-    @SpyBean
-    private Clock clock;
 
     @DisplayName("인증번호 만료 여부 검증 기능")
     @Test

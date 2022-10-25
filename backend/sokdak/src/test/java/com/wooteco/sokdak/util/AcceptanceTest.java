@@ -1,10 +1,12 @@
 package com.wooteco.sokdak.util;
 
 import io.restassured.RestAssured;
+import java.time.Clock;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -15,6 +17,9 @@ public class AcceptanceTest {
 
     @Autowired
     private DatabaseCleaner databaseCleaner;
+
+    @SpyBean
+    protected Clock clock;
 
     @BeforeEach
     public void setUp() {

@@ -21,7 +21,6 @@ import java.time.ZoneOffset;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpStatus;
 
 @DisplayName("인증 관련 인수테스트")
@@ -31,9 +30,6 @@ class AuthAcceptanceTest extends AcceptanceTest {
 
     @Autowired
     private AuthCodeRepository authCodeRepository;
-
-    @SpyBean
-    private Clock clock;
 
     @DisplayName("존재하는 회원 정보로 로그인 할 수 있다.")
     @Test

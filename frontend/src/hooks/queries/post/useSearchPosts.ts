@@ -1,7 +1,8 @@
 import { useInfiniteQuery, QueryKey, UseInfiniteQueryOptions } from 'react-query';
 
-import axios, { AxiosResponse, AxiosError } from 'axios';
+import { AxiosResponse, AxiosError } from 'axios';
 
+import api from '@/apis';
 import QUERY_KEYS from '@/constants/queries';
 
 type Query = string;
@@ -28,7 +29,7 @@ const useSearchPosts = ({
   useInfiniteQuery(
     [QUERY_KEYS.POSTS, ...storeCode],
     ({ pageParam = 0, queryKey: [, query, size] }) =>
-      axios.get(
+      api.get(
         `/posts?query=${query
           .replaceAll(' ', '%7C')
           .replaceAll('|', '%7C')

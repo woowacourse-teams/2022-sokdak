@@ -1,7 +1,8 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 
+import api from '@/apis';
 import QUERY_KEYS from '@/constants/queries';
 
 interface BoardsResponse {
@@ -13,7 +14,7 @@ const useBoards = ({
 }: {
   options?: UseQueryOptions<AxiosResponse<BoardsResponse>, AxiosError, Board[], string>;
 }) =>
-  useQuery(QUERY_KEYS.BOARDS, () => axios.get('/boards'), {
+  useQuery(QUERY_KEYS.BOARDS, () => api.get('/boards'), {
     select: data => data.data.boards,
     ...options,
   });

@@ -1,6 +1,8 @@
 import { useMutation, UseMutationOptions } from 'react-query';
 
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
+
+import api from '@/apis';
 
 const useVerificationCodeCheck = (
   options?: UseMutationOptions<
@@ -11,7 +13,7 @@ const useVerificationCodeCheck = (
 ) => {
   return useMutation(
     ({ email, code }): Promise<AxiosResponse<string, string>> =>
-      axios.post('/members/signup/email/verification', {
+      api.post('/members/signup/email/verification', {
         email,
         code,
       }),

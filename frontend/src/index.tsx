@@ -4,8 +4,6 @@ import { QueryClientProvider, QueryClient } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { BrowserRouter } from 'react-router-dom';
 
-import axios from 'axios';
-
 import { AuthContextProvider } from './context/Auth';
 import { PaginationContextProvider } from './context/Pagination';
 import { SnackBarContextProvider } from './context/Snackbar';
@@ -35,9 +33,6 @@ if (process.env.MODE !== 'LOCAL:MSW' && 'serviceWorker' in navigator) {
       });
   });
 }
-
-axios.defaults.baseURL = process.env.API_URL;
-axios.defaults.withCredentials = true;
 
 const queryClient = new QueryClient();
 

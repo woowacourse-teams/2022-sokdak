@@ -1,7 +1,8 @@
 import { useInfiniteQuery, QueryKey, UseInfiniteQueryOptions } from 'react-query';
 
-import axios, { AxiosResponse, AxiosError } from 'axios';
+import { AxiosResponse, AxiosError } from 'axios';
 
+import api from '@/apis';
 import QUERY_KEYS from '@/constants/queries';
 
 type BoardId = string | number;
@@ -23,7 +24,7 @@ const usePosts = ({
   useInfiniteQuery(
     [QUERY_KEYS.POSTS, ...storeCode],
     ({ pageParam = 0, queryKey: [, boardId, size] }) =>
-      axios.get(`/boards/${boardId}/posts?size=${size}&page=${pageParam}`),
+      api.get(`/boards/${boardId}/posts?size=${size}&page=${pageParam}`),
     {
       select: data => ({
         pages: data.pages.flatMap((page: AxiosResponse) => page.data.posts),

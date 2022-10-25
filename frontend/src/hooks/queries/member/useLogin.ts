@@ -1,12 +1,13 @@
 import { useContext } from 'react';
 import { useMutation, UseMutationOptions } from 'react-query';
 
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 
 import AuthContext from '@/context/Auth';
 
 import useSnackbar from '@/hooks/useSnackbar';
 
+import api from '@/apis';
 import authFetcher from '@/apis/authFetcher';
 import { STORAGE_KEY } from '@/constants/localStorage';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
@@ -17,7 +18,7 @@ const useLogin = (options?: UseMutationOptions<AxiosResponse<never>, AxiosError<
   const { setIsLogin, setUsername } = useContext(AuthContext);
   return useMutation(
     ({ username, password }): Promise<AxiosResponse<never>> =>
-      axios.post<never>(
+      api.post<never>(
         '/login',
         {
           username,

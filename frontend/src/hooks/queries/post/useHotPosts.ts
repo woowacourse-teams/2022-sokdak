@@ -1,8 +1,8 @@
 import { useQuery, QueryKey, UseQueryOptions } from 'react-query';
 
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
-import authFetcher from '@/apis/authFetcher';
+import { requestGetPosts } from '@/apis/post';
 import QUERY_KEYS from '@/constants/queries';
 
 const useHotPosts = ({
@@ -11,14 +11,13 @@ const useHotPosts = ({
 }: {
   storeCode: QueryKey;
   options?: UseQueryOptions<
-    AxiosResponse<{ posts: Post[]; lastPage: boolean }>,
+    { posts: Post[]; lastPage: boolean },
     AxiosError,
     { posts: Post[]; lastPage: boolean },
     QueryKey[]
   >;
 }) =>
-  useQuery([QUERY_KEYS.POST, storeCode], ({ queryKey: [, size] }) => authFetcher.get(`/boards/1/posts?size=${size}`), {
-    select: data => data.data,
+  useQuery([QUERY_KEYS.POST, storeCode], ({ queryKey: [, size] }) => requestGetPosts('1', Number(size), '0'), {
     ...options,
   });
 

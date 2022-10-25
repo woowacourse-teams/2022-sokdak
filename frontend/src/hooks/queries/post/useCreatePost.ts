@@ -4,7 +4,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 
 import useSnackbar from '@/hooks/useSnackbar';
 
-import authFetcher from '@/apis/authFetcher';
+import { createNewPost } from '@/apis/post';
 import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
@@ -12,10 +12,9 @@ const useCreatePost = (
   options?: UseMutationOptions<
     AxiosResponse<string, string>,
     AxiosError,
-    Pick<Post, 'title' | 'content' | 'imageName'> & {
-      hashtags: string[];
+    Pick<Post, 'title' | 'content' | 'imageName' | 'boardId'> & {
       anonymous?: boolean;
-      boardId?: number;
+      hashtags: string[];
     }
   >,
 ) => {
@@ -30,12 +29,11 @@ const useCreatePost = (
       anonymous,
       boardId,
       imageName,
-    }: Pick<Post, 'title' | 'content' | 'imageName'> & {
-      hashtags: string[];
+    }: Pick<Post, 'title' | 'content' | 'imageName' | 'boardId'> & {
       anonymous?: boolean;
-      boardId?: string | number;
+      hashtags: string[];
     }): Promise<AxiosResponse<string, string>> =>
-      authFetcher.post(`/boards/${boardId}/posts`, {
+      createNewPost(boardId!, {
         title,
         content,
         hashtags,

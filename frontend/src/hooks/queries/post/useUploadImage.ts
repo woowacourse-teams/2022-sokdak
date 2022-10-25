@@ -4,7 +4,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 
 import useSnackbar from '@/hooks/useSnackbar';
 
-import authFetcher from '@/apis/authFetcher';
+import { createImage } from '@/apis/post';
 import { MUTATION_KEY } from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
@@ -15,7 +15,7 @@ interface ResponseData {
 const useUploadImage = (options?: UseMutationOptions<AxiosResponse<ResponseData>, AxiosError, FormData>) => {
   const { showSnackbar } = useSnackbar();
 
-  return useMutation(image => authFetcher.post(process.env.IMAGE_API_URL!, image), {
+  return useMutation(image => createImage(image), {
     ...options,
     onSuccess: (data, variables, context) => {
       showSnackbar(SNACKBAR_MESSAGE.SUCCESS_UPLOAD_IMAGE);

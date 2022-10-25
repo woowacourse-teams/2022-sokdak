@@ -4,7 +4,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 
 import useSnackbar from '@/hooks/useSnackbar';
 
-import authFetcher from '@/apis/authFetcher';
+import { requestUpdatePost } from '@/apis/post';
 import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
@@ -12,7 +12,7 @@ const useUpdatePost = ({
   id,
   options,
 }: {
-  id: string | number;
+  id: string;
   options?: UseMutationOptions<
     AxiosResponse,
     AxiosError,
@@ -29,7 +29,7 @@ const useUpdatePost = ({
       hashtags,
       imageName,
     }: Pick<Post, 'title' | 'content' | 'imageName'> & { hashtags: string[] }): Promise<AxiosResponse> =>
-      authFetcher.put(`/posts/${id}`, {
+      requestUpdatePost(id, {
         title,
         content,
         hashtags,

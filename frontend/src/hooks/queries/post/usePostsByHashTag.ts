@@ -1,8 +1,8 @@
 import { useInfiniteQuery, QueryKey, UseInfiniteQueryOptions } from 'react-query';
 
-import { AxiosResponse, AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 
-import api from '@/apis';
+import { requestGetPostsByHashtags } from '@/apis/post';
 import QUERY_KEYS from '@/constants/queries';
 
 type HashtagName = string;
@@ -14,23 +14,22 @@ const usePostsByHashTag = ({
 }: {
   storeCode: [HashtagName, Size];
   options?: UseInfiniteQueryOptions<
-    AxiosResponse<{ posts: Post; lastPage: boolean }>,
+    { posts: Post[]; lastPage: boolean },
     AxiosError,
     Post,
-    AxiosResponse<{ posts: Post; lastPage: boolean }>,
+    { posts: Post[]; lastPage: boolean },
     [QueryKey, HashtagName, Size]
   >;
 }) =>
   useInfiniteQuery(
     [QUERY_KEYS.POSTS, ...storeCode],
-    ({ pageParam = 0, queryKey: [, hashtagName, size] }) =>
-      api.get(`/posts?hashtag=${hashtagName}&size=${size}&page=${pageParam}`),
+    ({ pageParam = 0, queryKey: [, hashtagName, size] }) => requestGetPostsByHashtags(hashtagName, size, pageParam),
     {
       select: data => ({
-        pages: data.pages.flatMap((page: AxiosResponse) => page.data.posts),
+        pages: data.pages.flatMap((page: { posts: Post[]; lastPage: boolean }) => page.posts),
         pageParams: [...data.pageParams, data.pageParams.length],
       }),
-      getNextPageParam: (lastPage, allPages) => (lastPage.data.lastPage ? undefined : allPages.length),
+      getNextPageParam: (lastPage, allPages) => (lastPage.lastPage ? undefined : allPages.length),
       retry: false,
       ...options,
     },

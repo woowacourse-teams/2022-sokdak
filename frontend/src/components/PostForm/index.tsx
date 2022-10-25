@@ -25,10 +25,9 @@ interface PostFormProps {
   prevHashTags?: Omit<Hashtag, 'count'>[];
   prevImagePath?: string;
   handlePost: (
-    post: Pick<Post, 'title' | 'content' | 'imageName'> & {
+    post: Pick<Post, 'title' | 'content' | 'imageName' | 'boardId'> & {
       hashtags: string[];
       anonymous?: boolean;
-      boardId: number;
     },
   ) => void;
 }

@@ -11,7 +11,7 @@ import * as Styled from './index.styles';
 import PATH from '@/constants/path';
 
 const Carousel = () => {
-  const { data } = useHotPosts({ storeCode: [10], options: { suspense: true, staleTime: 1000 * 40 } });
+  const { data } = useHotPosts({ storeCode: [10], options: { staleTime: 1000 * 40 } });
   const navigate = useNavigate();
   const scrollContainer = useRef<HTMLDivElement>(null);
   const ref = useRef<HTMLDivElement>(null);

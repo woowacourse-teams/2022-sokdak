@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 
 import { AxiosError, AxiosResponse } from 'axios';
 
-import api from '@/apis';
+import { requestGetPostsByBoards } from '@/apis/post';
 import QUERY_KEYS from '@/constants/queries';
 
 interface PostListByBoards {
@@ -21,8 +21,7 @@ const usePostByBoards = ({
     'queryKey' | 'queryFn'
   >;
 }) =>
-  useQuery(QUERY_KEYS.POSTS_BY_BOARDS, () => api.get('/boards/contents'), {
-    select: data => data.data,
+  useQuery(QUERY_KEYS.POSTS_BY_BOARDS, () => requestGetPostsByBoards(), {
     ...options,
   });
 

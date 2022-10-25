@@ -2,7 +2,7 @@ import { useQuery, QueryKey, UseQueryOptions } from 'react-query';
 
 import { AxiosError, AxiosResponse } from 'axios';
 
-import api from '@/apis';
+import { requestGetSearchPostCount } from '@/apis/post';
 import QUERY_KEYS from '@/constants/queries';
 
 type Query = string;
@@ -18,14 +18,8 @@ const useSearchPostCount = ({
   storeCode: [Query];
   options?: UseQueryOptions<AxiosResponse<ResponseData>, AxiosError, ResponseData, [QueryKey, Query]>;
 }) =>
-  useQuery(
-    [QUERY_KEYS.POST, ...storeCode],
-    ({ queryKey: [, query] }) =>
-      api.get(`/posts/count?query=${query.replaceAll(' ', '%7C').replaceAll('|', '%7C').replaceAll('+', '%7C')}`),
-    {
-      select: data => data.data,
-      ...options,
-    },
-  );
+  useQuery([QUERY_KEYS.POST, ...storeCode], ({ queryKey: [, query] }) => requestGetSearchPostCount(query), {
+    ...options,
+  });
 
 export default useSearchPostCount;

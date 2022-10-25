@@ -34,7 +34,7 @@ if (process.env.MODE !== 'LOCAL:MSW' && 'serviceWorker' in navigator) {
   });
 }
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({ defaultOptions: { queries: { suspense: true } } });
 
 const rootNode = document.getElementById('root') as Element;
 

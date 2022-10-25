@@ -2,7 +2,7 @@ import { useInfiniteQuery, QueryKey, UseInfiniteQueryOptions, useQueryClient } f
 
 import { AxiosResponse, AxiosError } from 'axios';
 
-import authFetcher from '@/apis';
+import authFetcher from '@/apis/authFetcher';
 import QUERY_KEYS from '@/constants/queries';
 
 type Size = number;

@@ -2,7 +2,7 @@ import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
 import { AxiosResponse } from 'axios';
 
-import authFetcher from '@/apis';
+import authFetcher from '@/apis/authFetcher';
 import QUERY_KEYS from '@/constants/queries';
 
 interface CommentList extends CommentType {

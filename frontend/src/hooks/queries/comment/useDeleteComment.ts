@@ -5,7 +5,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 
 import SnackbarContext from '@/context/Snackbar';
 
-import authFetcher from '@/apis';
+import authFetcher from '@/apis/authFetcher';
 import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 

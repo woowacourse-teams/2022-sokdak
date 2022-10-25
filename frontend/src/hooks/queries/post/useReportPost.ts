@@ -2,7 +2,7 @@ import { useMutation, UseMutationOptions } from 'react-query';
 
 import { AxiosError, AxiosResponse } from 'axios';
 
-import authFetcher from '@/apis';
+import authFetcher from '@/apis/authFetcher';
 import { MUTATION_KEY } from '@/constants/queries';
 
 interface PostReportProps {

@@ -2,7 +2,7 @@ import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
 import { AxiosError, AxiosResponse } from 'axios';
 
-import authFetcher from '@/apis';
+import authFetcher from '@/apis/authFetcher';
 import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 
 const useLike = (

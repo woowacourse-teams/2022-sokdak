@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 
 import { AxiosError, AxiosResponse } from 'axios';
 
-import authFetcher from '@/apis';
+import authFetcher from '@/apis/authFetcher';
 import QUERY_KEYS from '@/constants/queries';
 
 const useNotificationExists = ({

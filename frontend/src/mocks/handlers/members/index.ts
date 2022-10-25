@@ -30,7 +30,7 @@ const memberHandler = [
       ctx.status(200),
       ctx.set({
         Authorization:
-          'Bearer eyJhbGciOiJIUzUxMiJ9.eyJuaWNrbmFtZSI6InRlc3ROaWNrbmFtZSIsInN1YiI6IjIiLCJpYXQiOjE2NTg0MDIzODIsImV4cCI6MTY1ODQwNTk4Mn0.IK_mz7o7x12nIf16kPvpHvlJdjSJpzNSrpRXy61zbjd7RHxvBmCwMAzoKw6p85nIAvw1ocjWU4oBnloF0vuznA',
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6ImRvbmtleSIsImlhdCI6MjAxNjIzOTAyMn0.6uHvcllO8zj221Qerqdiu19oX8spwqUGJfxA4DXjEzE',
         'Refresh-Token':
           'Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NTg5MDIzOTcsImV4cCI6MTY2MDExMjM5N30.1uB7OLo8GY5z-JR8XiaDebbQdrpGrrv7k24J1mfwyoOlqIUpwnyCNubQMf-I94494d2_6x6pSHn_UM6ppYmiEA',
       }),

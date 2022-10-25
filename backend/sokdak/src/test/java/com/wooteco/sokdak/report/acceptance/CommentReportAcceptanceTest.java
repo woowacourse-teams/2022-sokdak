@@ -2,8 +2,8 @@ package com.wooteco.sokdak.report.acceptance;
 
 import static com.wooteco.sokdak.util.fixture.CommentFixture.VALID_COMMENT_MESSAGE;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
+import static com.wooteco.sokdak.util.fixture.TokenFixture.getChrisToken;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;

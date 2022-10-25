@@ -5,17 +5,16 @@ import static com.wooteco.sokdak.util.fixture.BoardFixture.HOT_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.POSUTA_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
 import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
+import static com.wooteco.sokdak.util.fixture.TokenFixture.getChrisToken;
+import static com.wooteco.sokdak.util.fixture.TokenFixture.getToken;
+import static com.wooteco.sokdak.util.fixture.TokenFixture.getTokens;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.board.dto.BoardContentElement;
 import com.wooteco.sokdak.board.dto.BoardContentPostElement;
 import com.wooteco.sokdak.board.dto.BoardResponse;
@@ -26,6 +25,7 @@ import com.wooteco.sokdak.post.dto.PostsResponse;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,7 +33,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-@DisplayName("게시글 관련 인수테스트")
+@DisplayName("게시판 관련 인수테스트")
 class BoardAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("게시판을 생성할 수 있다.")
@@ -116,14 +116,8 @@ class BoardAcceptanceTest extends AcceptanceTest {
     @Test
     void saveInHotBoardWithMoreThan5Likes() {
         // given
-        String token1 = getChrisToken();
-        String token2 = httpPost(new LoginRequest("josh", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        String token3 = httpPost(new LoginRequest("thor", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        String token4 = httpPost(new LoginRequest("hunch", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        String token5 = httpPost(new LoginRequest("east", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        List<String> tokens = List.of(token1, token2, token3, token4, token5);
-
         addNewPost();
+        List<String> tokens = getTokens();
 
         // when
         for (String token : tokens) {
@@ -147,14 +141,8 @@ class BoardAcceptanceTest extends AcceptanceTest {
     @Test
     void saveInHotBoardWith6Likes() {
         // given
-        String token1 = getChrisToken();
-        String token2 = httpPost(new LoginRequest("josh", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        String token3 = httpPost(new LoginRequest("thor", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        String token4 = httpPost(new LoginRequest("hunch", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        String token5 = httpPost(new LoginRequest("east", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        String token6 = httpPost(new LoginRequest("movie", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        List<String> tokens = List.of(token1, token2, token3, token4, token5, token6);
-
+        List<String> tokens = new ArrayList<>(getTokens());
+        tokens.add(getToken("movie"));
         addNewPost();
 
         // when
@@ -179,12 +167,7 @@ class BoardAcceptanceTest extends AcceptanceTest {
     @Test
     void keepPostInHotBoardAfterCancelLIke() {
         // given
-        String token1 = getChrisToken();
-        String token2 = httpPost(new LoginRequest("josh", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        String token3 = httpPost(new LoginRequest("thor", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        String token4 = httpPost(new LoginRequest("hunch", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        String token5 = httpPost(new LoginRequest("east", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        List<String> tokens = List.of(token1, token2, token3, token4, token5);
+        List<String> tokens = getTokens();
 
         addNewPost();
 
@@ -193,7 +176,7 @@ class BoardAcceptanceTest extends AcceptanceTest {
         }
 
         // when
-        httpPutWithAuthorization("/posts/1/like", token1);
+        httpPutWithAuthorization("/posts/1/like", tokens.get(0));
 
         ExtractableResponse<Response> hotBoardResponse = httpGet("/boards/" + HOT_BOARD_ID + "/posts?size=2&page=0");
         List<String> hotBoardPostNames = parsePostTitles(hotBoardResponse);
@@ -214,12 +197,7 @@ class BoardAcceptanceTest extends AcceptanceTest {
     @Test
     void deletePostInHotBoardAfterUserDeleteOriginalPost() {
         // given
-        String token1 = getChrisToken();
-        String token2 = httpPost(new LoginRequest("josh", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        String token3 = httpPost(new LoginRequest("thor", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        String token4 = httpPost(new LoginRequest("hunch", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        String token5 = httpPost(new LoginRequest("east", "Abcd123!@"), "/login").header(AUTHORIZATION);
-        List<String> tokens = List.of(token1, token2, token3, token4, token5);
+        List<String> tokens = getTokens();
 
         addNewPost();
 
@@ -228,7 +206,7 @@ class BoardAcceptanceTest extends AcceptanceTest {
         }
 
         // when
-        httpDeleteWithAuthorization("/posts/1", token1);
+        httpDeleteWithAuthorization("/posts/1", tokens.get(0));
 
         ExtractableResponse<Response> hotBoardResponse = httpGet("/boards/" + HOT_BOARD_ID + "/posts?size=2&page=0");
         List<String> hotBoardPostNames = parsePostTitles(hotBoardResponse);

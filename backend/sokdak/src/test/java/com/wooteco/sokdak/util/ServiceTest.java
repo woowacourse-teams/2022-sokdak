@@ -3,13 +3,18 @@ package com.wooteco.sokdak.util;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.CHRIS_ID;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
+import com.wooteco.sokdak.auth.service.AuthCodeGenerator;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
+import com.wooteco.sokdak.member.service.EmailSender;
+import java.time.Clock;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -25,6 +30,15 @@ public class ServiceTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @MockBean
+    protected AuthCodeGenerator authCodeGenerator;
+
+    @MockBean
+    protected EmailSender emailSender;
+
+    @SpyBean
+    protected Clock clock;
 
     protected Member member;
 

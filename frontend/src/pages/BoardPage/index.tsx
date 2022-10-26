@@ -18,7 +18,6 @@ const BoardPage = () => {
   const { data: boards } = useBoards({
     options: {
       staleTime: Infinity,
-      suspense: true,
     },
   });
 

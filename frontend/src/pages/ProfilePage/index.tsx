@@ -7,7 +7,7 @@ import AuthContext from '@/context/Auth';
 import PaginationContext from '@/context/Pagination';
 
 import useUpdateNickname from '@/hooks/queries/member/useUpdateNickname';
-import useMyPosts from '@/hooks/queries/profile/useMyPosts';
+import useMyPosts from '@/hooks/queries/post/useMyPosts';
 import useSnackbar from '@/hooks/useSnackbar';
 
 import * as Styled from './index.styles';

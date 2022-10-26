@@ -2,7 +2,7 @@ import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
 import { AxiosResponse } from 'axios';
 
-import authFetcher from '@/apis/authFetcher';
+import { requestPutLikeComment } from '@/apis/comment';
 import QUERY_KEYS from '@/constants/queries';
 
 interface CommentList extends CommentType {
@@ -26,7 +26,7 @@ const useLikeComment = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation(({ id }) => authFetcher.put(`/comments/${id}/like`), {
+  return useMutation(({ id }) => requestPutLikeComment(String(id)), {
     ...options,
     onSuccess: (_, variables) => {
       queryClient.setQueriesData<AxiosResponse<CommentResponse>>(QUERY_KEYS.COMMENTS, comment => {

@@ -5,7 +5,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 
 import SnackbarContext from '@/context/Snackbar';
 
-import authFetcher from '@/apis/authFetcher';
+import { createReportComment } from '@/apis/comment';
 import { MUTATION_KEY } from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
@@ -15,22 +15,17 @@ interface PostReportProps {
 }
 
 const useReportComment = (
-  options?: UseMutationOptions<AxiosResponse<never>, AxiosError<{ message: string }>, PostReportProps>,
+  options?: UseMutationOptions<AxiosResponse<null>, AxiosError<{ message: string }>, PostReportProps>,
 ) => {
   const { showSnackbar } = useContext(SnackbarContext);
 
-  return useMutation(
-    ({ id, message }) => {
-      return authFetcher.post(`/comments/${id}/report`, { message });
+  return useMutation(({ id, message }) => createReportComment(String(id), { message }), {
+    onSuccess: () => {
+      showSnackbar(SNACKBAR_MESSAGE.SUCCESS_REPORT_COMMENT);
     },
-    {
-      onSuccess: () => {
-        showSnackbar(SNACKBAR_MESSAGE.SUCCESS_REPORT_COMMENT);
-      },
-      mutationKey: MUTATION_KEY.REPORT_COMMENT,
-      ...options,
-    },
-  );
+    mutationKey: MUTATION_KEY.REPORT_COMMENT,
+    ...options,
+  });
 };
 
 export default useReportComment;

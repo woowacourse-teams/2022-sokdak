@@ -2,7 +2,7 @@ import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
 import { AxiosError, AxiosResponse } from 'axios';
 
-import authFetcher from '@/apis/authFetcher';
+import { createReply } from '@/apis/comment';
 import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 
 interface RequestProps {
@@ -16,7 +16,7 @@ const useCreateReply = (options?: UseMutationOptions<AxiosResponse, AxiosError<E
 
   return useMutation(
     ({ commentId, content, anonymous }): Promise<AxiosResponse> =>
-      authFetcher.post(`comments/${commentId}/reply`, {
+      createReply(String(commentId), {
         content,
         anonymous,
       }),

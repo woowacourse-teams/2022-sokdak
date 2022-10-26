@@ -8,14 +8,15 @@ import AuthContext from '@/context/Auth';
 import useSnackbar from '@/hooks/useSnackbar';
 
 import authFetcher from '@/apis/authFetcher';
+import { requestGetLogout } from '@/apis/member';
 import { STORAGE_KEY } from '@/constants/localStorage';
 import QUERY_KEYS from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
-const useLogout = (options?: UseQueryOptions<AxiosResponse<never>, AxiosError<{ message: string }>, never, string>) => {
+const useLogout = (options?: UseQueryOptions<AxiosResponse<null>, AxiosError<{ message: string }>, never, string>) => {
   const { showSnackbar } = useSnackbar();
   const { setIsLogin, setUsername } = useContext(AuthContext);
-  return useQuery(QUERY_KEYS.LOGOUT, () => authFetcher.get<never>('/logout'), {
+  return useQuery(QUERY_KEYS.LOGOUT, () => requestGetLogout(), {
     ...options,
     onSuccess(data) {
       showSnackbar(SNACKBAR_MESSAGE.SUCCESS_LOGOUT);

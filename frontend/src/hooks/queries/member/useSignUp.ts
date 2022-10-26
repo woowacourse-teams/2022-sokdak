@@ -2,7 +2,7 @@ import { useMutation, UseMutationOptions } from 'react-query';
 
 import { AxiosError, AxiosResponse } from 'axios';
 
-import api from '@/apis';
+import { createMember } from '@/apis/member';
 
 interface SignUpProps extends Member {
   email: string | null;
@@ -16,7 +16,7 @@ const useSignUp = (
 ) => {
   return useMutation(
     ({ email, username, nickname, code, password, passwordConfirmation }): Promise<AxiosResponse<string, string>> =>
-      api.post('/members/signup', {
+      createMember({
         email,
         username,
         nickname,

@@ -2,7 +2,7 @@ import { useQuery, QueryKey, UseQueryOptions } from 'react-query';
 
 import { AxiosError, AxiosResponse } from 'axios';
 
-import api from '@/apis';
+import { requestGetNicknameCheck } from '@/apis/member';
 import QUERY_KEYS from '@/constants/queries';
 
 const useNicknameCheck = ({
@@ -14,9 +14,8 @@ const useNicknameCheck = ({
 }) =>
   useQuery(
     [QUERY_KEYS.MEMBER_NICKNAME_CHECK, storeCode],
-    ({ queryKey: [, nickname] }) => api.get(`members/signup/exists?nickname=${nickname}`),
+    ({ queryKey: [, nickname] }) => requestGetNicknameCheck(String(nickname)),
     {
-      select: data => data.data.unique,
       ...options,
     },
   );

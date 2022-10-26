@@ -6,8 +6,8 @@ import Layout from '@/components/@styled/Layout';
 import AuthContext from '@/context/Auth';
 import PaginationContext from '@/context/Pagination';
 
+import useUpdateNickname from '@/hooks/queries/member/useUpdateNickname';
 import useMyPosts from '@/hooks/queries/profile/useMyPosts';
-import useUpdateNickname from '@/hooks/queries/profile/useUpdateNickname';
 import useSnackbar from '@/hooks/useSnackbar';
 
 import * as Styled from './index.styles';

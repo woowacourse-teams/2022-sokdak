@@ -2,7 +2,7 @@ import { useQuery, QueryKey, UseQueryOptions } from 'react-query';
 
 import { AxiosError, AxiosResponse } from 'axios';
 
-import api from '@/apis';
+import { requestGetIDCheck } from '@/apis/member';
 import QUERY_KEYS from '@/constants/queries';
 
 const useIDCheck = ({
@@ -14,9 +14,8 @@ const useIDCheck = ({
 }) =>
   useQuery(
     [QUERY_KEYS.MEMBER_ID_CHECK, storeCode],
-    ({ queryKey: [, username] }) => api.get(`members/signup/exists?username=${username}`),
+    ({ queryKey: [, username] }) => requestGetIDCheck(String(username)),
     {
-      select: data => data.data.unique,
       ...options,
     },
   );

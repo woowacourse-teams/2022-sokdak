@@ -1,6 +1,6 @@
 import { useQuery, QueryKey, UseQueryOptions } from 'react-query';
 
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
 import { requestGetComment } from '@/apis/comment';
 import QUERY_KEYS from '@/constants/queries';
@@ -22,7 +22,7 @@ const useComments = ({
   options,
 }: {
   storeCode: QueryKey;
-  options?: UseQueryOptions<AxiosResponse<CommentResponse>, AxiosError, CommentResponse, QueryKey[]>;
+  options?: UseQueryOptions<CommentResponse, AxiosError, CommentResponse, QueryKey[]>;
 }) =>
   useQuery([QUERY_KEYS.COMMENTS, storeCode], ({ queryKey: [, id] }) => requestGetComment(String(id)), {
     ...options,

@@ -16,12 +16,14 @@ interface CommentResponse {
   comments: CommentList[];
   totalCount: number;
 }
+// export interface UseMutationOptions<TData = unknown, TError = unknown, TVariables = void, TContext = unknown> extends Omit<MutationObserverOptions<TData, TError, TVariables, TContext>, '_defaulted' | 'variables'> {
 
 const useLikeComment = (
   options?: UseMutationOptions<
-    AxiosResponse<{ like: boolean; likeCount: number }>,
+    { like: boolean; likeCount: number },
     AxiosResponse<Error>,
-    { id: number }
+    { id: number },
+    { like: boolean; likeCount: number }
   >,
 ) => {
   const queryClient = useQueryClient();
@@ -29,12 +31,12 @@ const useLikeComment = (
   return useMutation(({ id }) => requestPutLikeComment(String(id)), {
     ...options,
     onSuccess: (_, variables) => {
-      queryClient.setQueriesData<AxiosResponse<CommentResponse>>(QUERY_KEYS.COMMENTS, comment => {
+      queryClient.setQueriesData<CommentResponse>(QUERY_KEYS.COMMENTS, comment => {
         const newData = {
           ...comment,
           data: {
-            totalCount: comment?.data.totalCount!,
-            comments: comment?.data.comments.map(comment => {
+            totalCount: comment?.totalCount!,
+            comments: comment?.comments.map(comment => {
               if (comment.id === variables.id) {
                 comment.like = !comment.like;
                 if (comment.like) comment.likeCount += 1;
@@ -50,7 +52,7 @@ const useLikeComment = (
             })!,
           },
         };
-        return newData as AxiosResponse<CommentResponse>;
+        return newData as CommentResponse;
       });
     },
   });

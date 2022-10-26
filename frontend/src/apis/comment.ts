@@ -11,7 +11,11 @@ export const createComment = (id: string, body: { content: string; anonymous: bo
 
 export const requestDeleteComment = (id: string) => authFetcher.delete(`/comments/${id}`);
 
-export const requestPutLikeComment = (id: string) => authFetcher.put(`/comments/${id}/like`);
+export const requestPutLikeComment = async (id: string) => {
+  const { data } = await authFetcher.put(`/comments/${id}/like`);
+
+  return data;
+};
 
 export const createReportComment = (id: string, body: { message: string }) =>
   authFetcher.post(`/comments/${id}/report`, body);

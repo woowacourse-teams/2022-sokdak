@@ -10,8 +10,8 @@ import Layout from '@/components/@styled/Layout';
 import ConfirmModal from '@/components/ConfirmModal';
 import Spinner from '@/components/Spinner';
 
-import useLike from '@/hooks/queries/likes/useLike';
 import useDeletePost from '@/hooks/queries/post/useDeletePost';
+import useLike from '@/hooks/queries/post/useLike';
 import usePost from '@/hooks/queries/post/usePost';
 import usePosts from '@/hooks/queries/post/usePosts';
 import useDebounce from '@/hooks/useDebounce';

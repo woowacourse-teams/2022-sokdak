@@ -2,7 +2,7 @@ import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
 import { AxiosError, AxiosResponse } from 'axios';
 
-import authFetcher from '@/apis/authFetcher';
+import { requestUpdateLikePost } from '@/apis/post';
 import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 
 const useLike = (
@@ -15,8 +15,7 @@ const useLike = (
   const queryClient = useQueryClient();
 
   return useMutation(
-    ({ id }): Promise<AxiosResponse<{ like: boolean; likeCount: number }, string>> =>
-      authFetcher.put(`/posts/${id}/like`),
+    ({ id }): Promise<AxiosResponse<{ like: boolean; likeCount: number }, string>> => requestUpdateLikePost(String(id)),
     {
       ...options,
       onSuccess: (data, variables, context) => {

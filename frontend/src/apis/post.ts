@@ -70,3 +70,5 @@ export const requestUpdatePost = (
 ) => authFetcher.put(`/posts/${id}`, body);
 
 export const createImage = (image: FormData) => authFetcher.post(process.env.IMAGE_API_URL!, image);
+
+export const requestUpdateLikePost = (id: string) => authFetcher.put(`/posts/${id}/like`);

@@ -12,11 +12,7 @@ import { BOARDS } from '@/constants/board';
 
 const MainPage = () => {
   const isDesktop = useResponsive(875);
-  const { data } = usePostByBoards({
-    options: {
-      staleTime: 1000 * 20,
-    },
-  });
+  const { data } = usePostByBoards({});
 
   if (!data) {
     return <></>;

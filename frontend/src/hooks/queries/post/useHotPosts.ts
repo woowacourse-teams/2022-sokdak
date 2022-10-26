@@ -18,6 +18,7 @@ const useHotPosts = ({
   >;
 }) =>
   useQuery([QUERY_KEYS.POST, storeCode], ({ queryKey: [, size] }) => requestGetPosts('1', Number(size), '0'), {
+    staleTime: 1000 * 40,
     ...options,
   });
 

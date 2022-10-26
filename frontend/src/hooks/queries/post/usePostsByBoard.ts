@@ -22,6 +22,7 @@ const usePostByBoards = ({
   >;
 }) =>
   useQuery(QUERY_KEYS.POSTS_BY_BOARDS, () => requestGetPostsByBoards(), {
+    staleTime: 1000 * 20,
     ...options,
   });
 

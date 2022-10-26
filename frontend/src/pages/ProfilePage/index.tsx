@@ -24,10 +24,6 @@ const ProfilePage = () => {
 
   const { data } = useMyPosts({
     storeCode: [SIZE, page],
-    options: {
-      keepPreviousData: true,
-      staleTime: Infinity,
-    },
   });
 
   const { mutate, isError } = useUpdateNickname({

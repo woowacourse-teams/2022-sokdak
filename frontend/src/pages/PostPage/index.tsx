@@ -32,9 +32,6 @@ const PostPage = () => {
 
   const { data, isError } = usePost({
     storeCode: id!,
-    options: {
-      staleTime: 1000 * 20,
-    },
   });
 
   const handleLikeButton = useDebounce(() => {
@@ -55,7 +52,6 @@ const PostPage = () => {
     storeCode: [HOT_BORAD_ID, POST_COUNT],
     options: {
       enabled: isDesktop,
-      staleTime: 1000 * 20,
     },
   });
 

@@ -21,6 +21,8 @@ const useMyPosts = ({
   options?: UseQueryOptions<ResponseData, AxiosError<ErrorResponse>, ResponseData, [QueryKey, Size, Page]>;
 }) =>
   useQuery([QUERY_KEYS.MY_POSTS, ...storeCode], ({ queryKey: [, size, page] }) => requestGetMyPost(size, page), {
+    keepPreviousData: true,
+    staleTime: Infinity,
     ...options,
   });
 

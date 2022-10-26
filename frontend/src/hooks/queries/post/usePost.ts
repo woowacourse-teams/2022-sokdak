@@ -13,6 +13,7 @@ const usePost = ({
   options?: UseQueryOptions<AxiosResponse<Post & { boardId: string }>, AxiosError, Post, QueryKey[]>;
 }) =>
   useQuery([QUERY_KEYS.POST, storeCode], ({ queryKey: [, id] }) => requestGetPost(String(id)), {
+    staleTime: 1000 * 20,
     ...options,
   });
 

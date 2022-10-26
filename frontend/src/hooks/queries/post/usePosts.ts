@@ -31,6 +31,7 @@ const usePosts = ({
       }),
       enabled: false,
       getNextPageParam: (lastPage, allPages) => (lastPage.lastPage ? undefined : allPages.length),
+      staleTime: 1000 * 20,
       ...options,
     },
   );

@@ -1,8 +1,8 @@
 import { useQuery, QueryKey, UseQueryOptions } from 'react-query';
 
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
-import api from '@/apis';
+import { requestGetHashTags } from '@/apis/hashtags';
 import QUERY_KEYS from '@/constants/queries';
 
 type Limit = number;
@@ -13,16 +13,11 @@ const useSearchHashtags = ({
   options,
 }: {
   storeCode: [Limit, Include];
-  options?: UseQueryOptions<
-    AxiosResponse,
-    AxiosError,
-    AxiosResponse<{ hashtags: Hashtag[] }>,
-    [QueryKey, Limit, Include]
-  >;
+  options?: UseQueryOptions<{ hashtags: Hashtag[] }, AxiosError, { hashtags: Hashtag[] }, [QueryKey, Limit, Include]>;
 }) => {
   return useQuery(
     [QUERY_KEYS.HASHTAGS, ...storeCode],
-    ({ queryKey: [, limit, include] }) => api.get(`/hashtags/popular?limit=${limit}&include=${include}`),
+    ({ queryKey: [, limit, include] }) => requestGetHashTags(limit, include),
     {
       staleTime: 1000 * 40,
       ...options,

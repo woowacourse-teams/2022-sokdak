@@ -4,10 +4,10 @@ import ReactDOM from 'react-dom';
 import SearchedHashtag from './components/SearchedHashtag';
 import SearchedPost from './components/SearchedPost';
 
-import useQueryDebounce from '@/hooks/queries/hashtag/useQueryDebounce';
 import useSearchHashtags from '@/hooks/queries/hashtag/useSearchHashtags';
 import useSearchPostCount from '@/hooks/queries/post/useSearchPostCount';
 import useSearchPosts from '@/hooks/queries/post/useSearchPosts';
+import useQueryDebounce from '@/hooks/queries/useQueryDebounce';
 
 import * as Styled from './index.styles';
 
@@ -57,7 +57,7 @@ const SearchModal = ({ handleSearchModal: closeModal }: SearchModalProps) => {
           </Styled.Header>
 
           <Styled.Content>
-            {hashtagResult && <SearchedHashtag hashtags={hashtagResult.data.hashtags} closeModal={closeModal} />}
+            {hashtagResult && <SearchedHashtag hashtags={hashtagResult.hashtags} closeModal={closeModal} />}
             {postResult && postResultCount && (
               <SearchedPost
                 posts={postResult.pages}

@@ -35,16 +35,16 @@ const Banner = () => {
 
       <Styled.RightSide>
         {HASHTAG_POSITION.map((item, i) => {
-          if (!data?.data.hashtags || data?.data.hashtags.length <= i) return;
+          if (!data?.hashtags || data?.hashtags.length <= i) return;
           return (
             <Styled.HashtagContainer
               x={item.x}
               y={item.y}
-              key={data.data.hashtags[i].name}
-              onClick={() => handleHashTagClick(data?.data.hashtags[i].name)}
+              key={data.hashtags[i].name}
+              onClick={() => handleHashTagClick(data?.hashtags[i].name)}
             >
               <Styled.Hashtag>
-                <Styled.HashtagText>{data.data.hashtags[i].name}</Styled.HashtagText>
+                <Styled.HashtagText>{data.hashtags[i].name}</Styled.HashtagText>
               </Styled.Hashtag>
             </Styled.HashtagContainer>
           );

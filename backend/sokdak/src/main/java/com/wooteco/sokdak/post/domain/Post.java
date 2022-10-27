@@ -24,12 +24,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import lombok.Builder;
+import org.hibernate.annotations.BatchSize;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
+@BatchSize(size = 1000)
 public class Post {
 
     private static final int BLOCKED_CONDITION = 5;
@@ -58,18 +60,23 @@ public class Post {
     private String imageName;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @BatchSize(size = 1000)
     private List<PostLike> postLikes = new ArrayList<>();
 
     @OneToMany(mappedBy = "post")
+    @BatchSize(size = 1000)
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    @BatchSize(size = 1000)
     private List<PostHashtag> postHashtags;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    @BatchSize(size = 1000)
     private List<PostBoard> postBoards = new ArrayList<>();
 
     @OneToMany(mappedBy = "post")
+    @BatchSize(size = 100)
     private List<PostReport> postReports = new ArrayList<>();
 
     @CreatedDate

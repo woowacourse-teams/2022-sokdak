@@ -93,19 +93,21 @@ public class LikeService {
                 .orElseThrow(CommentNotFoundException::new);
         authService.checkAuthority(authInfo, comment.getBoardId());
 
-        flipCommentLike(authInfo.getId(), comment);
-        int likeCount = comment.getCommentLikesCount();
+        int likeCount = flipCommentLike(authInfo.getId(), comment);
         boolean liked = comment.hasLikeOfMember(authInfo.getId());
 
         return new LikeFlipResponse(likeCount, liked);
     }
 
-    private void flipCommentLike(Long memberId, Comment comment) {
+    private int flipCommentLike(Long memberId, Comment comment) {
         if (comment.hasLikeOfMember(memberId)) {
             comment.deleteLikeOfMember(memberId);
-            return;
+            commentRepository.decreaseLikeCount(comment.getId());
+            return comment.getCommentLikesCount() - 1;
         }
         addNewCommentLike(memberId, comment);
+        commentRepository.increaseLikeCount(comment.getId());
+        return comment.getCommentLikesCount() + 1;
     }
 
     private void addNewCommentLike(Long memberId, Comment comment) {

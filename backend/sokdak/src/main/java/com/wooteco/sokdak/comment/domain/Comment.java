@@ -66,6 +66,8 @@ public class Comment {
 
     private boolean softRemoved;
 
+    private int likeCount;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
@@ -164,7 +166,7 @@ public class Comment {
     }
 
     public int getCommentLikesCount() {
-        return commentLikes.size();
+        return likeCount;
     }
 
     public boolean isSoftRemoved() {

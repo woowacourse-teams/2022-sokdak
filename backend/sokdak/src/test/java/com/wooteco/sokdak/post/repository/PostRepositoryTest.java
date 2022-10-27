@@ -128,12 +128,12 @@ class PostRepositoryTest extends RepositoryTest {
     @DisplayName("좋아요 개수를 1 감소한다.")
     @Test
     void decreaseLikeCount() {
-        int originLikeCount = post1.getLikeCount();
-
         postRepository.increaseLikeCount(post1.getId());
+        int originLikeCount = postRepository.findById(post1.getId()).get().getLikeCount();
+
+        postRepository.decreaseLikeCount(post1.getId());
 
         Post post = postRepository.findById(post1.getId()).orElseThrow();
-        assertThat(post.getLikeCount() - originLikeCount).isEqualTo(1);
-
+        assertThat(post.getLikeCount() - originLikeCount).isEqualTo(-1);
     }
 }

@@ -325,7 +325,7 @@ class LikeServiceTest extends ServiceTest {
 
     @DisplayName("게시글 좋아요시 게시글의 likeCount 가 증가한다.")
     @Test
-    void flipLike_increaseLikeCount() {
+    void flipPostLike_increaseLikeCount() {
         int originLikeCount = post.getLikeCount();
 
         likeService.flipPostLike(post.getId(), AUTH_INFO);
@@ -336,12 +336,34 @@ class LikeServiceTest extends ServiceTest {
 
     @DisplayName("한 사용자가 좋아요를 누른 게시글에 좋아요시 likeCount 가 감소한다.")
     @Test
-    void flipLike_decreaseLikeCount() {
+    void flipPostLike_decreaseLikeCount() {
         int originLikeCount = likeService.flipPostLike(post.getId(), AUTH_INFO).getLikeCount();
 
         likeService.flipPostLike(post.getId(), AUTH_INFO);
 
         Post foundPost = postRepository.findById(post.getId()).orElseThrow();
         assertThat(foundPost.getLikeCount() - originLikeCount).isEqualTo(-1);
+    }
+
+    @DisplayName("댓글 좋아요시 댓글의 likeCount 가 증가한다.")
+    @Test
+    void flipCommentLike_increaseLikeCount() {
+        int originLikeCount = comment.getCommentLikesCount();
+
+        likeService.flipCommentLike(comment.getId(), AUTH_INFO);
+
+        Comment foundComment = commentRepository.findById(comment.getId()).orElseThrow();
+        assertThat(foundComment.getCommentLikesCount() - originLikeCount).isEqualTo(1);
+    }
+
+    @DisplayName("한 사용자가 좋아요를 누른 댓글에 좋아요시 likeCount 가 감소한다.")
+    @Test
+    void flipCommentLike_decreaseLikeCount() {
+        int originLikeCount = likeService.flipCommentLike(comment.getId(), AUTH_INFO).getLikeCount();
+
+        likeService.flipCommentLike(comment.getId(), AUTH_INFO);
+
+        Comment foundComment = commentRepository.findById(comment.getId()).orElseThrow();
+        assertThat(foundComment.getCommentLikesCount() - originLikeCount).isEqualTo(-1);
     }
 }

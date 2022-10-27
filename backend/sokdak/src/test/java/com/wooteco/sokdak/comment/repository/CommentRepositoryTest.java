@@ -23,6 +23,8 @@ class CommentRepositoryTest extends RepositoryTest {
     private PostRepository postRepository;
 
     private Post post;
+    private Comment comment1;
+    private Comment comment2;
 
     @BeforeEach
     void setUp() {
@@ -32,18 +34,40 @@ class CommentRepositoryTest extends RepositoryTest {
                 .content(VALID_POST_CONTENT)
                 .build();
         postRepository.save(post);
+        comment1 = Comment.parent(member1, post, "east", "댓글");
+        comment2 = Comment.parent(member1, post, "east", "댓글2");
+        commentRepository.save(comment1);
+        commentRepository.save(comment2);
     }
 
     @DisplayName("게시물에 해당하는 모든 댓글을 가져온다.")
     @Test
     void findAllByPostId() {
-        Comment comment1 = Comment.parent(member1, post, "east", "댓글");
-        Comment comment2 = Comment.parent(member1, post, "east", "댓글2");
-        commentRepository.save(comment1);
-        commentRepository.save(comment2);
-
         List<Comment> comments = commentRepository.findCommentsByPostId(post.getId());
 
         assertThat(comments).hasSize(2);
+    }
+
+    @DisplayName("좋아요 개수를 1 증가한다.")
+    @Test
+    void increaseLikeCount() {
+        int originLikeCount = comment1.getCommentLikesCount();
+
+        commentRepository.increaseLikeCount(comment1.getId());
+
+        Comment foundComment = commentRepository.findById(comment1.getId()).orElseThrow();
+        assertThat(foundComment.getCommentLikesCount() - originLikeCount).isEqualTo(1);
+    }
+
+    @DisplayName("좋아요 개수를 1 감소한다.")
+    @Test
+    void decreaseLikeCount() {
+        commentRepository.increaseLikeCount(comment1.getId());
+        int originLikeCount = commentRepository.findById(comment1.getId()).get().getCommentLikesCount();
+
+        commentRepository.decreaseLikeCount(comment1.getId());
+
+        Comment foundComment = commentRepository.findById(comment1.getId()).orElseThrow();
+        assertThat(foundComment.getCommentLikesCount() - originLikeCount).isEqualTo(-1);
     }
 }

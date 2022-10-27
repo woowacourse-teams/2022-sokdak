@@ -53,6 +53,8 @@ public class Post {
 
     private int viewCount = 0;
 
+    private int likeCount = 0;
+
     private String writerNickname;
 
     private String imageName;
@@ -166,10 +168,11 @@ public class Post {
     }
 
     public int getLikeCount() {
-        if (postLikes == null) {
-            return 0;
-        }
-        return postLikes.size();
+//        if (postLikes == null) {
+//            return 0;
+//        }
+//        return postLikes.size();
+        return likeCount;
     }
 
     public int getCommentCount() {

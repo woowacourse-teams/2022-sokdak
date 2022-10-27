@@ -53,20 +53,22 @@ public class LikeService {
                 .orElseThrow(PostNotFoundException::new);
         authService.checkAuthority(authInfo, post.getBoardId());
 
-        flipPostLike(authInfo.getId(), post);
-        int likeCount = post.getLikeCount();
+        int likeCount = flipPostLike(authInfo.getId(), post);
         boolean liked = post.hasLikeOfMember(authInfo.getId());
 
         checkSpecialAndSave(likeCount, post);
         return new LikeFlipResponse(likeCount, liked);
     }
 
-    private void flipPostLike(Long memberId, Post post) {
+    private int flipPostLike(Long memberId, Post post) {
         if (post.hasLikeOfMember(memberId)) {
             post.deleteLikeOfMember(memberId);
-            return;
+            postRepository.decreaseLikeCount(post.getId());
+            return post.getLikeCount() - 1;
         }
         addNewPostLike(memberId, post);
+        postRepository.increaseLikeCount(post.getId());
+        return post.getLikeCount() + 1;
     }
 
     private void addNewPostLike(Long memberId, Post post) {

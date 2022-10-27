@@ -137,8 +137,7 @@ public class PostService {
         return PostsCountResponse.of((int) posts.getTotalElements());
     }
 
-    public PostsResponse searchSliceWithQuery(@Nullable String query,
-                                              Pageable pageable) {
+    public PostsResponse searchSliceWithQuery(@Nullable String query, Pageable pageable) {
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), DESC, "created_at");
         SearchQuery searchQuery = new SearchQuery(query);
         Slice<Post> posts = postRepository.findPostSlicePagesByQuery(pageable, searchQuery.getValue());
@@ -172,7 +171,6 @@ public class PostService {
         Hashtags hashtags = hashtagService.findHashtagsByPost(post);
 
         commentRepository.deleteAllByPost(post);
-        postLikeRepository.deleteAllByPost(post);
         postLikeRepository.deleteAllByPost(post);
         hashtagService.deleteAllByPost(hashtags, post);
         notificationService.deletePostNotification(id);

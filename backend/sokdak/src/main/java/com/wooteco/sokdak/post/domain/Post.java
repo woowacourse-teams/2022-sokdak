@@ -3,6 +3,7 @@ package com.wooteco.sokdak.post.domain;
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.comment.domain.Comment;
+import com.wooteco.sokdak.hashtag.domain.Hashtag;
 import com.wooteco.sokdak.hashtag.domain.PostHashtag;
 import com.wooteco.sokdak.like.domain.PostLike;
 import com.wooteco.sokdak.like.exception.PostLikeNotFoundException;
@@ -11,6 +12,8 @@ import com.wooteco.sokdak.report.domain.PostReport;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -69,7 +72,7 @@ public class Post {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     @BatchSize(size = 1000)
-    private List<PostHashtag> postHashtags;
+    private List<PostHashtag> postHashtags = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     @BatchSize(size = 1000)
@@ -101,8 +104,12 @@ public class Post {
         this.imageName = imageName;
     }
 
-    public boolean isModified() {
-        return !createdAt.equals(modifiedAt);
+    public void addReport(PostReport other) {
+        postReports.add(other);
+    }
+
+    public void addPostLike(PostLike postLike) {
+        postLikes.add(postLike);
     }
 
     public void updateTitle(String title) {
@@ -117,6 +124,30 @@ public class Post {
         this.imageName = imageName;
     }
 
+    public void deleteAllReports() {
+        postReports = new ArrayList<>();
+    }
+
+    public void deleteLikeOfMember(Long memberId) {
+        PostLike postLike = postLikes.stream()
+                .filter(it -> it.isLikeOf(memberId))
+                .findAny()
+                .orElseThrow(PostLikeNotFoundException::new);
+        postLikes.remove(postLike);
+    }
+
+    public boolean isModified() {
+        return !createdAt.equals(modifiedAt);
+    }
+
+    public boolean isBlocked() {
+        return postReports.size() >= BLOCKED_CONDITION;
+    }
+
+    public boolean isAnonymous() {
+        return !getNickname().equals(member.getNickname());
+    }
+
     public boolean isOwner(Long accessMemberId) {
         if (accessMemberId == null) {
             return false;
@@ -124,21 +155,14 @@ public class Post {
         return member.getId().equals(accessMemberId);
     }
 
-    public boolean isBlocked() {
-        return postReports.size() >= BLOCKED_CONDITION;
-    }
-
-    public void addReport(PostReport other) {
-        postReports.add(other);
-    }
-
-    public boolean isAnonymous() {
-        return !getNickname().equals(member.getNickname());
-    }
-
     public boolean hasReportByMember(Member reporter) {
         return postReports.stream()
                 .anyMatch(report -> report.isOwner(reporter));
+    }
+
+    public boolean hasLikeOfMember(Long memberId) {
+        return postLikes.stream()
+                .anyMatch(postLike -> postLike.isLikeOf(memberId));
     }
 
     public Long getId() {
@@ -157,11 +181,6 @@ public class Post {
             return BLIND_POST_MESSAGE;
         }
         return content.getValue();
-    }
-
-    public boolean hasLikeOfMember(Long memberId) {
-        return postLikes.stream()
-                .anyMatch(postLike -> postLike.isLikeOf(memberId));
     }
 
     public LocalDateTime getCreatedAt() {
@@ -217,27 +236,15 @@ public class Post {
         return postReports;
     }
 
-    public void deleteAllReports() {
-        postReports = new ArrayList<>();
-    }
-
-    public void addPostLike(PostLike postLike) {
-        postLikes.add(postLike);
-    }
-
-    public void deleteLikeOfMember(Long memberId) {
-        PostLike postLike = postLikes.stream()
-                .filter(it -> it.isLikeOf(memberId))
-                .findAny()
-                .orElseThrow(PostLikeNotFoundException::new);
-        postLikes.remove(postLike);
+    public List<PostHashtag> getHashtags() {
+        return postHashtags;
     }
 
     public Long getBoardId() {
         return postBoards.stream()
                 .map(PostBoard::getBoard)
                 .map(Board::getId)
-                .filter(id -> id != HOT_BOARD_ID)
+                .filter(id -> !Objects.equals(id, HOT_BOARD_ID))
                 .findAny()
                 .orElseThrow(IllegalStateException::new);
     }

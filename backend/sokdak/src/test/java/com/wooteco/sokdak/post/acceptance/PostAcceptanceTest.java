@@ -376,7 +376,6 @@ class PostAcceptanceTest extends AcceptanceTest {
         assertThat(postsResponse.getTotalPostCount()).isEqualTo(1);
     }
 
-
     private String parsePostId(ExtractableResponse<Response> response) {
         return response.header("Location")
                 .split("/posts/")[1];

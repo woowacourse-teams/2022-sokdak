@@ -53,20 +53,22 @@ public class LikeService {
                 .orElseThrow(PostNotFoundException::new);
         authService.checkAuthority(authInfo, post.getBoardId());
 
-        flipPostLike(authInfo.getId(), post);
-        int likeCount = post.getLikeCount();
+        int likeCount = flipPostLike(authInfo.getId(), post);
         boolean liked = post.hasLikeOfMember(authInfo.getId());
 
         checkSpecialAndSave(likeCount, post);
         return new LikeFlipResponse(likeCount, liked);
     }
 
-    private void flipPostLike(Long memberId, Post post) {
+    private int flipPostLike(Long memberId, Post post) {
         if (post.hasLikeOfMember(memberId)) {
             post.deleteLikeOfMember(memberId);
-            return;
+            postRepository.decreaseLikeCount(post.getId());
+            return post.getLikeCount() - 1;
         }
         addNewPostLike(memberId, post);
+        postRepository.increaseLikeCount(post.getId());
+        return post.getLikeCount() + 1;
     }
 
     private void addNewPostLike(Long memberId, Post post) {
@@ -91,19 +93,21 @@ public class LikeService {
                 .orElseThrow(CommentNotFoundException::new);
         authService.checkAuthority(authInfo, comment.getBoardId());
 
-        flipCommentLike(authInfo.getId(), comment);
-        int likeCount = comment.getCommentLikesCount();
+        int likeCount = flipCommentLike(authInfo.getId(), comment);
         boolean liked = comment.hasLikeOfMember(authInfo.getId());
 
         return new LikeFlipResponse(likeCount, liked);
     }
 
-    private void flipCommentLike(Long memberId, Comment comment) {
+    private int flipCommentLike(Long memberId, Comment comment) {
         if (comment.hasLikeOfMember(memberId)) {
             comment.deleteLikeOfMember(memberId);
-            return;
+            commentRepository.decreaseLikeCount(comment.getId());
+            return comment.getCommentLikesCount() - 1;
         }
         addNewCommentLike(memberId, comment);
+        commentRepository.increaseLikeCount(comment.getId());
+        return comment.getCommentLikesCount() + 1;
     }
 
     private void addNewCommentLike(Long memberId, Comment comment) {

@@ -168,10 +168,6 @@ public class Post {
     }
 
     public int getLikeCount() {
-//        if (postLikes == null) {
-//            return 0;
-//        }
-//        return postLikes.size();
         return likeCount;
     }
 

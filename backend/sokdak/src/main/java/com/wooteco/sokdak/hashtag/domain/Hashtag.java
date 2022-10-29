@@ -8,9 +8,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
+import org.hibernate.annotations.BatchSize;
 
 @Getter
 @Entity
+@BatchSize(size = 1000)
 public class Hashtag {
 
     @Id

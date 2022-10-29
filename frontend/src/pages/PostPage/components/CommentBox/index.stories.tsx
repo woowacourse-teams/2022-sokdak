@@ -22,4 +22,5 @@ CommentTemplate.args = {
     '속닥속닥 속닥속닥 속닥속닥 속닥속닥 속닥속닥 속닥속닥 속닥속닥 속닥속닥 속닥속닥 속닥속닥 속닥속닥 속닥속닥 속닥속닥 속닥속닥 속닥속닥 속닥속닥 속닥속닥 속닥속닥',
   createdAt: new Date().toISOString(),
   authorized: false,
+  likeCount: 10,
 };

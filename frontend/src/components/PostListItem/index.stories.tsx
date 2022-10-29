@@ -14,6 +14,7 @@ PostListItemTemplate.args = {
   content: '안녕?',
   createdAt: new Date('2021-07-28').toISOString(),
   likeCount: 1200,
+  viewCount: 130,
   commentCount: 0,
   modified: true,
 };

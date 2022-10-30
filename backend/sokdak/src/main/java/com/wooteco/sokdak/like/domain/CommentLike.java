@@ -42,4 +42,8 @@ public class CommentLike {
     public boolean isLikeOf(Long memberId) {
         return member.hasId(memberId);
     }
+
+    public void delete() {
+        this.comment = null;
+    }
 }

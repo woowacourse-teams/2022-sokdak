@@ -2,7 +2,6 @@ package com.wooteco.sokdak.post.repository;
 
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.post.domain.Post;
-import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -27,9 +26,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query(value = SEARCH_SQL, nativeQuery = true)
     Slice<Post> findPostSlicePagesByQuery(Pageable pageable, String query);
-
-    @Query(value = "SELECT p FROM Post p LEFT JOIN FETCH p.postLikes WHERE p.id = :id")
-    Optional<Post> findById(Long id);
 
     @Transactional
     @Modifying

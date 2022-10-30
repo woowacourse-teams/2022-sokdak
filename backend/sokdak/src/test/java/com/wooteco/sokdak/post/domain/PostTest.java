@@ -19,7 +19,6 @@ import static org.mockito.Mockito.when;
 import com.wooteco.sokdak.auth.domain.encryptor.EncryptorI;
 import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;
-import com.wooteco.sokdak.like.domain.PostLike;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.domain.Nickname;
 import com.wooteco.sokdak.member.domain.Password;
@@ -212,32 +211,6 @@ class PostTest {
         post.addReport(postReport);
 
         assertThat(post.hasReportByMember(member)).isEqualTo(expected);
-    }
-
-    @DisplayName("게시글에 특정 멤버가 좋아요를 눌렀는지 반환한다.")
-    @ParameterizedTest
-    @CsvSource({"1, true", "2, false"})
-    void hasLikeOfMember(Long memberId, boolean expected) {
-        PostLike.builder()
-                .post(post)
-                .member(member)
-                .build();
-        boolean actual = post.hasLikeOfMember(memberId);
-
-        assertThat(actual).isEqualTo(expected);
-    }
-
-    @DisplayName("게시글에 특정 멤버의 좋아요를 삭제한다.")
-    @Test
-    void deleteLikeOfMember() {
-        PostLike.builder()
-                .post(post)
-                .member(member)
-                .build();
-
-        post.deleteLikeOfMember(member.getId());
-
-        assertThat(post.hasLikeOfMember(member.getId())).isFalse();
     }
 
     @DisplayName("핫게시판을 제외한 게시글이 속한 boardId를 가져온다.")

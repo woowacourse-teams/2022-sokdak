@@ -2,7 +2,6 @@ package com.wooteco.sokdak.comment.domain;
 
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
 import com.wooteco.sokdak.like.domain.CommentLike;
-import com.wooteco.sokdak.like.exception.CommentLikeNotFoundException;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.report.domain.CommentReport;
@@ -189,21 +188,13 @@ public class Comment {
         return children.isEmpty();
     }
 
-    public boolean hasLikeOfMember(Long memberId) {
-        return commentLikes.stream()
-                .anyMatch(commentLike -> commentLike.isLikeOf(memberId));
-    }
-
     public void addCommentLike(CommentLike commentLike) {
         commentLikes.add(commentLike);
     }
 
-    public void deleteLikeOfMember(Long memberId) {
-        CommentLike commentLike = commentLikes.stream()
-                .filter(it -> it.isLikeOf(memberId))
-                .findAny()
-                .orElseThrow(CommentLikeNotFoundException::new);
+    public void deleteLike(CommentLike commentLike) {
         commentLikes.remove(commentLike);
+        commentLike.delete();
     }
 
     public Long getBoardId() {

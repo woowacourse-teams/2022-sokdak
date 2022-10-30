@@ -151,7 +151,7 @@ public class CommentService {
         if (comment.isSoftRemoved()) {
             return CommentResponse.softRemovedOf(comment, convertToReplyResponses(comment, id));
         }
-        boolean liked = commentLikeRepository.existsByMemberIdAndCommentId(id, comment.getId());
+        boolean liked = commentLikeRepository.existsByMemberIdAndComment(id, comment);
         return CommentResponse.of(comment, id, convertToReplyResponses(comment, id), liked);
     }
 
@@ -159,7 +159,7 @@ public class CommentService {
         final List<Comment> replies = commentRepository.findRepliesByParent(parent);
         List<ReplyResponse> replyResponses = new ArrayList<>();
         for (Comment reply : replies) {
-            boolean liked = commentLikeRepository.existsByMemberIdAndCommentId(accessMemberId, reply.getId());
+            boolean liked = commentLikeRepository.existsByMemberIdAndComment(accessMemberId, reply);
             replyResponses.add(ReplyResponse.of(reply, accessMemberId, liked));
         }
         return replyResponses;

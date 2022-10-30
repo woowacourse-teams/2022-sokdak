@@ -17,6 +17,7 @@ import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,18 +55,20 @@ public class LikeService {
         authService.checkAuthority(authInfo, post.getBoardId());
 
         int likeCount = flipPostLike(authInfo.getId(), post);
-        boolean liked = post.hasLikeOfMember(authInfo.getId());
+        boolean liked = postLikeRepository.existsByPostAndMemberId(post, authInfo.getId());
 
         checkSpecialAndSave(likeCount, post);
         return new LikeFlipResponse(likeCount, liked);
     }
 
     private int flipPostLike(Long memberId, Post post) {
-        if (post.hasLikeOfMember(memberId)) {
-            post.deleteLikeOfMember(memberId);
+        final Optional<PostLike> postLike = postLikeRepository.findByPostAndMemberId(post, memberId);
+        if (postLike.isPresent()) {
+            post.deleteLike(postLike.get());
             postRepository.decreaseLikeCount(post.getId());
             return post.getLikeCount() - 1;
         }
+
         addNewPostLike(memberId, post);
         postRepository.increaseLikeCount(post.getId());
         return post.getLikeCount() + 1;
@@ -94,14 +97,15 @@ public class LikeService {
         authService.checkAuthority(authInfo, comment.getBoardId());
 
         int likeCount = flipCommentLike(authInfo.getId(), comment);
-        boolean liked = comment.hasLikeOfMember(authInfo.getId());
+        boolean liked = commentLikeRepository.existsByMemberIdAndComment(authInfo.getId(), comment);
 
         return new LikeFlipResponse(likeCount, liked);
     }
 
     private int flipCommentLike(Long memberId, Comment comment) {
-        if (comment.hasLikeOfMember(memberId)) {
-            comment.deleteLikeOfMember(memberId);
+        Optional<CommentLike> commentLike = commentLikeRepository.findByMemberIdAndComment(memberId, comment);
+        if (commentLike.isPresent()) {
+            comment.deleteLike(commentLike.get());
             commentRepository.decreaseLikeCount(comment.getId());
             return comment.getCommentLikesCount() - 1;
         }

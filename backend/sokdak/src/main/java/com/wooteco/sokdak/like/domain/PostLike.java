@@ -42,4 +42,8 @@ public class PostLike {
     public boolean isLikeOf(Long memberId) {
         return member.hasId(memberId);
     }
+
+    public void delete() {
+        this.post = null;
+    }
 }

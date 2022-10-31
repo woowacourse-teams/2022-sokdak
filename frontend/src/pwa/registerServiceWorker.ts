@@ -1,8 +1,8 @@
 import { setPushStatus } from './pushStatus';
 
-const isSupported = process.env.MODE !== 'LOCAL:MSW' && 'serviceWorker' in navigator;
-
 const registerServiceWorker = () => {
+  const isSupported = process.env.MODE !== 'LOCAL:MSW' && 'serviceWorker' in navigator;
+
   if (!isSupported) return;
 
   window.addEventListener('load', () => {

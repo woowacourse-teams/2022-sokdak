@@ -11,7 +11,7 @@ interface DeleteNotificationProps {
 }
 
 const useDeleteNotification = (
-  options?: UseMutationOptions<AxiosResponse<null>, AxiosError<{ message: string }>, DeleteNotificationProps>,
+  options?: UseMutationOptions<AxiosResponse<null>, AxiosError<Error>, DeleteNotificationProps>,
 ) => {
   const queryClient = useQueryClient();
 

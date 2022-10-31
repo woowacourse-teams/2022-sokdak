@@ -9,12 +9,7 @@ const useNotificationExists = ({
   options,
 }: {
   options?: Omit<
-    UseQueryOptions<
-      { existence: boolean },
-      AxiosError<{ message: string }>,
-      boolean,
-      typeof QUERY_KEYS['NOTIFICATION_EXISTS']
-    >,
+    UseQueryOptions<Promise<boolean>, AxiosError<Error>, boolean, typeof QUERY_KEYS['NOTIFICATION_EXISTS']>,
     'queryKey' | 'queryFn'
   >;
 }) =>

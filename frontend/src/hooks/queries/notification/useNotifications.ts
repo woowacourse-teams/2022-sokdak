@@ -3,6 +3,7 @@ import { useInfiniteQuery, QueryKey, UseInfiniteQueryOptions, useQueryClient } f
 import { AxiosError } from 'axios';
 
 import { requestGetNotifications } from '@/api/notification';
+import type { GetNotificationsResponse } from '@/api/notification';
 import QUERY_KEYS from '@/constants/queries';
 
 type Size = number;
@@ -13,10 +14,10 @@ const useNotifications = ({
 }: {
   storeCode: [Size];
   options?: UseInfiniteQueryOptions<
-    { notifications: Notice[]; lastPage: boolean },
+    GetNotificationsResponse,
     AxiosError,
     Notice,
-    { notifications: Notice[]; lastPage: boolean },
+    GetNotificationsResponse,
     [QueryKey, Size]
   >;
 }) => {

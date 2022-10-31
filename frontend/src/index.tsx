@@ -16,28 +16,17 @@ import { isExpired, parseJwt } from './utils/decodeJwt';
 
 import App from './App';
 import runJenniferFront from './jenniferFront';
+import registerServiceWorker from './pwa/registerServiceWorker';
 import GlobalStyle from './style/GlobalStyle';
 import theme from './style/theme';
 import { ThemeProvider } from '@emotion/react';
 
 runJenniferFront();
+registerServiceWorker();
 
 if (process.env.MODE === 'LOCAL:MSW') {
   const { worker } = require('./mocks/worker');
   worker.start();
-}
-
-if (process.env.MODE !== 'LOCAL:MSW' && 'serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker
-      .register('/service-worker.js')
-      .then(registration => {
-        console.log('SW registered: ', registration);
-      })
-      .catch(registrationError => {
-        console.log('SW registration failed: ', registrationError);
-      });
-  });
 }
 
 axios.defaults.baseURL = process.env.API_URL;

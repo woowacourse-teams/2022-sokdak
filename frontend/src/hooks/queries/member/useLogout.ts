@@ -13,7 +13,7 @@ import { STORAGE_KEY } from '@/constants/localStorage';
 import QUERY_KEYS from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
-const useLogout = (options?: UseQueryOptions<AxiosResponse<null>, AxiosError<{ message: string }>, never, string>) => {
+const useLogout = (options?: UseQueryOptions<AxiosResponse<null>, AxiosError<Error>, null, string>) => {
   const { showSnackbar } = useSnackbar();
   const { setIsLogin, setUsername } = useContext(AuthContext);
   return useQuery(QUERY_KEYS.LOGOUT, () => requestGetLogout(), {

@@ -3,19 +3,13 @@ import { useMutation, UseMutationOptions } from 'react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 
 import { createMember } from '@/api/member';
-
-interface SignUpProps extends Member {
-  email: string | null;
-  nickname: string;
-  code: string | null;
-  passwordConfirmation: string;
-}
+import type { CreateMemberRequest } from '@/api/member';
 
 const useSignUp = (
-  options?: UseMutationOptions<AxiosResponse<string, string>, AxiosError<{ message: string }>, SignUpProps>,
+  options?: UseMutationOptions<AxiosResponse<null>, AxiosError<{ message: string }>, CreateMemberRequest>,
 ) => {
   return useMutation(
-    ({ email, username, nickname, code, password, passwordConfirmation }): Promise<AxiosResponse<string, string>> =>
+    ({ email, username, nickname, code, password, passwordConfirmation }): Promise<AxiosResponse<null>> =>
       createMember({
         email,
         username,

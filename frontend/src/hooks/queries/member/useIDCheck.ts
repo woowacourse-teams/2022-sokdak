@@ -1,6 +1,6 @@
 import { useQuery, QueryKey, UseQueryOptions } from 'react-query';
 
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
 import { requestGetIDCheck } from '@/api/member';
 import QUERY_KEYS from '@/constants/queries';
@@ -10,7 +10,7 @@ const useIDCheck = ({
   options,
 }: {
   storeCode: QueryKey;
-  options?: UseQueryOptions<AxiosResponse<{ unique: boolean }>, AxiosError<{ message: string }>, boolean, QueryKey[]>;
+  options?: UseQueryOptions<boolean, AxiosError<Error>, boolean, QueryKey[]>;
 }) =>
   useQuery(
     [QUERY_KEYS.MEMBER_ID_CHECK, storeCode],

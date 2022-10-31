@@ -1,37 +1,60 @@
-import { AxiosRequestConfig } from 'axios';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 import api from '.';
 import authFetcher from './authFetcher';
 
-export const createMember = (body: {
+export interface CreateMemberRequest extends Member {
   email: string | null;
-  username: string;
   nickname: string;
   code: string | null;
-  password: string;
   passwordConfirmation: string;
-}) => api.post('/members/signup', body);
+}
 
-export const createEmailCheck = (body: { email: string }) => api.post('/members/signup/email', body);
+export const createMember = (body: CreateMemberRequest) =>
+  api.post<null, AxiosResponse<null>, CreateMemberRequest>('/members/signup', body);
 
-export const createVerificationCodeCheck = (body: { email: string; code: string }) =>
-  api.post('/members/signup/email/verification', body);
+export interface CreateEmailCheckRequest {
+  email: string;
+}
 
-export const createLogin = (body: { username: string; password: string }, options: AxiosRequestConfig) =>
-  api.post('/login', body, options);
+export const createEmailCheck = (body: CreateEmailCheckRequest) =>
+  api.post<null, AxiosResponse<null>, CreateEmailCheckRequest>('/members/signup/email', body);
+
+export interface CreateVerificationCodeCheckRequest {
+  email: string;
+  code: string;
+}
+
+export const createVerificationCodeCheck = (body: CreateVerificationCodeCheckRequest) =>
+  api.post<null, AxiosResponse<null>, CreateVerificationCodeCheckRequest>('/members/signup/email/verification', body);
+
+export const createLogin = (body: Member, options: AxiosRequestConfig) =>
+  api.post<null, AxiosResponse<null>, Member>('/login', body, options);
+
+export interface GetNicknameCheckResponse {
+  unique: boolean;
+}
 
 export const requestGetNicknameCheck = async (nickname: string) => {
-  const { data } = await api.get(`members/signup/exists?nickname=${nickname}`);
+  const { data } = await api.get<GetNicknameCheckResponse>(`members/signup/exists?nickname=${nickname}`);
 
   return data.unique;
 };
 
+export interface GetIDCheckResponse {
+  unique: boolean;
+}
+
 export const requestGetIDCheck = async (username: string) => {
-  const { data } = await api.get(`members/signup/exists?username=${username}`);
+  const { data } = await api.get<GetIDCheckResponse>(`members/signup/exists?username=${username}`);
 
   return data.unique;
 };
 
 export const requestGetLogout = () => authFetcher.get('/logout');
 
-export const requestUpdateNickname = (body: { nickname: string }) => authFetcher.patch('/members/nickname', body);
+export interface UpdateNicknameRequest {
+  nickname: string;
+}
+export const requestUpdateNickname = (body: UpdateNicknameRequest) =>
+  authFetcher.patch<null, AxiosResponse<null>, UpdateNicknameRequest>('/members/nickname', body);

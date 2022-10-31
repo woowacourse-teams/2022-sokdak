@@ -13,7 +13,7 @@ import { STORAGE_KEY } from '@/constants/localStorage';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 import { parseJwt } from '@/utils/decodeJwt';
 
-const useLogin = (options?: UseMutationOptions<AxiosResponse<null>, AxiosError<{ message: string }>, Member>) => {
+const useLogin = (options?: UseMutationOptions<AxiosResponse<null>, AxiosError<Error>, Member>) => {
   const { showSnackbar } = useSnackbar();
   const { setIsLogin, setUsername } = useContext(AuthContext);
   return useMutation(

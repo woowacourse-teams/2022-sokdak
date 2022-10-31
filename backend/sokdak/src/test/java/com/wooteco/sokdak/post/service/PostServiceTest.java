@@ -156,7 +156,10 @@ class PostServiceTest extends ServiceTest {
         int viewCount = post.getViewCount();
         postService.findPost(post.getId(), AUTH_INFO, logs);
         em.clear();
-        int updatedViewCount = postRepository.findById(post.getId()).get().getViewCount();
+
+        int updatedViewCount = postRepository.findById(post.getId())
+                .get()
+                .getViewCount();
 
         assertThat(viewCount + expectedIncreasementViewcount).isEqualTo(updatedViewCount);
     }

@@ -55,6 +55,8 @@ import org.springframework.data.domain.Pageable;
 
 class PostServiceTest extends ServiceTest {
 
+    private static final String EMPTY_COOKIE_VALUE = "";
+
     @Autowired
     private PostService postService;
 
@@ -136,7 +138,7 @@ class PostServiceTest extends ServiceTest {
         postBoardRepository.save(postBoard);
 
         int viewCount = post.getViewCount();
-        postService.findPost(post.getId(), AUTH_INFO, "");
+        postService.findPost(post.getId(), AUTH_INFO, EMPTY_COOKIE_VALUE);
         em.clear();
         int updatedViewCount = postRepository.findById(post.getId()).get().getViewCount();
 
@@ -168,7 +170,7 @@ class PostServiceTest extends ServiceTest {
     private static Stream<Arguments> argsOfFindPostViewCount() {
         int today = LocalDateTime.now().getDayOfMonth();
         return Stream.of(
-                Arguments.of("", 1),
+                Arguments.of(EMPTY_COOKIE_VALUE, 1),
                 Arguments.of(today + ":2/3", 1),
                 Arguments.of(today+":1/2/3", 0)
         );
@@ -230,7 +232,7 @@ class PostServiceTest extends ServiceTest {
         postBoard.addBoard(board);
         postBoardRepository.save(postBoard);
 
-        PostDetailResponse response = postService.findPost(savedPostId, AUTH_INFO, "");
+        PostDetailResponse response = postService.findPost(savedPostId, AUTH_INFO, EMPTY_COOKIE_VALUE);
 
         assertAll(
                 () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
@@ -251,7 +253,7 @@ class PostServiceTest extends ServiceTest {
         postBoard.addBoard(board);
         postBoardRepository.save(postBoard);
 
-        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(2L, USER.getName(), "nickname"), "");
+        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(2L, USER.getName(), "nickname"), EMPTY_COOKIE_VALUE);
 
         assertAll(
                 () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
@@ -273,7 +275,7 @@ class PostServiceTest extends ServiceTest {
         postBoard.addBoard(board);
         postBoardRepository.save(postBoard);
 
-        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(null, USER.getName(), "nickname"), "");
+        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(null, USER.getName(), "nickname"), EMPTY_COOKIE_VALUE);
 
         assertAll(
                 () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
@@ -300,7 +302,7 @@ class PostServiceTest extends ServiceTest {
         postBoardRepository.save(postBoard);
         postBoardRepository.save(postHotBoard);
 
-        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(null, USER.getName(), "nickname"), "");
+        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(null, USER.getName(), "nickname"), EMPTY_COOKIE_VALUE);
 
         assertAll(
                 () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
@@ -317,7 +319,7 @@ class PostServiceTest extends ServiceTest {
     void findPost_Exception() {
         Long invalidPostId = 9999L;
 
-        assertThatThrownBy(() -> postService.findPost(invalidPostId, AUTH_INFO, ""))
+        assertThatThrownBy(() -> postService.findPost(invalidPostId, AUTH_INFO, EMPTY_COOKIE_VALUE))
                 .isInstanceOf(PostNotFoundException.class);
     }
 

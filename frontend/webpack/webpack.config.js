@@ -66,7 +66,7 @@ module.exports = {
       'process.env.IMAGE_API_URL': JSON.stringify('https://img.sokdaksokdak.com/images/'),
     }),
     new CopyWebpackPlugin({
-      patterns: [{ from: './public/icons', to: './icons' }, './public/manifest.json'],
+      patterns: [{ from: './public/icons', to: './icons' }, './public/manifest.json', './public/pushServiceWorker.js'],
     }),
   ],
   optimization: {

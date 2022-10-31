@@ -14,6 +14,7 @@ module.exports = merge(common, {
     new WorkboxPlugin.GenerateSW({
       clientsClaim: true,
       skipWaiting: true,
+      importScripts: ['./pushServiceWorker.js'],
     }),
   ],
   optimization: {

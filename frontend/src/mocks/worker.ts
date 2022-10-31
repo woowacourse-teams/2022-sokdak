@@ -5,6 +5,7 @@ import hashtagsHandlers from './handlers/hashtags';
 import memberHandler from './handlers/members';
 import notificationHandlers from './handlers/notifications';
 import postHandlers from './handlers/posts';
+import pushHandlers from './handlers/push';
 
 export const worker = setupWorker(
   ...postHandlers,
@@ -12,4 +13,5 @@ export const worker = setupWorker(
   ...hashtagsHandlers,
   ...commentHandlers,
   ...notificationHandlers,
+  ...pushHandlers,
 );

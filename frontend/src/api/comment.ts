@@ -23,7 +23,7 @@ export interface CreateCommentsRequest {
   anonymous: boolean;
 }
 
-export const createComment = (id: string, body: { content: string; anonymous: boolean }) =>
+export const createComment = (id: string, body: CreateCommentsRequest) =>
   authFetcher.post<null, AxiosResponse<null>, CreateCommentsRequest>(`posts/${id}/comments`, body);
 
 export const requestDeleteComment = (id: string) =>
@@ -44,7 +44,7 @@ export interface CreateReportCommentRequest {
   message: string;
 }
 
-export const createReportComment = (id: string, body: { message: string }) =>
+export const createReportComment = (id: string, body: CreateReportCommentRequest) =>
   authFetcher.post<null, AxiosResponse<null>, CreateReportCommentRequest>(`/comments/${id}/report`, body);
 
 export interface CreateReplyRequest {
@@ -52,5 +52,5 @@ export interface CreateReplyRequest {
   anonymous: boolean;
 }
 
-export const createReply = (id: string, body: { content: string; anonymous: boolean }) =>
+export const createReply = (id: string, body: CreateReplyRequest) =>
   authFetcher.post<null, AxiosResponse<null>, CreateReplyRequest>(`comments/${id}/reply`, body);

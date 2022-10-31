@@ -2,7 +2,7 @@ import { useMutation, UseMutationOptions } from 'react-query';
 
 import { AxiosError, AxiosResponse } from 'axios';
 
-import { createVerificationCodeCheck } from '@/apis/member';
+import { createVerificationCodeCheck } from '@/api/member';
 
 const useVerificationCodeCheck = (
   options?: UseMutationOptions<AxiosResponse<null>, AxiosError<{ message: string }>, { email: string; code: string }>,

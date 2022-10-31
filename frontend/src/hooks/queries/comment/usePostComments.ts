@@ -2,7 +2,7 @@ import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
 import { AxiosError, AxiosResponse } from 'axios';
 
-import { createComment } from '@/apis/comment';
+import { createComment } from '@/api/comment';
 import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 
 interface PostCommentsProps {

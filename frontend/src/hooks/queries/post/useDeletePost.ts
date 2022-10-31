@@ -4,7 +4,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 
 import useSnackbar from '@/hooks/useSnackbar';
 
-import { requestDeletePost } from '@/apis/post';
+import { requestDeletePost } from '@/api/post';
 import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 

@@ -2,7 +2,7 @@ import { useMutation, UseMutationOptions } from 'react-query';
 
 import { AxiosError, AxiosResponse } from 'axios';
 
-import { createMember } from '@/apis/member';
+import { createMember } from '@/api/member';
 
 interface SignUpProps extends Member {
   email: string | null;

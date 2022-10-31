@@ -7,8 +7,8 @@ import AuthContext from '@/context/Auth';
 
 import useSnackbar from '@/hooks/useSnackbar';
 
-import authFetcher from '@/apis/authFetcher';
-import { requestGetLogout } from '@/apis/member';
+import authFetcher from '@/api/authFetcher';
+import { requestGetLogout } from '@/api/member';
 import { STORAGE_KEY } from '@/constants/localStorage';
 import QUERY_KEYS from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';

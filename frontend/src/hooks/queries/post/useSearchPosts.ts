@@ -2,7 +2,7 @@ import { useInfiniteQuery, QueryKey, UseInfiniteQueryOptions } from 'react-query
 
 import { AxiosError } from 'axios';
 
-import { requestGetSearchPosts } from '@/apis/post';
+import { requestGetSearchPosts } from '@/api/post';
 import QUERY_KEYS from '@/constants/queries';
 
 type Query = string;

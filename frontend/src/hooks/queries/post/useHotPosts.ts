@@ -2,7 +2,7 @@ import { useQuery, QueryKey, UseQueryOptions } from 'react-query';
 
 import { AxiosError } from 'axios';
 
-import { requestGetPosts } from '@/apis/post';
+import { requestGetPosts } from '@/api/post';
 import QUERY_KEYS from '@/constants/queries';
 
 const useHotPosts = ({

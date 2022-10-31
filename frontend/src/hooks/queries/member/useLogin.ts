@@ -7,8 +7,8 @@ import AuthContext from '@/context/Auth';
 
 import useSnackbar from '@/hooks/useSnackbar';
 
-import authFetcher from '@/apis/authFetcher';
-import { createLogin } from '@/apis/member';
+import authFetcher from '@/api/authFetcher';
+import { createLogin } from '@/api/member';
 import { STORAGE_KEY } from '@/constants/localStorage';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 import { parseJwt } from '@/utils/decodeJwt';

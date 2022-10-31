@@ -2,7 +2,7 @@ import { useQuery, QueryKey, UseQueryOptions } from 'react-query';
 
 import { AxiosError, AxiosResponse } from 'axios';
 
-import { requestGetIDCheck } from '@/apis/member';
+import { requestGetIDCheck } from '@/api/member';
 import QUERY_KEYS from '@/constants/queries';
 
 const useIDCheck = ({

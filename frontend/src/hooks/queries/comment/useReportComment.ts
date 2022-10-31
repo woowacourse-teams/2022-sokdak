@@ -5,7 +5,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 
 import SnackbarContext from '@/context/Snackbar';
 
-import { createReportComment } from '@/apis/comment';
+import { createReportComment } from '@/api/comment';
 import { MUTATION_KEY } from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 

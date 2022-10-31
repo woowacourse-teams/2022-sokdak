@@ -2,7 +2,7 @@ import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
 import { AxiosError, AxiosResponse } from 'axios';
 
-import { requestDeleteNotification } from '@/apis/notification';
+import { requestDeleteNotification } from '@/api/notification';
 import { SIZE } from '@/constants/api';
 import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 

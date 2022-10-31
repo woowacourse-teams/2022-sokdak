@@ -2,7 +2,7 @@ import { useQuery, QueryKey, UseQueryOptions } from 'react-query';
 
 import { AxiosError } from 'axios';
 
-import { requestGetComment } from '@/apis/comment';
+import { requestGetComment } from '@/api/comment';
 import QUERY_KEYS from '@/constants/queries';
 
 interface CommentList extends CommentType {

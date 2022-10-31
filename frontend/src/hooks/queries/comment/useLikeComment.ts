@@ -2,7 +2,7 @@ import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
 import { AxiosResponse } from 'axios';
 
-import { requestPutLikeComment } from '@/apis/comment';
+import { requestPutLikeComment } from '@/api/comment';
 import QUERY_KEYS from '@/constants/queries';
 
 interface CommentList extends CommentType {

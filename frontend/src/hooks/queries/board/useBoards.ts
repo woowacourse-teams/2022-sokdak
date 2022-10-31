@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 
 import { AxiosError } from 'axios';
 
-import { requestGetBoards } from '@/apis/boards';
+import { requestGetBoards } from '@/api/boards';
 import QUERY_KEYS from '@/constants/queries';
 
 interface BoardsResponse {

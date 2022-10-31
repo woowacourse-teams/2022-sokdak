@@ -2,7 +2,7 @@ import { useQuery, QueryKey, UseQueryOptions } from 'react-query';
 
 import { AxiosError, AxiosResponse } from 'axios';
 
-import { requestGetPost } from '@/apis/post';
+import { requestGetPost } from '@/api/post';
 import QUERY_KEYS from '@/constants/queries';
 
 const usePost = ({

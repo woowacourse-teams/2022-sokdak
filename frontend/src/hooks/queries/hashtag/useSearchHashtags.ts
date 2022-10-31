@@ -2,7 +2,7 @@ import { useQuery, QueryKey, UseQueryOptions } from 'react-query';
 
 import { AxiosError } from 'axios';
 
-import { requestGetHashTags } from '@/apis/hashtag';
+import { requestGetHashTags } from '@/api/hashtag';
 import QUERY_KEYS from '@/constants/queries';
 
 type Limit = number;

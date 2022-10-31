@@ -2,7 +2,7 @@ import { useInfiniteQuery, QueryKey, UseInfiniteQueryOptions, useQueryClient } f
 
 import { AxiosError } from 'axios';
 
-import { requestGetNotifications } from '@/apis/notification';
+import { requestGetNotifications } from '@/api/notification';
 import QUERY_KEYS from '@/constants/queries';
 
 type Size = number;

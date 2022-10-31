@@ -2,7 +2,7 @@ import { QueryKey, useQuery, UseQueryOptions } from 'react-query';
 
 import { AxiosError } from 'axios';
 
-import { requestGetMyPost } from '@/apis/post';
+import { requestGetMyPost } from '@/api/post';
 import QUERY_KEYS from '@/constants/queries';
 
 type Size = number;

@@ -2,7 +2,7 @@ import { useInfiniteQuery, QueryKey, UseInfiniteQueryOptions } from 'react-query
 
 import { AxiosError } from 'axios';
 
-import { requestGetPostsByHashtags } from '@/apis/post';
+import { requestGetPostsByHashtags } from '@/api/post';
 import QUERY_KEYS from '@/constants/queries';
 
 type HashtagName = string;

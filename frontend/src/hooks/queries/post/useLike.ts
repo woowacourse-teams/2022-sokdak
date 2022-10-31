@@ -2,7 +2,7 @@ import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
 import { AxiosError, AxiosResponse } from 'axios';
 
-import { requestUpdateLikePost } from '@/apis/post';
+import { requestUpdateLikePost } from '@/api/post';
 import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 
 const useLike = (

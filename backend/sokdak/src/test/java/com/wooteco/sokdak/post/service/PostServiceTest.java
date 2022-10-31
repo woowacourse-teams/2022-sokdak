@@ -162,7 +162,7 @@ class PostServiceTest extends ServiceTest {
     }
 
     // post.getId == 1
-    static Stream<Arguments> argsOfFindPostViewCount() {
+    private static Stream<Arguments> argsOfFindPostViewCount() {
         int today = LocalDateTime.now().getDayOfMonth();
         return Stream.of(
                 Arguments.of("", 1),

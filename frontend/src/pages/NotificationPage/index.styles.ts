@@ -1,3 +1,4 @@
+import { css, keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 
 export const NotificationPageContainer = styled.div`
@@ -13,7 +14,6 @@ export const NotificationPageContainer = styled.div`
 `;
 
 export const Title = styled.h1`
-  width: 100%;
   font-size: 2rem;
   font-family: 'BMHANNAPro', 'Noto Sans KR';
   text-align: left;
@@ -47,4 +47,37 @@ export const EmptyContainer = styled.div`
   font-family: 'BMHANNAAir', 'Noto Sans KR';
   font-size: 1rem;
   color: ${props => props.theme.colors.gray_300};
+`;
+
+const buttonStyle = css`
+  font-family: 'BMHANNAAir', 'Noto Sans KR';
+  background-color: transparent;
+  padding: 0 20px;
+`;
+
+export const SubscribeButton = styled.button`
+  ${buttonStyle}
+`;
+
+export const UnsubscribeButton = styled.button`
+  ${buttonStyle}
+`;
+
+export const Header = styled.div`
+  width: 100%;
+  display: flex;
+`;
+
+const typing = keyframes`
+  from {
+    width: 0;
+  }
+`;
+
+export const Loading = styled.span`
+  display: inline-block;
+  width: 30px;
+  animation: ${typing} 2s steps(30) infinite;
+  white-space: nowrap;
+  overflow: hidden;
 `;

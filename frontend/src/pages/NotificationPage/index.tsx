@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 import NotificationItem from './components/NotificationItem';
 import Layout from '@/components/@styled/Layout';
 
 import useNotifications from '@/hooks/queries/notification/useNotifications';
 import useInfiniteScroll from '@/hooks/useInfiniteScroll';
+import usePush from '@/hooks/usePush';
 
 import * as Styled from './index.styles';
 
@@ -15,6 +16,7 @@ const NotificationPage = () => {
   let type = -2;
   const { isLoading, isError, data, fetchNextPage } = useNotifications({ storeCode: [SIZE.NOTIFICATION_LOAD] });
   const { scrollRef } = useInfiniteScroll({ data, proceed: fetchNextPage });
+  const { isSubscribing, isPushSupport, isLoading: isSubscribeLoading, subscribe, unsubscribe } = usePush();
 
   const timeTypeArr: Array<TimeType> = [...new Set<TimeType>(['오늘', '어제', '이번주', '이번달', '오래전'])];
 
@@ -29,7 +31,20 @@ const NotificationPage = () => {
   return (
     <Layout>
       <Styled.NotificationPageContainer>
-        <Styled.Title>알림</Styled.Title>
+        <Styled.Header>
+          <Styled.Title>알림</Styled.Title>
+          {isPushSupport && (
+            <Fragment>
+              {isSubscribing ? (
+                <Styled.SubscribeButton onClick={unsubscribe}>🔕 푸쉬 알림 끄기</Styled.SubscribeButton>
+              ) : (
+                <Styled.SubscribeButton onClick={subscribe}>
+                  🔔 푸쉬 알림 받기 {isSubscribeLoading && <Styled.Loading>. . .</Styled.Loading>}
+                </Styled.SubscribeButton>
+              )}
+            </Fragment>
+          )}
+        </Styled.Header>
         {data.pages.length > 0 ? (
           <Styled.NotificationContainer>
             {data?.pages.map((notice, index) => {

@@ -33,7 +33,7 @@ const useCreatePost = (
       anonymous?: boolean;
       hashtags: string[];
     }): Promise<AxiosResponse<string, string>> =>
-      createNewPost(boardId!, {
+      createNewPost(boardId, {
         title,
         content,
         hashtags,

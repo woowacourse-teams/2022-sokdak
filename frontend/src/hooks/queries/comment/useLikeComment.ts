@@ -16,7 +16,6 @@ interface CommentResponse {
   comments: CommentList[];
   totalCount: number;
 }
-// export interface UseMutationOptions<TData = unknown, TError = unknown, TVariables = void, TContext = unknown> extends Omit<MutationObserverOptions<TData, TError, TVariables, TContext>, '_defaulted' | 'variables'> {
 
 const useLikeComment = (
   options?: UseMutationOptions<

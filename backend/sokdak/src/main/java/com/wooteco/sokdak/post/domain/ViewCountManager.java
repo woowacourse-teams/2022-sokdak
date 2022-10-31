@@ -28,13 +28,6 @@ public class ViewCountManager {
         return isLogNonExist(todayLog, postId);
     }
 
-    private boolean isLogNonExist(String log, Long postId) {
-        List<Long> loggedPostIds = Arrays.stream(log.split(ID_DELIMITER))
-                .map(Long::parseLong)
-                .collect(Collectors.toList());
-        return !loggedPostIds.contains(postId);
-    }
-
     private Map<Integer, String> extractDateLogs(String logs) {
         Map<Integer, String> dateLogs = new HashMap<>();
         String[] logsPerDate = logs.split(DATE_LOG_DELIMITER);
@@ -42,6 +35,13 @@ public class ViewCountManager {
             dateLogs.putAll(divideDateAndLog(logPerDate));
         }
         return dateLogs;
+    }
+
+    private boolean isLogNonExist(String log, Long postId) {
+        List<Long> loggedPostIds = Arrays.stream(log.split(ID_DELIMITER))
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
+        return !loggedPostIds.contains(postId);
     }
 
     private Map<Integer, String> divideDateAndLog(String logPerDate) {

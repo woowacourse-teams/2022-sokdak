@@ -16,6 +16,8 @@ public class ViewCountManager {
     private static final String DATE_LOG_DELIMITER = "&";
     private static final String DATE_AND_ID_DELIMITER = ":";
     private static final String ID_DELIMITER = "/";
+    private static final int DATE_INDEX = 0;
+    private static final int LOG_INDEX = 1;
 
     // <DATE>:1/2/3&
     public boolean isFirstAccess(String logs, Long postId) {
@@ -49,8 +51,8 @@ public class ViewCountManager {
             return Collections.emptyMap();
         }
         String[] dateAndLog = logPerDate.split(DATE_AND_ID_DELIMITER);
-        int date = Integer.parseInt(dateAndLog[0]);
-        String log = dateAndLog[1];
+        int date = Integer.parseInt(dateAndLog[DATE_INDEX]);
+        String log = dateAndLog[LOG_INDEX];
         return Map.of(date, log);
     }
 

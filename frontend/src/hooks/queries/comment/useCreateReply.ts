@@ -3,19 +3,20 @@ import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 
 import { createReply } from '@/api/comment';
+import type { CreateReplyRequest } from '@/api/comment';
 import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 
-interface RequestProps {
+interface UseCreateReplyProps extends CreateReplyRequest {
   commentId: number | string;
-  content: string;
-  anonymous: boolean;
 }
 
-const useCreateReply = (options?: UseMutationOptions<AxiosResponse, AxiosError<ErrorResponse>, RequestProps>) => {
+const useCreateReply = (
+  options?: UseMutationOptions<AxiosResponse<null>, AxiosError<ErrorResponse>, UseCreateReplyProps>,
+) => {
   const queryClient = useQueryClient();
 
   return useMutation(
-    ({ commentId, content, anonymous }): Promise<AxiosResponse> =>
+    ({ commentId, content, anonymous }): Promise<AxiosResponse<null>> =>
       createReply(String(commentId), {
         content,
         anonymous,

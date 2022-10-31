@@ -6,16 +6,16 @@ import { AxiosError, AxiosResponse } from 'axios';
 import SnackbarContext from '@/context/Snackbar';
 
 import { createReportComment } from '@/api/comment';
+import type { CreateReportCommentRequest } from '@/api/comment';
 import { MUTATION_KEY } from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
-interface PostReportProps {
+interface UsePostReportProps extends CreateReportCommentRequest {
   id: number;
-  message: string;
 }
 
 const useReportComment = (
-  options?: UseMutationOptions<AxiosResponse<null>, AxiosError<{ message: string }>, PostReportProps>,
+  options?: UseMutationOptions<AxiosResponse<null>, AxiosError<{ message: string }>, UsePostReportProps>,
 ) => {
   const { showSnackbar } = useContext(SnackbarContext);
 

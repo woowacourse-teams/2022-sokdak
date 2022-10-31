@@ -1,24 +1,56 @@
+import { AxiosResponse } from 'axios';
+
 import authFetcher from './authFetcher';
 
+interface CommentList extends CommentType {
+  blocked: boolean;
+  postWriter: boolean;
+  replies: Omit<CommentList, 'replies'>[];
+}
+export interface GetCommentResponse {
+  comments: CommentList[];
+  totalCount: number;
+}
+
 export const requestGetComment = async (id: string) => {
-  const { data } = await authFetcher.get(`/posts/${id}/comments`);
+  const { data } = await authFetcher.get<GetCommentResponse>(`/posts/${id}/comments`);
 
   return data;
 };
+
+export interface CreateCommentsRequest {
+  content: string;
+  anonymous: boolean;
+}
 
 export const createComment = (id: string, body: { content: string; anonymous: boolean }) =>
-  authFetcher.post(`posts/${id}/comments`, body);
+  authFetcher.post<null, AxiosResponse<null>, CreateCommentsRequest>(`posts/${id}/comments`, body);
 
-export const requestDeleteComment = (id: string) => authFetcher.delete(`/comments/${id}`);
+export const requestDeleteComment = (id: string) =>
+  authFetcher.delete<null, AxiosResponse<null>, null>(`/comments/${id}`);
+
+export interface PutLikeCommentResponse {
+  like: boolean;
+  likeCount: number;
+}
 
 export const requestPutLikeComment = async (id: string) => {
-  const { data } = await authFetcher.put(`/comments/${id}/like`);
+  const { data } = await authFetcher.put<PutLikeCommentResponse>(`/comments/${id}/like`);
 
   return data;
 };
 
+export interface CreateReportCommentRequest {
+  message: string;
+}
+
 export const createReportComment = (id: string, body: { message: string }) =>
-  authFetcher.post(`/comments/${id}/report`, body);
+  authFetcher.post<null, AxiosResponse<null>, CreateReportCommentRequest>(`/comments/${id}/report`, body);
+
+export interface CreateReplyRequest {
+  content: string;
+  anonymous: boolean;
+}
 
 export const createReply = (id: string, body: { content: string; anonymous: boolean }) =>
-  authFetcher.post(`comments/${id}/reply`, body);
+  authFetcher.post<null, AxiosResponse<null>, CreateReplyRequest>(`comments/${id}/reply`, body);

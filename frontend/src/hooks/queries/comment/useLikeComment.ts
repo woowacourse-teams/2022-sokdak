@@ -3,26 +3,19 @@ import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 import { AxiosResponse } from 'axios';
 
 import { requestPutLikeComment } from '@/api/comment';
+import type { GetCommentResponse, PutLikeCommentResponse } from '@/api/comment';
 import QUERY_KEYS from '@/constants/queries';
 
-interface CommentList extends CommentType {
+interface UseLikeCommentProps {
   id: number;
-  blocked: boolean;
-  postWriter: boolean;
-  replies: Omit<CommentList, 'replies'>[];
-}
-
-interface CommentResponse {
-  comments: CommentList[];
-  totalCount: number;
 }
 
 const useLikeComment = (
   options?: UseMutationOptions<
-    { like: boolean; likeCount: number },
+    PutLikeCommentResponse,
     AxiosResponse<Error>,
-    { id: number },
-    { like: boolean; likeCount: number }
+    UseLikeCommentProps,
+    PutLikeCommentResponse
   >,
 ) => {
   const queryClient = useQueryClient();
@@ -30,7 +23,7 @@ const useLikeComment = (
   return useMutation(({ id }) => requestPutLikeComment(String(id)), {
     ...options,
     onSuccess: (_, variables) => {
-      queryClient.setQueriesData<CommentResponse>(QUERY_KEYS.COMMENTS, comment => {
+      queryClient.setQueriesData<GetCommentResponse>(QUERY_KEYS.COMMENTS, comment => {
         const newData = {
           ...comment,
           data: {
@@ -51,7 +44,7 @@ const useLikeComment = (
             })!,
           },
         };
-        return newData as CommentResponse;
+        return newData as GetCommentResponse;
       });
     },
   });

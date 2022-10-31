@@ -9,12 +9,12 @@ import { requestDeleteComment } from '@/api/comment';
 import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
-interface DeleteCommentProps {
+interface UseDeleteCommentProps {
   id: number;
 }
 
 const useDeleteComment = (
-  options?: UseMutationOptions<AxiosResponse<null>, AxiosError<{ message: string }>, DeleteCommentProps>,
+  options?: UseMutationOptions<AxiosResponse<null>, AxiosError<{ message: string }>, UseDeleteCommentProps>,
 ) => {
   const { showSnackbar } = useContext(SnackbarContext);
   const queryClient = useQueryClient();

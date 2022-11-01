@@ -1,6 +1,6 @@
 import { useQuery, QueryKey, UseQueryOptions } from 'react-query';
 
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
 import { requestGetPost } from '@/api/post';
 import QUERY_KEYS from '@/constants/queries';
@@ -10,7 +10,7 @@ const usePost = ({
   options,
 }: {
   storeCode: QueryKey;
-  options?: UseQueryOptions<AxiosResponse<Post & { boardId: string }>, AxiosError, Post, QueryKey[]>;
+  options?: UseQueryOptions<Promise<Post>, AxiosError, Post, QueryKey[]>;
 }) =>
   useQuery([QUERY_KEYS.POST, storeCode], ({ queryKey: [, id] }) => requestGetPost(String(id)), {
     staleTime: 1000 * 20,

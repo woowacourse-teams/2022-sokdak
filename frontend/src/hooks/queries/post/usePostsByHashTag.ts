@@ -3,6 +3,7 @@ import { useInfiniteQuery, QueryKey, UseInfiniteQueryOptions } from 'react-query
 import { AxiosError } from 'axios';
 
 import { requestGetPostsByHashtags } from '@/api/post';
+import type { GetPostsByHashtagsResponse } from '@/api/post';
 import QUERY_KEYS from '@/constants/queries';
 
 type HashtagName = string;
@@ -14,10 +15,10 @@ const usePostsByHashTag = ({
 }: {
   storeCode: [HashtagName, Size];
   options?: UseInfiniteQueryOptions<
-    { posts: Post[]; lastPage: boolean },
-    AxiosError,
+    GetPostsByHashtagsResponse,
+    AxiosError<Error>,
     Post,
-    { posts: Post[]; lastPage: boolean },
+    GetPostsByHashtagsResponse,
     [QueryKey, HashtagName, Size]
   >;
 }) =>
@@ -26,7 +27,7 @@ const usePostsByHashTag = ({
     ({ pageParam = 0, queryKey: [, hashtagName, size] }) => requestGetPostsByHashtags(hashtagName, size, pageParam),
     {
       select: data => ({
-        pages: data.pages.flatMap((page: { posts: Post[]; lastPage: boolean }) => page.posts),
+        pages: data.pages.flatMap((page: GetPostsByHashtagsResponse) => page.posts),
         pageParams: [...data.pageParams, data.pageParams.length],
       }),
       getNextPageParam: (lastPage, allPages) => (lastPage.lastPage ? undefined : allPages.length),

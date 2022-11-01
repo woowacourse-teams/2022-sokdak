@@ -61,7 +61,7 @@ const SearchModal = ({ handleSearchModal: closeModal }: SearchModalProps) => {
             {postResult && postResultCount && (
               <SearchedPost
                 posts={postResult.pages}
-                totalPostCount={postResultCount.totalPostCount}
+                totalPostCount={postResultCount}
                 keyword={debouncedInclude}
                 closeModal={closeModal}
               />

@@ -4,15 +4,13 @@ import { AxiosError, AxiosResponse } from 'axios';
 
 import useSnackbar from '@/hooks/useSnackbar';
 
-import { createImage } from '@/api/post';
+import { createImage, CreateImageResponse } from '@/api/post';
 import { MUTATION_KEY } from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
-interface ResponseData {
-  imageName: string;
-}
-
-const useUploadImage = (options?: UseMutationOptions<AxiosResponse<ResponseData>, AxiosError, FormData>) => {
+const useUploadImage = (
+  options?: UseMutationOptions<AxiosResponse<CreateImageResponse>, AxiosError<Error>, FormData>,
+) => {
   const { showSnackbar } = useSnackbar();
 
   return useMutation(image => createImage(image), {

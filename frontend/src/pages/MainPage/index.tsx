@@ -12,9 +12,9 @@ import { BOARDS } from '@/constants/board';
 
 const MainPage = () => {
   const isDesktop = useResponsive(875);
-  const { data } = usePostByBoards({});
+  const { data: boards } = usePostByBoards({});
 
-  if (!data) {
+  if (!boards) {
     return <></>;
   }
 
@@ -24,7 +24,7 @@ const MainPage = () => {
         {isDesktop && <Banner />}
         {isDesktop && <Carousel />}
         <Styled.BoardItemContainer>
-          {data.boards.map(board => (
+          {boards.map(board => (
             <BoardItem key={board.id} {...board} title={BOARDS[board.id - 1].title} boardId={board.id} />
           ))}
         </Styled.BoardItemContainer>

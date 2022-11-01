@@ -8,7 +8,7 @@ import { requestDeletePost } from '@/api/post';
 import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
-const useDeletePost = (options?: UseMutationOptions<AxiosResponse, AxiosError, string>) => {
+const useDeletePost = (options?: UseMutationOptions<AxiosResponse<null>, AxiosError, string>) => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
 

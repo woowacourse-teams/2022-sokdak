@@ -4,7 +4,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 
 import useSnackbar from '@/hooks/useSnackbar';
 
-import { requestUpdatePost } from '@/api/post';
+import { requestUpdatePost, UpdatePostRequest } from '@/api/post';
 import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
@@ -13,22 +13,13 @@ const useUpdatePost = ({
   options,
 }: {
   id: string;
-  options?: UseMutationOptions<
-    AxiosResponse,
-    AxiosError,
-    Pick<Post, 'title' | 'content' | 'imageName'> & { hashtags: string[] }
-  >;
+  options?: UseMutationOptions<AxiosResponse<null>, AxiosError, UpdatePostRequest>;
 }) => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
 
   return useMutation(
-    ({
-      title,
-      content,
-      hashtags,
-      imageName,
-    }: Pick<Post, 'title' | 'content' | 'imageName'> & { hashtags: string[] }): Promise<AxiosResponse> =>
+    ({ title, content, hashtags, imageName }: UpdatePostRequest) =>
       requestUpdatePost(id, {
         title,
         content,

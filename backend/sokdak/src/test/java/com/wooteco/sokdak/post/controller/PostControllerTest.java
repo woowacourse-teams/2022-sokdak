@@ -132,7 +132,7 @@ class PostControllerTest extends ControllerTest {
                 .build();
         doReturn(postResponse)
                 .when(postService)
-                .findPost(any(), any());
+                .findPost(any(), any(), any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -147,7 +147,7 @@ class PostControllerTest extends ControllerTest {
     void findPost_Exception_NoPost() {
         doThrow(new PostNotFoundException())
                 .when(postService)
-                .findPost(any(), any());
+                .findPost(any(), any(), any());
 
         restDocs
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

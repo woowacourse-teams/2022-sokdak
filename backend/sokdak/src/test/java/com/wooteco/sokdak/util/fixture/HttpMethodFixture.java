@@ -5,6 +5,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
 public class HttpMethodFixture {
@@ -12,6 +13,15 @@ public class HttpMethodFixture {
     public static ExtractableResponse<Response> httpGet(String path) {
         return RestAssured
                 .given().log().all()
+                .when().get(path)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> httpGetWithCookie(String path, String cookieValue) {
+        return RestAssured
+                .given().log().all()
+                .header(HttpHeaders.COOKIE, cookieValue)
                 .when().get(path)
                 .then().log().all()
                 .extract();

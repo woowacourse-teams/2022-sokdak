@@ -44,7 +44,7 @@ public class PostController {
                                                        @CookieValue(value = "viewedPost", required = false, defaultValue = "") String postLog) {
         PostDetailResponse postResponse = postService.findPost(id, authInfo, postLog);
         String updatedLog = postService.updatePostLog(id, postLog);
-        ResponseCookie responseCookie = ResponseCookie.from("viewedPost", updatedLog).build();
+        ResponseCookie responseCookie = ResponseCookie.from("viewedPost", updatedLog).maxAge(86400L).build();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie.toString()).body(postResponse);
     }
 

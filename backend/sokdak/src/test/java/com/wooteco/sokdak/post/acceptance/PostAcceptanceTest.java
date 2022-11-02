@@ -177,7 +177,8 @@ class PostAcceptanceTest extends AcceptanceTest {
         int today = LocalDateTime.now().getDayOfMonth();
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.header(HttpHeaders.SET_COOKIE)).isEqualTo("viewedPost=" + today + ":" + postId),
+                () -> assertThat(response.header(HttpHeaders.SET_COOKIE)).contains("viewedPost=" + today + ":" + postId),
+                () -> assertThat(response.header(HttpHeaders.SET_COOKIE)).contains("Max-Age=86400"),
                 () -> assertThat(postDetailResponse.getTitle()).isEqualTo(NEW_POST_REQUEST.getTitle()),
                 () -> assertThat(postDetailResponse.getContent()).isEqualTo(NEW_POST_REQUEST.getContent()),
                 () -> assertThat(postDetailResponse.getNickname()).isEqualTo("chrisNickname"),
@@ -199,7 +200,8 @@ class PostAcceptanceTest extends AcceptanceTest {
 
         int today = LocalDateTime.now().getDayOfMonth();
         assertAll(
-                () -> assertThat(firstResponse.header(HttpHeaders.SET_COOKIE)).isEqualTo("viewedPost=" + today + ":" + postId),
+                () -> assertThat(firstResponse.header(HttpHeaders.SET_COOKIE)).contains("viewedPost=" + today + ":" + postId),
+                () -> assertThat(firstResponse.header(HttpHeaders.SET_COOKIE)).contains("Max-Age=86400"),
                 () -> assertThat(firstPostDetailResponse.getViewCount() + 1).isEqualTo(secondPostDetailResponse.getViewCount())
         );
     }

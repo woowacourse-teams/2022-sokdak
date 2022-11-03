@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios';
 
 import authFetcher from './fetcher/auth';
+import extractDataFromAxios from './util/extractor';
 
 interface CommentList extends CommentType {
   blocked: boolean;
@@ -12,11 +13,8 @@ export interface GetCommentResponse {
   totalCount: number;
 }
 
-export const requestGetComment = async (id: string) => {
-  const { data } = await authFetcher.get<GetCommentResponse>(`/posts/${id}/comments`);
-
-  return data;
-};
+export const requestGetComment = (id: string) =>
+  extractDataFromAxios<GetCommentResponse>(authFetcher.get(`/posts/${id}/comments`));
 
 export interface CreateCommentsRequest {
   content: string;
@@ -24,28 +22,25 @@ export interface CreateCommentsRequest {
 }
 
 export const createComment = (id: string, body: CreateCommentsRequest) =>
-  authFetcher.post<null, AxiosResponse<null>, CreateCommentsRequest>(`posts/${id}/comments`, body);
+  extractDataFromAxios<null, CreateCommentsRequest>(authFetcher.post(`posts/${id}/comments`, body));
 
 export const requestDeleteComment = (id: string) =>
-  authFetcher.delete<null, AxiosResponse<null>, null>(`/comments/${id}`);
+  extractDataFromAxios<null, null>(authFetcher.delete<null, AxiosResponse<null>, null>(`/comments/${id}`));
 
 export interface PutLikeCommentResponse {
   like: boolean;
   likeCount: number;
 }
 
-export const requestPutLikeComment = async (id: string) => {
-  const { data } = await authFetcher.put<PutLikeCommentResponse>(`/comments/${id}/like`);
-
-  return data;
-};
+export const requestPutLikeComment = (id: string) =>
+  extractDataFromAxios<PutLikeCommentResponse>(authFetcher.put(`/comments/${id}/like`));
 
 export interface CreateReportCommentRequest {
   message: string;
 }
 
 export const createReportComment = (id: string, body: CreateReportCommentRequest) =>
-  authFetcher.post<null, AxiosResponse<null>, CreateReportCommentRequest>(`/comments/${id}/report`, body);
+  extractDataFromAxios<null, CreateReportCommentRequest>(authFetcher.post(`/comments/${id}/report`, body));
 
 export interface CreateReplyRequest {
   content: string;
@@ -53,4 +48,4 @@ export interface CreateReplyRequest {
 }
 
 export const createReply = (id: string, body: CreateReplyRequest) =>
-  authFetcher.post<null, AxiosResponse<null>, CreateReplyRequest>(`comments/${id}/reply`, body);
+  extractDataFromAxios<null, CreateReplyRequest>(authFetcher.post(`comments/${id}/reply`, body));

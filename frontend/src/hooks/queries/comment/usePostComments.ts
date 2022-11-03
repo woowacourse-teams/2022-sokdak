@@ -1,6 +1,6 @@
 import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
 import { createComment } from '@/api/comment';
 import type { CreateCommentsRequest } from '@/api/comment';
@@ -10,13 +10,11 @@ interface UsePostCommentsProps extends CreateCommentsRequest {
   id: string;
 }
 
-const usePostComments = (
-  options?: UseMutationOptions<AxiosResponse<null>, AxiosError<{ message: string }>, UsePostCommentsProps>,
-) => {
+const usePostComments = (options?: UseMutationOptions<null, AxiosError<Error>, UsePostCommentsProps>) => {
   const queryClient = useQueryClient();
 
   return useMutation(
-    ({ content, anonymous, id }): Promise<AxiosResponse<null>> =>
+    ({ content, anonymous, id }) =>
       createComment(String(id), {
         content,
         anonymous,

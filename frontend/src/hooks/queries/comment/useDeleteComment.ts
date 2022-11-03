@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
 import SnackbarContext from '@/context/Snackbar';
 
@@ -13,9 +13,7 @@ interface UseDeleteCommentProps {
   id: number;
 }
 
-const useDeleteComment = (
-  options?: UseMutationOptions<AxiosResponse<null>, AxiosError<{ message: string }>, UseDeleteCommentProps>,
-) => {
+const useDeleteComment = (options?: UseMutationOptions<null, AxiosError<Error>, UseDeleteCommentProps>) => {
   const { showSnackbar } = useContext(SnackbarContext);
   const queryClient = useQueryClient();
 

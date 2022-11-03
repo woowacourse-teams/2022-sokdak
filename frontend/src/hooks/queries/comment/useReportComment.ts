@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { useMutation, UseMutationOptions } from 'react-query';
 
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
 import SnackbarContext from '@/context/Snackbar';
 
@@ -14,9 +14,7 @@ interface UsePostReportProps extends CreateReportCommentRequest {
   id: number;
 }
 
-const useReportComment = (
-  options?: UseMutationOptions<AxiosResponse<null>, AxiosError<{ message: string }>, UsePostReportProps>,
-) => {
+const useReportComment = (options?: UseMutationOptions<null, AxiosError<Error>, UsePostReportProps>) => {
   const { showSnackbar } = useContext(SnackbarContext);
 
   return useMutation(({ id, message }) => createReportComment(String(id), { message }), {

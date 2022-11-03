@@ -1,6 +1,6 @@
 import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
 import { createReply } from '@/api/comment';
 import type { CreateReplyRequest } from '@/api/comment';
@@ -10,13 +10,11 @@ interface UseCreateReplyProps extends CreateReplyRequest {
   commentId: number | string;
 }
 
-const useCreateReply = (
-  options?: UseMutationOptions<AxiosResponse<null>, AxiosError<ErrorResponse>, UseCreateReplyProps>,
-) => {
+const useCreateReply = (options?: UseMutationOptions<null, AxiosError<Error>, UseCreateReplyProps>) => {
   const queryClient = useQueryClient();
 
   return useMutation(
-    ({ commentId, content, anonymous }): Promise<AxiosResponse<null>> =>
+    ({ commentId, content, anonymous }) =>
       createReply(String(commentId), {
         content,
         anonymous,

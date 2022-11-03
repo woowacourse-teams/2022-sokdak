@@ -21,7 +21,7 @@ const UpdatePostPage = () => {
   const { id, title, content, hashtags, imageName } = location.state as Omit<Post, 'createdAt'>;
 
   const { mutate: updatePost, isLoading } = useUpdatePost({
-    id,
+    id: String(id),
     options: {
       onSuccess: () => {
         navigate(-1);

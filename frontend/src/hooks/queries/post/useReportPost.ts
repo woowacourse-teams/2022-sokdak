@@ -1,27 +1,17 @@
 import { useMutation, UseMutationOptions } from 'react-query';
 
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
-import authFetcher from '@/apis';
+import { createPostReport, CreatePostReportRequest } from '@/api/post';
 import { MUTATION_KEY } from '@/constants/queries';
 
-interface PostReportProps {
+interface UseReportPostProps extends CreatePostReportRequest {
   id: number;
-  message: string;
 }
 
-const useReportPost = (
-  options?: UseMutationOptions<AxiosResponse<never>, AxiosError<{ message: string }>, PostReportProps>,
-) => {
-  return useMutation(
-    ({ id, message }) => {
-      return authFetcher.post(`/posts/${id}/report`, { message });
-    },
-    {
-      ...options,
-      mutationKey: MUTATION_KEY.REPORT_POST,
-    },
-  );
-};
-
+const useReportPost = (options?: UseMutationOptions<null, AxiosError, UseReportPostProps>) =>
+  useMutation(({ id, message }) => createPostReport(id, { message }), {
+    ...options,
+    mutationKey: MUTATION_KEY.REPORT_POST,
+  });
 export default useReportPost;

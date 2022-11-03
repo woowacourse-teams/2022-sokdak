@@ -15,12 +15,7 @@ const PRE_CREW_BOARD = 5;
 
 const BoardPage = () => {
   const { id: boardId } = useParams();
-  const { data: boards } = useBoards({
-    options: {
-      staleTime: Infinity,
-      suspense: true,
-    },
-  });
+  const { data: boards } = useBoards({});
 
   const { data, fetchNextPage, refetch } = usePosts({ storeCode: [boardId!, 3] });
 

@@ -52,7 +52,7 @@ const PostHeader = ({ post, onClickDeleteButton, onClickLikeButton }: PostHeader
         queryClient.getMutationDefaults(MUTATION_KEY.REPORT_POST)?.onError!(err, variables, context);
       }
 
-      showSnackbar(err?.response!.data.message);
+      showSnackbar(err.message);
       handleReportModal();
     },
   });

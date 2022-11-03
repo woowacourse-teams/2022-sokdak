@@ -1,21 +1,22 @@
 import { useContext } from 'react';
 import { useQuery, UseQueryOptions } from 'react-query';
 
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
 import AuthContext from '@/context/Auth';
 
 import useSnackbar from '@/hooks/useSnackbar';
 
-import authFetcher from '@/apis';
+import authFetcher from '@/api/fetcher/auth';
+import { requestGetLogout } from '@/api/member';
 import { STORAGE_KEY } from '@/constants/localStorage';
 import QUERY_KEYS from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
-const useLogout = (options?: UseQueryOptions<AxiosResponse<never>, AxiosError<{ message: string }>, never, string>) => {
+const useLogout = (options?: UseQueryOptions<null, AxiosError<Error>, null, string>) => {
   const { showSnackbar } = useSnackbar();
   const { setIsLogin, setUsername } = useContext(AuthContext);
-  return useQuery(QUERY_KEYS.LOGOUT, () => authFetcher.get<never>('/logout'), {
+  return useQuery(QUERY_KEYS.LOGOUT, () => requestGetLogout(), {
     ...options,
     onSuccess(data) {
       showSnackbar(SNACKBAR_MESSAGE.SUCCESS_LOGOUT);
@@ -29,6 +30,8 @@ const useLogout = (options?: UseQueryOptions<AxiosResponse<never>, AxiosError<{ 
       }
     },
     enabled: false,
+    cacheTime: 0,
+    staleTime: 0,
   });
 };
 

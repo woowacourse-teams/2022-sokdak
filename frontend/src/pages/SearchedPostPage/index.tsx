@@ -16,19 +16,19 @@ const SearchedPostPage = () => {
   const { data: postResult, fetchNextPage } = useSearchPosts({
     storeCode: [query.trim(), 5],
   });
-  const { data: countResult } = useSearchPostCount({
+  const { data: totalPostCount } = useSearchPostCount({
     storeCode: [query.trim()],
   });
 
   return (
     <Layout>
-      {query && postResult && countResult && (
+      {query && postResult && totalPostCount && (
         <Styled.Container>
           <Styled.Title>
             🔍 <Styled.Highlight>{query.replaceAll(' ', '+').replaceAll('+', ', ')}</Styled.Highlight> 관련{' '}
-            {countResult.totalPostCount}개의 검색 결과
+            {totalPostCount}개의 검색 결과
           </Styled.Title>
-          {countResult.totalPostCount ? <PostList data={postResult} fetchNextPage={fetchNextPage} /> : <NoResult />}
+          {totalPostCount ? <PostList data={postResult} fetchNextPage={fetchNextPage} /> : <NoResult />}
         </Styled.Container>
       )}
     </Layout>

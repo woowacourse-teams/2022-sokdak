@@ -7,23 +7,21 @@ import AuthContext from '@/context/Auth';
 
 import useSnackbar from '@/hooks/useSnackbar';
 
-import authFetcher from '@/apis';
+import authFetcher from '@/api/fetcher/auth';
+import { requestUpdateNickname } from '@/api/member';
+import type { UpdateNicknameRequest } from '@/api/member';
 import { STORAGE_KEY } from '@/constants/localStorage';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
-interface UseUpdateNicknameProps {
-  nickname: string;
-}
-
 const useUpdateNickname = (
-  options?: UseMutationOptions<AxiosResponse, AxiosError<ErrorResponse>, UseUpdateNicknameProps>,
+  options?: UseMutationOptions<AxiosResponse<null>, AxiosError<ErrorResponse>, UpdateNicknameRequest>,
 ) => {
   const { setUsername } = useContext(AuthContext);
   const { showSnackbar } = useSnackbar();
 
   return useMutation(
-    ({ nickname }): Promise<AxiosResponse> =>
-      authFetcher.patch('/members/nickname', {
+    ({ nickname }) =>
+      requestUpdateNickname({
         nickname,
       }),
     {

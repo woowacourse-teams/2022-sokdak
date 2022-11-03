@@ -20,7 +20,7 @@ const useUpdateNickname = (
   const { showSnackbar } = useSnackbar();
 
   return useMutation(
-    ({ nickname }): Promise<AxiosResponse<null>> =>
+    ({ nickname }) =>
       requestUpdateNickname({
         nickname,
       }),

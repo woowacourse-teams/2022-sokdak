@@ -10,13 +10,16 @@ const useNicknameCheck = ({
   options,
 }: {
   storeCode: QueryKey;
-  options?: UseQueryOptions<Promise<boolean>, AxiosError<Error>, boolean, QueryKey[]>;
+  options?: UseQueryOptions<boolean, AxiosError, boolean, QueryKey[]>;
 }) =>
   useQuery(
     [QUERY_KEYS.MEMBER_NICKNAME_CHECK, storeCode],
     ({ queryKey: [, nickname] }) => requestGetNicknameCheck(String(nickname)),
     {
       ...options,
+      cacheTime: 0,
+      staleTime: 0,
+      suspense: false,
     },
   );
 

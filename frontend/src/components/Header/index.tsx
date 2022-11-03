@@ -20,7 +20,7 @@ import Notification from './Notification';
 import SearchWeb from './SearchWeb';
 
 const Header = () => {
-  const { isLogin, username } = useContext(AuthContext);
+  const { isLogin } = useContext(AuthContext);
   const [isSearchModalOpen, handleSearchModal] = useReducer(state => !state, false);
   const { refetch: logout } = useLogout();
   const isHeaderSizeLineOver = useResponsive(875);
@@ -45,7 +45,7 @@ const Header = () => {
               <Styled.Search title={'검색'} />
             </Styled.SearchButton>
           )}
-          {isLogin && username ? (
+          {isLogin ? (
             <>
               <Notification />
               <Styled.DropdownContainer>

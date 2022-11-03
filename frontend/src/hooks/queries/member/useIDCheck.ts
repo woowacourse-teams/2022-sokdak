@@ -16,6 +16,9 @@ const useIDCheck = ({
     [QUERY_KEYS.MEMBER_ID_CHECK, storeCode],
     ({ queryKey: [, username] }) => requestGetIDCheck(String(username)),
     {
+      cacheTime: 0,
+      staleTime: 0,
+      suspense: false,
       ...options,
     },
   );

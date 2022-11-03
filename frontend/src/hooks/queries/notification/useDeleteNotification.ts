@@ -1,6 +1,6 @@
 import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
 import { requestDeleteNotification } from '@/api/notification';
 import { SIZE } from '@/constants/api';
@@ -10,9 +10,7 @@ interface DeleteNotificationProps {
   id: number;
 }
 
-const useDeleteNotification = (
-  options?: UseMutationOptions<AxiosResponse<null>, AxiosError<Error>, DeleteNotificationProps>,
-) => {
+const useDeleteNotification = (options?: UseMutationOptions<null, AxiosError<Error>, DeleteNotificationProps>) => {
   const queryClient = useQueryClient();
 
   return useMutation(({ id }) => requestDeleteNotification(String(id)), {

@@ -1,11 +1,9 @@
 import fetcher from './fetcher';
+import extractDataFromAxios from './util/extractor';
 
 export interface GetBoardsResponse {
   boards: Board[];
 }
 
-export const requestGetBoards = async () => {
-  const { data } = await fetcher.get<GetBoardsResponse>('/boards');
-
-  return data.boards;
-};
+export const requestGetBoards = () =>
+  extractDataFromAxios<GetBoardsResponse>(fetcher.get('/boards')).then(data => data.boards);

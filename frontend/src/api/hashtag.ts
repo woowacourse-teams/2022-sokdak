@@ -1,11 +1,9 @@
 import fetcher from './fetcher';
+import extractDataFromAxios from './util/extractor';
 
 export interface GetHashTagsResponse {
   hashtags: Hashtag[];
 }
 
-export const requestGetHashTags = async (limit: number, include: string) => {
-  const { data } = await fetcher.get<GetHashTagsResponse>(`/hashtags/popular?limit=${limit}&include=${include}`);
-
-  return data;
-};
+export const requestGetHashTags = async (limit: number, include: string) =>
+  extractDataFromAxios<GetHashTagsResponse>(fetcher.get(`/hashtags/popular?limit=${limit}&include=${include}`));

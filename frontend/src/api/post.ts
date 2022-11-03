@@ -2,23 +2,17 @@ import { AxiosResponse } from 'axios';
 
 import fetcher from './fetcher';
 import authFetcher from './fetcher/auth';
+import extractDataFromAxios from './util/extractor';
 
-export const requestGetPost = async (id: string) => {
-  const { data } = await authFetcher.get<Post>(`/posts/${id}`);
-
-  return data;
-};
+export const requestGetPost = (id: string) => extractDataFromAxios<Post>(authFetcher.get(`/posts/${id}`));
 
 export interface GetPostsResponse {
   posts: Post[];
   lastPage: boolean;
 }
 
-export const requestGetPosts = async (boardId: string, size: number, pageParam: string) => {
-  const { data } = await fetcher.get<GetPostsResponse>(`/boards/${boardId}/posts?size=${size}&page=${pageParam}`);
-
-  return data;
-};
+export const requestGetPosts = (boardId: string, size: number, pageParam: string) =>
+  extractDataFromAxios<GetPostsResponse>(fetcher.get(`/boards/${boardId}/posts?size=${size}&page=${pageParam}`));
 
 export interface CreateNewPostRequest extends Pick<Post, 'title' | 'content' | 'imageName'> {
   anonymous?: boolean;
@@ -26,9 +20,9 @@ export interface CreateNewPostRequest extends Pick<Post, 'title' | 'content' | '
 }
 
 export const createNewPost = (boardId: string | number, body: CreateNewPostRequest) =>
-  authFetcher.post<null, AxiosResponse<null>, CreateNewPostRequest>(`/boards/${boardId}/posts`, body);
+  extractDataFromAxios<null, CreateNewPostRequest>(authFetcher.post(`/boards/${boardId}/posts`, body));
 
-export const requestDeletePost = (id: string) => authFetcher.delete(`/posts/${id}`);
+export const requestDeletePost = (id: string) => extractDataFromAxios<null>(authFetcher.delete(`/posts/${id}`));
 
 export interface GetPostsByBoardsResponse {
   boards: {
@@ -38,65 +32,56 @@ export interface GetPostsByBoardsResponse {
   }[];
 }
 
-export const requestGetPostsByBoards = async () => {
-  const { data } = await fetcher.get<GetPostsByBoardsResponse>('/boards/contents');
-
-  return data.boards;
-};
+export const requestGetPostsByBoards = () =>
+  extractDataFromAxios<GetPostsByBoardsResponse>(fetcher.get('/boards/contents')).then(data => data.boards);
 
 export interface GetPostsByHashtagsResponse {
   posts: Post[];
   lastPage: boolean;
 }
 
-export const requestGetPostsByHashtags = async (hashtagName: string, size: number, pageParam: string) => {
-  const { data } = await fetcher.get<GetPostsByHashtagsResponse>(
-    `/posts?hashtag=${hashtagName}&size=${size}&page=${pageParam}`,
+export const requestGetPostsByHashtags = (hashtagName: string, size: number, pageParam: string) =>
+  extractDataFromAxios<GetPostsByHashtagsResponse>(
+    fetcher.get(`/posts?hashtag=${hashtagName}&size=${size}&page=${pageParam}`),
   );
-
-  return data;
-};
 
 export interface CreatePostReportRequest {
   message: string;
 }
 
 export const createPostReport = (id: number, body: CreatePostReportRequest) =>
-  authFetcher.post<null, AxiosResponse<null>, CreatePostReportRequest>(`/posts/${id}/report`, body);
+  extractDataFromAxios<null, CreatePostReportRequest>(authFetcher.post(`/posts/${id}/report`, body));
 
 export interface GetSearchPostCountResponse {
   totalPostCount: number;
 }
 
-export const requestGetSearchPostCount = async (query: string) => {
-  const { data } = await fetcher.get<GetSearchPostCountResponse>(
-    `/posts/count?query=${query.replaceAll(' ', '%7C').replaceAll('|', '%7C').replaceAll('+', '%7C')}`,
-  );
-
-  return data.totalPostCount;
-};
+export const requestGetSearchPostCount = (query: string) =>
+  extractDataFromAxios<GetSearchPostCountResponse>(
+    fetcher.get(`/posts/count?query=${query.replaceAll(' ', '%7C').replaceAll('|', '%7C').replaceAll('+', '%7C')}`),
+  ).then(data => data.totalPostCount);
 
 export interface GetSearchPostsResponse {
   posts: Post[];
   lastPage: boolean;
 }
 
-export const requestGetSearchPosts = async (query: string, size: number, pageParam: number) => {
-  const { data } = await fetcher.get<GetSearchPostsResponse>(
-    `/posts?query=${query
-      .replaceAll(' ', '%7C')
-      .replaceAll('|', '%7C')
-      .replaceAll('+', '%7C')}&size=${size}&page=${pageParam}`,
+export const requestGetSearchPosts = (query: string, size: number, pageParam: number) =>
+  extractDataFromAxios<GetSearchPostsResponse>(
+    fetcher.get(
+      `/posts?query=${query
+        .replaceAll(' ', '%7C')
+        .replaceAll('|', '%7C')
+        .replaceAll('+', '%7C')}&size=${size}&page=${pageParam}`,
+    ),
   );
-  return data;
-};
 
 export interface UpdatePostRequest extends Pick<Post, 'title' | 'content' | 'imageName'> {
   hashtags: string[];
 }
 
 export const requestUpdatePost = (id: string, body: UpdatePostRequest) =>
-  authFetcher.put<null, AxiosResponse<null>, UpdatePostRequest>(`/posts/${id}`, body);
+  extractDataFromAxios<null, UpdatePostRequest>(authFetcher.put(`/posts/${id}`, body));
 
 export interface CreateImageResponse {
   imageName: string;
@@ -113,15 +98,13 @@ export interface UpdateLikePostResponse {
   likeCount: number;
 }
 
-export const requestUpdateLikePost = (id: string) => authFetcher.put<UpdateLikePostResponse>(`/posts/${id}/like`);
+export const requestUpdateLikePost = (id: string) =>
+  extractDataFromAxios<UpdateLikePostResponse>(authFetcher.put(`/posts/${id}/like`));
 
 export interface GetMyPostResponse {
   posts: Post[];
   totalPageCount: number;
 }
 
-export const requestGetMyPost = async (size: number, page: number) => {
-  const { data } = await authFetcher.get<GetMyPostResponse>(`/posts/me?size=${size}&page=${page - 1}`);
-
-  return data;
-};
+export const requestGetMyPost = (size: number, page: number) =>
+  extractDataFromAxios<GetMyPostResponse>(authFetcher.get(`/posts/me?size=${size}&page=${page - 1}`));

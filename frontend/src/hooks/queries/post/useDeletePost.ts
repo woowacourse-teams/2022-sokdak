@@ -1,6 +1,6 @@
 import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
 import useSnackbar from '@/hooks/useSnackbar';
 
@@ -8,7 +8,7 @@ import { requestDeletePost } from '@/api/post';
 import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
-const useDeletePost = (options?: UseMutationOptions<AxiosResponse<null>, AxiosError, string>) => {
+const useDeletePost = (options?: UseMutationOptions<null, AxiosError, string>) => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
 

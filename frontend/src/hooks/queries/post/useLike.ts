@@ -1,13 +1,11 @@
 import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
 import { requestUpdateLikePost, UpdateLikePostResponse } from '@/api/post';
 import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 
-const useLike = (
-  options?: UseMutationOptions<AxiosResponse<UpdateLikePostResponse>, AxiosError<Error>, { id: string }>,
-) => {
+const useLike = (options?: UseMutationOptions<UpdateLikePostResponse, AxiosError, { id: string }>) => {
   const queryClient = useQueryClient();
 
   return useMutation(({ id }) => requestUpdateLikePost(String(id)), {

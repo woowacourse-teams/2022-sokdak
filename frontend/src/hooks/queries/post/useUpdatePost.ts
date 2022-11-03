@@ -1,6 +1,6 @@
 import { useQueryClient, useMutation, UseMutationOptions } from 'react-query';
 
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
 import useSnackbar from '@/hooks/useSnackbar';
 
@@ -13,7 +13,7 @@ const useUpdatePost = ({
   options,
 }: {
   id: string;
-  options?: UseMutationOptions<AxiosResponse<null>, AxiosError, UpdatePostRequest>;
+  options?: UseMutationOptions<null, AxiosError, UpdatePostRequest>;
 }) => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();

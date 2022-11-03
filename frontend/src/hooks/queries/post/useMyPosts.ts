@@ -13,7 +13,7 @@ const useMyPosts = ({
   options,
 }: {
   storeCode: [Size, Page];
-  options?: UseQueryOptions<GetMyPostResponse, AxiosError<ErrorResponse>, GetMyPostResponse, [QueryKey, Size, Page]>;
+  options?: UseQueryOptions<GetMyPostResponse, AxiosError, GetMyPostResponse, [QueryKey, Size, Page]>;
 }) =>
   useQuery([QUERY_KEYS.MY_POSTS, ...storeCode], ({ queryKey: [, size, page] }) => requestGetMyPost(size, page), {
     keepPreviousData: true,

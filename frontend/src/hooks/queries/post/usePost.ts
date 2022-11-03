@@ -10,7 +10,7 @@ const usePost = ({
   options,
 }: {
   storeCode: QueryKey;
-  options?: UseQueryOptions<Promise<Post>, AxiosError, Post, QueryKey[]>;
+  options?: UseQueryOptions<Post, AxiosError, Post, QueryKey[]>;
 }) =>
   useQuery([QUERY_KEYS.POST, storeCode], ({ queryKey: [, id] }) => requestGetPost(String(id)), {
     staleTime: 1000 * 20,

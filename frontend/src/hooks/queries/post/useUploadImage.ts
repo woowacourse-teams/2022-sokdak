@@ -8,9 +8,7 @@ import { createImage, CreateImageResponse } from '@/api/post';
 import { MUTATION_KEY } from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
-const useUploadImage = (
-  options?: UseMutationOptions<AxiosResponse<CreateImageResponse>, AxiosError<Error>, FormData>,
-) => {
+const useUploadImage = (options?: UseMutationOptions<AxiosResponse<CreateImageResponse>, AxiosError, FormData>) => {
   const { showSnackbar } = useSnackbar();
 
   return useMutation(image => createImage(image), {

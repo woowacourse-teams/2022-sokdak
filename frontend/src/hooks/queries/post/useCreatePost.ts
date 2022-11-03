@@ -1,6 +1,6 @@
 import { useQueryClient, useMutation, UseMutationOptions } from 'react-query';
 
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
 import useSnackbar from '@/hooks/useSnackbar';
 
@@ -13,7 +13,7 @@ interface UseCreatePostProps extends CreateNewPostRequest {
   boardId: number;
 }
 
-const useCreatePost = (options?: UseMutationOptions<AxiosResponse<null>, AxiosError, CreateNewPostRequest>) => {
+const useCreatePost = (options?: UseMutationOptions<null, AxiosError, CreateNewPostRequest>) => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
 

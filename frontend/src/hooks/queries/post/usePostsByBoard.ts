@@ -10,7 +10,7 @@ const usePostByBoards = ({
   options,
 }: {
   options?: Omit<
-    UseQueryOptions<GetPostsByBoardsResponse['boards'], AxiosError<Error>, GetPostsByBoardsResponse['boards'], string>,
+    UseQueryOptions<GetPostsByBoardsResponse['boards'], AxiosError, GetPostsByBoardsResponse['boards'], string>,
     'queryKey' | 'queryFn'
   >;
 }) =>

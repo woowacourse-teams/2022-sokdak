@@ -6,11 +6,12 @@ import useSnackbar from '@/hooks/useSnackbar';
 
 import * as Styled from './index.styles';
 
+import { CreateImageResponse } from '@/api/post';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
 interface ImageUploadProps {
   setImage: React.Dispatch<React.SetStateAction<Image>>;
-  uploadImage: UseMutateAsyncFunction<AxiosResponse, AxiosError, FormData>;
+  uploadImage: UseMutateAsyncFunction<AxiosResponse<CreateImageResponse>, AxiosError, FormData>;
 }
 
 const ImageUpload = ({ setImage, uploadImage }: ImageUploadProps) => {

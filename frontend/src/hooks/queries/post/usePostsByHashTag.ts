@@ -16,7 +16,7 @@ const usePostsByHashTag = ({
   storeCode: [HashtagName, Size];
   options?: UseInfiniteQueryOptions<
     GetPostsByHashtagsResponse,
-    AxiosError<Error>,
+    AxiosError,
     Post,
     GetPostsByHashtagsResponse,
     [QueryKey, HashtagName, Size]

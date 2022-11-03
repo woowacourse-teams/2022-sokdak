@@ -72,6 +72,7 @@
     "@typescript-eslint/parser": "^5.31.0",
     "babel-jest": "^28.0.7",
     "babel-loader": "^8.2.5",
+    "chromatic": "^6.11.2",
     "copy-webpack-plugin": "^11.0.0",
     "env-cmd": "^10.1.0",
     "esbuild-loader": "^2.20.0",

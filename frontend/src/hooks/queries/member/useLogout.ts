@@ -7,7 +7,7 @@ import AuthContext from '@/context/Auth';
 
 import useSnackbar from '@/hooks/useSnackbar';
 
-import authFetcher from '@/api/authFetcher';
+import authFetcher from '@/api/fetcher/auth';
 import { requestGetLogout } from '@/api/member';
 import { STORAGE_KEY } from '@/constants/localStorage';
 import QUERY_KEYS from '@/constants/queries';

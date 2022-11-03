@@ -1,7 +1,7 @@
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
-import api from '.';
-import authFetcher from './authFetcher';
+import fetcher from './fetcher';
+import authFetcher from './fetcher/auth';
 
 export interface CreateMemberRequest extends Member {
   email: string | null;
@@ -11,14 +11,14 @@ export interface CreateMemberRequest extends Member {
 }
 
 export const createMember = (body: CreateMemberRequest) =>
-  api.post<null, AxiosResponse<null>, CreateMemberRequest>('/members/signup', body);
+  fetcher.post<null, AxiosResponse<null>, CreateMemberRequest>('/members/signup', body);
 
 export interface CreateEmailCheckRequest {
   email: string;
 }
 
 export const createEmailCheck = (body: CreateEmailCheckRequest) =>
-  api.post<null, AxiosResponse<null>, CreateEmailCheckRequest>('/members/signup/email', body);
+  fetcher.post<null, AxiosResponse<null>, CreateEmailCheckRequest>('/members/signup/email', body);
 
 export interface CreateVerificationCodeCheckRequest {
   email: string;
@@ -26,17 +26,20 @@ export interface CreateVerificationCodeCheckRequest {
 }
 
 export const createVerificationCodeCheck = (body: CreateVerificationCodeCheckRequest) =>
-  api.post<null, AxiosResponse<null>, CreateVerificationCodeCheckRequest>('/members/signup/email/verification', body);
+  fetcher.post<null, AxiosResponse<null>, CreateVerificationCodeCheckRequest>(
+    '/members/signup/email/verification',
+    body,
+  );
 
 export const createLogin = (body: Member, options: AxiosRequestConfig) =>
-  api.post<null, AxiosResponse<null>, Member>('/login', body, options);
+  fetcher.post<null, AxiosResponse<null>, Member>('/login', body, options);
 
 export interface GetNicknameCheckResponse {
   unique: boolean;
 }
 
 export const requestGetNicknameCheck = async (nickname: string) => {
-  const { data } = await api.get<GetNicknameCheckResponse>(`members/signup/exists?nickname=${nickname}`);
+  const { data } = await fetcher.get<GetNicknameCheckResponse>(`members/signup/exists?nickname=${nickname}`);
 
   return data.unique;
 };
@@ -46,7 +49,7 @@ export interface GetIDCheckResponse {
 }
 
 export const requestGetIDCheck = async (username: string) => {
-  const { data } = await api.get<GetIDCheckResponse>(`members/signup/exists?username=${username}`);
+  const { data } = await fetcher.get<GetIDCheckResponse>(`members/signup/exists?username=${username}`);
 
   return data.unique;
 };

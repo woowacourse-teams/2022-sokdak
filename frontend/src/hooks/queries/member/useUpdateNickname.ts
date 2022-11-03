@@ -7,7 +7,7 @@ import AuthContext from '@/context/Auth';
 
 import useSnackbar from '@/hooks/useSnackbar';
 
-import authFetcher from '@/api/authFetcher';
+import authFetcher from '@/api/fetcher/auth';
 import { requestUpdateNickname } from '@/api/member';
 import type { UpdateNicknameRequest } from '@/api/member';
 import { STORAGE_KEY } from '@/constants/localStorage';

@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 
-import api from '.';
-import authFetcher from './authFetcher';
+import fetcher from './fetcher';
+import authFetcher from './fetcher/auth';
 
 export const requestGetPost = async (id: string) => {
   const { data } = await authFetcher.get<Post>(`/posts/${id}`);
@@ -15,7 +15,7 @@ export interface GetPostsResponse {
 }
 
 export const requestGetPosts = async (boardId: string, size: number, pageParam: string) => {
-  const { data } = await api.get<GetPostsResponse>(`/boards/${boardId}/posts?size=${size}&page=${pageParam}`);
+  const { data } = await fetcher.get<GetPostsResponse>(`/boards/${boardId}/posts?size=${size}&page=${pageParam}`);
 
   return data;
 };
@@ -39,7 +39,7 @@ export interface GetPostsByBoardsResponse {
 }
 
 export const requestGetPostsByBoards = async () => {
-  const { data } = await api.get<GetPostsByBoardsResponse>('/boards/contents');
+  const { data } = await fetcher.get<GetPostsByBoardsResponse>('/boards/contents');
 
   return data.boards;
 };
@@ -50,7 +50,7 @@ export interface GetPostsByHashtagsResponse {
 }
 
 export const requestGetPostsByHashtags = async (hashtagName: string, size: number, pageParam: string) => {
-  const { data } = await api.get<GetPostsByHashtagsResponse>(
+  const { data } = await fetcher.get<GetPostsByHashtagsResponse>(
     `/posts?hashtag=${hashtagName}&size=${size}&page=${pageParam}`,
   );
 
@@ -69,7 +69,7 @@ export interface GetSearchPostCountResponse {
 }
 
 export const requestGetSearchPostCount = async (query: string) => {
-  const { data } = await api.get<GetSearchPostCountResponse>(
+  const { data } = await fetcher.get<GetSearchPostCountResponse>(
     `/posts/count?query=${query.replaceAll(' ', '%7C').replaceAll('|', '%7C').replaceAll('+', '%7C')}`,
   );
 
@@ -82,7 +82,7 @@ export interface GetSearchPostsResponse {
 }
 
 export const requestGetSearchPosts = async (query: string, size: number, pageParam: number) => {
-  const { data } = await api.get<GetSearchPostsResponse>(
+  const { data } = await fetcher.get<GetSearchPostsResponse>(
     `/posts?query=${query
       .replaceAll(' ', '%7C')
       .replaceAll('|', '%7C')

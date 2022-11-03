@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 
-import authFetcher from './authFetcher';
+import authFetcher from './fetcher/auth';
 
 interface CommentList extends CommentType {
   blocked: boolean;

@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 
-import authFetcher from './authFetcher';
+import authFetcher from './fetcher/auth';
 
 export interface GetNotificationsResponse {
   notifications: Notice[];

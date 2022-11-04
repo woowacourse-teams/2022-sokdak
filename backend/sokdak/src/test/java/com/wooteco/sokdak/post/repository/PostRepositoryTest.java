@@ -113,4 +113,27 @@ class PostRepositoryTest extends RepositoryTest {
         Page<Post> result = postRepository.findPostPagesByQuery(PageRequest.of(0, 2, DESC, "created_at"), "");
         assertThat(result.getTotalElements()).isEqualTo(5L);
     }
+
+    @DisplayName("좋아요 개수를 1 증가한다.")
+    @Test
+    void increaseLikeCount() {
+        int originLikeCount = post1.getLikeCount();
+
+        postRepository.increaseLikeCount(post1.getId());
+
+        Post post = postRepository.findById(post1.getId()).orElseThrow();
+        assertThat(post.getLikeCount() - originLikeCount).isEqualTo(1);
+    }
+
+    @DisplayName("좋아요 개수를 1 감소한다.")
+    @Test
+    void decreaseLikeCount() {
+        postRepository.increaseLikeCount(post1.getId());
+        int originLikeCount = postRepository.findById(post1.getId()).get().getLikeCount();
+
+        postRepository.decreaseLikeCount(post1.getId());
+
+        Post post = postRepository.findById(post1.getId()).orElseThrow();
+        assertThat(post.getLikeCount() - originLikeCount).isEqualTo(-1);
+    }
 }

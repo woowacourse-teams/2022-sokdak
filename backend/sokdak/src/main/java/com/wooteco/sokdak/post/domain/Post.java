@@ -5,7 +5,6 @@ import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.hashtag.domain.PostHashtag;
 import com.wooteco.sokdak.like.domain.PostLike;
-import com.wooteco.sokdak.like.exception.PostLikeNotFoundException;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.report.domain.PostReport;
 import java.time.LocalDateTime;
@@ -52,6 +51,8 @@ public class Post {
     private Content content;
 
     private int viewCount = 0;
+
+    private int likeCount = 0;
 
     private String writerNickname;
 
@@ -152,11 +153,6 @@ public class Post {
         return content.getValue();
     }
 
-    public boolean hasLikeOfMember(Long memberId) {
-        return postLikes.stream()
-                .anyMatch(postLike -> postLike.isLikeOf(memberId));
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -166,10 +162,7 @@ public class Post {
     }
 
     public int getLikeCount() {
-        if (postLikes == null) {
-            return 0;
-        }
-        return postLikes.size();
+        return likeCount;
     }
 
     public int getCommentCount() {
@@ -218,12 +211,9 @@ public class Post {
         postLikes.add(postLike);
     }
 
-    public void deleteLikeOfMember(Long memberId) {
-        PostLike postLike = postLikes.stream()
-                .filter(it -> it.isLikeOf(memberId))
-                .findAny()
-                .orElseThrow(PostLikeNotFoundException::new);
+    public void deleteLike(PostLike postLike) {
         postLikes.remove(postLike);
+        postLike.delete();
     }
 
     public Long getBoardId() {

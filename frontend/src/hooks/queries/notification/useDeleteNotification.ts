@@ -1,8 +1,8 @@
 import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
-import authFetcher from '@/apis';
+import { requestDeleteNotification } from '@/api/notification';
 import { SIZE } from '@/constants/api';
 import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 
@@ -10,12 +10,10 @@ interface DeleteNotificationProps {
   id: number;
 }
 
-const useDeleteNotification = (
-  options?: UseMutationOptions<AxiosResponse<never>, AxiosError<{ message: string }>, DeleteNotificationProps>,
-) => {
+const useDeleteNotification = (options?: UseMutationOptions<null, AxiosError<Error>, DeleteNotificationProps>) => {
   const queryClient = useQueryClient();
 
-  return useMutation(({ id }) => authFetcher.delete(`/notifications/${id}`), {
+  return useMutation(({ id }) => requestDeleteNotification(String(id)), {
     ...options,
     onSuccess: () => {
       queryClient.refetchQueries([QUERY_KEYS.NOTIFICATIONS, SIZE.NOTIFICATION_LOAD]);

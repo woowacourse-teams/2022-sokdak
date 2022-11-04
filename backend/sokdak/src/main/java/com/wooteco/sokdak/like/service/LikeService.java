@@ -17,6 +17,7 @@ import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,20 +54,24 @@ public class LikeService {
                 .orElseThrow(PostNotFoundException::new);
         authService.checkAuthority(authInfo, post.getBoardId());
 
-        flipPostLike(authInfo.getId(), post);
-        int likeCount = post.getLikeCount();
-        boolean liked = post.hasLikeOfMember(authInfo.getId());
+        int likeCount = flipPostLike(authInfo.getId(), post);
+        boolean liked = postLikeRepository.existsByPostAndMemberId(post, authInfo.getId());
 
         checkSpecialAndSave(likeCount, post);
         return new LikeFlipResponse(likeCount, liked);
     }
 
-    private void flipPostLike(Long memberId, Post post) {
-        if (post.hasLikeOfMember(memberId)) {
-            post.deleteLikeOfMember(memberId);
-            return;
+    private int flipPostLike(Long memberId, Post post) {
+        final Optional<PostLike> postLike = postLikeRepository.findByPostAndMemberId(post, memberId);
+        if (postLike.isPresent()) {
+            post.deleteLike(postLike.get());
+            postRepository.decreaseLikeCount(post.getId());
+            return post.getLikeCount() - 1;
         }
+
         addNewPostLike(memberId, post);
+        postRepository.increaseLikeCount(post.getId());
+        return post.getLikeCount() + 1;
     }
 
     private void addNewPostLike(Long memberId, Post post) {
@@ -91,19 +96,22 @@ public class LikeService {
                 .orElseThrow(CommentNotFoundException::new);
         authService.checkAuthority(authInfo, comment.getBoardId());
 
-        flipCommentLike(authInfo.getId(), comment);
-        int likeCount = comment.getCommentLikesCount();
-        boolean liked = comment.hasLikeOfMember(authInfo.getId());
+        int likeCount = flipCommentLike(authInfo.getId(), comment);
+        boolean liked = commentLikeRepository.existsByMemberIdAndComment(authInfo.getId(), comment);
 
         return new LikeFlipResponse(likeCount, liked);
     }
 
-    private void flipCommentLike(Long memberId, Comment comment) {
-        if (comment.hasLikeOfMember(memberId)) {
-            comment.deleteLikeOfMember(memberId);
-            return;
+    private int flipCommentLike(Long memberId, Comment comment) {
+        Optional<CommentLike> commentLike = commentLikeRepository.findByMemberIdAndComment(memberId, comment);
+        if (commentLike.isPresent()) {
+            comment.deleteLike(commentLike.get());
+            commentRepository.decreaseLikeCount(comment.getId());
+            return comment.getCommentLikesCount() - 1;
         }
         addNewCommentLike(memberId, comment);
+        commentRepository.increaseLikeCount(comment.getId());
+        return comment.getCommentLikesCount() + 1;
     }
 
     private void addNewCommentLike(Long memberId, Comment comment) {

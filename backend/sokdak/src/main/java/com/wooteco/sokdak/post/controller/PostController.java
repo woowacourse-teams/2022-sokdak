@@ -16,7 +16,10 @@ import javax.annotation.Nullable;
 import javax.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,10 +39,13 @@ public class PostController {
     }
 
     @GetMapping("/posts/{id}")
-    public ResponseEntity<PostDetailResponse> findPost(@PathVariable Long id, @Login AuthInfo authInfo) {
-        postService.updateViewCount(id);
-        PostDetailResponse postResponse = postService.findPost(id, authInfo);
-        return ResponseEntity.ok(postResponse);
+    public ResponseEntity<PostDetailResponse> findPost(@PathVariable Long id,
+                                                       @Login AuthInfo authInfo,
+                                                       @CookieValue(value = "viewedPost", required = false, defaultValue = "") String postLog) {
+        PostDetailResponse postResponse = postService.findPost(id, authInfo, postLog);
+        String updatedLog = postService.updatePostLog(id, postLog);
+        ResponseCookie responseCookie = ResponseCookie.from("viewedPost", updatedLog).maxAge(86400L).build();
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie.toString()).body(postResponse);
     }
 
     @PostMapping("/boards/{boardId}/posts")
@@ -63,7 +69,6 @@ public class PostController {
         PostsCountResponse postsResponse = postService.countPostWithQuery(query);
         return ResponseEntity.ok(postsResponse);
     }
-
 
 
     @GetMapping(path = "/posts")

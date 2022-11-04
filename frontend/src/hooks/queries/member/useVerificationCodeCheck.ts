@@ -1,24 +1,16 @@
 import { useMutation, UseMutationOptions } from 'react-query';
 
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
+
+import { createVerificationCodeCheck } from '@/api/member';
+import { CreateVerificationCodeCheckRequest } from '@/api/member';
 
 const useVerificationCodeCheck = (
-  options?: UseMutationOptions<
-    AxiosResponse<string, string>,
-    AxiosError<{ message: string }>,
-    { email: string; code: string }
-  >,
+  options?: UseMutationOptions<null, AxiosError<Error>, CreateVerificationCodeCheckRequest>,
 ) => {
-  return useMutation(
-    ({ email, code }): Promise<AxiosResponse<string, string>> =>
-      axios.post('/members/signup/email/verification', {
-        email,
-        code,
-      }),
-    {
-      ...options,
-    },
-  );
+  return useMutation(({ email, code }) => createVerificationCodeCheck({ email, code }), {
+    ...options,
+  });
 };
 
 export default useVerificationCodeCheck;

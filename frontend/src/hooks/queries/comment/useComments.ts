@@ -1,32 +1,19 @@
 import { useQuery, QueryKey, UseQueryOptions } from 'react-query';
 
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
-import authFetcher from '@/apis';
+import { requestGetComment } from '@/api/comment';
+import type { GetCommentResponse } from '@/api/comment';
 import QUERY_KEYS from '@/constants/queries';
-
-interface CommentList extends CommentType {
-  id: number;
-  blocked: boolean;
-  postWriter: boolean;
-  replies: Omit<CommentList, 'replies'>[];
-}
-
-interface CommentResponse {
-  comments: CommentList[];
-  totalCount: number;
-}
 
 const useComments = ({
   storeCode,
   options,
 }: {
   storeCode: QueryKey;
-  options?: UseQueryOptions<AxiosResponse<CommentResponse>, AxiosError, CommentResponse, QueryKey[]>;
+  options?: UseQueryOptions<GetCommentResponse, AxiosError, GetCommentResponse, QueryKey[]>;
 }) =>
-  useQuery([QUERY_KEYS.COMMENTS, storeCode], ({ queryKey: [, id] }) => authFetcher.get(`/posts/${id}/comments`), {
-    select: data => data.data,
-    suspense: true,
+  useQuery([QUERY_KEYS.COMMENTS, storeCode], ({ queryKey: [, id] }) => requestGetComment(String(id)), {
     ...options,
   });
 

@@ -1,8 +1,9 @@
 import { useInfiniteQuery, QueryKey, UseInfiniteQueryOptions, useQueryClient } from 'react-query';
 
-import { AxiosResponse, AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 
-import authFetcher from '@/apis';
+import { requestGetNotifications } from '@/api/notification';
+import type { GetNotificationsResponse } from '@/api/notification';
 import QUERY_KEYS from '@/constants/queries';
 
 type Size = number;
@@ -13,10 +14,10 @@ const useNotifications = ({
 }: {
   storeCode: [Size];
   options?: UseInfiniteQueryOptions<
-    AxiosResponse<{ notifications: Notice[]; lastPage: boolean }>,
+    GetNotificationsResponse,
     AxiosError,
     Notice,
-    AxiosResponse<{ notifications: Notice[]; lastPage: boolean }>,
+    GetNotificationsResponse,
     [QueryKey, Size]
   >;
 }) => {
@@ -24,15 +25,13 @@ const useNotifications = ({
 
   return useInfiniteQuery(
     [QUERY_KEYS.NOTIFICATIONS, ...storeCode],
-    ({ pageParam = 0, queryKey: [, size] }) => authFetcher.get(`/notifications?size=${size}&page=${pageParam}`),
+    ({ pageParam = 0, queryKey: [, size] }) => requestGetNotifications(size, pageParam),
     {
       select: data => ({
-        pages: data.pages.flatMap(
-          (page: AxiosResponse<{ notifications: Notice[]; lastPage: boolean }>) => page.data.notifications,
-        ),
+        pages: data.pages.flatMap((page: { notifications: Notice[]; lastPage: boolean }) => page.notifications),
         pageParams: [...data.pageParams, data.pageParams.length],
       }),
-      getNextPageParam: (lastPage, allPages) => (lastPage.data.lastPage ? undefined : allPages.length),
+      getNextPageParam: (lastPage, allPages) => (lastPage.lastPage ? undefined : allPages.length),
       onSuccess: () => {
         queryClient.refetchQueries(QUERY_KEYS.NOTIFICATION_EXISTS);
       },

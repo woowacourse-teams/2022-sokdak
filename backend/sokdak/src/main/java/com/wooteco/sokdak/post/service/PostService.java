@@ -19,6 +19,7 @@ import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
 import com.wooteco.sokdak.notification.service.NotificationService;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.domain.SearchQuery;
+import com.wooteco.sokdak.post.domain.ViewCountManager;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PagePostsResponse;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
@@ -51,12 +52,13 @@ public class PostService {
     private final PostLikeRepository postLikeRepository;
     private final NotificationService notificationService;
     private final AuthService authService;
+    private final ViewCountManager viewCountManager;
 
     public PostService(HashtagService hashtagService, BoardService boardService,
                        PostRepository postRepository, PostBoardRepository postBoardRepository,
                        MemberRepository memberRepository, CommentRepository commentRepository,
                        PostLikeRepository postLikeRepository, NotificationService notificationService,
-                       AuthService authService) {
+                       AuthService authService, ViewCountManager viewCountManager) {
         this.hashtagService = hashtagService;
         this.boardService = boardService;
         this.postRepository = postRepository;
@@ -66,6 +68,7 @@ public class PostService {
         this.postLikeRepository = postLikeRepository;
         this.notificationService = notificationService;
         this.authService = authService;
+        this.viewCountManager = viewCountManager;
     }
 
     @Transactional
@@ -98,19 +101,22 @@ public class PostService {
         return member.getNickname();
     }
 
-    public PostDetailResponse findPost(Long postId, AuthInfo authInfo) {
+    @Transactional
+    public PostDetailResponse findPost(Long postId, AuthInfo authInfo, String cookieValue) {
+        if (viewCountManager.isFirstAccess(cookieValue, postId)) {
+            postRepository.updateViewCount(postId);
+        }
         Post foundPost = findPostObject(postId);
         Board writableBoard = foundPost.getWritableBoard();
-        boolean liked = foundPost.hasLikeOfMember(authInfo.getId());
+        boolean liked = postLikeRepository.existsByPostAndMemberId(foundPost, authInfo.getId());
         Hashtags hashtags = hashtagService.findHashtagsByPost(foundPost);
 
         return PostDetailResponse.of(foundPost, writableBoard, liked,
                 foundPost.isOwner(authInfo.getId()), hashtags, foundPost.getImageName());
     }
 
-    @Transactional
-    public void updateViewCount(Long postId) {
-        postRepository.updateViewCount(postId);
+    public String updatePostLog(Long postId, String cookieValue) {
+        return viewCountManager.getUpdatedLog(cookieValue, postId);
     }
 
     private Post findPostObject(Long postId) {

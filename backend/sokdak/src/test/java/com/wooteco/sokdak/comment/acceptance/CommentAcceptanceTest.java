@@ -9,9 +9,9 @@ import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpDeleteWithAu
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGet;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getTokens;
 import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
+import static com.wooteco.sokdak.util.fixture.TokenFixture.getChrisToken;
+import static com.wooteco.sokdak.util.fixture.TokenFixture.getTokens;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 

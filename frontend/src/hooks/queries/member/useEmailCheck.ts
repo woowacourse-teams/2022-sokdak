@@ -1,13 +1,14 @@
 import { useMutation, UseMutationOptions } from 'react-query';
 
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
-const useEmailCheck = (
-  options?: UseMutationOptions<AxiosResponse<string, string>, AxiosError<{ message: string }>, { email: string }>,
-) => {
+import { createEmailCheck } from '@/api/member';
+import type { CreateEmailCheckRequest } from '@/api/member';
+
+const useEmailCheck = (options?: UseMutationOptions<null, AxiosError<Error>, CreateEmailCheckRequest>) => {
   return useMutation(
-    ({ email }): Promise<AxiosResponse<string, string>> =>
-      axios.post('/members/signup/email', {
+    ({ email }) =>
+      createEmailCheck({
         email,
       }),
     {

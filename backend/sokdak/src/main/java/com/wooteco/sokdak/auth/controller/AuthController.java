@@ -4,7 +4,6 @@ import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.auth.service.AuthService;
 import com.wooteco.sokdak.auth.service.RefreshTokenService;
-import com.wooteco.sokdak.member.dto.VerificationRequest;
 import com.wooteco.sokdak.support.token.AuthorizationExtractor;
 import com.wooteco.sokdak.support.token.Login;
 import com.wooteco.sokdak.support.token.TokenManager;

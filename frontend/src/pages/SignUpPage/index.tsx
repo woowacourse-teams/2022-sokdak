@@ -48,7 +48,7 @@ const SignUpPage = () => {
         item.setIsAnimationActive(true);
       });
 
-      showSnackbar(error.response?.data.message!);
+      showSnackbar(error.message);
     },
   });
 

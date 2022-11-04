@@ -1,7 +1,7 @@
 package com.wooteco.sokdak.util.fixture;
 
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
+import static com.wooteco.sokdak.util.fixture.TokenFixture.getChrisToken;
 
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import java.util.List;

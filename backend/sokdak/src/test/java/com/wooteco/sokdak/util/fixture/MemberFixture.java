@@ -1,8 +1,5 @@
 package com.wooteco.sokdak.util.fixture;
 
-import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-
 import com.wooteco.sokdak.auth.domain.encryptor.EncryptorFactory;
 import com.wooteco.sokdak.auth.domain.encryptor.EncryptorI;
 import com.wooteco.sokdak.auth.dto.LoginRequest;
@@ -46,27 +43,5 @@ public class MemberFixture {
                 Member.builder().id(5L).username(Username.of(ENCRYPTOR, "east"))
                         .password(VALID_PASSWORD).nickname(new Nickname("eastNickname")).build()
         );
-    }
-
-    public static List<String> getTokens() {
-        String token1 = getToken("chris");
-        String token2 = getToken("josh");
-        String token3 = getToken("thor");
-        String token4 = getToken("hunch");
-        String token5 = getToken("east");
-        return List.of(token1, token2, token3, token4, token5);
-    }
-
-    public static String getChrisToken() {
-        return getToken("chris");
-    }
-
-    public static String getApplicantToken() {
-        return getToken("applicant");
-    }
-
-    public static String getToken(String username) {
-        LoginRequest loginRequest = new LoginRequest(username, "Abcd123!@");
-        return httpPost(loginRequest, "/login").header(AUTHORIZATION);
     }
 }

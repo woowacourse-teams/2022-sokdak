@@ -1,23 +1,21 @@
-import { HTMLAttributes, PropsWithChildren, useEffect, useState } from 'react';
-
-import useThrottle from '@/hooks/useThrottle';
+import { HTMLAttributes, PropsWithChildren, useRef } from 'react';
 
 import * as Styled from './index.styles';
 
+import useAnimateContainer from './useAnimateContainer';
+
 const SidebarContainer = ({ children, className }: PropsWithChildren<HTMLAttributes<HTMLDivElement>>) => {
-  const [position, setPosition] = useState(document.documentElement.scrollTop);
-  const moveSidebar = useThrottle(() => setPosition(document.documentElement.scrollTop), 50);
+  const sideBarContainerRef = useRef<HTMLDivElement>(null);
+  const sideBarRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    window.addEventListener('scroll', moveSidebar);
-
-    return () => window.removeEventListener('scroll', moveSidebar);
-  }, []);
+  const { movementDegree } = useAnimateContainer({ parentContainer: sideBarContainerRef, childContainer: sideBarRef });
 
   return (
-    <Styled.Container position={position} className={className}>
-      {children}
-    </Styled.Container>
+    <Styled.SidebarContainer ref={sideBarContainerRef}>
+      <Styled.Container position={movementDegree} className={className} ref={sideBarRef}>
+        {children}
+      </Styled.Container>
+    </Styled.SidebarContainer>
   );
 };
 

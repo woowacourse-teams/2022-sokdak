@@ -10,8 +10,8 @@ import Layout from '@/components/@styled/Layout';
 import ConfirmModal from '@/components/ConfirmModal';
 import Spinner from '@/components/Spinner';
 
-import useLike from '@/hooks/queries/likes/useLike';
 import useDeletePost from '@/hooks/queries/post/useDeletePost';
+import useLike from '@/hooks/queries/post/useLike';
 import usePost from '@/hooks/queries/post/usePost';
 import usePosts from '@/hooks/queries/post/usePosts';
 import useDebounce from '@/hooks/useDebounce';
@@ -32,9 +32,6 @@ const PostPage = () => {
 
   const { data, isError } = usePost({
     storeCode: id!,
-    options: {
-      staleTime: 1000 * 20,
-    },
   });
 
   const handleLikeButton = useDebounce(() => {
@@ -55,7 +52,6 @@ const PostPage = () => {
     storeCode: [HOT_BORAD_ID, POST_COUNT],
     options: {
       enabled: isDesktop,
-      staleTime: 1000 * 20,
     },
   });
 

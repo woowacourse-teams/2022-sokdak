@@ -1,16 +1,12 @@
 import { useInfiniteQuery, QueryKey, UseInfiniteQueryOptions } from 'react-query';
 
-import axios, { AxiosResponse, AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 
+import { GetSearchPostsResponse, requestGetSearchPosts } from '@/api/post';
 import QUERY_KEYS from '@/constants/queries';
 
 type Query = string;
 type Size = number;
-
-interface ResponseData {
-  posts: Post[];
-  lastPage: boolean;
-}
 
 const useSearchPosts = ({
   storeCode,
@@ -18,29 +14,22 @@ const useSearchPosts = ({
 }: {
   storeCode: [Query, Size];
   options?: UseInfiniteQueryOptions<
-    AxiosResponse<ResponseData>,
+    GetSearchPostsResponse,
     AxiosError,
     Post,
-    AxiosResponse<ResponseData>,
+    GetSearchPostsResponse,
     [QueryKey, Query, Size]
   >;
 }) =>
   useInfiniteQuery(
     [QUERY_KEYS.POSTS, ...storeCode],
-    ({ pageParam = 0, queryKey: [, query, size] }) =>
-      axios.get(
-        `/posts?query=${query
-          .replaceAll(' ', '%7C')
-          .replaceAll('|', '%7C')
-          .replaceAll('+', '%7C')}&size=${size}&page=${pageParam}`,
-      ),
+    ({ pageParam = 0, queryKey: [, query, size] }) => requestGetSearchPosts(query, size, pageParam),
     {
       select: data => ({
-        pages: data.pages.flatMap((page: AxiosResponse) => page.data.posts),
+        pages: data.pages.flatMap((page: GetSearchPostsResponse) => page.posts),
         pageParams: [...data.pageParams, data.pageParams.length],
       }),
-      getNextPageParam: (lastPage, allPages) => (lastPage.data.lastPage ? undefined : allPages.length),
-      suspense: true,
+      getNextPageParam: (lastPage, allPages) => (lastPage.lastPage ? undefined : allPages.length),
       ...options,
     },
   );

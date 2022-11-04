@@ -8,11 +8,11 @@ import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpGetWithAutho
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPost;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPutWithAuthorization;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getChrisToken;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getToken;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.getTokens;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static com.wooteco.sokdak.util.fixture.PostFixture.addNewPost;
+import static com.wooteco.sokdak.util.fixture.TokenFixture.getChrisToken;
+import static com.wooteco.sokdak.util.fixture.TokenFixture.getToken;
+import static com.wooteco.sokdak.util.fixture.TokenFixture.getTokens;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;

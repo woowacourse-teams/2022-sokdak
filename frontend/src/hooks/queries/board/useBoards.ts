@@ -1,20 +1,14 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
+import { requestGetBoards } from '@/api/boards';
 import QUERY_KEYS from '@/constants/queries';
 
-interface BoardsResponse {
-  boards: Board[];
-}
-
-const useBoards = ({
-  options,
-}: {
-  options?: UseQueryOptions<AxiosResponse<BoardsResponse>, AxiosError, Board[], string>;
-}) =>
-  useQuery(QUERY_KEYS.BOARDS, () => axios.get('/boards'), {
-    select: data => data.data.boards,
+const useBoards = ({ options }: { options?: UseQueryOptions<Board[], AxiosError, Board[], string> }) =>
+  useQuery(QUERY_KEYS.BOARDS, () => requestGetBoards(), {
+    staleTime: Infinity,
+    cacheTime: Infinity,
     ...options,
   });
 

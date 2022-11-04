@@ -44,7 +44,7 @@ const NicknameInput = ({
         }
       },
       onError(error) {
-        setError(error.response?.data.message!);
+        setError(error.message!);
         setIsAnimationActive(true);
       },
       enabled: false,

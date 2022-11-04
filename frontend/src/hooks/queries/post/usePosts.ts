@@ -1,7 +1,9 @@
 import { useInfiniteQuery, QueryKey, UseInfiniteQueryOptions } from 'react-query';
 
-import axios, { AxiosResponse, AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 
+import { requestGetPosts } from '@/api/post';
+import type { GetPostsResponse } from '@/api/post';
 import QUERY_KEYS from '@/constants/queries';
 
 type BoardId = string | number;
@@ -12,25 +14,19 @@ const usePosts = ({
   options,
 }: {
   storeCode: [BoardId, Size];
-  options?: UseInfiniteQueryOptions<
-    AxiosResponse<{ posts: Post; lastPage: boolean }>,
-    AxiosError,
-    Post,
-    AxiosResponse<{ posts: Post; lastPage: boolean }>,
-    [QueryKey, BoardId, Size]
-  >;
+  options?: UseInfiniteQueryOptions<GetPostsResponse, AxiosError, Post, GetPostsResponse, [QueryKey, BoardId, Size]>;
 }) =>
   useInfiniteQuery(
     [QUERY_KEYS.POSTS, ...storeCode],
-    ({ pageParam = 0, queryKey: [, boardId, size] }) =>
-      axios.get(`/boards/${boardId}/posts?size=${size}&page=${pageParam}`),
+    ({ pageParam = 0, queryKey: [, boardId, size] }) => requestGetPosts(String(boardId), size, pageParam),
     {
       select: data => ({
-        pages: data.pages.flatMap((page: AxiosResponse) => page.data.posts),
+        pages: data.pages.flatMap((page: GetPostsResponse) => page.posts),
         pageParams: [...data.pageParams, data.pageParams.length],
       }),
       enabled: false,
-      getNextPageParam: (lastPage, allPages) => (lastPage.data.lastPage ? undefined : allPages.length),
+      getNextPageParam: (lastPage, allPages) => (lastPage.lastPage ? undefined : allPages.length),
+      staleTime: 1000 * 20,
       ...options,
     },
   );

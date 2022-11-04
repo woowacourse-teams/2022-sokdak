@@ -1,41 +1,25 @@
 import { useQueryClient, useMutation, UseMutationOptions } from 'react-query';
 
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
 import useSnackbar from '@/hooks/useSnackbar';
 
-import authFetcher from '@/apis';
+import { createNewPost } from '@/api/post';
+import type { CreateNewPostRequest } from '@/api/post';
 import QUERY_KEYS, { MUTATION_KEY } from '@/constants/queries';
 import SNACKBAR_MESSAGE from '@/constants/snackbar';
 
-const useCreatePost = (
-  options?: UseMutationOptions<
-    AxiosResponse<string, string>,
-    AxiosError,
-    Pick<Post, 'title' | 'content' | 'imageName'> & {
-      hashtags: string[];
-      anonymous?: boolean;
-      boardId?: number;
-    }
-  >,
-) => {
+interface UseCreatePostProps extends CreateNewPostRequest {
+  boardId: number;
+}
+
+const useCreatePost = (options?: UseMutationOptions<null, AxiosError, CreateNewPostRequest>) => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
 
   return useMutation(
-    ({
-      title,
-      content,
-      hashtags,
-      anonymous,
-      boardId,
-      imageName,
-    }: Pick<Post, 'title' | 'content' | 'imageName'> & {
-      hashtags: string[];
-      anonymous?: boolean;
-      boardId?: string | number;
-    }): Promise<AxiosResponse<string, string>> =>
-      authFetcher.post(`/boards/${boardId}/posts`, {
+    ({ title, content, hashtags, anonymous, boardId, imageName }: UseCreatePostProps) =>
+      createNewPost(boardId, {
         title,
         content,
         hashtags,

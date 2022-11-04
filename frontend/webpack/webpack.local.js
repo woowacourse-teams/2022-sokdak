@@ -7,6 +7,8 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 require('dotenv').config();
 
 module.exports = merge(common, {
+  mode: 'development',
+  devtool: 'eval-cheap-source-map',
   plugins: [
     new DefinePlugin({
       'process.env.API_URL': JSON.stringify(process.env.API_URL),
@@ -26,5 +28,8 @@ module.exports = merge(common, {
     devMiddleware: {
       stats: 'errors-only',
     },
+  },
+  optimization: {
+    minimize: false,
   },
 });

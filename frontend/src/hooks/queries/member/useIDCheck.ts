@@ -1,7 +1,8 @@
 import { useQuery, QueryKey, UseQueryOptions } from 'react-query';
 
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 
+import { requestGetIDCheck } from '@/api/member';
 import QUERY_KEYS from '@/constants/queries';
 
 const useIDCheck = ({
@@ -9,13 +10,15 @@ const useIDCheck = ({
   options,
 }: {
   storeCode: QueryKey;
-  options?: UseQueryOptions<AxiosResponse<{ unique: boolean }>, AxiosError<{ message: string }>, boolean, QueryKey[]>;
+  options?: UseQueryOptions<boolean, AxiosError<Error>, boolean, QueryKey[]>;
 }) =>
   useQuery(
     [QUERY_KEYS.MEMBER_ID_CHECK, storeCode],
-    ({ queryKey: [, username] }) => axios.get(`members/signup/exists?username=${username}`),
+    ({ queryKey: [, username] }) => requestGetIDCheck(String(username)),
     {
-      select: data => data.data.unique,
+      cacheTime: 0,
+      staleTime: 0,
+      suspense: false,
       ...options,
     },
   );

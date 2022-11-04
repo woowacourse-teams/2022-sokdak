@@ -87,10 +87,7 @@ jobs:
       - name: get analysis results
         id: analysis_results
         run: |
-          RESPONSE=$(curl -X GET -G '${{ env.SONARQUBE_AUTH_URL }}/api/measures/search' \
-          -d projectKeys=sokdak \
-          -d metricKeys=bugs,vulnerabilities,security_hotspots,code_smells,coverage,tests,test_success_density,test_failures,test_errors,skipped_tests,duplicated_lines_density,duplicated_files,duplicated_blocks \
-          | jq '.measures')
+          RESPONSE=$(curl -X GET -G '${{ env.SONARQUBE_AUTH_URL }}/api/measures/search' -d projectKeys=sokdak -d metricKeys=bugs,vulnerabilities,security_hotspots,code_smells,coverage,tests,test_success_density,test_failures,test_errors,skipped_tests,duplicated_lines_density,duplicated_files,duplicated_blocks | jq '.measures')
           echo "$RESPONSE" | jq -c '.[] | .' | while read -r data;
           do
             METRIC=$(echo $data | jq -r '.metric')

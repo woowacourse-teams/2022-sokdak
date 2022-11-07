@@ -99,8 +99,7 @@ public class AdminService {
 
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFoundException::new);
-        postReportRepository.deleteAllByPostId(post.getId());
-        post.deleteAllReports();
+        postReportService.deleteAllPostReport(post);
     }
 
     public PostReportsResponse findAllPostReports(AuthInfo authInfo) {

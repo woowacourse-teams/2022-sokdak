@@ -70,4 +70,10 @@ public class PostReportService {
             notificationService.notifyPostReport(post);
         }
     }
+
+    @Transactional
+    public void deleteAllPostReport(Post post) {
+        postReportRepository.deleteAllByPostId(post.getId());
+        post.deleteAllReports();
+    }
 }

@@ -134,11 +134,12 @@ class PostTest {
         List<Member> members = getMembersForReport();
         int blockCondition = 5;
         for (int i = 0; i < blockCondition; ++i) {
-            PostReport.builder()
-                    .post(post)
+            PostReport postReport = PostReport.builder()
+                    .postId(post.getId())
                     .reporter(members.get(i))
                     .reportMessage("신고")
                     .build();
+            post.addReport(postReport);
         }
 
         assertAll(
@@ -176,7 +177,7 @@ class PostTest {
         int unblockCondition = 4;
         for (int i = 0; i < unblockCondition; ++i) {
             PostReport.builder()
-                    .post(post)
+                    .postId(post.getId())
                     .reporter(members.get(i))
                     .reportMessage("신고")
                     .build();
@@ -204,7 +205,7 @@ class PostTest {
     @MethodSource("hasReportByMemberArguments")
     void hasReportByMember(Member reporter, Member member, boolean expected) {
         PostReport postReport = PostReport.builder()
-                .post(post)
+                .postId(post.getId())
                 .reporter(reporter)
                 .reportMessage("report")
                 .build();

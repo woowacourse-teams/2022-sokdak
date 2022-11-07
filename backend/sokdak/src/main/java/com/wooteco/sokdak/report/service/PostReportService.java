@@ -50,11 +50,13 @@ public class PostReportService {
     }
 
     private PostReport createPostReport(Post post, Member member, String message) {
-        return PostReport.builder()
-                .post(post)
+        PostReport postReport = PostReport.builder()
+                .postId(post.getId())
                 .reporter(member)
                 .reportMessage(message)
                 .build();
+        post.addReport(postReport);
+        return postReport;
     }
 
     private void checkMemberAlreadyReport(Post post, Member member) {

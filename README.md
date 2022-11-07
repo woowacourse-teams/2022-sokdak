@@ -58,9 +58,7 @@
   
 **Language |** Java 11
 
-**Framework |** Spring 5.3.21 (Spring Boot 2.7.1, Spring MVC 5.3.21)
-
-**Data(RDBMS) |** JPA Hibernate 5.6.9 (Spring Data JPA 2.7.1)
+**Framework |** Spring 5.3.21 (Spring Boot 2.7.1, Spring MVC 5.3.21, Spring Data JPA 2.7.1)
 
 **Build Tool |** Gradle 7.4.1
 
@@ -92,9 +90,6 @@
 
 ### CI/CD
 ![CICD](https://user-images.githubusercontent.com/64204666/196035345-24e44fa2-57c8-4178-99c8-5955445c0a17.png)
-## 📂 업데이트 내역
-
-// 채워주세요
 
 ## 😎 우리가 협업하는 법
 

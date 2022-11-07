@@ -17,7 +17,6 @@ const useIDCheck = ({
     ({ queryKey: [, username] }) => requestGetIDCheck(String(username)),
     {
       cacheTime: 0,
-      staleTime: 0,
       suspense: false,
       ...options,
     },

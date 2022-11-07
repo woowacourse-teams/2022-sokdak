@@ -32,7 +32,7 @@ function decode(str: string) {
   }
 }
 
-export function parseJwt(token: string) {
+export function parseJwt(token: string): AccessToken | never {
   if (typeof token !== 'string') {
     throw new Error('Invalid token specified');
   }
@@ -43,6 +43,6 @@ export function parseJwt(token: string) {
   }
 }
 
-export const isExpired = (data: { exp: number; iat: number }) => {
+export const isExpired = (data: AccessToken) => {
   return new Date(data.exp * 1000) < new Date();
 };

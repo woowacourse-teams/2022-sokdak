@@ -10,19 +10,8 @@ const AuthContext = React.createContext<AuthContextValue>({} as AuthContextValue
 
 export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const accessToken = localStorage.getItem(STORAGE_KEY.ACCESS_TOKEN);
-  const [isLogin, setIsLogin] = useState(() => {
-    if (accessToken) {
-      return true;
-    }
-    return false;
-  });
-
-  const [username, setUsername] = useState(() => {
-    if (accessToken) {
-      return parseJwt(accessToken)?.nickname!;
-    }
-    return '';
-  });
+  const [isLogin, setIsLogin] = useState(!!accessToken);
+  const [username, setUsername] = useState(accessToken ? parseJwt(accessToken).nickname : '');
 
   return <AuthContext.Provider value={{ isLogin, setIsLogin, username, setUsername }}>{children}</AuthContext.Provider>;
 };

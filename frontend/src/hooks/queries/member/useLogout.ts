@@ -31,7 +31,7 @@ const useLogout = (options?: UseQueryOptions<null, AxiosError<Error>, null, stri
     },
     enabled: false,
     cacheTime: 0,
-    staleTime: 0,
+    suspense: false,
   });
 };
 

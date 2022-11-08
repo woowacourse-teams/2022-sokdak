@@ -18,7 +18,9 @@ runJenniferFront();
 
 if (process.env.MODE === 'LOCAL:MSW') {
   const { worker } = require('./mocks/worker');
-  worker.start();
+  worker.start({
+    onUnhandledRequest: 'bypass',
+  });
 }
 
 if (process.env.MODE !== 'LOCAL:MSW' && 'serviceWorker' in navigator) {
@@ -34,7 +36,7 @@ if (process.env.MODE !== 'LOCAL:MSW' && 'serviceWorker' in navigator) {
   });
 }
 
-const queryClient = new QueryClient({ defaultOptions: { queries: { suspense: true } } });
+const queryClient = new QueryClient({ defaultOptions: { queries: { suspense: true, useErrorBoundary: true } } });
 
 const rootNode = document.getElementById('root') as Element;
 

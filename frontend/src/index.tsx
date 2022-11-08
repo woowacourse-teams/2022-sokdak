@@ -4,6 +4,8 @@ import { QueryClientProvider, QueryClient } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { BrowserRouter } from 'react-router-dom';
 
+import { AxiosError } from 'axios';
+
 import { AuthContextProvider } from './context/Auth';
 import { PaginationContextProvider } from './context/Pagination';
 import { SnackBarContextProvider } from './context/Snackbar';
@@ -36,7 +38,14 @@ if (process.env.MODE !== 'LOCAL:MSW' && 'serviceWorker' in navigator) {
   });
 }
 
-const queryClient = new QueryClient({ defaultOptions: { queries: { suspense: true, useErrorBoundary: true } } });
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      suspense: true,
+      useErrorBoundary: error => error instanceof AxiosError && error.response?.status! >= 500,
+    },
+  },
+});
 
 const rootNode = document.getElementById('root') as Element;
 

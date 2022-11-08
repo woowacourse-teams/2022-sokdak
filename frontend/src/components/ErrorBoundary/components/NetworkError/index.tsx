@@ -11,7 +11,7 @@ const NetworkError = ({ className, errorBoundaryReset }: NetworkErrorProps) => {
   const queryClient = useQueryClient();
 
   const refetch = () => {
-    queryClient.refetchQueries();
+    queryClient.refetchQueries({ inactive: true });
     errorBoundaryReset();
   };
 

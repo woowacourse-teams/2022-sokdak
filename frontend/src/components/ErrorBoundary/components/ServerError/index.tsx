@@ -12,7 +12,7 @@ const ServerError = ({ className, serverMessage, errorBoundaryReset }: ServerErr
   const queryClient = useQueryClient();
 
   const refetch = () => {
-    queryClient.refetchQueries();
+    queryClient.refetchQueries({ inactive: true });
     errorBoundaryReset();
   };
 

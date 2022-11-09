@@ -78,12 +78,6 @@ public class DatabaseCleaner implements InitializingBean {
                 "insert into member (username, nickname, password, role_type) values ('42aef2f386567bd5a6a3c753ad0b0debc280a3b6231c084618992fc4c91b7644', 'applicantNickname', '6297d64078fc9abcfe37d0e2c910d4798bb4c04502d7dd1207f558860c2b382e', 'APPLICANT');")
                 .executeUpdate();
 
-        for (int i = 1; i <= 10; i++) {
-            entityManager.createNativeQuery(
-                    "insert into new_notification_existence (member_id, existence) values (" + i + ", false);")
-                    .executeUpdate();
-        }
-
         //티켓 추가
         entityManager.createNativeQuery(
                 "insert into ticket (serial_number, used) values ('21f46568bf6002c23843d198af30bb2bc8123695bd3d12ce86e0fc35bc5d3279', false);")

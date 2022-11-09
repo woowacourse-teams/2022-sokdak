@@ -15,7 +15,6 @@ import com.wooteco.sokdak.notification.dto.NewNotificationCheckResponse;
 import com.wooteco.sokdak.notification.dto.NotificationResponse;
 import com.wooteco.sokdak.notification.dto.NotificationsResponse;
 import com.wooteco.sokdak.notification.excpetion.NotificationNotFoundException;
-import com.wooteco.sokdak.notification.repository.NewNotificationExistenceRepository;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import java.util.List;
@@ -30,12 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
-    private final NewNotificationExistenceRepository newNotificationExistenceRepository;
 
-    public NotificationService(NotificationRepository notificationRepository,
-                               NewNotificationExistenceRepository newNotificationExistenceRepository) {
+    public NotificationService(NotificationRepository notificationRepository) {
         this.notificationRepository = notificationRepository;
-        this.newNotificationExistenceRepository = newNotificationExistenceRepository;
     }
 
     @Transactional
@@ -75,12 +71,11 @@ public class NotificationService {
                 .comment(comment)
                 .build();
         notificationRepository.save(notification);
-        newNotificationExistenceRepository.update(member.getId(), true);
     }
 
     public NewNotificationCheckResponse checkNewNotification(AuthInfo authInfo) {
         return new NewNotificationCheckResponse(
-                newNotificationExistenceRepository.existsByMemberIdAndExistenceIsTrue(authInfo.getId()));
+                notificationRepository.existsByMemberIdAndInquiredIsFalse(authInfo.getId()));
     }
 
     @Transactional
@@ -91,8 +86,6 @@ public class NotificationService {
         if (foundNotifications.hasContent()) {
             inquireNotification(notifications);
         }
-        boolean newNotificationExistence = notificationRepository.existsByMemberIdAndInquiredIsFalse(authInfo.getId());
-        newNotificationExistenceRepository.update(authInfo.getId(), newNotificationExistence);
         return findNotifications(notifications, foundNotifications.isLast());
     }
 

@@ -16,8 +16,6 @@ import com.wooteco.sokdak.member.exception.InvalidSignupFlowException;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.exception.PasswordConfirmationException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
-import com.wooteco.sokdak.notification.domain.NewNotificationExistence;
-import com.wooteco.sokdak.notification.repository.NewNotificationExistenceRepository;
 import com.wooteco.sokdak.ticket.service.RegisterService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,16 +27,13 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final RegisterService registerService;
     private final EncryptorI encryptor;
-    private final NewNotificationExistenceRepository newNotificationExistenceRepository;
 
     public MemberService(MemberRepository memberRepository,
                          RegisterService registerService,
-                         EncryptorI encryptor,
-                         NewNotificationExistenceRepository newNotificationExistenceRepository) {
+                         EncryptorI encryptor) {
         this.memberRepository = memberRepository;
         this.registerService = registerService;
         this.encryptor = encryptor;
-        this.newNotificationExistenceRepository = newNotificationExistenceRepository;
     }
 
     public UniqueResponse checkUniqueUsername(String username) {
@@ -61,9 +56,8 @@ public class MemberService {
                 .password(Password.of(encryptor, signupRequest.getPassword()))
                 .nickname(new Nickname(signupRequest.getNickname()))
                 .build();
-        Member savedMember = memberRepository.save(member);
+        memberRepository.save(member);
         registerService.useTicket(signupRequest.getEmail());
-        newNotificationExistenceRepository.save(new NewNotificationExistence(savedMember.getId(), false));
     }
 
     @Transactional
@@ -73,8 +67,7 @@ public class MemberService {
         Member member = Member.applicant(Username.of(encryptor, signupRequest.getUsername()),
                 Password.of(encryptor, signupRequest.getPassword()),
                 new Nickname(signupRequest.getNickname()));
-        Member savedMember = memberRepository.save(member);
-        newNotificationExistenceRepository.save(new NewNotificationExistence(savedMember.getId(), false));
+        memberRepository.save(member);
     }
 
     private void validate(SignupRequest signupRequest) {

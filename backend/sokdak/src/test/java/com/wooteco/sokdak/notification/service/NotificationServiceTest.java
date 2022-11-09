@@ -17,12 +17,10 @@ import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
-import com.wooteco.sokdak.notification.domain.NewNotificationExistence;
 import com.wooteco.sokdak.notification.domain.Notification;
 import com.wooteco.sokdak.notification.dto.NewNotificationCheckResponse;
 import com.wooteco.sokdak.notification.dto.NotificationResponse;
 import com.wooteco.sokdak.notification.dto.NotificationsResponse;
-import com.wooteco.sokdak.notification.repository.NewNotificationExistenceRepository;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
@@ -61,9 +59,6 @@ class NotificationServiceTest extends ServiceTest {
 
     @Autowired
     private NotificationRepository notificationRepository;
-
-    @Autowired
-    private NewNotificationExistenceRepository newNotificationExistenceRepository;
 
     private Member member2;
     private Post post;
@@ -220,7 +215,6 @@ class NotificationServiceTest extends ServiceTest {
     @ParameterizedTest
     @CsvSource({"3, true", "4, false"})
     void existsNewNotification(Long memberId, boolean expected) {
-        newNotificationExistenceRepository.save(new NewNotificationExistence(memberId, false));
         notificationService.notifyPostReport(post);
         AuthInfo authInfo = new AuthInfo(memberId, "USER", VALID_NICKNAME_TEXT);
 
@@ -232,7 +226,6 @@ class NotificationServiceTest extends ServiceTest {
     @DisplayName("알림 목록을 반환하고 조회한 알림으로 변경하고 새 알림을 존재하지 않는 상태로 변경한다.")
     @Test
     void findNotifications() {
-        newNotificationExistenceRepository.save(new NewNotificationExistence(AUTH_INFO.getId(), false));
         Notification notification2 = Notification.builder()
                 .member(member)
                 .notificationType(POST_REPORT)

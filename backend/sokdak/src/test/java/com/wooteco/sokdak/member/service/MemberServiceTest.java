@@ -14,7 +14,6 @@ import com.wooteco.sokdak.member.exception.DuplicateNicknameException;
 import com.wooteco.sokdak.member.exception.InvalidNicknameException;
 import com.wooteco.sokdak.member.repository.AuthCodeRepository;
 import com.wooteco.sokdak.member.repository.MemberRepository;
-import com.wooteco.sokdak.notification.repository.NewNotificationExistenceRepository;
 import com.wooteco.sokdak.ticket.domain.AuthCode;
 import com.wooteco.sokdak.util.ServiceTest;
 import org.junit.jupiter.api.DisplayName;
@@ -34,9 +33,6 @@ class MemberServiceTest extends ServiceTest {
 
     @Autowired
     private MemberRepository memberRepository;
-
-    @Autowired
-    private NewNotificationExistenceRepository newNotificationExistenceRepository;
 
     @DisplayName("이미 존재하는 username이면 uniqueResponse의 unique를 false, 이외는 true를 반환한다.")
     @ParameterizedTest
@@ -60,11 +56,8 @@ class MemberServiceTest extends ServiceTest {
                 "testJoshNickname", "ABCDEF", "Abcd123!@", "Abcd123!@");
         memberService.signUp(signupRequest);
 
-        assertAll(
-                () -> assertThat(memberRepository.findByUsernameValueAndPasswordValue(ENCRYPTOR.encrypt("josh"),
-                        ENCRYPTOR.encrypt("Abcd123!@"))).isPresent(),
-                () -> assertThat(newNotificationExistenceRepository.findAll()).hasSize(11)
-        );
+        assertThat(memberRepository.findByUsernameValueAndPasswordValue(ENCRYPTOR.encrypt("josh"),
+                ENCRYPTOR.encrypt("Abcd123!@"))).isPresent();
     }
 
     @DisplayName("지원자로 회원가입 조건을 모두 만족하면 회원가입에 성공한다.")
@@ -77,10 +70,7 @@ class MemberServiceTest extends ServiceTest {
         Member member = memberRepository.findByUsernameValueAndPasswordValue(
                 ENCRYPTOR.encrypt(signupRequest.getUsername()),
                 ENCRYPTOR.encrypt(signupRequest.getPassword())).get();
-        assertAll(
-                () -> assertThat(member.getRoleType()).isEqualTo(RoleType.APPLICANT),
-                () -> assertThat(newNotificationExistenceRepository.findAll()).hasSize(11)
-        );
+        assertThat(member.getRoleType()).isEqualTo(RoleType.APPLICANT);
     }
 
     @DisplayName("닉네임 수정 기능")

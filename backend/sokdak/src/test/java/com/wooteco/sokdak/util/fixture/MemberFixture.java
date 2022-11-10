@@ -24,18 +24,31 @@ public class MemberFixture {
     public static final Nickname VALID_NICKNAME = new Nickname("testNickname");
 
     public static final LoginRequest VALID_LOGIN_REQUEST = new LoginRequest(VALID_USERNAME_TEXT, VALID_PASSWORD_TEXT);
-    public static final LoginRequest APPLICANT_LOGIN_REQUEST = new LoginRequest(APPLICANT_USERNAME, VALID_PASSWORD_TEXT);
+    public static final LoginRequest APPLICANT_LOGIN_REQUEST = new LoginRequest(APPLICANT_USERNAME,
+            VALID_PASSWORD_TEXT);
     public static final LoginRequest INVALID_LOGIN_REQUEST = new LoginRequest("invalidUsername", "invalidPassword1!");
 
     public static final Long CHRIS_ID = 3L;
 
+    public static final Member CHRIS = Member.builder()
+            .id(1L)
+            .username(Username.of(ENCRYPTOR, "chris"))
+            .password(VALID_PASSWORD)
+            .nickname(new Nickname("chrisNickname"))
+            .build();
+
+    public static final Member JOSH = Member.builder()
+            .id(2L)
+            .username(Username.of(ENCRYPTOR, "josh"))
+            .password(VALID_PASSWORD)
+            .nickname(new Nickname("joshNickname"))
+            .build();
+
     public static List<Member> getMembersForReport() {
 
         return List.of(
-                Member.builder().id(1L).username(Username.of(ENCRYPTOR, "chris"))
-                        .password(VALID_PASSWORD).nickname(new Nickname("chrisNickname")).build(),
-                Member.builder().id(2L).username(Username.of(ENCRYPTOR, "josh"))
-                        .password(VALID_PASSWORD).nickname(new Nickname("joshNickname")).build(),
+                CHRIS,
+                JOSH,
                 Member.builder().id(3L).username(Username.of(ENCRYPTOR, "thor"))
                         .password(VALID_PASSWORD).nickname(new Nickname("thorNickname")).build(),
                 Member.builder().id(4L).username(Username.of(ENCRYPTOR, "hunch"))

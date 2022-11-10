@@ -3,7 +3,6 @@ package com.wooteco.sokdak.notification.service;
 import static com.wooteco.sokdak.notification.domain.NotificationType.COMMENT_REPORT;
 import static com.wooteco.sokdak.notification.domain.NotificationType.HOT_BOARD;
 import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_COMMENT;
-import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_REPLY;
 import static com.wooteco.sokdak.notification.domain.NotificationType.POST_REPORT;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME_TEXT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
@@ -92,122 +91,28 @@ class NotificationServiceTest extends ServiceTest {
         commentRepository.save(comment2);
     }
 
-    @DisplayName("새 댓글 알림을 등록한다.")
+    @DisplayName("알림을 등록한다.")
     @Test
     void notifyNewComment() {
-        notificationService.notifyCommentIfNotMine(member, post, comment);
-
-        List<Notification> notifications = notificationRepository.findNotificationsByMemberId(member.getId(), PAGEABLE)
-                .getContent();
-        Notification notification = notifications.get(0);
-
-        assertAll(
-                () -> assertThat(notifications).hasSize(1),
-                () -> assertThat(notification.getMember()).isEqualTo(member),
-                () -> assertThat(notification.getPost()).isEqualTo(post),
-                () -> assertThat(notification.getNotificationType()).isEqualTo(NEW_COMMENT),
-                () -> assertThat(notification.getContent()).isEqualTo(post.getTitle()),
-                () -> assertThat(notification.isInquired()).isFalse()
-        );
-    }
-
-    @DisplayName("자신의 게시글에 댓글을 동록하면 댓글 알림이 생성되지 않는다.")
-    @Test
-    void notifyNewComment_MyPostMyComment() {
-        notificationService.notifyCommentIfNotMine(member, post, comment2);
-
-        List<Notification> notifications = notificationRepository.findNotificationsByMemberId(member.getId(), PAGEABLE)
-                .getContent();
-
-        assertThat(notifications).isEmpty();
-    }
-
-    @DisplayName("댓글 신고 알림을 등록한다.")
-    @Test
-    void notifyCommentReport() {
-        notificationService.notifyCommentReport(post, comment);
-
-        Long memberId = comment.getMember()
-                .getId();
-        List<Notification> notifications = notificationRepository.findNotificationsByMemberId(memberId, PAGEABLE)
-                .getContent();
-        Notification notification = notifications.get(0);
-
-        assertAll(
-                () -> assertThat(notifications).hasSize(1),
-                () -> assertThat(notification.getMember()).isEqualTo(comment.getMember()),
-                () -> assertThat(notification.getPost()).isEqualTo(post),
-                () -> assertThat(notification.getNotificationType()).isEqualTo(COMMENT_REPORT),
-                () -> assertThat(notification.getContent()).isEqualTo("내용"),
-                () -> assertThat(notification.isInquired()).isFalse()
-        );
-    }
-
-    @DisplayName("게시글이 핫 게시판으로 이동했다는 알림을 등록한다.")
-    @Test
-    void notifyHotBoard() {
-        notificationService.notifyHotBoard(post);
-
-        List<Notification> notifications = notificationRepository.findNotificationsByMemberId(member.getId(), PAGEABLE)
-                .getContent();
-        Notification notification = notifications.get(0);
-
-        assertAll(
-                () -> assertThat(notifications).hasSize(1),
-                () -> assertThat(notification.getMember()).isEqualTo(member),
-                () -> assertThat(notification.getPost()).isEqualTo(post),
-                () -> assertThat(notification.getNotificationType()).isEqualTo(HOT_BOARD),
-                () -> assertThat(notification.getContent()).isEqualTo(VALID_POST_TITLE),
-                () -> assertThat(notification.isInquired()).isFalse()
-        );
-    }
-
-    @DisplayName("게시글 신고 알림을 등록한다.")
-    @Test
-    void notifyPostReport() {
-        notificationService.notifyPostReport(post);
-
-        List<Notification> notifications = notificationRepository.findNotificationsByMemberId(member.getId(), PAGEABLE)
-                .getContent();
-        Notification notification = notifications.get(0);
-
-        assertAll(
-                () -> assertThat(notifications).hasSize(1),
-                () -> assertThat(notification.getMember()).isEqualTo(member),
-                () -> assertThat(notification.getPost()).isEqualTo(post),
-                () -> assertThat(notification.getNotificationType()).isEqualTo(POST_REPORT),
-                () -> assertThat(notification.getContent()).isEqualTo(VALID_POST_TITLE),
-                () -> assertThat(notification.isInquired()).isFalse()
-        );
-    }
-
-    @DisplayName("대댓글 작성 알림을 등록한다.")
-    @Test
-    void notifyReplyIfNotAuthenticated() {
-        Comment reply = Comment.builder()
-                .post(post)
-                .parent(comment)
+        Notification notification = Notification.builder()
+                .notificationType(NEW_COMMENT)
                 .member(member)
-                .message("대댓글")
-                .nickname("닉네임")
+                .post(post)
+                .comment(comment)
                 .build();
-        commentRepository.save(reply);
-        Long memberId = comment.getMember()
-                .getId();
+        notificationService.notify(notification);
 
-        notificationService.notifyReplyIfNotMine(comment.getMember(), post, comment, reply);
-
-        List<Notification> notifications = notificationRepository.findNotificationsByMemberId(memberId, PAGEABLE)
+        List<Notification> notifications = notificationRepository.findNotificationsByMemberId(member.getId(), PAGEABLE)
                 .getContent();
-        Notification notification = notifications.get(0);
+        Notification savedNotification = notifications.get(0);
 
         assertAll(
                 () -> assertThat(notifications).hasSize(1),
-                () -> assertThat(notification.getMember()).isEqualTo(member2),
-                () -> assertThat(notification.getPost()).isEqualTo(post),
-                () -> assertThat(notification.getNotificationType()).isEqualTo(NEW_REPLY),
-                () -> assertThat(notification.getContent()).isEqualTo(comment.getMessage()),
-                () -> assertThat(notification.isInquired()).isFalse()
+                () -> assertThat(savedNotification.getMember()).isEqualTo(member),
+                () -> assertThat(savedNotification.getPost()).isEqualTo(post),
+                () -> assertThat(savedNotification.getNotificationType()).isEqualTo(NEW_COMMENT),
+                () -> assertThat(savedNotification.getContent()).isEqualTo(post.getTitle()),
+                () -> assertThat(savedNotification.isInquired()).isFalse()
         );
     }
 

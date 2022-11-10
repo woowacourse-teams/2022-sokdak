@@ -1,8 +1,10 @@
 package com.wooteco.sokdak.util.fixture;
 
 import static com.wooteco.sokdak.util.fixture.HttpMethodFixture.httpPostWithAuthorization;
+import static com.wooteco.sokdak.util.fixture.MemberFixture.CHRIS;
 import static com.wooteco.sokdak.util.fixture.TokenFixture.getChrisToken;
 
+import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import java.util.List;
 
@@ -24,6 +26,13 @@ public class PostFixture {
 
     public static final Long BLOCKED_COUNT = 5L;
     public static final String SERIAL_NUMBER = "asd23456";
+
+    public static final Post CHRIS_POST = Post.builder()
+            .title(VALID_POST_TITLE)
+            .content(VALID_POST_CONTENT)
+            .member(CHRIS)
+            .imageName(" ")
+            .build();
 
     public static Long addNewPost() {
         NewPostRequest newPostRequest = new NewPostRequest(VALID_POST_TITLE, VALID_POST_CONTENT, false,

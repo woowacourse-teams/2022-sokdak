@@ -35,6 +35,11 @@ public class NotificationService {
     }
 
     @Transactional
+    public void notify(Notification notification) {
+        notificationRepository.save(notification);
+    }
+
+    @Transactional
     public void notifyCommentIfNotMine(Member member, Post post, Comment comment) {
         if (!comment.isAuthorized(member.getId())) {
             notify(member, post, comment, NEW_COMMENT);

@@ -1,9 +1,5 @@
 package com.wooteco.sokdak.notification.service;
 
-import static com.wooteco.sokdak.notification.domain.NotificationType.COMMENT_REPORT;
-import static com.wooteco.sokdak.notification.domain.NotificationType.HOT_BOARD;
-import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_COMMENT;
-import static com.wooteco.sokdak.notification.domain.NotificationType.POST_REPORT;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME_TEXT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
@@ -91,36 +87,12 @@ class NotificationServiceTest extends ServiceTest {
         commentRepository.save(comment2);
     }
 
-    @DisplayName("알림을 등록한다.")
-    @Test
-    void notifyNewComment() {
-        Notification notification = Notification.builder()
-                .notificationType(NEW_COMMENT)
-                .member(member)
-                .post(post)
-                .comment(comment)
-                .build();
-        notificationService.notify(notification);
-
-        List<Notification> notifications = notificationRepository.findNotificationsByMemberId(member.getId(), PAGEABLE)
-                .getContent();
-        Notification savedNotification = notifications.get(0);
-
-        assertAll(
-                () -> assertThat(notifications).hasSize(1),
-                () -> assertThat(savedNotification.getMember()).isEqualTo(member),
-                () -> assertThat(savedNotification.getPost()).isEqualTo(post),
-                () -> assertThat(savedNotification.getNotificationType()).isEqualTo(NEW_COMMENT),
-                () -> assertThat(savedNotification.getContent()).isEqualTo(post.getTitle()),
-                () -> assertThat(savedNotification.isInquired()).isFalse()
-        );
-    }
-
     @DisplayName("새로 등록된 알림이 있는지 반환한다.")
     @ParameterizedTest
     @CsvSource({"3, true", "4, false"})
     void existsNewNotification(Long memberId, boolean expected) {
-        notificationService.notifyPostReport(post);
+        Notification notification = Notification.newComment(member.getId(), comment.getId());
+        notificationRepository.save(notification);
         AuthInfo authInfo = new AuthInfo(memberId, "USER", VALID_NICKNAME_TEXT);
 
         NewNotificationCheckResponse newNotificationCheckResponse = notificationService.checkNewNotification(authInfo);
@@ -131,19 +103,9 @@ class NotificationServiceTest extends ServiceTest {
     @DisplayName("알림 목록을 반환하고 조회한 알림으로 변경하고 새 알림을 존재하지 않는 상태로 변경한다.")
     @Test
     void findNotifications() {
-        Notification notification2 = Notification.builder()
-                .member(member)
-                .notificationType(POST_REPORT)
-                .post(post)
-                .build();
-        Notification notification3 = Notification.builder()
-                .member(member)
-                .notificationType(NEW_COMMENT)
-                .post(post)
-                .comment(comment)
-                .build();
-        notificationRepository.save(notification2);
-        notificationRepository.save(notification3);
+        Notification notification2 = Notification.postReport(member.getId(), post.getId());
+        Notification notification3 = Notification.newComment(member.getId(), post.getId());
+        notificationRepository.saveAll(List.of(notification2, notification3));
 
         NotificationsResponse notificationsResponse = notificationService
                 .findNotifications(AUTH_INFO, PageRequest.of(0, 2, Sort.by("createdAt").descending()));
@@ -166,21 +128,10 @@ class NotificationServiceTest extends ServiceTest {
     @DisplayName("댓글에 해당하는 알림들을 삭제한다.")
     @Test
     void deleteCommentNotification() {
-        Notification notification1 = Notification.builder()
-                .notificationType(COMMENT_REPORT)
-                .post(post)
-                .comment(comment)
-                .member(member)
-                .build();
-        Notification notification2 = Notification.builder()
-                .notificationType(COMMENT_REPORT)
-                .post(post)
-                .comment(comment)
-                .member(member)
-                .build();
+        Notification notification1 = Notification.commentReport(member.getId(), post.getId(), comment.getId());
+        Notification notification2 = Notification.commentReport(member.getId(), post.getId(), comment.getId());
 
-        notificationRepository.save(notification1);
-        notificationRepository.save(notification2);
+        notificationRepository.saveAll(List.of(notification1, notification2));
 
         em.clear();
 
@@ -200,19 +151,8 @@ class NotificationServiceTest extends ServiceTest {
                 .message("내용")
                 .build();
         commentRepository.save(comment3);
-        Notification notification1 = Notification.builder()
-                .notificationType(NEW_COMMENT)
-                .post(post)
-                .comment(comment)
-                .member(member)
-                .build();
-        Notification notification2 = Notification.builder()
-                .notificationType(NEW_COMMENT)
-                .post(post)
-                .comment(comment3)
-                .member(member)
-                .build();
-
+        Notification notification1 = Notification.newComment(member.getId(), post.getId());
+        Notification notification2 = Notification.newComment(member.getId(), post.getId());
         notificationRepository.save(notification1);
         notificationRepository.save(notification2);
 
@@ -227,11 +167,7 @@ class NotificationServiceTest extends ServiceTest {
     @DisplayName("알림을 삭제한다.")
     @Test
     void deleteNotification() {
-        Notification notification = Notification.builder()
-                .member(member)
-                .notificationType(HOT_BOARD)
-                .post(post)
-                .build();
+        Notification notification = Notification.postHotBoard(member.getId(), post.getId());
         notificationRepository.save(notification);
 
         notificationService.deleteNotification(AUTH_INFO, notification.getId());

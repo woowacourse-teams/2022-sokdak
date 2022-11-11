@@ -2,7 +2,6 @@ package com.wooteco.sokdak.notification.repository;
 
 import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_COMMENT;
 import static com.wooteco.sokdak.notification.domain.NotificationType.POST_REPORT;
-import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_PASSWORD;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -71,13 +70,29 @@ class NotificationRepositoryTest extends RepositoryTest {
                 .nickname("닉네임")
                 .build();
         commentRepository.save(comment);
-        notification = Notification.builder()
-                .member(member1)
-                .post(post)
-                .comment(comment)
-                .notificationType(NEW_COMMENT)
-                .build();
+        notification = Notification.newComment(member1.getId(), post.getId());
         notificationRepository.save(notification);
+    }
+
+    @DisplayName("알림들의 id를 받아 조회 여부를 true로 변경한다.")
+    @Test
+    void inquireNotificationByIds() {
+        Long memberId = 1L;
+        Long postId = 1L;
+        Notification notification2 = Notification.newComment(memberId, postId);
+        Notification notification3 = Notification.postReport(memberId, postId);
+        notificationRepository.saveAll(List.of(notification2, notification3));
+        em.clear();
+
+        notificationRepository.inquireNotificationByIds(
+                List.of(notification.getId(), notification2.getId(), notification3.getId()));
+
+        List<Notification> notifications = notificationRepository
+                .findNotificationsByMemberId(member1.getId(), Pageable.ofSize(3))
+                .getContent();
+        boolean actual = notifications.stream()
+                .allMatch(Notification::isInquired);
+        assertThat(actual).isTrue();
     }
 
     @DisplayName("회원이 조회하지 않은 알림이 존재하는지 반환")
@@ -91,31 +106,10 @@ class NotificationRepositoryTest extends RepositoryTest {
     @DisplayName("회원에 따른 알림을 반환한다.")
     @Test
     void findNotificationsByMemberId() {
-        Member member3 = Member.builder()
-                .username(Username.of(encryptor, "east"))
-                .password(VALID_PASSWORD)
-                .nickname(new Nickname("eastNickname"))
-                .build();
-        memberRepository.save(member3);
-        Comment comment2 = Comment.builder()
-                .post(post)
-                .member(member3)
-                .message("댓글2")
-                .nickname("깔깔")
-                .build();
-        commentRepository.save(comment2);
-        Notification notification2 = Notification.builder()
-                .member(member1)
-                .post(post)
-                .comment(comment2)
-                .notificationType(NEW_COMMENT)
-                .build();
+        Long memberId = 1L;
+        Notification notification2 = Notification.newComment(memberId, 1L);
         notificationRepository.save(notification2);
-        Notification notification3 = Notification.builder()
-                .member(member1)
-                .post(post)
-                .notificationType(POST_REPORT)
-                .build();
+        Notification notification3 = Notification.postReport(memberId, 2L);
         notificationRepository.save(notification3);
         PageRequest pageRequest = PageRequest.of(0, 2, Sort.by("createdAt").descending());
 
@@ -125,45 +119,9 @@ class NotificationRepositoryTest extends RepositoryTest {
         assertAll(
                 () -> assertThat(notifications.isLast()).isFalse(),
                 () -> assertThat(notifications.getContent().get(0).getNotificationType()).isEqualTo(POST_REPORT),
-                () -> assertThat(notifications.getContent().get(0).getContent()).isEqualTo(post.getTitle()),
+                () -> assertThat(notifications.getContent().get(0).getPostId()).isEqualTo(2L),
                 () -> assertThat(notifications.getContent().get(1).getNotificationType()).isEqualTo(NEW_COMMENT),
-                () -> assertThat(notifications.getContent().get(1).getContent()).isEqualTo(post.getTitle())
+                () -> assertThat(notifications.getContent().get(1).getPostId()).isEqualTo(1L)
         );
-    }
-
-    @DisplayName("알림들의 id를 받아 조회 여부를 true로 변경한다.")
-    @Test
-    void inquireNotificationByIds() {
-        Comment comment2 = Comment.builder()
-                .post(post)
-                .member(member2)
-                .message("댓글2")
-                .nickname("깔깔")
-                .build();
-        commentRepository.save(comment2);
-        Notification notification2 = Notification.builder()
-                .member(member1)
-                .post(post)
-                .comment(comment2)
-                .notificationType(NEW_COMMENT)
-                .build();
-        notificationRepository.save(notification2);
-        Notification notification3 = Notification.builder()
-                .member(member1)
-                .post(post)
-                .notificationType(POST_REPORT)
-                .build();
-        notificationRepository.save(notification3);
-        em.clear();
-
-        notificationRepository.inquireNotificationByIds(
-                List.of(notification.getId(), notification2.getId(), notification3.getId()));
-
-        List<Notification> notifications = notificationRepository
-                .findNotificationsByMemberId(member1.getId(), Pageable.ofSize(3))
-                .getContent();
-        boolean actual = notifications.stream()
-                .allMatch(Notification::isInquired);
-        assertThat(actual).isTrue();
     }
 }

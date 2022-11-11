@@ -1,7 +1,5 @@
 package com.wooteco.sokdak.notification.dto;
 
-import com.wooteco.sokdak.notification.domain.Notification;
-import com.wooteco.sokdak.notification.domain.NotificationType;
 import java.time.LocalDateTime;
 import lombok.Getter;
 
@@ -9,25 +7,19 @@ import lombok.Getter;
 public class NotificationResponse {
 
     private Long id;
-    private String content;
-    private LocalDateTime createdAt;
     private String type;
     private Long postId;
+    private LocalDateTime createdAt;
+    private String content;
 
     public NotificationResponse() {
     }
 
-    public NotificationResponse(Long id, String content, LocalDateTime createdAt,
-                                NotificationType type, Long postId) {
+    public NotificationResponse(Long id, String type, Long postId, LocalDateTime createdAt, String content) {
         this.id = id;
-        this.content = content;
-        this.createdAt = createdAt;
-        this.type = type.name();
+        this.type = type;
         this.postId = postId;
-    }
-
-    public static NotificationResponse of(Notification notification) {
-        return new NotificationResponse(notification.getId(), notification.getContent(),
-                notification.getCreatedAt(), notification.getNotificationType(), notification.getPost().getId());
+        this.createdAt = createdAt;
+        this.content = content;
     }
 }

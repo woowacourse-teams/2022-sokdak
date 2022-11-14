@@ -8,6 +8,7 @@ import com.wooteco.sokdak.comment.dto.CommentsResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.dto.NewReplyRequest;
 import com.wooteco.sokdak.comment.dto.ReplyResponse;
+import com.wooteco.sokdak.comment.event.NewCommentEvent;
 import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
 import com.wooteco.sokdak.comment.exception.ReplyDepthException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
@@ -25,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,17 +40,20 @@ public class CommentService {
     private final NotificationService notificationService;
     private final CommentLikeRepository commentLikeRepository;
     private final AuthService authService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public CommentService(CommentRepository commentRepository, MemberRepository memberRepository,
                           PostRepository postRepository, NotificationService notificationService,
                           CommentLikeRepository commentLikeRepository,
-                          AuthService authService) {
+                          AuthService authService,
+                          ApplicationEventPublisher applicationEventPublisher) {
         this.commentRepository = commentRepository;
         this.memberRepository = memberRepository;
         this.postRepository = postRepository;
         this.notificationService = notificationService;
         this.commentLikeRepository = commentLikeRepository;
         this.authService = authService;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Transactional
@@ -64,7 +69,8 @@ public class CommentService {
         Comment comment = Comment.parent(member, post, nickname, newCommentRequest.getContent());
 
         commentRepository.save(comment);
-        notificationService.notifyCommentIfNotMine(post.getMember(), post, comment);
+        applicationEventPublisher.publishEvent(
+                new NewCommentEvent(post.getMember().getId(), post.getId(), comment.getId(), member.getId()));
 
         return comment.getId();
     }
@@ -77,7 +83,7 @@ public class CommentService {
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
 
-        if (!parent.isParent()){
+        if (!parent.isParent()) {
             throw new ReplyDepthException();
         }
         Post post = parent.getPost();

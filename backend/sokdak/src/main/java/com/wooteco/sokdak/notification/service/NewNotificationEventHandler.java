@@ -5,6 +5,7 @@ import com.wooteco.sokdak.comment.event.NewCommentEvent;
 import com.wooteco.sokdak.comment.event.NewReplyEvent;
 import com.wooteco.sokdak.notification.domain.Notification;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
+import com.wooteco.sokdak.report.event.PostReportEvent;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -41,6 +42,13 @@ public class NewNotificationEventHandler {
     public void handlePostHotBoardNotification(PostHotBoardEvent postHotBoardEvent) {
         Notification notification =
                 Notification.postHotBoard(postHotBoardEvent.getTargetMemberId(), postHotBoardEvent.getPostId());
+        notificationRepository.save(notification);
+    }
+
+    @TransactionalEventListener
+    public void handlePostReportNotification(PostReportEvent postReportEvent) {
+        Notification notification =
+                Notification.postHotBoard(postReportEvent.getTargetMemberId(), postReportEvent.getPostId());
         notificationRepository.save(notification);
     }
 }

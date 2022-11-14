@@ -11,8 +11,10 @@ import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.report.domain.PostReport;
 import com.wooteco.sokdak.report.dto.ReportRequest;
+import com.wooteco.sokdak.report.event.PostReportEvent;
 import com.wooteco.sokdak.report.exception.AlreadyReportPostException;
 import com.wooteco.sokdak.report.repository.PostReportRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,15 +27,18 @@ public class PostReportService {
     private final MemberRepository memberRepository;
     private final NotificationService notificationService;
     private final AuthService authService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public PostReportService(PostReportRepository postReportRepository, PostRepository postRepository,
                              MemberRepository memberRepository, NotificationService notificationService,
-                             AuthService authService) {
+                             AuthService authService,
+                             ApplicationEventPublisher applicationEventPublisher) {
         this.postReportRepository = postReportRepository;
         this.postRepository = postRepository;
         this.memberRepository = memberRepository;
         this.notificationService = notificationService;
         this.authService = authService;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Transactional
@@ -65,7 +70,7 @@ public class PostReportService {
 
     private void notifyReportIfOverThanBlockCondition(Post post) {
         if (post.isBlocked()) {
-            notificationService.notifyPostReport(post);
+            applicationEventPublisher.publishEvent(new PostReportEvent(post.getMember().getId(), post.getId()));
         }
     }
 }

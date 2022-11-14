@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.notification.service;
 
+import com.wooteco.sokdak.board.event.PostHotBoardEvent;
 import com.wooteco.sokdak.comment.event.NewCommentEvent;
 import com.wooteco.sokdak.comment.event.NewReplyEvent;
 import com.wooteco.sokdak.notification.domain.Notification;
@@ -34,5 +35,12 @@ public class NewNotificationEventHandler {
                     newReplyEvent.getCommentMemberId(), newReplyEvent.getPostId(), newReplyEvent.getCommentId());
             notificationRepository.save(notification);
         }
+    }
+
+    @TransactionalEventListener
+    public void handlePostHotBoardNotification(PostHotBoardEvent postHotBoardEvent) {
+        Notification notification =
+                Notification.postHotBoard(postHotBoardEvent.getTargetMemberId(), postHotBoardEvent.getPostId());
+        notificationRepository.save(notification);
     }
 }

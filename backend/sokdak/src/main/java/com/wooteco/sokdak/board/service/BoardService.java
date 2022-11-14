@@ -8,6 +8,7 @@ import com.wooteco.sokdak.board.dto.BoardResponse;
 import com.wooteco.sokdak.board.dto.BoardsResponse;
 import com.wooteco.sokdak.board.dto.NewBoardRequest;
 import com.wooteco.sokdak.board.dto.NewBoardResponse;
+import com.wooteco.sokdak.board.event.PostHotBoardEvent;
 import com.wooteco.sokdak.board.exception.BoardNotFoundException;
 import com.wooteco.sokdak.board.exception.BoardNotWritableException;
 import com.wooteco.sokdak.board.repository.BoardRepository;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -37,12 +39,15 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final PostBoardRepository postBoardRepository;
     private final NotificationService notificationService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public BoardService(BoardRepository boardRepository, PostBoardRepository postBoardRepository,
-                        NotificationService notificationService) {
+                        NotificationService notificationService,
+                        ApplicationEventPublisher applicationEventPublisher) {
         this.boardRepository = boardRepository;
         this.postBoardRepository = postBoardRepository;
         this.notificationService = notificationService;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Transactional
@@ -96,7 +101,8 @@ public class BoardService {
             postBoard.addPost(originalPost);
             postBoard.addBoard(specialBoard);
             postBoardRepository.save(postBoard);
-            notificationService.notifyHotBoard(originalPost);
+            applicationEventPublisher
+                    .publishEvent(new PostHotBoardEvent(originalPost.getMember().getId(), originalPost.getId()));
         }
     }
 

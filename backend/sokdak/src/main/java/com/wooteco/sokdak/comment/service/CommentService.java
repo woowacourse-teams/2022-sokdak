@@ -9,6 +9,7 @@ import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.dto.NewReplyRequest;
 import com.wooteco.sokdak.comment.dto.ReplyResponse;
 import com.wooteco.sokdak.comment.event.NewCommentEvent;
+import com.wooteco.sokdak.comment.event.NewReplyEvent;
 import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
 import com.wooteco.sokdak.comment.exception.ReplyDepthException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
@@ -93,7 +94,8 @@ public class CommentService {
         Comment reply = Comment.child(member, post, nickname, newReplyRequest.getContent(), parent);
 
         commentRepository.save(reply);
-        notificationService.notifyReplyIfNotMine(parent.getMember(), post, parent, reply);
+        applicationEventPublisher.publishEvent(
+                new NewReplyEvent(parent.getMember().getId(), post.getId(), parent.getId(), member.getId()));
         return reply.getId();
     }
 

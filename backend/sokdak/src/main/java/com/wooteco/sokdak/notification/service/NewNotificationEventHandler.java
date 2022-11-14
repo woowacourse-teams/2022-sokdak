@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.notification.service;
 
 import com.wooteco.sokdak.comment.event.NewCommentEvent;
+import com.wooteco.sokdak.comment.event.NewReplyEvent;
 import com.wooteco.sokdak.notification.domain.Notification;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import org.springframework.scheduling.annotation.Async;
@@ -22,6 +23,15 @@ public class NewNotificationEventHandler {
         if (!newCommentEvent.getTargetMemberId().equals(newCommentEvent.getCommentMemberId())) {
             Notification notification =
                     Notification.newComment(newCommentEvent.getTargetMemberId(), newCommentEvent.getPostId());
+            notificationRepository.save(notification);
+        }
+    }
+
+    @TransactionalEventListener
+    public void handleNewReplyNotification(NewReplyEvent newReplyEvent) {
+        if (!newReplyEvent.getCommentMemberId().equals(newReplyEvent.getReplyMemberId())) {
+            Notification notification = Notification.newReply(
+                    newReplyEvent.getCommentMemberId(), newReplyEvent.getPostId(), newReplyEvent.getCommentId());
             notificationRepository.save(notification);
         }
     }

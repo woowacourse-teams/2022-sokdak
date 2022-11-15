@@ -21,6 +21,7 @@ import com.wooteco.sokdak.auth.dto.LoginRequest;
 import com.wooteco.sokdak.notification.dto.NewNotificationCheckResponse;
 import com.wooteco.sokdak.notification.dto.NotificationResponse;
 import com.wooteco.sokdak.notification.dto.NotificationsResponse;
+import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.util.AcceptanceTest;
 import io.restassured.response.ExtractableResponse;
@@ -28,18 +29,23 @@ import io.restassured.response.Response;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 @DisplayName("알림 관련 테스트")
 class NotificationAcceptanceTest extends AcceptanceTest {
 
+    @Autowired
+    private NotificationRepository notificationRepository;
+
     @DisplayName("게시글에 댓글이 등록되면 게시글 사용자에게 알림이 등록된다.")
     @Test
-    void checkNewNotification_NewComment() {
+    void checkNewNotification_NewComment() throws InterruptedException {
         Long postId = addNewPost();
         LoginRequest loginRequest = new LoginRequest("josh", "Abcd123!@");
         String token = httpPost(loginRequest, "/login").header(AUTHORIZATION);
         httpPostWithAuthorization(NON_ANONYMOUS_COMMENT_REQUEST, "/posts/" + postId + "/comments", token);
+        awaitUntilNewNotificationIsSaved();
 
         ExtractableResponse<Response> response = httpGetWithAuthorization("/notifications/check", getChrisToken());
         NewNotificationCheckResponse newNotificationCheckResponse =
@@ -70,12 +76,13 @@ class NotificationAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("자신의 댓글에 대댓글이 달리면 댓글 작성자에게 알림이 등록된다.")
     @Test
-    void checkNewNotification_NewReply() {
+    void checkNewNotification_NewReply() throws InterruptedException {
         Long postId = addNewPost();
         String chrisToken = getChrisToken();
         String joshToken = getToken("josh");
         httpPostWithAuthorization(NON_ANONYMOUS_COMMENT_REQUEST, "/posts/" + postId + "/comments", joshToken);
         httpPostWithAuthorization(NON_ANONYMOUS_REPLY_REQUEST, "/comments" + 1 + "/reply", chrisToken);
+        awaitUntilNewNotificationIsSaved();
 
         ExtractableResponse<Response> response = httpGetWithAuthorization("/notifications/check", joshToken);
         NewNotificationCheckResponse newNotificationCheckResponse =
@@ -89,12 +96,13 @@ class NotificationAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("게시글이 HOT 게시판에 등록되면 게시글 사용자에게 알림이 등록된다.")
     @Test
-    void checkNewNotification_PostInHotBoard() {
+    void checkNewNotification_PostInHotBoard() throws InterruptedException {
         addNewPost();
         List<String> otherTokens = getTokens();
         for (String token : otherTokens) {
             httpPutWithAuthorization("/posts/1/like", token);
         }
+        awaitUntilNewNotificationIsSaved();
 
         ExtractableResponse<Response> response = httpGetWithAuthorization("/notifications/check", getChrisToken());
         NewNotificationCheckResponse newNotificationCheckResponse =
@@ -108,13 +116,14 @@ class NotificationAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("게시글이 5회 신고 되면 게시글 작성자에게 알림이 등록된다.")
     @Test
-    void checkNewNotification_PostReport() {
+    void checkNewNotification_PostReport() throws InterruptedException {
         Long postId = addNewPost();
         List<String> reporterTokens = getTokens();
         for (int i = 0; i < 5; ++i) {
             ReportRequest reportRequest = new ReportRequest("신고");
             httpPostWithAuthorization(reportRequest, "/posts/" + postId + "/report", reporterTokens.get(i));
         }
+        awaitUntilNewNotificationIsSaved();
 
         ExtractableResponse<Response> response = httpGetWithAuthorization("/notifications/check", getChrisToken());
         NewNotificationCheckResponse newNotificationCheckResponse =
@@ -128,7 +137,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("댓글이 5회 신고 되면 댓글 작성자에게 알림이 등록된다.")
     @Test
-    void checkNewNotification_CommentReport() {
+    void checkNewNotification_CommentReport() throws InterruptedException {
         Long postId = addNewPost();
         String commenterToken = getChrisToken();
         httpPostWithAuthorization(NON_ANONYMOUS_COMMENT_REQUEST, "/posts/" + postId + "/comments", commenterToken);
@@ -138,6 +147,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
             ReportRequest reportRequest = new ReportRequest("댓글신고");
             httpPostWithAuthorization(reportRequest, "/comments/" + commentId + "/report", reporterTokens.get(i));
         }
+        awaitUntilNewNotificationIsSaved();
 
         ExtractableResponse<Response> response = httpGetWithAuthorization("/notifications/check", commenterToken);
         NewNotificationCheckResponse newNotificationCheckResponse =
@@ -206,5 +216,11 @@ class NotificationAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value()),
                 () -> assertThat(newNotificationCheckResponseAfterDeletion.isExistence()).isFalse()
         );
+    }
+
+    private void awaitUntilNewNotificationIsSaved() throws InterruptedException {
+        while (notificationRepository.findAll().size() != 1) {
+            Thread.sleep(10);
+        }
     }
 }

@@ -10,6 +10,7 @@ import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.service.EmailSender;
 import java.time.Clock;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -43,10 +44,14 @@ public class ServiceTest {
     protected Member member;
 
     @BeforeEach
-    void cleanAndSetData() {
-        databaseCleaner.clear();
+    void setInitialData() {
         databaseCleaner.insertInitialData();
         member = memberRepository.findById(CHRIS_ID)
                 .orElseThrow(MemberNotFoundException::new);
+    }
+
+    @AfterEach
+    void clearDatabase() {
+        databaseCleaner.clear();
     }
 }

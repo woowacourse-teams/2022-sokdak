@@ -2,6 +2,7 @@ package com.wooteco.sokdak.util;
 
 import io.restassured.RestAssured;
 import java.time.Clock;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +25,11 @@ public class AcceptanceTest {
     @BeforeEach
     public void setUp() {
         RestAssured.port = port;
-        databaseCleaner.clear();
         databaseCleaner.insertInitialData();
+    }
+
+    @AfterEach
+    void clearDatabase() {
+        databaseCleaner.clear();
     }
 }

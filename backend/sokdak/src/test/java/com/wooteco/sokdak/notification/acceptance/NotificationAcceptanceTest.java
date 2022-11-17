@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.wooteco.sokdak.auth.dto.LoginRequest;
-import com.wooteco.sokdak.config.AsyncTestConfig;
 import com.wooteco.sokdak.notification.dto.NewNotificationCheckResponse;
 import com.wooteco.sokdak.notification.dto.NotificationResponse;
 import com.wooteco.sokdak.notification.dto.NotificationsResponse;
@@ -29,11 +28,9 @@ import io.restassured.response.Response;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 
 @DisplayName("알림 관련 테스트")
-@Import(AsyncTestConfig.class)
 class NotificationAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("게시글에 댓글이 등록되면 게시글 사용자에게 알림이 등록된다.")

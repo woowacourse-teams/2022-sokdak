@@ -17,14 +17,13 @@ import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
-import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.report.dto.ReportRequest;
+import com.wooteco.sokdak.report.event.PostReportEvent;
 import com.wooteco.sokdak.report.exception.AlreadyReportPostException;
 import com.wooteco.sokdak.report.exception.InvalidReportMessageException;
-import com.wooteco.sokdak.report.repository.PostReportRepository;
 import com.wooteco.sokdak.util.ServiceTest;
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,13 +41,7 @@ class PostReportServiceTest extends ServiceTest {
     private PostRepository postRepository;
 
     @Autowired
-    private PostReportRepository postReportRepository;
-
-    @Autowired
     private PostReportService postReportService;
-
-    @Autowired
-    private NotificationRepository notificationRepository;
 
     @Autowired
     private BoardRepository boardRepository;
@@ -132,17 +125,17 @@ class PostReportServiceTest extends ServiceTest {
 
     @DisplayName("게시글 5회 신고시 알림 등록")
     @ParameterizedTest
-    @CsvSource({"4, false", "5, true"})
-    void reportPost_blockNotification(int reportCount, boolean expected) {
+    @CsvSource({"4, 0", "5, 1"})
+    void reportPost_blockNotification(int reportCount, long expected) {
         AuthInfo authInfo;
         for (long i = 1; i <= reportCount; i++) {
             authInfo = new AuthInfo(i, "USER", VALID_NICKNAME_TEXT);
             postReportService.reportPost(post.getId(), REPORT_REQUEST, authInfo);
         }
 
-        boolean actual = notificationRepository.existsByMemberIdAndInquiredIsFalse(member.getId());
+        long postReportEventCount = applicationEvents.stream(PostReportEvent.class).count();
 
-        assertThat(actual).isEqualTo(expected);
+        assertThat(postReportEventCount).isEqualTo(expected);
     }
 
     @DisplayName("게시글 5회 신고시 게시글의 내용이 반환되지 않는다.")

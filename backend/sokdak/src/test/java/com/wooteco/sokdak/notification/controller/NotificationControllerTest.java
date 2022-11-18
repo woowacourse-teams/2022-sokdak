@@ -40,9 +40,9 @@ class NotificationControllerTest extends ControllerTest {
     @Test
     void findNotifications() {
         NotificationResponse notificationResponse1 =
-                new NotificationResponse(1L, "게시글 제목", LocalDateTime.now(), NotificationType.POST_REPORT, 1L);
+                new NotificationResponse(1L, NotificationType.POST_REPORT.name(), 1L, LocalDateTime.now(), "게시글 제목");
         NotificationResponse notificationResponse2 =
-                new NotificationResponse(1L, "게시글 제목", LocalDateTime.now(), NotificationType.NEW_COMMENT, 1L);
+                new NotificationResponse(1L, NotificationType.NEW_COMMENT.name(), 1L, LocalDateTime.now(), "게시글 제목");
         NotificationsResponse notificationsResponse =
                 new NotificationsResponse(List.of(notificationResponse1, notificationResponse2), true);
         doReturn(notificationsResponse)

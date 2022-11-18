@@ -12,8 +12,10 @@ import com.wooteco.sokdak.notification.service.NotificationService;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.report.domain.CommentReport;
 import com.wooteco.sokdak.report.dto.ReportRequest;
+import com.wooteco.sokdak.report.event.CommentReportEvent;
 import com.wooteco.sokdak.report.exception.AlreadyReportCommentException;
 import com.wooteco.sokdak.report.repository.CommentReportRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,15 +28,18 @@ public class CommentReportService {
     private final MemberRepository memberRepository;
     private final NotificationService notificationService;
     private final AuthService authService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public CommentReportService(CommentReportRepository commentReportRepository, CommentRepository commentRepository,
                                 MemberRepository memberRepository, NotificationService notificationService,
-                                AuthService authService) {
+                                AuthService authService,
+                                ApplicationEventPublisher applicationEventPublisher) {
         this.commentReportRepository = commentReportRepository;
         this.commentRepository = commentRepository;
         this.memberRepository = memberRepository;
         this.notificationService = notificationService;
         this.authService = authService;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Transactional
@@ -67,7 +72,8 @@ public class CommentReportService {
     private void notifyReportIfOverBlockCondition(Comment comment) {
         if (comment.isBlocked()) {
             Post post = comment.getPost();
-            notificationService.notifyCommentReport(post, comment);
+            applicationEventPublisher.publishEvent(
+                    new CommentReportEvent(comment.getMember().getId(), post.getId(), comment.getId()));
         }
     }
 }

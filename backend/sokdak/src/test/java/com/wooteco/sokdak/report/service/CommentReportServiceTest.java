@@ -3,9 +3,6 @@ package com.wooteco.sokdak.report.service;
 import static com.wooteco.sokdak.member.domain.RoleType.USER;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.APPLICANT_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.BoardFixture.FREE_BOARD_ID;
-import static com.wooteco.sokdak.util.fixture.BoardFixture.GOOD_CREW_BOARD_ID;
-import static com.wooteco.sokdak.util.fixture.BoardFixture.HOT_BOARD_ID;
-import static com.wooteco.sokdak.util.fixture.BoardFixture.POSUTA_BOARD_ID;
 import static com.wooteco.sokdak.util.fixture.CommentFixture.VALID_COMMENT_MESSAGE;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME_TEXT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
@@ -13,8 +10,6 @@ import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
@@ -25,24 +20,20 @@ import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
-import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.report.dto.ReportRequest;
+import com.wooteco.sokdak.report.event.CommentReportEvent;
 import com.wooteco.sokdak.report.exception.AlreadyReportCommentException;
 import com.wooteco.sokdak.report.exception.InvalidReportMessageException;
-import com.wooteco.sokdak.report.repository.CommentReportRepository;
 import com.wooteco.sokdak.util.ServiceTest;
 import java.util.Collections;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 class CommentReportServiceTest extends ServiceTest {
@@ -56,13 +47,7 @@ class CommentReportServiceTest extends ServiceTest {
     private CommentRepository commentRepository;
 
     @Autowired
-    private CommentReportRepository commentReportRepository;
-
-    @Autowired
     private CommentReportService commentReportService;
-
-    @Autowired
-    private NotificationRepository notificationRepository;
 
     @Autowired
     private BoardRepository boardRepository;
@@ -177,17 +162,17 @@ class CommentReportServiceTest extends ServiceTest {
 
     @DisplayName("댓글 5회 신고시 알림 등록")
     @ParameterizedTest
-    @CsvSource({"4, false", "5, true"})
-    void reportComment_BlockNotification(int reportCount, boolean expected) {
+    @CsvSource({"4, 0", "5, 1"})
+    void reportComment_BlockNotification(int reportCount, long expected) {
         AuthInfo authInfo;
         for (long i = 1; i <= reportCount; i++) {
             authInfo = new AuthInfo(i, "USER", VALID_NICKNAME_TEXT);
             commentReportService.reportComment(comment.getId(), REPORT_REQUEST, authInfo);
         }
 
-        boolean actual = notificationRepository.existsByMemberIdAndInquiredIsFalse(member.getId());
+        long commentReportEventCount = applicationEvents.stream(CommentReportEvent.class).count();
 
-        assertThat(actual).isEqualTo(expected);
+        assertThat(commentReportEventCount).isEqualTo(expected);
     }
 
     @DisplayName("지원자는 권한이 없는 게시판 게시글의 댓글, 대댓글을 신고할 수 없다.")

@@ -2,20 +2,20 @@ package com.wooteco.sokdak.comment.event;
 
 public class NewReplyEvent {
 
-    private final Long commentMemberId;
+    private final Long notificationTargetMemberId;
     private final Long postId;
     private final Long commentId;
-    private final Long replyMemberId;
+    private final Long replyWritingMemberId;
 
-    public NewReplyEvent(Long commentMemberId, Long postId, Long commentId, Long replyMemberId) {
-        this.commentMemberId = commentMemberId;
+    public NewReplyEvent(Long notificationTargetMemberId, Long postId, Long commentId, Long replyWritingMemberId) {
+        this.notificationTargetMemberId = notificationTargetMemberId;
         this.postId = postId;
         this.commentId = commentId;
-        this.replyMemberId = replyMemberId;
+        this.replyWritingMemberId = replyWritingMemberId;
     }
 
-    public Long getCommentMemberId() {
-        return commentMemberId;
+    public Long getNotificationTargetMemberId() {
+        return notificationTargetMemberId;
     }
 
     public Long getPostId() {
@@ -26,7 +26,7 @@ public class NewReplyEvent {
         return commentId;
     }
 
-    public Long getReplyMemberId() {
-        return replyMemberId;
+    public Long getReplyWritingMemberId() {
+        return replyWritingMemberId;
     }
 }

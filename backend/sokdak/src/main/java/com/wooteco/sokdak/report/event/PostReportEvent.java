@@ -2,16 +2,16 @@ package com.wooteco.sokdak.report.event;
 
 public class PostReportEvent {
 
-    private final Long targetMemberId;
+    private final Long notificationTargetMemberId;
     private final Long postId;
 
-    public PostReportEvent(Long targetMemberId, Long postId) {
-        this.targetMemberId = targetMemberId;
+    public PostReportEvent(Long notificationTargetMemberId, Long postId) {
+        this.notificationTargetMemberId = notificationTargetMemberId;
         this.postId = postId;
     }
 
-    public Long getTargetMemberId() {
-        return targetMemberId;
+    public Long getNotificationTargetMemberId() {
+        return notificationTargetMemberId;
     }
 
     public Long getPostId() {

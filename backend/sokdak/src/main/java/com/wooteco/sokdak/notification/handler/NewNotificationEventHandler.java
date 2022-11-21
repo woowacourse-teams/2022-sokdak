@@ -26,7 +26,7 @@ public class NewNotificationEventHandler {
 
     @TransactionalEventListener
     public void handleNewCommentNotification(NewCommentEvent newCommentEvent) {
-        if (!newCommentEvent.getNotificationTargetMemberId().equals(newCommentEvent.getCommentWritingMemberId())) {
+        if (isNotifiableNewComment(newCommentEvent)) {
             Notification notification =
                     Notification
                             .newComment(newCommentEvent.getNotificationTargetMemberId(), newCommentEvent.getPostId());
@@ -34,14 +34,23 @@ public class NewNotificationEventHandler {
         }
     }
 
+    private boolean isNotifiableNewComment(NewCommentEvent newCommentEvent) {
+        return !newCommentEvent.getNotificationTargetMemberId()
+                .equals(newCommentEvent.getCommentWritingMemberId());
+    }
+
     @TransactionalEventListener
     public void handleNewReplyNotification(NewReplyEvent newReplyEvent) {
-        if (!newReplyEvent.getNotificationTargetMemberId().equals(newReplyEvent.getReplyWritingMemberId())) {
+        if (isNotifiableNewReply(newReplyEvent)) {
             Notification notification = Notification.newReply(
                     newReplyEvent.getNotificationTargetMemberId(), newReplyEvent.getPostId(),
                     newReplyEvent.getCommentId());
             notificationRepository.save(notification);
         }
+    }
+
+    private boolean isNotifiableNewReply(NewReplyEvent newReplyEvent) {
+        return !newReplyEvent.getNotificationTargetMemberId().equals(newReplyEvent.getReplyWritingMemberId());
     }
 
     @TransactionalEventListener

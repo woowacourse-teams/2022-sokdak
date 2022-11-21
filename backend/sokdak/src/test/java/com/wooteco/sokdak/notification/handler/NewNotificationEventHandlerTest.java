@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.notification.service;
+package com.wooteco.sokdak.notification.handler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

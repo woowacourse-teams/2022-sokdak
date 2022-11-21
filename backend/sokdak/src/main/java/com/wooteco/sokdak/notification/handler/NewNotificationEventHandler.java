@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.notification.service;
+package com.wooteco.sokdak.notification.handler;
 
 import com.wooteco.sokdak.board.event.PostHotBoardEvent;
 import com.wooteco.sokdak.comment.event.NewCommentEvent;

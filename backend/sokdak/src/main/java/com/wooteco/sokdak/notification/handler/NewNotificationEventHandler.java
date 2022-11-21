@@ -27,9 +27,8 @@ public class NewNotificationEventHandler {
     @TransactionalEventListener
     public void handleNewCommentNotification(NewCommentEvent newCommentEvent) {
         if (isNotifiableNewComment(newCommentEvent)) {
-            Notification notification =
-                    Notification
-                            .newComment(newCommentEvent.getNotificationTargetMemberId(), newCommentEvent.getPostId());
+            Notification notification = Notification.newComment(
+                    newCommentEvent.getNotificationTargetMemberId(), newCommentEvent.getPostId());
             notificationRepository.save(notification);
         }
     }
@@ -43,7 +42,8 @@ public class NewNotificationEventHandler {
     public void handleNewReplyNotification(NewReplyEvent newReplyEvent) {
         if (isNotifiableNewReply(newReplyEvent)) {
             Notification notification = Notification.newReply(
-                    newReplyEvent.getNotificationTargetMemberId(), newReplyEvent.getPostId(),
+                    newReplyEvent.getNotificationTargetMemberId(),
+                    newReplyEvent.getPostId(),
                     newReplyEvent.getCommentId());
             notificationRepository.save(notification);
         }
@@ -55,23 +55,24 @@ public class NewNotificationEventHandler {
 
     @TransactionalEventListener
     public void handlePostHotBoardNotification(PostHotBoardEvent postHotBoardEvent) {
-        Notification notification =
-                Notification
-                        .postHotBoard(postHotBoardEvent.getNotificationTargetMemberId(), postHotBoardEvent.getPostId());
+        Notification notification = Notification.postHotBoard(
+                postHotBoardEvent.getNotificationTargetMemberId(), postHotBoardEvent.getPostId());
         notificationRepository.save(notification);
     }
 
     @TransactionalEventListener
     public void handlePostReportNotification(PostReportEvent postReportEvent) {
-        Notification notification =
-                Notification.postHotBoard(postReportEvent.getNotificationTargetMemberId(), postReportEvent.getPostId());
+        Notification notification = Notification.postHotBoard(
+                postReportEvent.getNotificationTargetMemberId(), postReportEvent.getPostId());
         notificationRepository.save(notification);
     }
 
     @TransactionalEventListener
     public void handleCommentReportNotification(CommentReportEvent commentReportEvent) {
-        Notification notification = Notification.commentReport(commentReportEvent.getNotificationTargetMemberId(),
-                commentReportEvent.getPostId(), commentReportEvent.getCommentId());
+        Notification notification = Notification.commentReport(
+                commentReportEvent.getNotificationTargetMemberId(),
+                commentReportEvent.getPostId(),
+                commentReportEvent.getCommentId());
         notificationRepository.save(notification);
     }
 }

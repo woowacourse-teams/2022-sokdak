@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.notification.service;
+package com.wooteco.sokdak.notification.handler;
 
 import com.wooteco.sokdak.board.event.PostHotBoardEvent;
 import com.wooteco.sokdak.comment.event.NewCommentEvent;
@@ -26,43 +26,53 @@ public class NewNotificationEventHandler {
 
     @TransactionalEventListener
     public void handleNewCommentNotification(NewCommentEvent newCommentEvent) {
-        if (!newCommentEvent.getNotificationTargetMemberId().equals(newCommentEvent.getCommentWritingMemberId())) {
-            Notification notification =
-                    Notification
-                            .newComment(newCommentEvent.getNotificationTargetMemberId(), newCommentEvent.getPostId());
+        if (isNotifiableNewComment(newCommentEvent)) {
+            Notification notification = Notification.newComment(
+                    newCommentEvent.getNotificationTargetMemberId(), newCommentEvent.getPostId());
             notificationRepository.save(notification);
         }
     }
 
+    private boolean isNotifiableNewComment(NewCommentEvent newCommentEvent) {
+        return !newCommentEvent.getNotificationTargetMemberId()
+                .equals(newCommentEvent.getCommentWritingMemberId());
+    }
+
     @TransactionalEventListener
     public void handleNewReplyNotification(NewReplyEvent newReplyEvent) {
-        if (!newReplyEvent.getNotificationTargetMemberId().equals(newReplyEvent.getReplyWritingMemberId())) {
+        if (isNotifiableNewReply(newReplyEvent)) {
             Notification notification = Notification.newReply(
-                    newReplyEvent.getNotificationTargetMemberId(), newReplyEvent.getPostId(),
+                    newReplyEvent.getNotificationTargetMemberId(),
+                    newReplyEvent.getPostId(),
                     newReplyEvent.getCommentId());
             notificationRepository.save(notification);
         }
     }
 
+    private boolean isNotifiableNewReply(NewReplyEvent newReplyEvent) {
+        return !newReplyEvent.getNotificationTargetMemberId().equals(newReplyEvent.getReplyWritingMemberId());
+    }
+
     @TransactionalEventListener
     public void handlePostHotBoardNotification(PostHotBoardEvent postHotBoardEvent) {
-        Notification notification =
-                Notification
-                        .postHotBoard(postHotBoardEvent.getNotificationTargetMemberId(), postHotBoardEvent.getPostId());
+        Notification notification = Notification.postHotBoard(
+                postHotBoardEvent.getNotificationTargetMemberId(), postHotBoardEvent.getPostId());
         notificationRepository.save(notification);
     }
 
     @TransactionalEventListener
     public void handlePostReportNotification(PostReportEvent postReportEvent) {
-        Notification notification =
-                Notification.postHotBoard(postReportEvent.getNotificationTargetMemberId(), postReportEvent.getPostId());
+        Notification notification = Notification.postHotBoard(
+                postReportEvent.getNotificationTargetMemberId(), postReportEvent.getPostId());
         notificationRepository.save(notification);
     }
 
     @TransactionalEventListener
     public void handleCommentReportNotification(CommentReportEvent commentReportEvent) {
-        Notification notification = Notification.commentReport(commentReportEvent.getNotificationTargetMemberId(),
-                commentReportEvent.getPostId(), commentReportEvent.getCommentId());
+        Notification notification = Notification.commentReport(
+                commentReportEvent.getNotificationTargetMemberId(),
+                commentReportEvent.getPostId(),
+                commentReportEvent.getCommentId());
         notificationRepository.save(notification);
     }
 }

@@ -5,18 +5,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.wooteco.sokdak.board.event.PostHotBoardEvent;
 import com.wooteco.sokdak.comment.event.NewCommentEvent;
 import com.wooteco.sokdak.comment.event.NewReplyEvent;
+import com.wooteco.sokdak.config.AsyncTestConfig;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.report.event.CommentReportEvent;
 import com.wooteco.sokdak.report.event.PostReportEvent;
 import com.wooteco.sokdak.util.DatabaseCleaner;
-import com.wooteco.sokdak.util.ServiceTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
 
-class NewNotificationEventHandlerTest extends ServiceTest {
+@SpringBootTest
+@Import(AsyncTestConfig.class)
+class NewNotificationEventHandlerTest {
 
     private static final long TARGET_MEMBER_ID = 1L;
     private static final long POST_ID = 1L;

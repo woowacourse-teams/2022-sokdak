@@ -229,4 +229,27 @@ class NotificationAcceptanceTest extends AcceptanceTest {
                 () -> assertThat(notificationsResponseAfterPostDeletion.getNotifications()).isEmpty()
         );
     }
+
+    @DisplayName("댓글이 삭제되면 댓글에 대한 알림들이 모두 삭제된다.")
+    @Test
+    void deleteComment_deleteNotificationByCommentId() {
+        Long postId = addNewPost();
+        httpPostWithAuthorization(NON_ANONYMOUS_COMMENT_REQUEST, "/posts/" + postId + "/comments", getToken("josh"));
+        httpPostWithAuthorization(NON_ANONYMOUS_REPLY_REQUEST, "/comments/" + 1 + "/reply", getChrisToken());
+        NotificationsResponse notificationsResponseBeforeCommentDeletion =
+                httpGetWithAuthorization("/notifications?size=2&page=0", getToken("josh"))
+                        .jsonPath()
+                        .getObject(".", NotificationsResponse.class);
+
+        httpDeleteWithAuthorization("/comments/1", getToken("josh"));
+
+        NotificationsResponse notificationsResponseAfterCommentDeletion =
+                httpGetWithAuthorization("/notifications?size=2&page=0", getToken("josh"))
+                        .jsonPath()
+                        .getObject(".", NotificationsResponse.class);
+        assertAll(
+                () -> assertThat(notificationsResponseBeforeCommentDeletion.getNotifications()).hasSize(1),
+                () -> assertThat(notificationsResponseAfterCommentDeletion.getNotifications()).isEmpty()
+        );
+    }
 }

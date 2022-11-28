@@ -192,7 +192,7 @@ class CommentServiceTest extends ServiceTest {
 
         Comment comment = commentRepository.findById(commentId).orElseThrow();
         Comment reply = commentRepository.findById(replyId).orElseThrow();
-        long newReplyEventCount = applicationEvents.stream(NotificationEvent.class).count();
+        long newReplyEventCount = applicationEvents.stream(NewReplyEvent.class).count();
         assertAll(
                 () -> assertThat(reply.getMessage()).isEqualTo(NON_ANONYMOUS_REPLY_REQUEST.getContent()),
                 () -> assertThat(reply.getParent()).isEqualTo(comment),

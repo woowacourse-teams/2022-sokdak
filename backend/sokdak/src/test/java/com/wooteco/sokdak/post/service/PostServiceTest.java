@@ -29,6 +29,7 @@ import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsCountResponse;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
+import com.wooteco.sokdak.post.event.PostDeletionEvent;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.util.ServiceTest;
@@ -368,7 +369,11 @@ class PostServiceTest extends ServiceTest {
         postService.deletePost(postId, AUTH_INFO);
 
         Optional<Post> foundPost = postRepository.findById(postId);
-        assertThat(foundPost).isEmpty();
+        long postDeletionEventCount = applicationEvents.stream(PostDeletionEvent.class).count();
+        assertAll(
+                () -> assertThat(foundPost).isEmpty(),
+                () -> assertThat(postDeletionEventCount).isEqualTo(1L)
+        );
     }
 
     @DisplayName("댓글이 있는 게시글 삭제")

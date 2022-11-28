@@ -2,6 +2,7 @@ package com.wooteco.sokdak.notification.handler;
 
 import com.wooteco.sokdak.comment.event.CommentDeletionEvent;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
+import com.wooteco.sokdak.post.event.PostDeletionEvent;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -22,5 +23,10 @@ public class DeletionEventHandler {
     @TransactionalEventListener
     public void handleCommentDeletion(CommentDeletionEvent commentDeletionEvent) {
         notificationRepository.deleteAllByCommentId(commentDeletionEvent.getCommentId());
+    }
+
+    @TransactionalEventListener
+    public void handlePostDeletion(PostDeletionEvent postDeletionEvent) {
+        notificationRepository.deleteAllByPostId(postDeletionEvent.getPostId());
     }
 }

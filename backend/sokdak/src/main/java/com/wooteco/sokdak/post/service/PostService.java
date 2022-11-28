@@ -16,7 +16,6 @@ import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
-import com.wooteco.sokdak.notification.service.NotificationService;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.domain.SearchQuery;
 import com.wooteco.sokdak.post.domain.ViewCountManager;
@@ -26,11 +25,13 @@ import com.wooteco.sokdak.post.dto.PostDetailResponse;
 import com.wooteco.sokdak.post.dto.PostUpdateRequest;
 import com.wooteco.sokdak.post.dto.PostsCountResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
+import com.wooteco.sokdak.post.event.PostDeletionEvent;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.Collections;
 import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -50,14 +51,14 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final PostLikeRepository postLikeRepository;
-    private final NotificationService notificationService;
+    private final ApplicationEventPublisher applicationEventPublisher;
     private final AuthService authService;
     private final ViewCountManager viewCountManager;
 
     public PostService(HashtagService hashtagService, BoardService boardService,
                        PostRepository postRepository, PostBoardRepository postBoardRepository,
                        MemberRepository memberRepository, CommentRepository commentRepository,
-                       PostLikeRepository postLikeRepository, NotificationService notificationService,
+                       PostLikeRepository postLikeRepository, ApplicationEventPublisher applicationEventPublisher,
                        AuthService authService, ViewCountManager viewCountManager) {
         this.hashtagService = hashtagService;
         this.boardService = boardService;
@@ -66,7 +67,7 @@ public class PostService {
         this.memberRepository = memberRepository;
         this.commentRepository = commentRepository;
         this.postLikeRepository = postLikeRepository;
-        this.notificationService = notificationService;
+        this.applicationEventPublisher = applicationEventPublisher;
         this.authService = authService;
         this.viewCountManager = viewCountManager;
     }
@@ -181,7 +182,7 @@ public class PostService {
         postLikeRepository.deleteAllByPost(post);
         postLikeRepository.deleteAllByPost(post);
         hashtagService.deleteAllByPost(hashtags, post);
-        notificationService.deletePostNotification(id);
+        applicationEventPublisher.publishEvent(new PostDeletionEvent(post.getId()));
 
         postRepository.delete(post);
     }

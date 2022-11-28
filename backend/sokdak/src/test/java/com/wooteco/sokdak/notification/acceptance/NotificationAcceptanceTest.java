@@ -75,7 +75,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
         String chrisToken = getChrisToken();
         String joshToken = getToken("josh");
         httpPostWithAuthorization(NON_ANONYMOUS_COMMENT_REQUEST, "/posts/" + postId + "/comments", joshToken);
-        httpPostWithAuthorization(NON_ANONYMOUS_REPLY_REQUEST, "/comments" + 1 + "/reply", chrisToken);
+        httpPostWithAuthorization(NON_ANONYMOUS_REPLY_REQUEST, "/comments/" + 1 + "/reply", chrisToken);
 
         ExtractableResponse<Response> response = httpGetWithAuthorization("/notifications/check", joshToken);
         NewNotificationCheckResponse newNotificationCheckResponse =
@@ -83,7 +83,7 @@ class NotificationAcceptanceTest extends AcceptanceTest {
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(newNotificationCheckResponse.isExistence()).isFalse()
+                () -> assertThat(newNotificationCheckResponse.isExistence()).isTrue()
         );
     }
 

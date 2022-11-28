@@ -27,6 +27,7 @@ import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.dto.NewReplyRequest;
 import com.wooteco.sokdak.comment.dto.ReplyResponse;
+import com.wooteco.sokdak.comment.event.CommentDeletionEvent;
 import com.wooteco.sokdak.comment.exception.ReplyDepthException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.member.domain.Member;

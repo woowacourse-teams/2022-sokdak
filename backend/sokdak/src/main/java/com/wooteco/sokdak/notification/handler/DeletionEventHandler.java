@@ -1,8 +1,8 @@
 package com.wooteco.sokdak.notification.handler;
 
-import com.wooteco.sokdak.comment.event.CommentDeletionEvent;
+import com.wooteco.sokdak.comment.domain.CommentDeletionEvent;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
-import com.wooteco.sokdak.post.event.PostDeletionEvent;
+import com.wooteco.sokdak.post.domain.PostDeletionEvent;
 import javax.transaction.Transactional;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;

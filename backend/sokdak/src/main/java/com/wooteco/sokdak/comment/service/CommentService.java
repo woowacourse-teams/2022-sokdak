@@ -8,6 +8,7 @@ import com.wooteco.sokdak.comment.dto.CommentsResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.dto.NewReplyRequest;
 import com.wooteco.sokdak.comment.dto.ReplyResponse;
+import com.wooteco.sokdak.comment.event.CommentDeletionEvent;
 import com.wooteco.sokdak.comment.event.NewCommentEvent;
 import com.wooteco.sokdak.comment.event.NewReplyEvent;
 import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
@@ -18,7 +19,6 @@ import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
-import com.wooteco.sokdak.notification.service.NotificationService;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
@@ -38,20 +38,16 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
-    private final NotificationService notificationService;
     private final CommentLikeRepository commentLikeRepository;
     private final AuthService authService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     public CommentService(CommentRepository commentRepository, MemberRepository memberRepository,
-                          PostRepository postRepository, NotificationService notificationService,
-                          CommentLikeRepository commentLikeRepository,
-                          AuthService authService,
-                          ApplicationEventPublisher applicationEventPublisher) {
+                          PostRepository postRepository, CommentLikeRepository commentLikeRepository,
+                          AuthService authService, ApplicationEventPublisher applicationEventPublisher) {
         this.commentRepository = commentRepository;
         this.memberRepository = memberRepository;
         this.postRepository = postRepository;
-        this.notificationService = notificationService;
         this.commentLikeRepository = commentLikeRepository;
         this.authService = authService;
         this.applicationEventPublisher = applicationEventPublisher;
@@ -178,7 +174,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
         comment.validateOwner(authInfo.getId());
-        notificationService.deleteCommentNotification(commentId);
+        applicationEventPublisher.publishEvent(new CommentDeletionEvent(comment.getId()));
         commentLikeRepository.deleteAllByCommentId(commentId);
 
         deleteCommentOrReply(comment);

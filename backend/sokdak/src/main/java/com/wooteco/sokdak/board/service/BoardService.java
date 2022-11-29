@@ -13,7 +13,6 @@ import com.wooteco.sokdak.board.exception.BoardNotFoundException;
 import com.wooteco.sokdak.board.exception.BoardNotWritableException;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
-import com.wooteco.sokdak.notification.service.NotificationService;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
@@ -38,15 +37,12 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final PostBoardRepository postBoardRepository;
-    private final NotificationService notificationService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     public BoardService(BoardRepository boardRepository, PostBoardRepository postBoardRepository,
-                        NotificationService notificationService,
                         ApplicationEventPublisher applicationEventPublisher) {
         this.boardRepository = boardRepository;
         this.postBoardRepository = postBoardRepository;
-        this.notificationService = notificationService;
         this.applicationEventPublisher = applicationEventPublisher;
     }
 

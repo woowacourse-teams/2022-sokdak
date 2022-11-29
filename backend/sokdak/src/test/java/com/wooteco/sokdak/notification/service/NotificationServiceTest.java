@@ -125,45 +125,6 @@ class NotificationServiceTest extends ServiceTest {
         );
     }
 
-    @DisplayName("댓글에 해당하는 알림들을 삭제한다.")
-    @Test
-    void deleteCommentNotification() {
-        Notification notification1 = Notification.commentReport(member.getId(), post.getId(), comment.getId());
-        Notification notification2 = Notification.commentReport(member.getId(), post.getId(), comment.getId());
-
-        notificationRepository.saveAll(List.of(notification1, notification2));
-
-        em.clear();
-
-        notificationService.deleteCommentNotification(comment.getId());
-
-        NotificationsResponse notifications = notificationService.findNotifications(AUTH_INFO, PAGEABLE);
-        assertThat(notifications.getNotifications()).isEmpty();
-    }
-
-    @DisplayName("게시글에 해당하는 알림들을 삭제한다.")
-    @Test
-    void deletePostNotification() {
-        Comment comment3 = Comment.builder()
-                .post(post)
-                .member(member2)
-                .nickname("닉네임")
-                .message("내용")
-                .build();
-        commentRepository.save(comment3);
-        Notification notification1 = Notification.newComment(member.getId(), post.getId());
-        Notification notification2 = Notification.newComment(member.getId(), post.getId());
-        notificationRepository.save(notification1);
-        notificationRepository.save(notification2);
-
-        em.clear();
-
-        notificationService.deletePostNotification(post.getId());
-
-        NotificationsResponse notifications = notificationService.findNotifications(AUTH_INFO, PAGEABLE);
-        assertThat(notifications.getNotifications()).isEmpty();
-    }
-
     @DisplayName("알림을 삭제한다.")
     @Test
     void deleteNotification() {

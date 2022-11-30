@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.comment.repository;
 
 import com.wooteco.sokdak.comment.domain.Comment;
+import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.post.domain.Post;
 import java.util.List;
 import java.util.Optional;
@@ -12,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    @Query(value = "SELECT c.nickname FROM Comment c WHERE c.member.id = :memberId and c.post.id = :postId")
-    List<String> findNickNamesByPostIdAndMemberId(@Param("postId") Long postId, @Param("memberId") Long memberId);
+    @Query(value = "SELECT c.nickname FROM Comment c WHERE c.post = :post AND c.member = :member")
+    List<String> findNickNamesByPostIdAndMemberId(Post post, Member member);
 
     @Query(value = "SELECT c.nickname FROM Comment c WHERE c.post.id = :postId")
     List<String> findNicknamesByPostId(@Param("postId") Long postId);
@@ -22,8 +23,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findCommentsByPostId(@Param("postId") Long postId);
 
     List<Comment> findRepliesByParent(Comment parent);
-
-    boolean existsByPostAndMemberId(Post post, Long memberId);
 
     void deleteAllByPost(Post post);
 

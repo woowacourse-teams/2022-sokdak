@@ -3,14 +3,13 @@ package com.wooteco.sokdak.comment.service;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.service.AuthService;
 import com.wooteco.sokdak.comment.domain.Comment;
+import com.wooteco.sokdak.comment.domain.CommentDeletionEvent;
+import com.wooteco.sokdak.comment.domain.CommentNicknameGenerator;
 import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.CommentsResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.dto.NewReplyRequest;
 import com.wooteco.sokdak.comment.dto.ReplyResponse;
-import com.wooteco.sokdak.comment.event.CommentDeletionEvent;
-import com.wooteco.sokdak.comment.event.NewCommentEvent;
-import com.wooteco.sokdak.comment.event.NewReplyEvent;
 import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
 import com.wooteco.sokdak.comment.exception.ReplyDepthException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
@@ -18,14 +17,12 @@ import com.wooteco.sokdak.like.repository.CommentLikeRepository;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
-import com.wooteco.sokdak.member.util.RandomNicknameGenerator;
+import com.wooteco.sokdak.notification.service.NotificationService;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -41,16 +38,20 @@ public class CommentService {
     private final CommentLikeRepository commentLikeRepository;
     private final AuthService authService;
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final CommentNicknameGenerator commentNicknameGenerator;
 
     public CommentService(CommentRepository commentRepository, MemberRepository memberRepository,
-                          PostRepository postRepository, CommentLikeRepository commentLikeRepository,
-                          AuthService authService, ApplicationEventPublisher applicationEventPublisher) {
+                          PostRepository postRepository, NotificationService notificationService,
+                          CommentLikeRepository commentLikeRepository, AuthService authService,
+                          ApplicationEventPublisher applicationEventPublisher,
+                          CommentNicknameGenerator commentNicknameGenerator) {
         this.commentRepository = commentRepository;
         this.memberRepository = memberRepository;
         this.postRepository = postRepository;
         this.commentLikeRepository = commentLikeRepository;
         this.authService = authService;
         this.applicationEventPublisher = applicationEventPublisher;
+        this.commentNicknameGenerator = commentNicknameGenerator;
     }
 
     @Transactional
@@ -61,7 +62,7 @@ public class CommentService {
         Member member = memberRepository.findById(authInfo.getId())
                 .orElseThrow(MemberNotFoundException::new);
 
-        String nickname = getCommentNickname(newCommentRequest.isAnonymous(), authInfo, post);
+        String nickname = commentNicknameGenerator.getCommentNickname(newCommentRequest.isAnonymous(), authInfo, post);
 
         Comment comment = Comment.parent(member, post, nickname, newCommentRequest.getContent());
 
@@ -85,7 +86,7 @@ public class CommentService {
         }
         Post post = parent.getPost();
 
-        String nickname = getCommentNickname(newReplyRequest.isAnonymous(), authInfo, post);
+        String nickname = commentNicknameGenerator.getCommentNickname(newReplyRequest.isAnonymous(), authInfo, post);
 
         Comment reply = Comment.child(member, post, nickname, newReplyRequest.getContent(), parent);
 
@@ -93,49 +94,6 @@ public class CommentService {
         applicationEventPublisher.publishEvent(
                 new NewReplyEvent(parent.getMember().getId(), post.getId(), parent.getId(), member.getId()));
         return reply.getId();
-    }
-
-    private String getCommentNickname(boolean anonymous, AuthInfo authInfo, Post post) {
-        String memberNickname = memberRepository.findNicknameValueById(authInfo.getId())
-                .orElseThrow(MemberNotFoundException::new);
-        if (!anonymous) { // 기명이면 member table에서 memberId로 닉네임 가져옴.
-            return memberNickname;
-        }
-        if (post.isOwner(authInfo.getId())) { // 댓글 작성하는 사람과 게시글 작성자 일치
-            return getPostWriterNickname(post, authInfo.getId());
-        }
-
-        // 익명이면, comment table에서 memberId에 해당하는 nickname들을 다 가져와서, member
-        List<String> usedNicknames = getUsedNicknameInPage(post);
-        List<String> pastNicknamesByMemberId =
-                commentRepository.findNickNamesByPostIdAndMemberId(post.getId(), authInfo.getId());
-
-        return pastNicknamesByMemberId.stream()
-                .filter(isRandomNicknameGeneratedInPast(memberNickname))
-                .findAny()
-                .orElseGet(() -> RandomNicknameGenerator.generate(new HashSet<>(usedNicknames)));
-    }
-
-    private String getPostWriterNickname(Post post, Long memberId) {
-        if (post.isAnonymous()) { // 작성자가 기명으로 글 작성
-            return post.getNickname();
-        }
-        if (commentRepository.existsByPostAndMemberId(post, memberId)) {
-            return commentRepository.findNickNamesByPostIdAndMemberId(post.getId(), memberId)
-                    .get(0);
-        }
-        List<String> commentNicknames = commentRepository.findNicknamesByPostId(post.getId());
-        return RandomNicknameGenerator.generate(new HashSet<>(commentNicknames));
-    }
-
-    private Predicate<String> isRandomNicknameGeneratedInPast(String memberNickname) {
-        return nickname -> !nickname.equals(memberNickname);
-    }
-
-    private List<String> getUsedNicknameInPage(Post post) {
-        List<String> usedNicknames = commentRepository.findNicknamesByPostId(post.getId());
-        usedNicknames.add(post.getNickname());
-        return usedNicknames;
     }
 
     public CommentsResponse findComments(Long postId, AuthInfo authInfo) {

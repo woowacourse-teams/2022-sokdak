@@ -87,7 +87,7 @@ class CommentNicknameGeneratorTest {
     void getCommentNickname_Anonymous_NotPostWriter_SecondComment() {
         when(memberRepository.findById(2L))
                 .thenReturn(Optional.of(MEMBER2));
-        when(commentRepository.findNickNamesByPostIdAndMemberId(ANONYMOUS_POST, MEMBER2))
+        when(commentRepository.findNickNamesByPostAndMember(ANONYMOUS_POST, MEMBER2))
                 .thenReturn(List.of("이전의 닉네임"));
 
         String actual = commentNicknameGenerator.getCommentNickname(true, AUTH_INFO2, ANONYMOUS_POST);
@@ -100,7 +100,7 @@ class CommentNicknameGeneratorTest {
     void a() {
         when(memberRepository.findById(2L))
                 .thenReturn(Optional.of(MEMBER2));
-        when(commentRepository.findNickNamesByPostIdAndMemberId(ANONYMOUS_POST, MEMBER2))
+        when(commentRepository.findNickNamesByPostAndMember(ANONYMOUS_POST, MEMBER2))
                 .thenReturn(List.of("닉네임2"));
 
         String actual = commentNicknameGenerator.getCommentNickname(true, AUTH_INFO2, ANONYMOUS_POST);

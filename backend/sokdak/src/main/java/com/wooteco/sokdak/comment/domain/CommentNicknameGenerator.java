@@ -40,7 +40,7 @@ public class CommentNicknameGenerator {
     }
 
     private String findPreviousAnonymousNicknameOrElseNewRandomNickname(Post post, Member member) {
-        List<String> commentNicknamesByPostAndMember = commentRepository.findNickNamesByPostIdAndMemberId(post, member);
+        List<String> commentNicknamesByPostAndMember = commentRepository.findNickNamesByPostAndMember(post, member);
         return commentNicknamesByPostAndMember.stream()
                 .filter(nickname -> !nickname.equals(member.getNickname()))
                 .findFirst()

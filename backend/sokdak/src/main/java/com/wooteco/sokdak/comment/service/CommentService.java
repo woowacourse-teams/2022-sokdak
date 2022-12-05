@@ -20,7 +20,6 @@ import com.wooteco.sokdak.like.repository.CommentLikeRepository;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
-import com.wooteco.sokdak.notification.service.NotificationService;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
@@ -44,9 +43,8 @@ public class CommentService {
     private final CommentNicknameGenerator commentNicknameGenerator;
 
     public CommentService(CommentRepository commentRepository, MemberRepository memberRepository,
-                          PostRepository postRepository, NotificationService notificationService,
-                          CommentLikeRepository commentLikeRepository, AuthService authService,
-                          ApplicationEventPublisher applicationEventPublisher,
+                          PostRepository postRepository, CommentLikeRepository commentLikeRepository,
+                          AuthService authService, ApplicationEventPublisher applicationEventPublisher,
                           CommentNicknameGenerator commentNicknameGenerator) {
         this.commentRepository = commentRepository;
         this.memberRepository = memberRepository;

@@ -3,7 +3,7 @@ import { rest } from 'msw';
 import { hashtagList } from '@/dummy';
 
 const hashtagsHandlers = [
-  rest.get('/hashtags/popular', (req, res, ctx) => {
+  rest.get('/api/hashtags/popular', (req, res, ctx) => {
     const limit = Number(req.url.searchParams.get('limit')!);
     const include = req.url.searchParams.get('include')!;
 

@@ -4,7 +4,7 @@ import { STORAGE_KEY } from '@/constants/localStorage';
 import { isExpired, parseJwt } from '@/utils/decodeJwt';
 
 const authFetcher = axios.create({
-  baseURL: `${process.env.API_URL}/api`,
+  baseURL: process.env.API_URL ? `${process.env.API_URL}/api` : '/api',
   withCredentials: true,
 });
 

@@ -3,7 +3,7 @@ import { rest } from 'msw';
 import { notificationList } from '@/dummy';
 
 const notificationHandlers = [
-  rest.get('/notifications', (req, res, ctx) => {
+  rest.get('/api/notifications', (req, res, ctx) => {
     const size = Number(req.url.searchParams.get('size'));
     const page = Number(req.url.searchParams.get('page'));
     notificationList.sort((prev, next) => Number(new Date(next.createdAt)) - Number(new Date(prev.createdAt)));
@@ -25,11 +25,11 @@ const notificationHandlers = [
     );
   }),
 
-  rest.get('/notifications/check', (req, res, ctx) => {
+  rest.get('/api/notifications/check', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json({ existence: notificationList.some(({ isChecked }) => !isChecked) }));
   }),
 
-  rest.delete('/notifications/:id', (req, res, ctx) => {
+  rest.delete('/api/notifications/:id', (req, res, ctx) => {
     const { id } = req.params;
 
     const targetIndex = notificationList.findIndex(notification => notification.id === Number(id));

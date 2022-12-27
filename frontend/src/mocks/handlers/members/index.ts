@@ -10,7 +10,7 @@ interface SignUpProps extends Member {
 }
 
 const memberHandler = [
-  rest.post<Member>('/login', (req, res, ctx) => {
+  rest.post<Member>('/api/login', (req, res, ctx) => {
     const { username, password } = req.body;
 
     const targetMember = memberList.find(member => member.username === username);
@@ -37,7 +37,7 @@ const memberHandler = [
     );
   }),
 
-  rest.post<{ email: string }>('/members/signup/email', (req, res, ctx) => {
+  rest.post<{ email: string }>('/api/members/signup/email', (req, res, ctx) => {
     const { email } = req.body;
 
     const targetEmail = validMemberEmail.find(member => member.email === email);
@@ -53,7 +53,7 @@ const memberHandler = [
     return res(ctx.status(204));
   }),
 
-  rest.post<{ email: string; code: string }>('/members/signup/email/verification', (req, res, ctx) => {
+  rest.post<{ email: string; code: string }>('/api/members/signup/email/verification', (req, res, ctx) => {
     const { email, code } = req.body;
 
     const targetEmail = validMemberEmail.find(member => member.email === email);
@@ -72,7 +72,7 @@ const memberHandler = [
 
     return res(ctx.status(204));
   }),
-  rest.get('/members/signup/exists', (req, res, ctx) => {
+  rest.get('/api/members/signup/exists', (req, res, ctx) => {
     if (req.url.searchParams.has('username')) {
       const id = req.url.searchParams.get('username');
 
@@ -95,7 +95,7 @@ const memberHandler = [
     }
   }),
 
-  rest.post<SignUpProps>('/members/signup', (req, res, ctx) => {
+  rest.post<SignUpProps>('/api/members/signup', (req, res, ctx) => {
     const { email, code, nickname, password, passwordConfirmation, username } = req.body;
     if (password !== passwordConfirmation) {
       return res(ctx.status(400), ctx.json({ message: '입력된 비밀번호와 비밀번호 확인란이 일치하지 않습니다.' }));
@@ -130,7 +130,7 @@ const memberHandler = [
     return res(ctx.status(201));
   }),
 
-  rest.patch<{ nickname: string }>('/members/nickname', (req, res, ctx) => {
+  rest.patch<{ nickname: string }>('/api/members/nickname', (req, res, ctx) => {
     const { nickname } = req.body;
 
     if (!/^[가-힣a-zA-Z]+$/.test(nickname)) {
@@ -154,7 +154,7 @@ const memberHandler = [
     return res(ctx.status(204));
   }),
 
-  rest.post('/logout', (req, res, ctx) => {
+  rest.post('/api/logout', (req, res, ctx) => {
     return res(ctx.status(204));
   }),
 ];

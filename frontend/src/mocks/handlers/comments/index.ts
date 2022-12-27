@@ -3,7 +3,7 @@ import { rest } from 'msw';
 import { commentList, commentListTable, postList, reportCommentList } from '@/dummy';
 
 const commentHandlers = [
-  rest.get('/posts/:id/comments', (req, res, ctx) => {
+  rest.get('/api/posts/:id/comments', (req, res, ctx) => {
     const params = req.params;
     const id = Number(params.id);
 
@@ -15,7 +15,7 @@ const commentHandlers = [
     return res(ctx.status(200), ctx.json({ comments: targetCommentList, totalCount }));
   }),
 
-  rest.post<{ content: string; anonymous: boolean }>('/posts/:id/comments', (req, res, ctx) => {
+  rest.post<{ content: string; anonymous: boolean }>('/api/posts/:id/comments', (req, res, ctx) => {
     const params = req.params;
     const id = Number(params.id);
     const { content, anonymous } = req.body;
@@ -46,7 +46,7 @@ const commentHandlers = [
     return res(ctx.status(204));
   }),
 
-  rest.post<{ message: string }>('/comments/:id/report', (req, res, ctx) => {
+  rest.post<{ message: string }>('/api/comments/:id/report', (req, res, ctx) => {
     const id = Number(req.params.id);
     const { message } = req.body;
 
@@ -58,7 +58,7 @@ const commentHandlers = [
     return res(ctx.status(201));
   }),
 
-  rest.delete('/comments/:id', (req, res, ctx) => {
+  rest.delete('/api/comments/:id', (req, res, ctx) => {
     let isCommentExist = false;
     const id = Number(req.params.id);
 
@@ -106,7 +106,7 @@ const commentHandlers = [
     return res(ctx.status(204));
   }),
 
-  rest.post<{ content: string; anonymous: boolean }>('/comments/:id/reply', (req, res, ctx) => {
+  rest.post<{ content: string; anonymous: boolean }>('/api/comments/:id/reply', (req, res, ctx) => {
     const id = Number(req.params.id);
     const { content, anonymous } = req.body;
 
@@ -141,7 +141,7 @@ const commentHandlers = [
     return res(ctx.status(201));
   }),
 
-  rest.put('/comments/:id/like', (req, res, ctx) => {
+  rest.put('/api/comments/:id/like', (req, res, ctx) => {
     const { id } = req.params;
     const targetComment = commentList.find(comment => comment.id === Number(id));
 

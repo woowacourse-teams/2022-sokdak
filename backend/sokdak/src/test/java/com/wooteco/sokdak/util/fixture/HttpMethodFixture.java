@@ -10,10 +10,12 @@ import org.springframework.http.MediaType;
 
 public class HttpMethodFixture {
 
+    private static final String REQUEST_URI_PREFIX = "/api";
+
     public static ExtractableResponse<Response> httpGet(String path) {
         return RestAssured
                 .given().log().all()
-                .when().get(path)
+                .when().get(REQUEST_URI_PREFIX + path)
                 .then().log().all()
                 .extract();
     }
@@ -22,7 +24,7 @@ public class HttpMethodFixture {
         return RestAssured
                 .given().log().all()
                 .header(HttpHeaders.COOKIE, cookieValue)
-                .when().get(path)
+                .when().get(REQUEST_URI_PREFIX + path)
                 .then().log().all()
                 .extract();
     }
@@ -32,7 +34,7 @@ public class HttpMethodFixture {
                 .given().log().all()
                 .body(postRequest)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post(path)
+                .when().post(REQUEST_URI_PREFIX + path)
                 .then().log().all()
                 .extract();
     }
@@ -41,7 +43,7 @@ public class HttpMethodFixture {
         return RestAssured
                 .given().log().all()
                 .header(AUTHORIZATION, token)
-                .when().get(path)
+                .when().get(REQUEST_URI_PREFIX + path)
                 .then().log().all()
                 .extract();
     }
@@ -53,7 +55,7 @@ public class HttpMethodFixture {
                 .header(AUTHORIZATION, token)
                 .body(requestBody)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post(path)
+                .when().post(REQUEST_URI_PREFIX + path)
                 .then().log().all()
                 .extract();
     }
@@ -65,7 +67,7 @@ public class HttpMethodFixture {
                 .header(AUTHORIZATION, token)
                 .body(requestBody)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().put(path)
+                .when().put(REQUEST_URI_PREFIX + path)
                 .then().log().all()
                 .extract();
     }
@@ -74,7 +76,7 @@ public class HttpMethodFixture {
         return RestAssured
                 .given().log().all()
                 .header(AUTHORIZATION, token)
-                .when().put(path)
+                .when().put(REQUEST_URI_PREFIX + path)
                 .then().log().all()
                 .extract();
     }
@@ -86,7 +88,7 @@ public class HttpMethodFixture {
                 .header(AUTHORIZATION, token)
                 .body(requestBody)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().patch(path)
+                .when().patch(REQUEST_URI_PREFIX + path)
                 .then().log().all()
                 .extract();
     }
@@ -95,7 +97,7 @@ public class HttpMethodFixture {
         return RestAssured
                 .given().log().all()
                 .header(AUTHORIZATION, token)
-                .when().delete(path)
+                .when().delete(REQUEST_URI_PREFIX + path)
                 .then().log().all()
                 .extract();
     }

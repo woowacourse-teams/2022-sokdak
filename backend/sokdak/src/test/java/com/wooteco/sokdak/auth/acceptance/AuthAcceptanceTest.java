@@ -63,7 +63,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         authCodeRepository.save(authCode);
 
         ExtractableResponse<Response> response =
-                httpPost(new VerificationRequest(email, code), "members/signup/email/verification");
+                httpPost(new VerificationRequest(email, code), "/members/signup/email/verification");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
@@ -80,7 +80,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         authCodeRepository.save(authCode);
 
         ExtractableResponse<Response> response =
-                httpPost(new VerificationRequest(email, "NONONO"), "members/signup/email/verification");
+                httpPost(new VerificationRequest(email, "NONONO"), "/members/signup/email/verification");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
@@ -97,7 +97,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
         authCodeRepository.save(authCode);
 
         ExtractableResponse<Response> response = httpPost(
-                new VerificationRequest("wrong@gmail.com", code), "members/signup/email/verification");
+                new VerificationRequest("wrong@gmail.com", code), "/members/signup/email/verification");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
@@ -118,7 +118,7 @@ class AuthAcceptanceTest extends AcceptanceTest {
                 .instant();
 
         ExtractableResponse<Response> response =
-                httpPost(new VerificationRequest(email, code), "members/signup/email/verification");
+                httpPost(new VerificationRequest(email, code), "/members/signup/email/verification");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }

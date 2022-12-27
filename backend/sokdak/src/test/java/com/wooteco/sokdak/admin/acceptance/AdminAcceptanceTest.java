@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 @DisplayName("관리자 인수테스트")
-public class AdminAcceptanceTest extends AcceptanceTest {
+class AdminAcceptanceTest extends AcceptanceTest {
 
     private static final int reportCount = 5;
     private static final String SERIAL_NUMBER = "test1@gmail.com";
@@ -34,9 +34,9 @@ public class AdminAcceptanceTest extends AcceptanceTest {
         String adminToken = getAdminToken();
         addNewPost();
 
-        httpDeleteWithAuthorization("admin/posts/1", adminToken);
+        httpDeleteWithAuthorization("/admin/posts/1", adminToken);
 
-        ExtractableResponse<Response> actual = httpGetWithAuthorization("posts/1", adminToken);
+        ExtractableResponse<Response> actual = httpGetWithAuthorization("/posts/1", adminToken);
         assertAll(
                 () -> assertThat(actual.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value()),
                 () -> assertThat(actual.body().asString()).contains("게시물을 찾을 수 없습니다.")
@@ -49,10 +49,10 @@ public class AdminAcceptanceTest extends AcceptanceTest {
         String adminToken = getAdminToken();
         addNewPost();
 
-        httpPostWithAuthorization("", "admin/posts/1/postreports/" + reportCount, adminToken);
-        ExtractableResponse<Response> response = httpGetWithAuthorization("admin/postreports", adminToken);
-        httpDeleteWithAuthorization("admin/posts/1/postreports", adminToken);
-        ExtractableResponse<Response> response2 = httpGetWithAuthorization("admin/postreports", adminToken);
+        httpPostWithAuthorization("", "/admin/posts/1/postreports/" + reportCount, adminToken);
+        ExtractableResponse<Response> response = httpGetWithAuthorization("/admin/postreports", adminToken);
+        httpDeleteWithAuthorization("/admin/posts/1/postreports", adminToken);
+        ExtractableResponse<Response> response2 = httpGetWithAuthorization("/admin/postreports", adminToken);
 
         assertAll(
                 () -> assertThat(getPostReports(response)).hasSize(reportCount),
@@ -74,11 +74,11 @@ public class AdminAcceptanceTest extends AcceptanceTest {
                 .build();
         int lastTicketIndex = 7;
 
-        httpPostWithAuthorization(initTicketRequest, "admin/tickets", adminToken);
-        TicketElement initTicketElement = getTicketElements(httpGetWithAuthorization("admin/tickets", adminToken))
+        httpPostWithAuthorization(initTicketRequest, "/admin/tickets", adminToken);
+        TicketElement initTicketElement = getTicketElements(httpGetWithAuthorization("/admin/tickets", adminToken))
                 .get(lastTicketIndex);
-        httpPatchWithAuthorization(usedTicketRequest, "admin/tickets", adminToken);
-        TicketElement usedTicketElement = getTicketElements(httpGetWithAuthorization("admin/tickets", adminToken))
+        httpPatchWithAuthorization(usedTicketRequest, "/admin/tickets", adminToken);
+        TicketElement usedTicketElement = getTicketElements(httpGetWithAuthorization("/admin/tickets", adminToken))
                 .get(lastTicketIndex);
 
         assertAll(

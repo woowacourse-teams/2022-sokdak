@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-@Profile("main")
+@Profile("prod")
 public class RoutingDataSource extends AbstractRoutingDataSource {
 
     private RoutingCircular<String> routingCircular;

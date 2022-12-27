@@ -47,6 +47,7 @@ server:
     session:
       cookie:
         http-only: false
+    context-path: /api
 
 jasypt:
   encryptor:

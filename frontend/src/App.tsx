@@ -2,7 +2,11 @@ import { useContext, lazy, Suspense } from 'react';
 import { useQueryClient } from 'react-query';
 import { Route, Routes } from 'react-router-dom';
 
+import { AxiosError } from 'axios';
+
 import Prompt from './components/Prompt';
+import ErrorBoundary from '@/components/ErrorBoundary';
+import CommonError from '@/components/ErrorBoundary/components/CommonError';
 import Header from '@/components/Header';
 import Snackbar from '@/components/Snackbar';
 import Spinner from '@/components/Spinner';
@@ -54,7 +58,11 @@ const App = () => {
   });
 
   return (
-    <>
+    <ErrorBoundary
+      fallback={(error: Error | AxiosError | null, errorBoundaryReset: () => void) => (
+        <CommonError error={error} errorBoundaryReset={errorBoundaryReset} />
+      )}
+    >
       <Header />
       <Suspense fallback={<FallbackSpinner />}>
         <Routes>
@@ -89,7 +97,7 @@ const App = () => {
           setVisible={setInstallable}
         />
       )}
-    </>
+    </ErrorBoundary>
   );
 };
 

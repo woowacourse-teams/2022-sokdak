@@ -30,9 +30,9 @@ const memberHandler = [
       ctx.status(200),
       ctx.set({
         Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6ImRvbmtleSIsImlhdCI6MjAxNjIzOTAyMn0.6uHvcllO8zj221Qerqdiu19oX8spwqUGJfxA4DXjEzE',
+          'Bearer eyJhbGciOiJIUzUxMiJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwibmlja25hbWUiOiJURVNUIiwiaWF0IjoxNjY3ODAwMTQyLCJleHAiOjI2NjgzMDM3NDJ9.XEv2IcfS3to3GbMFcBciLc1pZpj39sOyMv6e9PT0-eq0pStz5Ok9ZsFp7AwGs2SFIthS9oGgyMCHbyQqZr5-NQ',
         'Refresh-Token':
-          'Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NTg5MDIzOTcsImV4cCI6MTY2MDExMjM5N30.1uB7OLo8GY5z-JR8XiaDebbQdrpGrrv7k24J1mfwyoOlqIUpwnyCNubQMf-I94494d2_6x6pSHn_UM6ppYmiEA',
+          'Bearer eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2NTg5MDIzOTcsImV4cCI6MjY2MDExMjM5N30.HCWdK3pVqdt6QZIQGvoNNwmnBGy6MRr1e-Pm3SWp6yXwSds3mpvtJjmtuHMa1bfsP0kQLR1TnLIKsclbe0Nedw',
       }),
     );
   }),
@@ -154,7 +154,7 @@ const memberHandler = [
     return res(ctx.status(204));
   }),
 
-  rest.post('/logout', (req, res, ctx) => {
+  rest.get('/logout', (req, res, ctx) => {
     return res(ctx.status(204));
   }),
 ];

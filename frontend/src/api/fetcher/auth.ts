@@ -11,14 +11,14 @@ const authFetcher = axios.create({
 const accessToken = localStorage.getItem(STORAGE_KEY.ACCESS_TOKEN);
 const refreshToken = localStorage.getItem(STORAGE_KEY.REFRESH_TOKEN);
 
-if (refreshToken && isExpired(parseJwt(refreshToken)!)) {
+if (refreshToken && isExpired(parseJwt(refreshToken))) {
   localStorage.removeItem(STORAGE_KEY.ACCESS_TOKEN);
   localStorage.removeItem(STORAGE_KEY.REFRESH_TOKEN);
 }
 
 if (accessToken) authFetcher.defaults.headers.common['Authorization'] = accessToken;
 
-if (refreshToken && !isExpired(parseJwt(refreshToken)!)) {
+if (refreshToken && !isExpired(parseJwt(refreshToken))) {
   authFetcher.defaults.headers.common['Refresh-Token'] = refreshToken;
 }
 
@@ -37,7 +37,7 @@ authFetcher.interceptors.request.use(
         if (request.headers) request.headers['Authorization'] = data.headers.authorization;
         authFetcher.defaults.headers.common['Authorization'] = data.headers.authorization;
       } catch (e) {
-        authFetcher.defaults.headers.common = {};
+        delete authFetcher.defaults.headers.common['Authorization'];
         localStorage.removeItem(STORAGE_KEY.ACCESS_TOKEN);
         localStorage.removeItem(STORAGE_KEY.REFRESH_TOKEN);
         throw new AxiosError('토큰이 만료되었습니다.');

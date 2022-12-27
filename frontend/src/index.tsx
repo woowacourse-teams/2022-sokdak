@@ -4,6 +4,8 @@ import { QueryClientProvider, QueryClient } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { BrowserRouter } from 'react-router-dom';
 
+import { AxiosError } from 'axios';
+
 import { AuthContextProvider } from './context/Auth';
 import { PaginationContextProvider } from './context/Pagination';
 import { SnackBarContextProvider } from './context/Snackbar';
@@ -18,7 +20,9 @@ runJenniferFront();
 
 if (process.env.MODE === 'LOCAL:MSW') {
   const { worker } = require('./mocks/worker');
-  worker.start();
+  worker.start({
+    onUnhandledRequest: 'bypass',
+  });
 }
 
 if (process.env.MODE !== 'LOCAL:MSW' && 'serviceWorker' in navigator) {
@@ -34,7 +38,14 @@ if (process.env.MODE !== 'LOCAL:MSW' && 'serviceWorker' in navigator) {
   });
 }
 
-const queryClient = new QueryClient({ defaultOptions: { queries: { suspense: true } } });
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      suspense: true,
+      useErrorBoundary: error => error instanceof AxiosError && error.response?.status! >= 500,
+    },
+  },
+});
 
 const rootNode = document.getElementById('root') as Element;
 

@@ -1,27 +1,21 @@
 package com.wooteco.sokdak.notification.domain;
 
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
-import com.wooteco.sokdak.comment.domain.Comment;
-import com.wooteco.sokdak.member.domain.Member;
-import com.wooteco.sokdak.post.domain.Post;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Getter
 @EntityListeners(AuditingEntityListener.class)
+@Getter
 public class Notification {
 
     @Id
@@ -31,17 +25,11 @@ public class Notification {
 
     private NotificationType notificationType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    private Long memberId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    private Post post;
+    private Long postId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_id")
-    private Comment comment;
+    private Long commentId;
 
     private boolean inquired;
 
@@ -51,25 +39,41 @@ public class Notification {
     protected Notification() {
     }
 
-    @Builder
-    private Notification(NotificationType notificationType, Member member, Post post, Comment comment) {
+    public Notification(NotificationType notificationType, Long memberId, Long postId, Long commentId) {
         this.notificationType = notificationType;
-        this.member = member;
-        this.post = post;
-        this.comment = comment;
+        this.memberId = memberId;
+        this.postId = postId;
+        this.commentId = commentId;
         this.inquired = false;
     }
 
-    public String getContent() {
-        if (getComment() == null || notificationType == NotificationType.NEW_COMMENT) {
-            return post.getTitle();
-        }
-        return getComment().getMessage();
+    public static Notification postReport(Long memberId, Long postId) {
+        return new Notification(NotificationType.POST_REPORT, memberId, postId, null);
+    }
+
+    public static Notification newComment(Long memberId, Long postId) {
+        return new Notification(NotificationType.NEW_COMMENT, memberId, postId, null);
+    }
+
+    public static Notification postHotBoard(Long memberId, Long postId) {
+        return new Notification(NotificationType.HOT_BOARD, memberId, postId, null);
+    }
+
+    public static Notification newReply(Long memberId, Long postId, Long commentId) {
+        return new Notification(NotificationType.NEW_REPLY, memberId, postId, commentId);
+    }
+
+    public static Notification commentReport(Long memberId, Long postId, Long commentId) {
+        return new Notification(NotificationType.COMMENT_REPORT, memberId, postId, commentId);
     }
 
     public void validateOwner(Long accessMemberId) {
-        if (!member.hasId(accessMemberId)) {
+        if (!memberId.equals(accessMemberId)) {
             throw new AuthorizationException();
         }
+    }
+
+    public boolean isCommentNotification() {
+        return Objects.nonNull(commentId);
     }
 }

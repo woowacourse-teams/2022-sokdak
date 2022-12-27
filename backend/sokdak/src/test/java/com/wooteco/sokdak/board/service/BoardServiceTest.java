@@ -16,12 +16,12 @@ import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.board.dto.BoardsResponse;
 import com.wooteco.sokdak.board.dto.NewBoardResponse;
+import com.wooteco.sokdak.board.event.PostHotBoardEvent;
 import com.wooteco.sokdak.board.exception.BoardNotFoundException;
 import com.wooteco.sokdak.board.exception.BoardNotWritableException;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.member.domain.RoleType;
-import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.util.ServiceTest;
@@ -47,9 +47,6 @@ class BoardServiceTest extends ServiceTest {
 
     @Autowired
     private PostBoardRepository postBoardRepository;
-
-    @Autowired
-    private NotificationRepository notificationRepository;
 
     private Post post;
 
@@ -143,13 +140,13 @@ class BoardServiceTest extends ServiceTest {
 
         boardService.checkAndSaveInSpecialBoard(post);
         Optional<PostBoard> foundPostBoard = postBoardRepository.findPostBoardByPostAndBoard(post, hotBoard);
-        boolean newNotification = notificationRepository.existsByMemberIdAndInquiredIsFalse(member.getId());
+        long postHotBoardEventCount = applicationEvents.stream(PostHotBoardEvent.class).count();
 
         assertAll(
                 () -> assertThat(foundPostBoard).isNotEmpty(),
                 () -> assertThat(foundPostBoard.get().getBoard().getTitle()).isEqualTo("Hot 게시판"),
                 () -> assertThat(foundPostBoard.get().getPost().getTitle()).isEqualTo("제목"),
-                () -> assertThat(newNotification).isTrue()
+                () -> assertThat(postHotBoardEventCount).isEqualTo(1)
         );
     }
 

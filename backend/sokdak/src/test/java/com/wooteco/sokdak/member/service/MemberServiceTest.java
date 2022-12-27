@@ -3,6 +3,7 @@ package com.wooteco.sokdak.member.service;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.ENCRYPTOR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.domain.RoleType;

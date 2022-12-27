@@ -4,7 +4,7 @@ import { hashtagList, postList, boardList, reportList } from '@/dummy';
 
 const postHandlers = [
   rest.post<Pick<Post, 'title' | 'content' | 'imageName'> & { hashtags: string[]; anonymous: boolean }>(
-    '/boards/:boardId/posts',
+    '/api/boards/:boardId/posts',
     (req, res, ctx) => {
       const { title, content, hashtags, anonymous, imageName } = req.body;
       const boardId = Number(req.params.boardId!);
@@ -53,7 +53,7 @@ const postHandlers = [
     },
   ),
 
-  rest.put('/posts/:id/like', (req, res, ctx) => {
+  rest.put('/api/posts/:id/like', (req, res, ctx) => {
     const id = Number(req.params.id!);
     const targetPost = postList.find(post => post.id === id);
 
@@ -81,7 +81,7 @@ const postHandlers = [
     );
   }),
 
-  rest.get('/posts/count', (req, res, ctx) => {
+  rest.get('/api/posts/count', (req, res, ctx) => {
     const query = req.url.searchParams.get('query');
 
     if (!query) {
@@ -112,7 +112,7 @@ const postHandlers = [
     return res(ctx.status(200), ctx.json({ totalPostCount: result.length }));
   }),
 
-  rest.get('/posts/:id', (req, res, ctx) => {
+  rest.get('/api/posts/:id', (req, res, ctx) => {
     const { id } = req.params;
 
     if (isNaN(Number(id))) {
@@ -140,49 +140,52 @@ const postHandlers = [
     return res(ctx.status(200), ctx.json(targetPost));
   }),
 
-  rest.put<Pick<Post, 'title' | 'content' | 'imageName'> & { hashtags: string[] }>('/posts/:id', (req, res, ctx) => {
-    const params = req.params;
-    const id = Number(params.id);
-    const { title, content, hashtags, imageName } = req.body;
+  rest.put<Pick<Post, 'title' | 'content' | 'imageName'> & { hashtags: string[] }>(
+    '/api/posts/:id',
+    (req, res, ctx) => {
+      const params = req.params;
+      const id = Number(params.id);
+      const { title, content, hashtags, imageName } = req.body;
 
-    const isTargetPostExist = postList.some(post => post.id === id);
+      const isTargetPostExist = postList.some(post => post.id === id);
 
-    if (!isTargetPostExist) {
-      return res(ctx.status(400), ctx.json({ message: '해당 글이 존재하지 않습니다.' }));
-    }
-
-    if (!title || !content) {
-      return res(ctx.status(400), ctx.json({ message: '제목 혹은 본문이 없습니다.' }));
-    }
-
-    const targetPost = postList.find(post => post.id === id)!;
-
-    targetPost.title = title;
-    targetPost.content = content;
-    targetPost.imageName = imageName;
-
-    hashtags.forEach(hashtagName => {
-      const existedTag = hashtagList.find(hashtag => hashtag.name === hashtagName);
-
-      if (existedTag) {
-        existedTag.count += 1;
-        return;
+      if (!isTargetPostExist) {
+        return res(ctx.status(400), ctx.json({ message: '해당 글이 존재하지 않습니다.' }));
       }
 
-      hashtagList.push({
-        id: hashtagList.length + 1,
-        name: hashtagName,
-        count: 1,
+      if (!title || !content) {
+        return res(ctx.status(400), ctx.json({ message: '제목 혹은 본문이 없습니다.' }));
+      }
+
+      const targetPost = postList.find(post => post.id === id)!;
+
+      targetPost.title = title;
+      targetPost.content = content;
+      targetPost.imageName = imageName;
+
+      hashtags.forEach(hashtagName => {
+        const existedTag = hashtagList.find(hashtag => hashtag.name === hashtagName);
+
+        if (existedTag) {
+          existedTag.count += 1;
+          return;
+        }
+
+        hashtagList.push({
+          id: hashtagList.length + 1,
+          name: hashtagName,
+          count: 1,
+        });
       });
-    });
 
-    targetPost.hashtags = hashtags.map(hashtagName => hashtagList.find(hashtag => hashtag.name === hashtagName)!);
-    targetPost.modified = true;
+      targetPost.hashtags = hashtags.map(hashtagName => hashtagList.find(hashtag => hashtag.name === hashtagName)!);
+      targetPost.modified = true;
 
-    return res(ctx.status(204));
-  }),
+      return res(ctx.status(204));
+    },
+  ),
 
-  rest.delete('/posts/:id', (req, res, ctx) => {
+  rest.delete('/api/posts/:id', (req, res, ctx) => {
     const params = req.params;
     const id = Number(params.id);
 
@@ -211,7 +214,7 @@ const postHandlers = [
     return res(ctx.status(204));
   }),
 
-  rest.get('/boards/contents', (req, res, ctx) => {
+  rest.get('/api/boards/contents', (req, res, ctx) => {
     const boards = boardList.map(board => {
       return {
         ...board,
@@ -224,7 +227,7 @@ const postHandlers = [
     return res(ctx.status(200), ctx.json({ boards: boards }));
   }),
 
-  rest.get('/boards/:id/posts', (req, res, ctx) => {
+  rest.get('/api/boards/:id/posts', (req, res, ctx) => {
     const params = req.params;
     const boardId = Number(params.id);
 
@@ -242,7 +245,7 @@ const postHandlers = [
     );
   }),
 
-  rest.get('/posts', (req, res, ctx) => {
+  rest.get('/api/posts', (req, res, ctx) => {
     const hashtagName = req.url.searchParams.get('hashtag');
     const query = req.url.searchParams.get('query');
     const size = Number(req.url.searchParams.get('size')!);
@@ -300,7 +303,7 @@ const postHandlers = [
     );
   }),
 
-  rest.post<{ message: string }>('/posts/:id/report', (req, res, ctx) => {
+  rest.post<{ message: string }>('/api/posts/:id/report', (req, res, ctx) => {
     const { id } = req.params;
     const { message } = req.body;
 
@@ -320,7 +323,7 @@ const postHandlers = [
     return res(ctx.status(201));
   }),
 
-  rest.get('/boards', (req, res, ctx) => {
+  rest.get('/api/boards', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json({ boards: boardList }));
   }),
 ];

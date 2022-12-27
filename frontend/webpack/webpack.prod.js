@@ -8,7 +8,7 @@ module.exports = merge(common, {
   mode: 'production',
   plugins: [
     new DefinePlugin({
-      'process.env.API_URL': JSON.stringify('https://was.sokdaksokdak.com'),
+      'process.env.API_URL': JSON.stringify('https://sokdaksokdak.com'),
       'process.env.MODE': JSON.stringify('production'),
     }),
     new WorkboxPlugin.GenerateSW({

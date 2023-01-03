@@ -8,12 +8,11 @@ import com.wooteco.sokdak.board.dto.BoardResponse;
 import com.wooteco.sokdak.board.dto.BoardsResponse;
 import com.wooteco.sokdak.board.dto.NewBoardRequest;
 import com.wooteco.sokdak.board.dto.NewBoardResponse;
-import com.wooteco.sokdak.board.event.PostHotBoardEvent;
 import com.wooteco.sokdak.board.exception.BoardNotFoundException;
 import com.wooteco.sokdak.board.exception.BoardNotWritableException;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
-import com.wooteco.sokdak.notification.service.NotificationService;
+import com.wooteco.sokdak.event.NotificationEvent;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
@@ -38,15 +37,12 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final PostBoardRepository postBoardRepository;
-    private final NotificationService notificationService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     public BoardService(BoardRepository boardRepository, PostBoardRepository postBoardRepository,
-                        NotificationService notificationService,
                         ApplicationEventPublisher applicationEventPublisher) {
         this.boardRepository = boardRepository;
         this.postBoardRepository = postBoardRepository;
-        this.notificationService = notificationService;
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
@@ -101,8 +97,8 @@ public class BoardService {
             postBoard.addPost(originalPost);
             postBoard.addBoard(specialBoard);
             postBoardRepository.save(postBoard);
-            applicationEventPublisher
-                    .publishEvent(new PostHotBoardEvent(originalPost.getMember().getId(), originalPost.getId()));
+            applicationEventPublisher.publishEvent(
+                    NotificationEvent.toHotBoardEvent(originalPost.getMember().getId(), originalPost.getId()));
         }
     }
 

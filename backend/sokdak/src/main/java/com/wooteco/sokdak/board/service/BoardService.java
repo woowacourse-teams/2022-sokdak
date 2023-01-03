@@ -13,6 +13,7 @@ import com.wooteco.sokdak.board.exception.BoardNotFoundException;
 import com.wooteco.sokdak.board.exception.BoardNotWritableException;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
+import com.wooteco.sokdak.event.NotificationEvent;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;

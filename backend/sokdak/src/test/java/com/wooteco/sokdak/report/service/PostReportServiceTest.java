@@ -17,6 +17,7 @@ import com.wooteco.sokdak.board.domain.Board;
 import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
+import com.wooteco.sokdak.event.NotificationEvent;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
@@ -133,7 +134,7 @@ class PostReportServiceTest extends ServiceTest {
             postReportService.reportPost(post.getId(), REPORT_REQUEST, authInfo);
         }
 
-        long postReportEventCount = applicationEvents.stream(PostReportEvent.class).count();
+        long postReportEventCount = applicationEvents.stream(NotificationEvent.class).count();
 
         assertThat(postReportEventCount).isEqualTo(expected);
     }

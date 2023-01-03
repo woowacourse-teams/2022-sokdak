@@ -20,6 +20,7 @@ import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
+import com.wooteco.sokdak.event.NotificationEvent;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
@@ -170,7 +171,7 @@ class CommentReportServiceTest extends ServiceTest {
             commentReportService.reportComment(comment.getId(), REPORT_REQUEST, authInfo);
         }
 
-        long commentReportEventCount = applicationEvents.stream(CommentReportEvent.class).count();
+        long commentReportEventCount = applicationEvents.stream(NotificationEvent.class).count();
 
         assertThat(commentReportEventCount).isEqualTo(expected);
     }

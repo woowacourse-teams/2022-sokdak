@@ -30,6 +30,7 @@ import com.wooteco.sokdak.comment.dto.ReplyResponse;
 import com.wooteco.sokdak.comment.event.CommentDeletionEvent;
 import com.wooteco.sokdak.comment.exception.ReplyDepthException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
+import com.wooteco.sokdak.event.NotificationEvent;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.domain.Nickname;
 import com.wooteco.sokdak.member.domain.Password;
@@ -191,7 +192,7 @@ class CommentServiceTest extends ServiceTest {
 
         Comment comment = commentRepository.findById(commentId).orElseThrow();
         Comment reply = commentRepository.findById(replyId).orElseThrow();
-        long newReplyEventCount = applicationEvents.stream(NewReplyEvent.class).count();
+        long newReplyEventCount = applicationEvents.stream(NotificationEvent.class).count();
         assertAll(
                 () -> assertThat(reply.getMessage()).isEqualTo(NON_ANONYMOUS_REPLY_REQUEST.getContent()),
                 () -> assertThat(reply.getParent()).isEqualTo(comment),

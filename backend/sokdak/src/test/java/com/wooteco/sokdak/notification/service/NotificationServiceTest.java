@@ -15,6 +15,7 @@ import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.notification.domain.Notification;
@@ -96,7 +97,7 @@ class NotificationServiceTest extends ServiceTest {
     void existsNewNotification(Long memberId, boolean expected) {
         Notification notification = new Notification(NEW_COMMENT, member.getId(), post.getId(), null);
         notificationRepository.save(notification);
-        AuthInfo authInfo = new AuthInfo(memberId, "USER", VALID_NICKNAME_TEXT);
+        AuthInfo authInfo = new AuthInfo(memberId, RoleType.USER.getName(), VALID_NICKNAME_TEXT);
 
         NewNotificationCheckResponse newNotificationCheckResponse = notificationService.checkNewNotification(authInfo);
 
@@ -120,10 +121,10 @@ class NotificationServiceTest extends ServiceTest {
                 () -> assertThat(notificationsResponse.isLastPage()).isTrue(),
                 () -> assertThat(notificationResponses).hasSize(2),
                 () -> assertThat(notificationResponses.get(0).getPostId()).isEqualTo(post.getId()),
-                () -> assertThat(notificationResponses.get(0).getType()).isEqualTo("NEW_COMMENT"),
+                () -> assertThat(notificationResponses.get(0).getType()).isEqualTo(NEW_COMMENT.name()),
                 () -> assertThat(notificationResponses.get(0).getContent()).isEqualTo(post.getTitle()),
                 () -> assertThat(notificationResponses.get(1).getPostId()).isEqualTo(post.getId()),
-                () -> assertThat(notificationResponses.get(1).getType()).isEqualTo("POST_REPORT"),
+                () -> assertThat(notificationResponses.get(1).getType()).isEqualTo(POST_REPORT.name()),
                 () -> assertThat(notificationResponses.get(1).getContent()).isEqualTo(post.getTitle()),
                 () -> assertThat(newNotificationCheckResponse.isExistence()).isFalse()
         );

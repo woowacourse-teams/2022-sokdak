@@ -1,5 +1,6 @@
 package com.wooteco.sokdak.notification.domain;
 
+import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_REPLY;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.wooteco.sokdak.auth.exception.AuthorizationException;
@@ -12,7 +13,9 @@ class NotificationTest {
     @Test
     void validateOwner() {
         Long memberId = 1L;
-        Notification notification = Notification.newComment(memberId, 1L);
+        Long postId = 1L;
+        Long commentId = 1L;
+        Notification notification = new Notification(NEW_REPLY, memberId, postId, commentId);
 
         assertThatThrownBy(() -> notification.validateOwner(9999L))
                 .isInstanceOf(AuthorizationException.class);

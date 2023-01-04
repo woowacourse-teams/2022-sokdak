@@ -47,26 +47,6 @@ public class Notification {
         this.inquired = false;
     }
 
-    public static Notification postReport(Long memberId, Long postId) {
-        return new Notification(NotificationType.POST_REPORT, memberId, postId, null);
-    }
-
-    public static Notification newComment(Long memberId, Long postId) {
-        return new Notification(NotificationType.NEW_COMMENT, memberId, postId, null);
-    }
-
-    public static Notification postHotBoard(Long memberId, Long postId) {
-        return new Notification(NotificationType.HOT_BOARD, memberId, postId, null);
-    }
-
-    public static Notification newReply(Long memberId, Long postId, Long commentId) {
-        return new Notification(NotificationType.NEW_REPLY, memberId, postId, commentId);
-    }
-
-    public static Notification commentReport(Long memberId, Long postId, Long commentId) {
-        return new Notification(NotificationType.COMMENT_REPORT, memberId, postId, commentId);
-    }
-
     public void validateOwner(Long accessMemberId) {
         if (!memberId.equals(accessMemberId)) {
             throw new AuthorizationException();

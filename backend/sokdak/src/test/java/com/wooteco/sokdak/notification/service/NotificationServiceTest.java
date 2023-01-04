@@ -37,6 +37,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 class NotificationServiceTest extends ServiceTest {
 
+    private static final String NICKNAME = "닉네임";
+    private static final String MESSAGE = "내용";
+
     @PersistenceContext
     private EntityManager em;
 
@@ -74,14 +77,14 @@ class NotificationServiceTest extends ServiceTest {
         comment = Comment.builder()
                 .post(post)
                 .member(member2)
-                .nickname("닉네임")
-                .message("내용")
+                .nickname(NICKNAME)
+                .message(MESSAGE)
                 .build();
         comment2 = Comment.builder()
                 .post(post)
                 .member(member)
-                .nickname("닉네임")
-                .message("내용")
+                .nickname(NICKNAME)
+                .message(MESSAGE)
                 .build();
         commentRepository.save(comment);
         commentRepository.save(comment2);
@@ -149,8 +152,8 @@ class NotificationServiceTest extends ServiceTest {
         Comment comment3 = Comment.builder()
                 .post(post)
                 .member(member2)
-                .nickname("닉네임")
-                .message("내용")
+                .nickname(NICKNAME)
+                .message(MESSAGE)
                 .build();
         commentRepository.save(comment3);
         Notification notification1 = new Notification(NEW_COMMENT, member.getId(), post.getId(), null);

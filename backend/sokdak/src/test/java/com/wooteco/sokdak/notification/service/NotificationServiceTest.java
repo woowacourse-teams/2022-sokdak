@@ -4,6 +4,7 @@ import static com.wooteco.sokdak.notification.domain.NotificationType.COMMENT_RE
 import static com.wooteco.sokdak.notification.domain.NotificationType.HOT_BOARD;
 import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_COMMENT;
 import static com.wooteco.sokdak.notification.domain.NotificationType.POST_REPORT;
+import static com.wooteco.sokdak.notification.fixture.NotificationFixture.ZERO_PAGE_TWO_SIZE_CREATE_AT_DESCENDING_PAGEABLE;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME_TEXT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
@@ -33,13 +34,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 class NotificationServiceTest extends ServiceTest {
-
-    private static final Pageable PAGEABLE = PageRequest.of(0, 100);
 
     @PersistenceContext
     private EntityManager em;
@@ -108,11 +104,12 @@ class NotificationServiceTest extends ServiceTest {
     @Test
     void findNotifications() {
         Notification notification2 = new Notification(POST_REPORT, member.getId(), post.getId(), null);
+        notificationRepository.save(notification2);
         Notification notification3 = new Notification(NEW_COMMENT, member.getId(), post.getId(), null);
-        notificationRepository.saveAll(List.of(notification2, notification3));
+        notificationRepository.save(notification3);
 
-        NotificationsResponse notificationsResponse = notificationService
-                .findNotifications(AUTH_INFO, PageRequest.of(0, 2, Sort.by("createdAt").descending()));
+        NotificationsResponse notificationsResponse =
+                notificationService.findNotifications(AUTH_INFO, ZERO_PAGE_TWO_SIZE_CREATE_AT_DESCENDING_PAGEABLE);
         List<NotificationResponse> notificationResponses = notificationsResponse.getNotifications();
         NewNotificationCheckResponse newNotificationCheckResponse = notificationService.checkNewNotification(AUTH_INFO);
 
@@ -141,7 +138,8 @@ class NotificationServiceTest extends ServiceTest {
 
         notificationService.deleteCommentNotification(comment.getId());
 
-        NotificationsResponse notifications = notificationService.findNotifications(AUTH_INFO, PAGEABLE);
+        NotificationsResponse notifications =
+                notificationService.findNotifications(AUTH_INFO, ZERO_PAGE_TWO_SIZE_CREATE_AT_DESCENDING_PAGEABLE);
         assertThat(notifications.getNotifications()).isEmpty();
     }
 
@@ -164,7 +162,8 @@ class NotificationServiceTest extends ServiceTest {
 
         notificationService.deletePostNotification(post.getId());
 
-        NotificationsResponse notifications = notificationService.findNotifications(AUTH_INFO, PAGEABLE);
+        NotificationsResponse notifications =
+                notificationService.findNotifications(AUTH_INFO, ZERO_PAGE_TWO_SIZE_CREATE_AT_DESCENDING_PAGEABLE);
         assertThat(notifications.getNotifications()).isEmpty();
     }
 
@@ -177,7 +176,7 @@ class NotificationServiceTest extends ServiceTest {
         notificationService.deleteNotification(AUTH_INFO, notification.getId());
 
         List<Notification> notifications = notificationRepository
-                .findNotificationsByMemberId(member.getId(), PAGEABLE)
+                .findNotificationsByMemberId(member.getId(), ZERO_PAGE_TWO_SIZE_CREATE_AT_DESCENDING_PAGEABLE)
                 .getContent();
         assertThat(notifications).isEmpty();
     }

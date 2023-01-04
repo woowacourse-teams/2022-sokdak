@@ -2,6 +2,7 @@ package com.wooteco.sokdak.notification.repository;
 
 import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_COMMENT;
 import static com.wooteco.sokdak.notification.domain.NotificationType.POST_REPORT;
+import static com.wooteco.sokdak.notification.fixture.NotificationFixture.ZERO_PAGE_TWO_SIZE_CREATE_AT_DESCENDING_PAGEABLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -13,10 +14,7 @@ import javax.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
 
 class NotificationRepositoryTest extends RepositoryTest {
 
@@ -41,7 +39,7 @@ class NotificationRepositoryTest extends RepositoryTest {
         notificationRepository.inquireNotificationByIds(List.of(notification.getId(), notification2.getId()));
 
         List<Notification> notifications = notificationRepository
-                .findNotificationsByMemberId(MEMBER_ID, Pageable.ofSize(3))
+                .findNotificationsByMemberId(MEMBER_ID, ZERO_PAGE_TWO_SIZE_CREATE_AT_DESCENDING_PAGEABLE)
                 .getContent();
         boolean actual = notifications.stream()
                 .allMatch(Notification::isInquired);
@@ -63,19 +61,16 @@ class NotificationRepositoryTest extends RepositoryTest {
     @Test
     void findNotificationsByMemberId() {
         Long anotherPostId = 2L;
-        Notification notification = new Notification(NEW_COMMENT, MEMBER_ID, POST_ID, NULL_COMMENT_ID);
-        notificationRepository.save(notification);
         Notification notification2 = new Notification(NEW_COMMENT, MEMBER_ID, POST_ID, NULL_COMMENT_ID);
         notificationRepository.save(notification2);
         Notification notification3 = new Notification(POST_REPORT, MEMBER_ID, anotherPostId, NULL_COMMENT_ID);
         notificationRepository.save(notification3);
-        PageRequest pageRequest = PageRequest.of(0, 2, Sort.by("createdAt").descending());
 
         Slice<Notification> notifications = notificationRepository
-                .findNotificationsByMemberId(MEMBER_ID, pageRequest);
+                .findNotificationsByMemberId(MEMBER_ID, ZERO_PAGE_TWO_SIZE_CREATE_AT_DESCENDING_PAGEABLE);
 
         assertAll(
-                () -> assertThat(notifications.isLast()).isFalse(),
+                () -> assertThat(notifications.isLast()).isTrue(),
                 () -> assertThat(notifications.getContent().get(0).getNotificationType()).isEqualTo(POST_REPORT),
                 () -> assertThat(notifications.getContent().get(0).getPostId()).isEqualTo(anotherPostId),
                 () -> assertThat(notifications.getContent().get(1).getNotificationType()).isEqualTo(NEW_COMMENT),

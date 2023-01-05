@@ -2,8 +2,10 @@ package com.wooteco.sokdak.notification.handler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.wooteco.sokdak.comment.domain.NewCommentEvent;
 import com.wooteco.sokdak.event.NotificationEvent;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
+import com.wooteco.sokdak.report.domain.PostReportEvent;
 import com.wooteco.sokdak.util.DatabaseCleaner;
 import com.wooteco.sokdak.util.ServiceTest;
 import java.util.stream.Stream;
@@ -47,11 +49,11 @@ class NewNotificationEventHandlerTest extends ServiceTest {
         Long sameNotificationTriggeringMemberId = 1L;
         Long differentNotificationTriggeringMemberId = 2L;
         return Stream.of(
-                Arguments.of(NotificationEvent.toNewCommentEvent(notificationTargetMemberId, POST_ID,
+                Arguments.of(new NewCommentEvent(notificationTargetMemberId, POST_ID,
                         sameNotificationTriggeringMemberId), 0),
-                Arguments.of(NotificationEvent.toNewCommentEvent(notificationTargetMemberId, POST_ID,
+                Arguments.of(new NewCommentEvent(notificationTargetMemberId, POST_ID,
                         differentNotificationTriggeringMemberId), 1),
-                Arguments.of(NotificationEvent.toPostReportEvent(notificationTargetMemberId, POST_ID), 1)
+                Arguments.of(new PostReportEvent(notificationTargetMemberId, POST_ID), 1)
         );
     }
 }

@@ -2,7 +2,6 @@ package com.wooteco.sokdak.report.service;
 
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.service.AuthService;
-import com.wooteco.sokdak.event.NotificationEvent;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
@@ -10,6 +9,7 @@ import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.report.domain.PostReport;
+import com.wooteco.sokdak.report.domain.PostReportEvent;
 import com.wooteco.sokdak.report.dto.ReportRequest;
 import com.wooteco.sokdak.report.exception.AlreadyReportPostException;
 import com.wooteco.sokdak.report.repository.PostReportRepository;
@@ -66,8 +66,7 @@ public class PostReportService {
 
     private void notifyReportIfOverThanBlockCondition(Post post) {
         if (post.isBlocked()) {
-            applicationEventPublisher.publishEvent(NotificationEvent.toPostReportEvent(
-                    post.getMember().getId(), post.getId()));
+            applicationEventPublisher.publishEvent(new PostReportEvent(post.getMember().getId(), post.getId()));
         }
     }
 }

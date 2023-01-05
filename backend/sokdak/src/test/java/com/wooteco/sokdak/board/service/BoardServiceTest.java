@@ -13,6 +13,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.wooteco.sokdak.board.domain.Board;
+import com.wooteco.sokdak.board.domain.HotBoardEvent;
 import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.board.dto.BoardsResponse;
 import com.wooteco.sokdak.board.dto.NewBoardResponse;
@@ -20,7 +21,6 @@ import com.wooteco.sokdak.board.exception.BoardNotFoundException;
 import com.wooteco.sokdak.board.exception.BoardNotWritableException;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
-import com.wooteco.sokdak.event.NotificationEvent;
 import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.repository.PostRepository;
@@ -140,7 +140,7 @@ class BoardServiceTest extends ServiceTest {
 
         boardService.checkAndSaveInSpecialBoard(post);
         Optional<PostBoard> foundPostBoard = postBoardRepository.findPostBoardByPostAndBoard(post, hotBoard);
-        long postHotBoardEventCount = applicationEvents.stream(NotificationEvent.class).count();
+        long postHotBoardEventCount = applicationEvents.stream(HotBoardEvent.class).count();
 
         assertAll(
                 () -> assertThat(foundPostBoard).isNotEmpty(),

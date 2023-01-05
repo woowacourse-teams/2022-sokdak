@@ -1,6 +1,7 @@
 package com.wooteco.sokdak.board.service;
 
 import com.wooteco.sokdak.board.domain.Board;
+import com.wooteco.sokdak.board.domain.HotBoardEvent;
 import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.board.dto.BoardContentElement;
 import com.wooteco.sokdak.board.dto.BoardContentResponse;
@@ -12,7 +13,6 @@ import com.wooteco.sokdak.board.exception.BoardNotFoundException;
 import com.wooteco.sokdak.board.exception.BoardNotWritableException;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
-import com.wooteco.sokdak.event.NotificationEvent;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.dto.PostsElementResponse;
 import com.wooteco.sokdak.post.dto.PostsResponse;
@@ -98,7 +98,7 @@ public class BoardService {
             postBoard.addBoard(specialBoard);
             postBoardRepository.save(postBoard);
             applicationEventPublisher.publishEvent(
-                    NotificationEvent.toHotBoardEvent(originalPost.getMember().getId(), originalPost.getId()));
+                    new HotBoardEvent(originalPost.getMember().getId(), originalPost.getId()));
         }
     }
 

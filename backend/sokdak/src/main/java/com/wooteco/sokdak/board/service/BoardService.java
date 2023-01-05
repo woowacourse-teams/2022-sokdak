@@ -97,8 +97,8 @@ public class BoardService {
             postBoard.addPost(originalPost);
             postBoard.addBoard(specialBoard);
             postBoardRepository.save(postBoard);
-            applicationEventPublisher
-                    .publishEvent(new HotBoardEvent(originalPost.getMember().getId(), originalPost.getId()));
+            applicationEventPublisher.publishEvent(
+                    new HotBoardEvent(originalPost.getMember().getId(), originalPost.getId()));
         }
     }
 

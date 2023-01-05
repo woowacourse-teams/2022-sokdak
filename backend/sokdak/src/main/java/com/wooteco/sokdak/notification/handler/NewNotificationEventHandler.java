@@ -3,7 +3,6 @@ package com.wooteco.sokdak.notification.handler;
 import com.wooteco.sokdak.event.NotificationEvent;
 import com.wooteco.sokdak.notification.domain.Notification;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
-import java.util.Objects;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -23,7 +22,7 @@ public class NewNotificationEventHandler {
 
     @TransactionalEventListener
     public void handleNotificationEvent(NotificationEvent notificationEvent) {
-        if (isNotifiable(notificationEvent)) {
+        if (notificationEvent.isNotifiable()) {
             Notification notification = new Notification(
                     notificationEvent.getNotificationType(),
                     notificationEvent.getNotificationTargetMemberId(),
@@ -32,13 +31,5 @@ public class NewNotificationEventHandler {
             );
             notificationRepository.save(notification);
         }
-    }
-
-    private boolean isNotifiable(NotificationEvent notificationEvent) {
-        if (Objects.isNull(notificationEvent.getEventTriggeringMemberId())) {
-            return true;
-        }
-        return !notificationEvent.getNotificationTargetMemberId()
-                .equals(notificationEvent.getEventTriggeringMemberId());
     }
 }

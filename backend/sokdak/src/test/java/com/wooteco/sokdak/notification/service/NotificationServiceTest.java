@@ -4,6 +4,7 @@ import static com.wooteco.sokdak.notification.domain.NotificationType.COMMENT_RE
 import static com.wooteco.sokdak.notification.domain.NotificationType.HOT_BOARD;
 import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_COMMENT;
 import static com.wooteco.sokdak.notification.domain.NotificationType.POST_REPORT;
+import static com.wooteco.sokdak.notification.fixture.NotificationFixture.ZERO_PAGE_TWO_SIZE_CREATE_AT_DESCENDING_PAGEABLE;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME_TEXT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
@@ -14,6 +15,7 @@ import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.member.domain.Member;
+import com.wooteco.sokdak.member.domain.RoleType;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
 import com.wooteco.sokdak.notification.domain.Notification;
@@ -33,13 +35,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 class NotificationServiceTest extends ServiceTest {
 
-    private static final Pageable PAGEABLE = PageRequest.of(0, 100);
+    private static final String NICKNAME = "닉네임";
+    private static final String MESSAGE = "내용";
 
     @PersistenceContext
     private EntityManager em;
@@ -78,14 +78,14 @@ class NotificationServiceTest extends ServiceTest {
         comment = Comment.builder()
                 .post(post)
                 .member(member2)
-                .nickname("닉네임")
-                .message("내용")
+                .nickname(NICKNAME)
+                .message(MESSAGE)
                 .build();
         comment2 = Comment.builder()
                 .post(post)
                 .member(member)
-                .nickname("닉네임")
-                .message("내용")
+                .nickname(NICKNAME)
+                .message(MESSAGE)
                 .build();
         commentRepository.save(comment);
         commentRepository.save(comment2);
@@ -97,7 +97,7 @@ class NotificationServiceTest extends ServiceTest {
     void existsNewNotification(Long memberId, boolean expected) {
         Notification notification = new Notification(NEW_COMMENT, member.getId(), post.getId(), null);
         notificationRepository.save(notification);
-        AuthInfo authInfo = new AuthInfo(memberId, "USER", VALID_NICKNAME_TEXT);
+        AuthInfo authInfo = new AuthInfo(memberId, RoleType.USER.getName(), VALID_NICKNAME_TEXT);
 
         NewNotificationCheckResponse newNotificationCheckResponse = notificationService.checkNewNotification(authInfo);
 
@@ -108,11 +108,12 @@ class NotificationServiceTest extends ServiceTest {
     @Test
     void findNotifications() {
         Notification notification2 = new Notification(POST_REPORT, member.getId(), post.getId(), null);
+        notificationRepository.save(notification2);
         Notification notification3 = new Notification(NEW_COMMENT, member.getId(), post.getId(), null);
-        notificationRepository.saveAll(List.of(notification2, notification3));
+        notificationRepository.save(notification3);
 
-        NotificationsResponse notificationsResponse = notificationService
-                .findNotifications(AUTH_INFO, PageRequest.of(0, 2, Sort.by("createdAt").descending()));
+        NotificationsResponse notificationsResponse =
+                notificationService.findNotifications(AUTH_INFO, ZERO_PAGE_TWO_SIZE_CREATE_AT_DESCENDING_PAGEABLE);
         List<NotificationResponse> notificationResponses = notificationsResponse.getNotifications();
         NewNotificationCheckResponse newNotificationCheckResponse = notificationService.checkNewNotification(AUTH_INFO);
 
@@ -120,10 +121,10 @@ class NotificationServiceTest extends ServiceTest {
                 () -> assertThat(notificationsResponse.isLastPage()).isTrue(),
                 () -> assertThat(notificationResponses).hasSize(2),
                 () -> assertThat(notificationResponses.get(0).getPostId()).isEqualTo(post.getId()),
-                () -> assertThat(notificationResponses.get(0).getType()).isEqualTo("NEW_COMMENT"),
+                () -> assertThat(notificationResponses.get(0).getType()).isEqualTo(NEW_COMMENT.name()),
                 () -> assertThat(notificationResponses.get(0).getContent()).isEqualTo(post.getTitle()),
                 () -> assertThat(notificationResponses.get(1).getPostId()).isEqualTo(post.getId()),
-                () -> assertThat(notificationResponses.get(1).getType()).isEqualTo("POST_REPORT"),
+                () -> assertThat(notificationResponses.get(1).getType()).isEqualTo(POST_REPORT.name()),
                 () -> assertThat(notificationResponses.get(1).getContent()).isEqualTo(post.getTitle()),
                 () -> assertThat(newNotificationCheckResponse.isExistence()).isFalse()
         );
@@ -141,7 +142,8 @@ class NotificationServiceTest extends ServiceTest {
 
         notificationService.deleteCommentNotification(comment.getId());
 
-        NotificationsResponse notifications = notificationService.findNotifications(AUTH_INFO, PAGEABLE);
+        NotificationsResponse notifications =
+                notificationService.findNotifications(AUTH_INFO, ZERO_PAGE_TWO_SIZE_CREATE_AT_DESCENDING_PAGEABLE);
         assertThat(notifications.getNotifications()).isEmpty();
     }
 
@@ -151,8 +153,8 @@ class NotificationServiceTest extends ServiceTest {
         Comment comment3 = Comment.builder()
                 .post(post)
                 .member(member2)
-                .nickname("닉네임")
-                .message("내용")
+                .nickname(NICKNAME)
+                .message(MESSAGE)
                 .build();
         commentRepository.save(comment3);
         Notification notification1 = new Notification(NEW_COMMENT, member.getId(), post.getId(), null);
@@ -164,7 +166,8 @@ class NotificationServiceTest extends ServiceTest {
 
         notificationService.deletePostNotification(post.getId());
 
-        NotificationsResponse notifications = notificationService.findNotifications(AUTH_INFO, PAGEABLE);
+        NotificationsResponse notifications =
+                notificationService.findNotifications(AUTH_INFO, ZERO_PAGE_TWO_SIZE_CREATE_AT_DESCENDING_PAGEABLE);
         assertThat(notifications.getNotifications()).isEmpty();
     }
 
@@ -177,7 +180,7 @@ class NotificationServiceTest extends ServiceTest {
         notificationService.deleteNotification(AUTH_INFO, notification.getId());
 
         List<Notification> notifications = notificationRepository
-                .findNotificationsByMemberId(member.getId(), PAGEABLE)
+                .findNotificationsByMemberId(member.getId(), ZERO_PAGE_TWO_SIZE_CREATE_AT_DESCENDING_PAGEABLE)
                 .getContent();
         assertThat(notifications).isEmpty();
     }

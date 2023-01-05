@@ -21,12 +21,12 @@ import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.comment.domain.Comment;
+import com.wooteco.sokdak.comment.domain.NewCommentEvent;
+import com.wooteco.sokdak.comment.domain.NewReplyEvent;
 import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.dto.NewReplyRequest;
 import com.wooteco.sokdak.comment.dto.ReplyResponse;
-import com.wooteco.sokdak.comment.event.NewCommentEvent;
-import com.wooteco.sokdak.comment.event.NewReplyEvent;
 import com.wooteco.sokdak.comment.exception.ReplyDepthException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.member.domain.Member;
@@ -185,6 +185,7 @@ class CommentServiceTest extends ServiceTest {
     @Test
     void addReply() {
         Long commentId = commentService.addComment(anonymousPost.getId(), NON_ANONYMOUS_COMMENT_REQUEST, AUTH_INFO);
+        applicationEvents.clear();
 
         Long replyId = commentService.addReply(commentId, NON_ANONYMOUS_REPLY_REQUEST, AUTH_INFO);
 

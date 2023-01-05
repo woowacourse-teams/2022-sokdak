@@ -8,11 +8,10 @@ import com.wooteco.sokdak.comment.repository.CommentRepository;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
-import com.wooteco.sokdak.notification.service.NotificationService;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.report.domain.CommentReport;
+import com.wooteco.sokdak.report.domain.CommentReportEvent;
 import com.wooteco.sokdak.report.dto.ReportRequest;
-import com.wooteco.sokdak.report.event.CommentReportEvent;
 import com.wooteco.sokdak.report.exception.AlreadyReportCommentException;
 import com.wooteco.sokdak.report.repository.CommentReportRepository;
 import org.springframework.context.ApplicationEventPublisher;
@@ -26,18 +25,15 @@ public class CommentReportService {
     private final CommentReportRepository commentReportRepository;
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
-    private final NotificationService notificationService;
     private final AuthService authService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     public CommentReportService(CommentReportRepository commentReportRepository, CommentRepository commentRepository,
-                                MemberRepository memberRepository, NotificationService notificationService,
-                                AuthService authService,
+                                MemberRepository memberRepository, AuthService authService,
                                 ApplicationEventPublisher applicationEventPublisher) {
         this.commentReportRepository = commentReportRepository;
         this.commentRepository = commentRepository;
         this.memberRepository = memberRepository;
-        this.notificationService = notificationService;
         this.authService = authService;
         this.applicationEventPublisher = applicationEventPublisher;
     }

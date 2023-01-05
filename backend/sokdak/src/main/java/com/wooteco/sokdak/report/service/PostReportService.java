@@ -5,13 +5,12 @@ import com.wooteco.sokdak.auth.service.AuthService;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
-import com.wooteco.sokdak.notification.service.NotificationService;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
 import com.wooteco.sokdak.report.domain.PostReport;
+import com.wooteco.sokdak.report.domain.PostReportEvent;
 import com.wooteco.sokdak.report.dto.ReportRequest;
-import com.wooteco.sokdak.report.event.PostReportEvent;
 import com.wooteco.sokdak.report.exception.AlreadyReportPostException;
 import com.wooteco.sokdak.report.repository.PostReportRepository;
 import org.springframework.context.ApplicationEventPublisher;
@@ -25,18 +24,15 @@ public class PostReportService {
     private final PostReportRepository postReportRepository;
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
-    private final NotificationService notificationService;
     private final AuthService authService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     public PostReportService(PostReportRepository postReportRepository, PostRepository postRepository,
-                             MemberRepository memberRepository, NotificationService notificationService,
-                             AuthService authService,
+                             MemberRepository memberRepository, AuthService authService,
                              ApplicationEventPublisher applicationEventPublisher) {
         this.postReportRepository = postReportRepository;
         this.postRepository = postRepository;
         this.memberRepository = memberRepository;
-        this.notificationService = notificationService;
         this.authService = authService;
         this.applicationEventPublisher = applicationEventPublisher;
     }

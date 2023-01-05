@@ -4,13 +4,13 @@ import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.service.AuthService;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.domain.CommentNicknameGenerator;
+import com.wooteco.sokdak.comment.domain.NewCommentEvent;
+import com.wooteco.sokdak.comment.domain.NewReplyEvent;
 import com.wooteco.sokdak.comment.dto.CommentResponse;
 import com.wooteco.sokdak.comment.dto.CommentsResponse;
 import com.wooteco.sokdak.comment.dto.NewCommentRequest;
 import com.wooteco.sokdak.comment.dto.NewReplyRequest;
 import com.wooteco.sokdak.comment.dto.ReplyResponse;
-import com.wooteco.sokdak.comment.event.NewCommentEvent;
-import com.wooteco.sokdak.comment.event.NewReplyEvent;
 import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
 import com.wooteco.sokdak.comment.exception.ReplyDepthException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
@@ -71,7 +71,7 @@ public class CommentService {
 
         commentRepository.save(comment);
         applicationEventPublisher.publishEvent(
-                new NewCommentEvent(post.getMember().getId(), post.getId(), comment.getId(), member.getId()));
+                new NewCommentEvent(post.getMember().getId(), post.getId(), member.getId()));
 
         return comment.getId();
     }
@@ -94,8 +94,8 @@ public class CommentService {
         Comment reply = Comment.child(member, post, nickname, newReplyRequest.getContent(), parent);
 
         commentRepository.save(reply);
-        applicationEventPublisher.publishEvent(
-                new NewReplyEvent(parent.getMember().getId(), post.getId(), parent.getId(), member.getId()));
+        applicationEventPublisher.publishEvent(new NewReplyEvent(
+                parent.getMember().getId(), post.getId(), parent.getId(), member.getId()));
         return reply.getId();
     }
 

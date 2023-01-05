@@ -22,6 +22,7 @@ class NotificationRepositoryTest extends RepositoryTest {
 
     private static final Long MEMBER_ID = 1L;
     private static final Long POST_ID = 1L;
+    private static final Long NULL_COMMENT_ID = null;
 
     @Autowired
     private NotificationRepository notificationRepository;
@@ -32,8 +33,8 @@ class NotificationRepositoryTest extends RepositoryTest {
     @DisplayName("알림들의 id를 받아 조회 여부를 true로 변경한다.")
     @Test
     void inquireNotificationByIds() {
-        Notification notification = Notification.newComment(MEMBER_ID, POST_ID);
-        Notification notification2 = Notification.newComment(MEMBER_ID, POST_ID);
+        Notification notification = new Notification(NEW_COMMENT, MEMBER_ID, POST_ID, NULL_COMMENT_ID);
+        Notification notification2 = new Notification(NEW_COMMENT, MEMBER_ID, POST_ID, NULL_COMMENT_ID);
         notificationRepository.saveAll(List.of(notification, notification2));
         em.clear();
 
@@ -50,7 +51,7 @@ class NotificationRepositoryTest extends RepositoryTest {
     @DisplayName("회원이 조회하지 않은 알림이 존재하는지 반환")
     @Test
     void existsByMemberIdAndInquired() {
-        Notification notification = Notification.newComment(MEMBER_ID, POST_ID);
+        Notification notification = new Notification(NEW_COMMENT, MEMBER_ID, POST_ID, NULL_COMMENT_ID);
         notificationRepository.save(notification);
 
         boolean actual = notificationRepository.existsByMemberIdAndInquiredIsFalse(MEMBER_ID);
@@ -61,11 +62,12 @@ class NotificationRepositoryTest extends RepositoryTest {
     @DisplayName("회원에 따른 알림을 반환한다.")
     @Test
     void findNotificationsByMemberId() {
-        Notification notification = Notification.newComment(MEMBER_ID, POST_ID);
+        Long anotherPostId = 2L;
+        Notification notification = new Notification(NEW_COMMENT, MEMBER_ID, POST_ID, NULL_COMMENT_ID);
         notificationRepository.save(notification);
-        Notification notification2 = Notification.newComment(MEMBER_ID, POST_ID);
+        Notification notification2 = new Notification(NEW_COMMENT, MEMBER_ID, POST_ID, NULL_COMMENT_ID);
         notificationRepository.save(notification2);
-        Notification notification3 = Notification.postReport(MEMBER_ID, 2L);
+        Notification notification3 = new Notification(POST_REPORT, MEMBER_ID, anotherPostId, NULL_COMMENT_ID);
         notificationRepository.save(notification3);
         PageRequest pageRequest = PageRequest.of(0, 2, Sort.by("createdAt").descending());
 
@@ -75,9 +77,9 @@ class NotificationRepositoryTest extends RepositoryTest {
         assertAll(
                 () -> assertThat(notifications.isLast()).isFalse(),
                 () -> assertThat(notifications.getContent().get(0).getNotificationType()).isEqualTo(POST_REPORT),
-                () -> assertThat(notifications.getContent().get(0).getPostId()).isEqualTo(2L),
+                () -> assertThat(notifications.getContent().get(0).getPostId()).isEqualTo(anotherPostId),
                 () -> assertThat(notifications.getContent().get(1).getNotificationType()).isEqualTo(NEW_COMMENT),
-                () -> assertThat(notifications.getContent().get(1).getPostId()).isEqualTo(1L)
+                () -> assertThat(notifications.getContent().get(1).getPostId()).isEqualTo(POST_ID)
         );
     }
 }

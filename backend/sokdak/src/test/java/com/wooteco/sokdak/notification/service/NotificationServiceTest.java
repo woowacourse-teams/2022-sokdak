@@ -1,5 +1,9 @@
 package com.wooteco.sokdak.notification.service;
 
+import static com.wooteco.sokdak.notification.domain.NotificationType.COMMENT_REPORT;
+import static com.wooteco.sokdak.notification.domain.NotificationType.HOT_BOARD;
+import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_COMMENT;
+import static com.wooteco.sokdak.notification.domain.NotificationType.POST_REPORT;
 import static com.wooteco.sokdak.util.fixture.MemberFixture.VALID_NICKNAME_TEXT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_CONTENT;
 import static com.wooteco.sokdak.util.fixture.PostFixture.VALID_POST_TITLE;
@@ -91,7 +95,7 @@ class NotificationServiceTest extends ServiceTest {
     @ParameterizedTest
     @CsvSource({"3, true", "4, false"})
     void existsNewNotification(Long memberId, boolean expected) {
-        Notification notification = Notification.newComment(member.getId(), comment.getId());
+        Notification notification = new Notification(NEW_COMMENT, member.getId(), post.getId(), null);
         notificationRepository.save(notification);
         AuthInfo authInfo = new AuthInfo(memberId, "USER", VALID_NICKNAME_TEXT);
 
@@ -103,8 +107,8 @@ class NotificationServiceTest extends ServiceTest {
     @DisplayName("알림 목록을 반환하고 조회한 알림으로 변경하고 새 알림을 존재하지 않는 상태로 변경한다.")
     @Test
     void findNotifications() {
-        Notification notification2 = Notification.postReport(member.getId(), post.getId());
-        Notification notification3 = Notification.newComment(member.getId(), post.getId());
+        Notification notification2 = new Notification(POST_REPORT, member.getId(), post.getId(), null);
+        Notification notification3 = new Notification(NEW_COMMENT, member.getId(), post.getId(), null);
         notificationRepository.saveAll(List.of(notification2, notification3));
 
         NotificationsResponse notificationsResponse = notificationService
@@ -128,8 +132,8 @@ class NotificationServiceTest extends ServiceTest {
     @DisplayName("댓글에 해당하는 알림들을 삭제한다.")
     @Test
     void deleteCommentNotification() {
-        Notification notification1 = Notification.commentReport(member.getId(), post.getId(), comment.getId());
-        Notification notification2 = Notification.commentReport(member.getId(), post.getId(), comment.getId());
+        Notification notification1 = new Notification(COMMENT_REPORT, member.getId(), post.getId(), comment.getId());
+        Notification notification2 = new Notification(COMMENT_REPORT, member.getId(), post.getId(), comment.getId());
 
         notificationRepository.saveAll(List.of(notification1, notification2));
 
@@ -151,8 +155,8 @@ class NotificationServiceTest extends ServiceTest {
                 .message("내용")
                 .build();
         commentRepository.save(comment3);
-        Notification notification1 = Notification.newComment(member.getId(), post.getId());
-        Notification notification2 = Notification.newComment(member.getId(), post.getId());
+        Notification notification1 = new Notification(NEW_COMMENT, member.getId(), post.getId(), null);
+        Notification notification2 = new Notification(NEW_COMMENT, member.getId(), post.getId(), null);
         notificationRepository.save(notification1);
         notificationRepository.save(notification2);
 
@@ -167,7 +171,7 @@ class NotificationServiceTest extends ServiceTest {
     @DisplayName("알림을 삭제한다.")
     @Test
     void deleteNotification() {
-        Notification notification = Notification.postHotBoard(member.getId(), post.getId());
+        Notification notification = new Notification(HOT_BOARD, member.getId(), post.getId(), null);
         notificationRepository.save(notification);
 
         notificationService.deleteNotification(AUTH_INFO, notification.getId());

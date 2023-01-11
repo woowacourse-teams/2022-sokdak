@@ -22,6 +22,7 @@ import com.wooteco.sokdak.hashtag.domain.PostHashtag;
 import com.wooteco.sokdak.hashtag.repository.HashtagRepository;
 import com.wooteco.sokdak.hashtag.repository.PostHashtagRepository;
 import com.wooteco.sokdak.post.domain.Post;
+import com.wooteco.sokdak.post.domain.PostDeletionEvent;
 import com.wooteco.sokdak.post.dto.NewPostRequest;
 import com.wooteco.sokdak.post.dto.PagePostsResponse;
 import com.wooteco.sokdak.post.dto.PostDetailResponse;
@@ -170,7 +171,7 @@ class PostServiceTest extends ServiceTest {
         return Stream.of(
                 Arguments.of(EMPTY_COOKIE_VALUE, 1),
                 Arguments.of(today + ":2/3", 1),
-                Arguments.of(today+":1/2/3", 0)
+                Arguments.of(today + ":1/2/3", 0)
         );
     }
 
@@ -251,7 +252,8 @@ class PostServiceTest extends ServiceTest {
         postBoard.addBoard(board);
         postBoardRepository.save(postBoard);
 
-        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(2L, USER.getName(), "nickname"), EMPTY_COOKIE_VALUE);
+        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(2L, USER.getName(), "nickname"),
+                EMPTY_COOKIE_VALUE);
 
         assertAll(
                 () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
@@ -273,7 +275,8 @@ class PostServiceTest extends ServiceTest {
         postBoard.addBoard(board);
         postBoardRepository.save(postBoard);
 
-        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(null, USER.getName(), "nickname"), EMPTY_COOKIE_VALUE);
+        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(null, USER.getName(), "nickname"),
+                EMPTY_COOKIE_VALUE);
 
         assertAll(
                 () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
@@ -300,7 +303,8 @@ class PostServiceTest extends ServiceTest {
         postBoardRepository.save(postBoard);
         postBoardRepository.save(postHotBoard);
 
-        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(null, USER.getName(), "nickname"), EMPTY_COOKIE_VALUE);
+        PostDetailResponse response = postService.findPost(savedPostId, new AuthInfo(null, USER.getName(), "nickname"),
+                EMPTY_COOKIE_VALUE);
 
         assertAll(
                 () -> assertThat(response.getTitle()).isEqualTo(post.getTitle()),
@@ -368,7 +372,11 @@ class PostServiceTest extends ServiceTest {
         postService.deletePost(postId, AUTH_INFO);
 
         Optional<Post> foundPost = postRepository.findById(postId);
-        assertThat(foundPost).isEmpty();
+        long postDeletionEventCount = applicationEvents.stream(PostDeletionEvent.class).count();
+        assertAll(
+                () -> assertThat(foundPost).isEmpty(),
+                () -> assertThat(postDeletionEventCount).isEqualTo(1L)
+        );
     }
 
     @DisplayName("댓글이 있는 게시글 삭제")

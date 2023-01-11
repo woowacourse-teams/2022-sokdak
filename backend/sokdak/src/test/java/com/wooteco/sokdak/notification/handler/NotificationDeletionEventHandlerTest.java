@@ -7,21 +7,17 @@ import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_REPLY;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.wooteco.sokdak.comment.domain.CommentDeletionEvent;
-import com.wooteco.sokdak.config.AsyncTestConfig;
 import com.wooteco.sokdak.notification.domain.Notification;
 import com.wooteco.sokdak.notification.repository.NotificationRepository;
 import com.wooteco.sokdak.post.domain.PostDeletionEvent;
 import com.wooteco.sokdak.util.DatabaseCleaner;
+import com.wooteco.sokdak.util.ServiceTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 
-@SpringBootTest
-@Import(AsyncTestConfig.class)
-class NotificationDeletionEventHandlerTest {
+class NotificationDeletionEventHandlerTest extends ServiceTest {
 
     @Autowired
     private NotificationRepository notificationRepository;

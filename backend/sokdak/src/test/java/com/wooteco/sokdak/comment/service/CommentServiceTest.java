@@ -21,6 +21,7 @@ import com.wooteco.sokdak.board.domain.PostBoard;
 import com.wooteco.sokdak.board.repository.BoardRepository;
 import com.wooteco.sokdak.board.repository.PostBoardRepository;
 import com.wooteco.sokdak.comment.domain.Comment;
+import com.wooteco.sokdak.comment.domain.CommentDeletionEvent;
 import com.wooteco.sokdak.comment.domain.NewCommentEvent;
 import com.wooteco.sokdak.comment.domain.NewReplyEvent;
 import com.wooteco.sokdak.comment.dto.CommentResponse;
@@ -403,7 +404,11 @@ class CommentServiceTest extends ServiceTest {
 
         commentService.deleteComment(commentId, new AuthInfo(member.getId(), USER.getName(), member.getNickname()));
 
-        assertThat(commentRepository.findById(commentId)).isEmpty();
+        long commentDeletionEventCount = applicationEvents.stream(CommentDeletionEvent.class).count();
+        assertAll(
+                () -> assertThat(commentRepository.findById(commentId)).isEmpty(),
+                () -> assertThat(commentDeletionEventCount).isEqualTo(1L)
+        );
     }
 
     @DisplayName("댓글 작성자가 아닌 유저가 댓글을 삭제하면 예외 발생")

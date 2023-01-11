@@ -3,6 +3,7 @@ package com.wooteco.sokdak.comment.service;
 import com.wooteco.sokdak.auth.dto.AuthInfo;
 import com.wooteco.sokdak.auth.service.AuthService;
 import com.wooteco.sokdak.comment.domain.Comment;
+import com.wooteco.sokdak.comment.domain.CommentDeletionEvent;
 import com.wooteco.sokdak.comment.domain.CommentNicknameGenerator;
 import com.wooteco.sokdak.comment.domain.NewCommentEvent;
 import com.wooteco.sokdak.comment.domain.NewReplyEvent;
@@ -18,7 +19,6 @@ import com.wooteco.sokdak.like.repository.CommentLikeRepository;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
-import com.wooteco.sokdak.notification.service.NotificationService;
 import com.wooteco.sokdak.post.domain.Post;
 import com.wooteco.sokdak.post.exception.PostNotFoundException;
 import com.wooteco.sokdak.post.repository.PostRepository;
@@ -36,21 +36,18 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
-    private final NotificationService notificationService;
     private final CommentLikeRepository commentLikeRepository;
     private final AuthService authService;
     private final ApplicationEventPublisher applicationEventPublisher;
     private final CommentNicknameGenerator commentNicknameGenerator;
 
     public CommentService(CommentRepository commentRepository, MemberRepository memberRepository,
-                          PostRepository postRepository, NotificationService notificationService,
-                          CommentLikeRepository commentLikeRepository, AuthService authService,
-                          ApplicationEventPublisher applicationEventPublisher,
+                          PostRepository postRepository, CommentLikeRepository commentLikeRepository,
+                          AuthService authService, ApplicationEventPublisher applicationEventPublisher,
                           CommentNicknameGenerator commentNicknameGenerator) {
         this.commentRepository = commentRepository;
         this.memberRepository = memberRepository;
         this.postRepository = postRepository;
-        this.notificationService = notificationService;
         this.commentLikeRepository = commentLikeRepository;
         this.authService = authService;
         this.applicationEventPublisher = applicationEventPublisher;
@@ -135,7 +132,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
         comment.validateOwner(authInfo.getId());
-        notificationService.deleteCommentNotification(commentId);
+        applicationEventPublisher.publishEvent(new CommentDeletionEvent(comment.getId()));
         commentLikeRepository.deleteAllByCommentId(commentId);
 
         deleteCommentOrReply(comment);

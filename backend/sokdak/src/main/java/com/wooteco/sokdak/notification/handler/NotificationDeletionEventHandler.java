@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Transactional
-public class DeletionEventHandler {
+public class NotificationDeletionEventHandler {
 
     private final NotificationRepository notificationRepository;
 
-    public DeletionEventHandler(NotificationRepository notificationRepository) {
+    public NotificationDeletionEventHandler(NotificationRepository notificationRepository) {
         this.notificationRepository = notificationRepository;
     }
 

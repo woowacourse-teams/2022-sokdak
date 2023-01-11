@@ -21,13 +21,13 @@ import org.springframework.context.annotation.Import;
 
 @SpringBootTest
 @Import(AsyncTestConfig.class)
-class DeletionEventHandlerTest {
+class NotificationDeletionEventHandlerTest {
 
     @Autowired
     private NotificationRepository notificationRepository;
 
     @Autowired
-    private DeletionEventHandler deletionEventHandler;
+    private NotificationDeletionEventHandler notificationDeletionEventHandler;
 
     @Autowired
     private DatabaseCleaner databaseCleaner;
@@ -45,7 +45,7 @@ class DeletionEventHandlerTest {
         notificationRepository.save(new Notification(NEW_REPLY, 1L, 1L, commentId));
         CommentDeletionEvent commentDeletionEvent = new CommentDeletionEvent(commentId);
 
-        deletionEventHandler.handleCommentDeletion(commentDeletionEvent);
+        notificationDeletionEventHandler.handleCommentDeletion(commentDeletionEvent);
 
         assertThat(notificationRepository.findAll()).isEmpty();
     }
@@ -58,7 +58,7 @@ class DeletionEventHandlerTest {
         notificationRepository.save(new Notification(NEW_COMMENT, 1L, postId, null));
         PostDeletionEvent postDeletionEvent = new PostDeletionEvent(postId);
 
-        deletionEventHandler.handlePostDeletion(postDeletionEvent);
+        notificationDeletionEventHandler.handlePostDeletion(postDeletionEvent);
 
         assertThat(notificationRepository.findAll()).isEmpty();
     }

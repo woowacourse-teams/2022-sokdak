@@ -87,12 +87,4 @@ public class NotificationService {
         notification.validateOwner(authInfo.getId());
         notificationRepository.deleteById(notificationId);
     }
-
-    @Transactional
-    public void deleteCommentNotification(Long commentId) {
-        List<Long> ids = notificationRepository.findIdsByCommentId(commentId);
-        if (!ids.isEmpty()) {
-            notificationRepository.deleteAllById(ids);
-        }
-    }
 }

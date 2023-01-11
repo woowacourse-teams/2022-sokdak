@@ -1,6 +1,5 @@
 package com.wooteco.sokdak.notification.service;
 
-import static com.wooteco.sokdak.notification.domain.NotificationType.COMMENT_REPORT;
 import static com.wooteco.sokdak.notification.domain.NotificationType.HOT_BOARD;
 import static com.wooteco.sokdak.notification.domain.NotificationType.NEW_COMMENT;
 import static com.wooteco.sokdak.notification.domain.NotificationType.POST_REPORT;
@@ -128,23 +127,6 @@ class NotificationServiceTest extends ServiceTest {
                 () -> assertThat(notificationResponses.get(1).getContent()).isEqualTo(post.getTitle()),
                 () -> assertThat(newNotificationCheckResponse.isExistence()).isFalse()
         );
-    }
-
-    @DisplayName("댓글에 해당하는 알림들을 삭제한다.")
-    @Test
-    void deleteCommentNotification() {
-        Notification notification1 = new Notification(COMMENT_REPORT, member.getId(), post.getId(), comment.getId());
-        Notification notification2 = new Notification(COMMENT_REPORT, member.getId(), post.getId(), comment.getId());
-
-        notificationRepository.saveAll(List.of(notification1, notification2));
-
-        em.clear();
-
-        notificationService.deleteCommentNotification(comment.getId());
-
-        NotificationsResponse notifications =
-                notificationService.findNotifications(AUTH_INFO, ZERO_PAGE_TWO_SIZE_CREATE_AT_DESCENDING_PAGEABLE);
-        assertThat(notifications.getNotifications()).isEmpty();
     }
 
     @DisplayName("알림을 삭제한다.")

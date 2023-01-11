@@ -5,7 +5,6 @@ import com.wooteco.sokdak.auth.service.AuthService;
 import com.wooteco.sokdak.comment.domain.Comment;
 import com.wooteco.sokdak.comment.exception.CommentNotFoundException;
 import com.wooteco.sokdak.comment.repository.CommentRepository;
-import com.wooteco.sokdak.event.NotificationEvent;
 import com.wooteco.sokdak.member.domain.Member;
 import com.wooteco.sokdak.member.exception.MemberNotFoundException;
 import com.wooteco.sokdak.member.repository.MemberRepository;
@@ -69,7 +68,7 @@ public class CommentReportService {
     private void notifyReportIfOverBlockCondition(Comment comment) {
         if (comment.isBlocked()) {
             Post post = comment.getPost();
-            applicationEventPublisher.publishEvent(NotificationEvent.toCommentReportEvent(
+            applicationEventPublisher.publishEvent(new CommentReportEvent(
                     comment.getMember().getId(), post.getId(), comment.getId()));
         }
     }

@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.post.event;
+package com.wooteco.sokdak.post.domain;
 
 public class PostDeletionEvent {
 

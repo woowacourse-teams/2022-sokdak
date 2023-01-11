@@ -1,4 +1,4 @@
-package com.wooteco.sokdak.comment.event;
+package com.wooteco.sokdak.comment.domain;
 
 public class CommentDeletionEvent {
 

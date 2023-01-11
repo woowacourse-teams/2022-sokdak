@@ -95,12 +95,4 @@ public class NotificationService {
             notificationRepository.deleteAllById(ids);
         }
     }
-
-    @Transactional
-    public void deletePostNotification(Long postId) {
-        List<Long> ids = notificationRepository.findIdsByPostId(postId);
-        if (!ids.isEmpty()) {
-            notificationRepository.deleteAllById(ids);
-        }
-    }
 }

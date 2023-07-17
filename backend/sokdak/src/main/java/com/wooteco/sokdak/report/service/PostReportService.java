@@ -51,11 +51,13 @@ public class PostReportService {
     }
 
     private PostReport createPostReport(Post post, Member member, String message) {
-        return PostReport.builder()
-                .post(post)
+        PostReport postReport = PostReport.builder()
+                .postId(post.getId())
                 .reporter(member)
                 .reportMessage(message)
                 .build();
+        post.addReport(postReport);
+        return postReport;
     }
 
     private void checkMemberAlreadyReport(Post post, Member member) {
@@ -68,5 +70,11 @@ public class PostReportService {
         if (post.isBlocked()) {
             applicationEventPublisher.publishEvent(new PostReportEvent(post.getMember().getId(), post.getId()));
         }
+    }
+
+    @Transactional
+    public void deleteAllPostReport(Post post) {
+        postReportRepository.deleteAllByPostId(post.getId());
+        post.deleteAllReports();
     }
 }

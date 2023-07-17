@@ -70,7 +70,8 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<PostBoard> postBoards = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany
+    @JoinColumn(name = "postId")
     private List<PostReport> postReports = new ArrayList<>();
 
     @CreatedDate

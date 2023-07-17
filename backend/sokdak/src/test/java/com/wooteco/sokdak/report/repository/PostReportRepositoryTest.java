@@ -45,19 +45,19 @@ class PostReportRepositoryTest extends RepositoryTest {
     void existsPostReportByPostIdAndMemberId_True() {
         PostReport postReport = PostReport.builder()
                 .reporter(member1)
-                .post(post)
+                .postId(post.getId())
                 .reportMessage("report")
                 .build();
         postReportRepository.save(postReport);
 
-        assertThat(postReportRepository.existsPostReportByPostAndReporter(post, member1))
+        assertThat(postReportRepository.existsPostReportByPostIdAndReporter(post.getId(), member1))
                 .isTrue();
     }
 
     @Test
     @DisplayName("특정 postId와 memberId를 가지는 데이터가 없으면 false를 반환한다.")
     void existsPostReportByPostIdAndMemberId_False() {
-        assertThat(postReportRepository.existsPostReportByPostAndReporter(post, member1))
+        assertThat(postReportRepository.existsPostReportByPostIdAndReporter(post.getId(), member1))
                 .isFalse();
     }
 
@@ -73,10 +73,11 @@ class PostReportRepositoryTest extends RepositoryTest {
                     .build();
             memberRepository.save(member);
             PostReport postReport = PostReport.builder()
-                    .post(post)
+                    .postId(post.getId())
                     .reporter(member)
                     .reportMessage("report")
                     .build();
+            post.addReport(postReport);
             postReportRepository.save(postReport);
         }
 

@@ -46,10 +46,11 @@ class PostReportTest {
     @Test
     void constructor() {
         PostReport postReport = PostReport.builder()
-                .post(post)
+                .postId(post.getId())
                 .reporter(member)
                 .reportMessage("신고")
                 .build();
+        post.addReport(postReport);
 
         assertThat(post.getPostReports()).contains(postReport);
     }
@@ -59,7 +60,7 @@ class PostReportTest {
     @MethodSource("isOwnerArguments")
     void isOwner(Member reporter, Member member, boolean expected) {
         PostReport postReport = PostReport.builder()
-                .post(post)
+                .postId(post.getId())
                 .reporter(reporter)
                 .reportMessage("message")
                 .build();

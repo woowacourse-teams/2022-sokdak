@@ -26,9 +26,7 @@ public class PostReport {
     @Column(name = "post_report_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    private Post post;
+    private Long postId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -44,19 +42,18 @@ public class PostReport {
     }
 
     @Builder
-    private PostReport(Post post, Member reporter, String reportMessage) {
-        this.post = post;
+    private PostReport(Long postId, Member reporter, String reportMessage) {
+        this.postId = postId;
         this.reporter = reporter;
         this.reportMessage = new ReportMessage(reportMessage);
-        this.post.addReport(this);
     }
 
     public Long getId() {
         return id;
     }
 
-    public Post getPost() {
-        return post;
+    public Long getPostId() {
+        return postId;
     }
 
     public Member getReporter() {

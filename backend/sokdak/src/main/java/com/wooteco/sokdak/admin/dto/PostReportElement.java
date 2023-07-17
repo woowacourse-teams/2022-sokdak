@@ -29,7 +29,7 @@ public class PostReportElement {
     public static PostReportElement of(PostReport postReport) {
         return PostReportElement.builder()
                 .id(postReport.getId())
-                .postId(postReport.getPost().getId())
+                .postId(postReport.getPostId())
                 .reporterId(postReport.getReporter().getId())
                 .reportMessage(postReport.getReportMessage())
                 .createdAt(postReport.getCreatedAt())
